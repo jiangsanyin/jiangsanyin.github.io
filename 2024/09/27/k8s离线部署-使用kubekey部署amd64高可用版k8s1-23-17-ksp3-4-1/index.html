@@ -19,20 +19,21 @@
   <meta name="author" content="jiangxiaoying">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、环境信息介绍   主机名 IP root密码 规格 磁盘 操作系统 备注    ksp-deploy 172.25.253.106 cloud@2020 4c8g 400g Ubuntu 20.04.3 LTS-arm64 联网，生成artifact等文件   node01 172.25.253.93 cloud@2020 8c16g 400g Ubuntu 20.04.3 LTS-arm64">
+    <meta name="description" content="一、环境信息介绍（1）   环境涉及软件版本信息：  操作系统：Ubuntu 20.04.3 LTS -amd64 KubeSphere：v3.4.1 K8s：v1.23.17 Docker：24.0.5 KubeKey: v3.0.13 Harbor：2.5.3  （2）   相关服务器信息：    主机名 IP root密码 规格 磁盘 操作系统 备注    ksp-deploy 10.13.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="k8s离线部署方法之1-使用kubekey部署arm64单机版k8s1.23.17+ksp3.4.1">
-<meta property="og:url" content="https://jiangsanyin.github.io/2024/12/06/k8s%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95%E4%B9%8B1-%E4%BD%BF%E7%94%A8kubekey%E9%83%A8%E7%BD%B2arm64%E9%AB%98%E5%8F%AF%E7%94%A8%E7%89%88k8s1-23-17-ksp3-4-1/index.html">
+<meta property="og:title" content="k8s离线部署-使用kubekey部署amd64高可用版k8s1.23.17-ksp3.4.1">
+<meta property="og:url" content="https://jiangsanyin.github.io/2024/09/27/k8s%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2-%E4%BD%BF%E7%94%A8kubekey%E9%83%A8%E7%BD%B2amd64%E9%AB%98%E5%8F%AF%E7%94%A8%E7%89%88k8s1-23-17-ksp3-4-1/index.html">
 <meta property="og:site_name" content="jiangxiaoying~">
-<meta property="og:description" content="一、环境信息介绍   主机名 IP root密码 规格 磁盘 操作系统 备注    ksp-deploy 172.25.253.106 cloud@2020 4c8g 400g Ubuntu 20.04.3 LTS-arm64 联网，生成artifact等文件   node01 172.25.253.93 cloud@2020 8c16g 400g Ubuntu 20.04.3 LTS-arm64">
+<meta property="og:description" content="一、环境信息介绍（1）   环境涉及软件版本信息：  操作系统：Ubuntu 20.04.3 LTS -amd64 KubeSphere：v3.4.1 K8s：v1.23.17 Docker：24.0.5 KubeKey: v3.0.13 Harbor：2.5.3  （2）   相关服务器信息：    主机名 IP root密码 规格 磁盘 操作系统 备注    ksp-deploy 10.13.">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2024/12/06/1s8tXg4bIidVPMQ.png">
-<meta property="og:image" content="https://s2.loli.net/2024/12/06/nDmeWhOgQbZ9BPs.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/27/LvlWHDEZotbKJ7e.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/27/1WzNeiw3naOt8Yc.png">
 <meta property="og:image" content="https://s2.loli.net/2024/09/27/QPIJhHLnZCevs4a.png">
 <meta property="og:image" content="https://s2.loli.net/2024/09/27/8ACWt4ePH56rQcZ.png">
 <meta property="og:image" content="https://s2.loli.net/2024/09/27/WkdADh2C5PfNUtg.png">
 <meta property="og:image" content="https://s2.loli.net/2024/09/27/vIH53M1idLjtyoT.png">
 <meta property="og:image" content="https://s2.loli.net/2024/09/27/6ogZuMe3bKRCJcQ.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/27/ITVXtn7AvfB4hOy.png">
 <meta property="og:image" content="https://s2.loli.net/2024/09/27/O2KsM3ZyeQWf5wB.png">
 <meta property="og:image" content="https://s2.loli.net/2024/09/27/Qrt2KARLuZwVmpk.png">
 <meta property="og:image" content="https://s2.loli.net/2024/09/27/ZOR9W85BltuKeob.png">
@@ -61,16 +62,16 @@
 <meta property="og:image" content="https://s2.loli.net/2024/09/27/BUKEnwk5hX48WzR.png">
 <meta property="og:image" content="https://s2.loli.net/2024/09/27/FDpcln8Zz4rbwXo.png">
 <meta property="og:image" content="https://s2.loli.net/2024/09/27/KFDzHMUQh8SjyXi.png">
-<meta property="article:published_time" content="2024-12-06T13:18:42.000Z">
-<meta property="article:modified_time" content="2024-12-06T15:05:48.000Z">
+<meta property="article:published_time" content="2024-09-27T02:49:54.000Z">
+<meta property="article:modified_time" content="2024-12-30T13:53:06.000Z">
 <meta property="article:author" content="jiangxiaoying">
-<meta property="article:tag" content="kubekey 离线部署 arm64 k8s kubesphere">
+<meta property="article:tag" content="amd64构架 k8s1.23.17 kubesphere3.4.1 离线部署">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2024/12/06/1s8tXg4bIidVPMQ.png">
+<meta name="twitter:image" content="https://s2.loli.net/2024/09/27/LvlWHDEZotbKJ7e.png">
   
   
   
-  <title>k8s离线部署方法之1-使用kubekey部署arm64单机版k8s1.23.17+ksp3.4.1 - jiangxiaoying~</title>
+  <title>k8s离线部署-使用kubekey部署amd64高可用版k8s1.23.17-ksp3.4.1 - jiangxiaoying~</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -249,7 +250,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="k8s离线部署方法之1-使用kubekey部署arm64单机版k8s1.23.17+ksp3.4.1"></span>
+            <span id="subtitle" data-typed-text="k8s离线部署-使用kubekey部署amd64高可用版k8s1.23.17-ksp3.4.1"></span>
           
         </div>
 
@@ -260,8 +261,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-12-06 21:18" pubdate>
-          2024年12月6日 晚上
+        <time datetime="2024-09-27 10:49" pubdate>
+          2024年9月27日 上午
         </time>
       </span>
     
@@ -272,7 +273,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          7.5k 字
+          7.3k 字
         
       </span>
     
@@ -283,7 +284,7 @@
         
         
         
-          63 分钟
+          61 分钟
         
       </span>
     
@@ -329,12 +330,22 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">k8s离线部署方法之1-使用kubekey部署arm64单机版k8s1.23.17+ksp3.4.1</h1>
+            <h1 id="seo-header">k8s离线部署-使用kubekey部署amd64高可用版k8s1.23.17-ksp3.4.1</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一、环境信息介绍"><a href="#一、环境信息介绍" class="headerlink" title="一、环境信息介绍"></a>一、环境信息介绍</h1><table>
+                <h1 id="一、环境信息介绍"><a href="#一、环境信息介绍" class="headerlink" title="一、环境信息介绍"></a>一、环境信息介绍</h1><p>（1）   环境涉及软件版本信息：</p>
+<ul>
+<li>操作系统：<strong>Ubuntu 20.04.3 LTS -amd64</strong></li>
+<li>KubeSphere：<strong>v3.4.1</strong></li>
+<li>K8s：<strong>v1.23.17</strong></li>
+<li>Docker：<strong>24.0.5</strong></li>
+<li>KubeKey: <strong>v3.0.13</strong></li>
+<li>Harbor：<strong>2.5.3</strong></li>
+</ul>
+<p>（2）   相关服务器信息：</p>
+<table>
 <thead>
 <tr>
 <th><strong>主机名</strong></th>
@@ -348,74 +359,56 @@
 </thead>
 <tbody><tr>
 <td>ksp-deploy</td>
-<td>172.25.253.106</td>
+<td>10.13.15.6</td>
+<td>cloud@2020</td>
+<td>8c16g</td>
+<td>400G</td>
+<td>Ubuntu 20.04.3 LTS -amd64</td>
+<td>联网，生成artifact等</td>
+</tr>
+<tr>
+<td>ksp-registry</td>
+<td>10.13.15.101</td>
 <td>cloud@2020</td>
 <td>4c8g</td>
-<td>400g</td>
-<td>Ubuntu 20.04.3 LTS-arm64</td>
-<td>联网，生成artifact等文件</td>
+<td>400G</td>
+<td>Ubuntu 20.04.3 LTS -amd64</td>
+<td>Harbor仓库，未联网</td>
 </tr>
 <tr>
-<td>node01</td>
-<td>172.25.253.93</td>
+<td>k8s01-1</td>
+<td>10.13.15.16</td>
 <td>cloud@2020</td>
 <td>8c16g</td>
-<td>400g</td>
-<td>Ubuntu 20.04.3 LTS-arm64</td>
-<td>控制节点</td>
+<td>400G+960G</td>
+<td>Ubuntu 20.04.3 LTS -amd64</td>
+<td>K8s节点，未联网</td>
 </tr>
 <tr>
-<td>node02</td>
-<td>172.25.253.94</td>
+<td>k8s01-2</td>
+<td>10.13.15.17</td>
 <td>cloud@2020</td>
 <td>8c16g</td>
-<td>400g</td>
-<td>Ubuntu 20.04.3 LTS-arm64</td>
-<td>控制节点</td>
+<td>400G+960G</td>
+<td>Ubuntu 20.04.3 LTS -amd64</td>
+<td>K8s节点，未联网</td>
 </tr>
 <tr>
-<td>node03</td>
-<td>172.25.253.95</td>
+<td>k8s01-3</td>
+<td>10.13.15.161</td>
 <td>cloud@2020</td>
 <td>8c16g</td>
-<td>400g</td>
-<td>Ubuntu 20.04.3 LTS-arm64</td>
-<td>控制节点</td>
-</tr>
-<tr>
-<td>node04</td>
-<td>172.25.253.113</td>
-<td>cloud@2020</td>
-<td>8c16g</td>
-<td>400g</td>
-<td>Ubuntu 20.04.3 LTS-arm64</td>
-<td>工作节点</td>
-</tr>
-<tr>
-<td>node05</td>
-<td>172.25.253.114</td>
-<td>cloud@2020</td>
-<td>8c16g</td>
-<td>400g</td>
-<td>Ubuntu 20.04.3 LTS-arm64</td>
-<td>工作节点</td>
+<td>400G+960G</td>
+<td>Ubuntu 20.04.3 LTS -amd64</td>
+<td>K8s节点，未联网</td>
 </tr>
 </tbody></table>
-<p>环境涉及软件版本信息：</p>
-<ul>
-<li>操作系统：<strong>Ubuntu 20.04.3 LTS -arm64</strong></li>
-<li>KubeSphere：<strong>v3.4.1</strong></li>
-<li>K8s：<strong>v1.23.17</strong></li>
-<li>Docker：<strong>24.0.5</strong></li>
-<li>KubeKey: <strong>v3.0.13</strong></li>
-</ul>
-<p>参考文档：<a target="_blank" rel="noopener" href="https://v3-1.docs.kubesphere.io/zh/docs/installing-on-linux/introduction/air-gapped-installation/">https://v3-1.docs.kubesphere.io/zh/docs/installing-on-linux/introduction/air-gapped-installation/</a></p>
 <h1 id="二、离线安装介绍"><a href="#二、离线安装介绍" class="headerlink" title="二、离线安装介绍"></a>二、离线安装介绍</h1><p>KubeKey 从 v2.1.0 版开始新增了清单 (manifest) 和制品 (artifact) 的概念，为用户离线部署 KubeSphere 和 K8s 集群提供了一种简单便捷的解决方案。</p>
 <p>manifest 是一个描述当前 Kubernetes 集群信息和定义 artifact 制品中需要包含哪些内容的文本文件。</p>
 <p>使用 KubeKey，用户只需使用清单 manifest 文件来定义将要离线部署的集群环境需要的内容，再通过该 manifest 来导出制品 artifact 文件即可完成准备工作。离线部署时只需要 KubeKey 和 artifact 就可快速、简单的在环境中部署镜像仓库 Harbor 和 KubeSphere 以及 K8s 集群。</p>
 <p>KubeKey 生成 manifest 文件有两种方式：</p>
 <ul>
-<li>利用现有运行中的集群作为源生成 manifest 文件，是官方推荐的一种方式，具体参考 KubeSphere <a target="_blank" rel="noopener" href="https://v3-1.docs.kubesphere.io/zh/docs/installing-on-linux/introduction/air-gapped-installation/">官网的离线部署文档</a>。</li>
+<li>利用现有运行中的集群作为源生成 manifest 文件，也是官方推荐的一种方式，具体参考     KubeSphere <a target="_blank" rel="noopener" href="https://www.kubesphere.io/zh/docs/v3.4/installing-on-linux/introduction/air-gapped-installation/">官网的离线部署文档</a>。</li>
 <li>根据 <a target="_blank" rel="noopener" href="https://github.com/kubesphere/kubekey/blob/master/docs/manifest-example.md">manifest 模板文件</a> 手动编写 manifest 文件。</li>
 </ul>
 <p>第一种方式的好处是可以根据 1:1 的运行集群构建离线集群，依赖于已有集群，灵活度不够，并不是所有人都具备这种条件。</p>
@@ -425,28 +418,39 @@
 
 <h2 id="3-2-设置各服务器主机名"><a href="#3-2-设置各服务器主机名" class="headerlink" title="3.2 设置各服务器主机名"></a>3.2 设置各服务器主机名</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">hostnamectl set-hostname xxx<br><span class="hljs-meta prompt_">#</span><span class="language-bash">然后退出终端并重新创建一个终端会话</span><br></code></pre></td></tr></table></figure>
 
-<h2 id="3-3-设置主机与ip的映射信息"><a href="#3-3-设置主机与ip的映射信息" class="headerlink" title="3.3 设置主机与ip的映射信息"></a>3.3 设置主机与ip的映射信息</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">cat &gt;&gt; /etc/hosts &lt;&lt;EOF		<br>172.25.253.106 ksp-deploy<br>172.25.253.93 node01<br>172.25.253.94 node02<br>172.25.253.95 node03<br>172.25.253.113 node04<br>172.25.253.114 node05<br>EOF<br></code></pre></td></tr></table></figure>
+<h2 id="3-3-设置主机与ip的映射信息"><a href="#3-3-设置主机与ip的映射信息" class="headerlink" title="3.3 设置主机与ip的映射信息"></a>3.3 设置主机与ip的映射信息</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">cat &gt;&gt; /etc/hosts &lt;&lt;EOF		<br>10.13.15.6 ksp-deploy<br>10.13.15.101 ksp-registry<br>10.13.15.16 k8s01-1<br>10.13.15.17 k8s01-2<br>10.13.15.161 k8s01-3<br>EOF<br></code></pre></td></tr></table></figure>
 
 <h1 id="四、离线部署资源制作"><a href="#四、离线部署资源制作" class="headerlink" title="四、离线部署资源制作"></a>四、离线部署资源制作</h1><p>制作离线部署资源需要找一台能联通互联网的节点（本文中是ksp-deploy），本文为了资源的制作和离线部署验证，单独增加了一个能联网的 <strong>ksp-deploy</strong> 节点。</p>
 <p>在该节点下载 KubeKey （下文简称 KK）<strong>v3.0.13</strong>。具体 KK 版本号可以在 <a target="_blank" rel="noopener" href="https://github.com/kubesphere/kubekey/releases">KubeKey 发行页面</a> 查看。</p>
 <h2 id="4-1-下载-KubeKey"><a href="#4-1-下载-KubeKey" class="headerlink" title="4.1 下载 KubeKey"></a>4.1 下载 KubeKey</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@ksp-deploy:~# mkdir /root/kubekey<br>root@ksp-deploy:~# cd /root/kubekey<br><span class="hljs-meta prompt_"># </span><span class="language-bash">选择中文区下载(访问 GitHub 受限时使用)</span><br>root@ksp-deploy:~/kubekey# export KKZONE=cn<br><span class="hljs-meta prompt_"># </span><span class="language-bash">执行下载命令，获取指定版本的 kk（受限于网络，有时需要执行多次）</span><br>root@ksp-deploy:~/kubekey# curl -sfL https://get-kk.kubesphere.io | VERSION=v3.0.13 sh -<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://s2.loli.net/2024/12/06/1s8tXg4bIidVPMQ.png" srcset="/img/loading.gif" lazyload alt="image-20241206224422568"></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@ksp-deploy:~/kubekey# chown root:root kk<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看kubekey3.0.13版本</span><br>root@ksp-deploy:~/kubekey# ./kk version<br>kk version: &amp;version.Info&#123;Major:&quot;3&quot;, Minor:&quot;0&quot;, GitVersion:&quot;v3.0.13-dirty&quot;, GitCommit:&quot;ac75d3ef3c22e6a9d999dcea201234d6651b3e72&quot;, GitTreeState:&quot;dirty&quot;, BuildDate:&quot;2023-11-07T08:43:42Z&quot;, GoVersion:&quot;go1.19.2&quot;, Compiler:&quot;gc&quot;, Platform:&quot;linux/arm64&quot;&#125;<br></code></pre></td></tr></table></figure>
+<p><img src="https://s2.loli.net/2024/09/27/LvlWHDEZotbKJ7e.png" srcset="/img/loading.gif" lazyload alt="image-20240927112648800"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@ksp-deploy:~/kubekey# chown root:root kk<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看kubekey3.0.13版本</span><br>root@ksp-deploy:~/kubekey#./kk version<br></code></pre></td></tr></table></figure>
 
 <h2 id="4-2-获取-manifest-模板"><a href="#4-2-获取-manifest-模板" class="headerlink" title="4.2 获取 manifest 模板"></a>4.2 获取 manifest 模板</h2><p>manifest 文件的编写可以参考 <a href="https://link.zhihu.com/?target=https://github.com/kubesphere/kubekey/blob/master/docs/manifest-example.md">官方示例文档</a>。有两个可用参考用例，一个简单版，一个完整版。参考简单版即可。</p>
 <p>受限于篇幅，本文不展示原始的示例文件，建议读者仔细阅读官方示例，理解每一项配置的含义后根据需求改写（<strong>暂时无法理解的，可以直接使用下文提供的成品配置文件</strong>）。</p>
 <h2 id="4-3-获取-images-list-及可裁剪性分析"><a href="#4-3-获取-images-list-及可裁剪性分析" class="headerlink" title="4.3 获取 images-list 及可裁剪性分析"></a>4.3 获取 images-list 及可裁剪性分析</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">执行下面的命令获取官方 releases v3.4.1 对应的 images-list（最终实验结果，一些镜像需要自行整理，完整的镜像列表可参考下文中的 manifest 文件）。</span><br>root@ksp-deploy:~/kubekey# wget https://github.com/kubesphere/ks-installer/releases/download/v3.4.1/images-list.txt<br></code></pre></td></tr></table></figure>
 
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">此文件不能直接使用（从官网上下载下来的这个文件应该只是x86平台上验证过的。这个文件中有些镜像并没有arm64版本；此外，非全量安装时不是所有镜像都是需要的）</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">经过修改后image-list.txt文件如下（已经经过验证）：</span><br>root@ksp-deploy:~/kubekey# cat images-list.txt<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#k8s-images</span></span><br>kubesphere/pause:3.6<br>kubesphere/kube-apiserver:v1.23.17<br>kubesphere/kube-controller-manager:v1.23.17<br>kubesphere/kube-scheduler:v1.23.17<br>kubesphere/kube-proxy:v1.23.17<br>coredns/coredns:1.8.6<br>kubesphere/k8s-dns-node-cache:1.15.12<br>calico/kube-controllers:v3.26.1<br>calico/cni:v3.26.1<br>calico/node:v3.26.1<br>calico/pod2daemon-flexvol:v3.26.1<br>openebs/provisioner-localpv:3.3.0<br>openebs/linux-utils:3.3.0<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#kubesphere-images</span></span><br>kubesphere/ks-installer:v3.4.1<br>kubesphere/ks-apiserver:v3.4.1<br>kubesphere/ks-console:v3.4.1<br>kubesphere/ks-controller-manager:v3.4.1<br>kubesphere/kubectl:v1.20.0<br>kubesphere/kubectl:v1.22.0<br>kubesphere/kubefed:v0.8.1<br>kubesphere/tower:v0.2.1<br>minio/minio:RELEASE.2024-08-17T01-24-54Z<br>minio/mc:RELEASE.2024-08-17T11-33-50Z<br>csiplugin/snapshot-controller:v4.0.0<br>kubesphere/nginx-ingress-controller:v1.3.1<br>mirrorgooglecontainers/defaultbackend-arm64:1.4<br>kubesphere/metrics-server:v0.4.2<br>redis:5.0.14-alpine<br>haproxy:2.0.25-alpine<br>alpine:3.14<br>osixia/openldap:1.3.0<br>kubesphere/netshoot:v1.0<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#kubeedge-images</span></span><br>kubeedge/cloudcore:v1.13.0<br>kubesphere/iptables-manager:v1.13.0<br>kubesphere/edgeservice:v0.3.0<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#gatekeeper-images</span></span><br>openpolicyagent/gatekeeper:v3.5.2<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#openpitrix-images</span></span><br>kubesphere/openpitrix-jobs:v3.3.2<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#kubesphere-devops-images</span></span><br>kubesphere/devops-apiserver:ks-v3.4.1<br>kubesphere/devops-controller:ks-v3.4.1<br>kubesphere/devops-tools:ks-v3.4.1<br>kubesphere/ks-jenkins:v3.4.0-2.319.3-1<br>jenkins/inbound-agent:4.10-2<br>kubesphere/s2ioperator:v3.2.1<br>kubesphere/java-11-centos7:v3.2.0<br>kubesphere/java-8-centos7:v3.2.0<br>quay.io/argoproj/argocd:v2.3.3<br>quay.io/argoproj/argocd-applicationset:v0.4.1<br>ghcr.io/dexidp/dex:v2.30.2<br>redis:6.2.6-alpine<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#kubesphere-monitoring-images</span></span><br>jimmidyson/configmap-reload:v0.7.1<br>prom/prometheus:v2.39.1<br>kubesphere/prometheus-config-reloader:v0.55.1<br>kubesphere/prometheus-operator:v0.55.1<br>kubesphere/kube-rbac-proxy:v0.11.0<br>kubesphere/kube-state-metrics:v2.6.0<br>prom/node-exporter:v1.3.1<br>prom/alertmanager:v0.23.0<br>thanosio/thanos:v0.31.0<br>grafana/grafana:8.3.3<br>kubesphere/kube-rbac-proxy:v0.11.0<br>kubesphere/notification-manager-operator:v2.3.0<br>kubesphere/notification-manager:v2.3.0<br>kubesphere/notification-tenant-sidecar:v3.2.0<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#kubesphere-logging-images</span></span><br>kubesphere/opensearch-curator:v0.0.5<br>kubesphere/fluent-bit:v1.9.4<br>kubesphere/log-sidecar-injector:v1.2.0<br>elastic/filebeat:6.7.0<br>kubesphere/kube-events-operator:v0.6.0<br>kubesphere/kube-events-ruler:v0.6.0<br>kubesphere/kube-auditing-operator:v0.2.0<br>kubesphere/kube-auditing-webhook:v0.2.0<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#istio-images</span></span><br>jaegertracing/jaeger-operator:1.29<br>jaegertracing/jaeger-agent:1.29<br>jaegertracing/jaeger-collector:1.29<br>jaegertracing/jaeger-query:1.29<br>jaegertracing/jaeger-es-index-cleaner:1.29<br>kubesphere/kiali-operator:v1.50.1<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#example-images</span></span><br>busybox:1.31.1<br></code></pre></td></tr></table></figure>
+<p>完整的 Image（<strong>136 个</strong>） 分类及可裁剪性：</p>
+<ul>
+<li>kubesphere-images（<strong>18 个，不可裁剪</strong>）</li>
+<li>kubeedge-images（3 个，可裁剪，取决于是否启用 kubeedge）</li>
+<li>gatekeeper-images（1 个，可裁剪，取决于是否启用 gatekeeper，建议保留）</li>
+<li>openpitrix-images（<strong>1 个，可裁剪但是基本都会用到，建议保留</strong>）</li>
+<li>kubesphere-devops-images（45 个，构建用的开发环境镜像可裁剪，前缀带 builder-、tomcat85-、java-、nodejs-、python-     这一类的都可以酌情处理）</li>
+<li>kubesphere-monitoring-images（<strong>14 个，不可裁剪</strong>）</li>
+<li>kubesphere-logging-images（15 个，能裁剪的也就是 elasticsearch- 和 opensearch 开头的，KubeSphere v3.4.1 默认选择 opensearch，建议都保留）</li>
+<li>istio-images（9 个，可裁剪，取决于是否启用 istio，建议保留）</li>
+<li>example-images（13 个，可裁剪）</li>
+<li>weave-scope-images（1 个，可裁剪，取决于是否启用 weave）</li>
+<li><strong>官方列表中未列出的核心 images</strong>（12 个，必须，否则部署时报错）</li>
+<li>**官方列表中未列出的必要 images **（4 个，必须，否则部署时报错）</li>
+</ul>
+<p>为了保持完整性，本文使用了所有 Image，只是修改了镜像前缀为 <a href="https://link.zhihu.com/?target=http://registry.cn-beijing.aliyuncs.com/kubesphereio"><strong>http://registry.cn-beijing.aliyuncs.com/kubesphereio</strong></a>，修改后的完整的镜像列表在下面的 manifest 文件中展示，读者可根据需求裁剪。</p>
+<h2 id="4-4-获取操作系统依赖包"><a href="#4-4-获取操作系统依赖包" class="headerlink" title="4.4 获取操作系统依赖包"></a>4.4 获取操作系统依赖包</h2><p>本实验环境使用的操作系统是 x86_64 的 Ubuntu 20.04.3 LTS，所以只下载 Ubuntu 20.04.3 LTS的操作系统依赖包，其他操作系统请读者在 <a href="https://link.zhihu.com/?target=https://github.com/kubesphere/kubekey/releases">KubeKey releases 页面</a>下载。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">执行下面的命令，在能联网的部署服务器上执行下载。网络访问受限时，也可以通过其他方式，将该 ISO 下载后放到制作离线镜像的服务器的 /root/kubekey 目录下。</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">KubeKey v3.0.13 的 release 中没包，只能在 v3.0.12 的 releases 中下载。</span><br>root@ksp-deploy:~/kubekey# wget https://github.com/kubesphere/kubekey/releases/download/v3.0.12/ubuntu-20.04-debs-amd64.iso<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">验证 <span class="hljs-built_in">sha256sum</span>，确保 ISO 在下载过程中没出问题（官方提供的 <span class="hljs-built_in">sha256sum</span> 信息在 https://github.com/kubesphere/kubekey/releases/download/v3.0.12/ubuntu-20.04-debs.iso.sha256sum.txt）</span><br>root@ksp-deploy:~/kubekey# sha256sum ubuntu-20.04-debs-amd64.iso<br></code></pre></td></tr></table></figure>
 
-<h2 id="4-4-获取-Kubernetes-二进制文件"><a href="#4-4-获取-Kubernetes-二进制文件" class="headerlink" title="4.4 获取 Kubernetes 二进制文件"></a>4.4 获取 Kubernetes 二进制文件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">下载 offline-installation-tool.sh</span><br>root@ksp-deploy:~/kubekey# curl -L -O https://github.com/kubesphere/ks-installer/releases/download/v3.4.1/offline-installation-tool.sh<br><span class="hljs-meta prompt_">#</span><span class="language-bash">给文件增加可执行权限</span><br>root@ksp-deploy:~/kubekey# chmod +x offline-installation-tool.sh<br><span class="hljs-meta prompt_">#</span><span class="language-bash">执查看如何使用脚本</span><br>root@ksp-deploy:~/kubekey# ./offline-installation-tool.sh -h<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">下载 Kubernetes 二进制文件</span><br>root@ksp-deploy:~/kubekey# ./offline-installation-tool.sh -b -v v1.23.17<br><span class="hljs-meta prompt_">#</span><span class="language-bash">运行脚本后，会自动创建一个文件夹 kubekey。请注意，稍后创建集群时，该文件和 kk 必须放在同一个目录</span><br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/12/06/nDmeWhOgQbZ9BPs.png" srcset="/img/loading.gif" lazyload alt="image-20241206225937269"></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在 offline-installation-tool.sh 中拉取镜像</span><br>root@ksp-deploy:~/kubekey# ./offline-installation-tool.sh -s -l images-list.txt -d ./kubesphere-images<br><br></code></pre></td></tr></table></figure>
-
-
-
+<p><img src="https://s2.loli.net/2024/09/27/1WzNeiw3naOt8Yc.png" srcset="/img/loading.gif" lazyload alt="image-20240927112900448"></p>
 <h2 id="4-5-生成-manifest-文件"><a href="#4-5-生成-manifest-文件" class="headerlink" title="4.5 生成 manifest 文件"></a>4.5 生成 manifest 文件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">以https://github.com/kubesphere/kubekey/blob/master/docs/manifest-example.md 中示例为基础，修改得到ksp-v3.4.1-manifest.yaml</span><br>root@ksp-deploy:~/kubekey# touch ksp-v3.4.1-manifest.yaml<br>root@ksp-deploy:~/kubekey# vi ksp-v3.4.1-manifest.yaml<br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改后的文件内容如下：</span><br></code></pre></td></tr></table></figure>
 
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">kubekey.kubesphere.io/v1alpha2</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Manifest</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">sample</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">arches:</span> <br>  <span class="hljs-bullet">-</span> <span class="hljs-string">amd64</span><br>  <span class="hljs-attr">operatingSystems:</span> <br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">arch:</span> <span class="hljs-string">amd64</span><br>    <span class="hljs-attr">type:</span> <span class="hljs-string">linux</span><br>    <span class="hljs-attr">id:</span> <span class="hljs-string">ubuntu</span><br>    <span class="hljs-attr">version:</span> <span class="hljs-string">&quot;20.04&quot;</span><br>    <span class="hljs-attr">osImage:</span> <span class="hljs-string">Ubuntu</span> <span class="hljs-number">20.04</span><span class="hljs-number">.3</span> <span class="hljs-string">LTS</span><br>    <span class="hljs-attr">repository:</span> <br>      <span class="hljs-attr">iso:</span><br>        <span class="hljs-attr">localPath:</span> <span class="hljs-string">/root/kubekey/ubuntu-20.04-debs-amd64.iso</span><br>        <span class="hljs-attr">url:</span> <br>  <span class="hljs-attr">kubernetesDistributions:</span> <br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">kubernetes</span><br>    <span class="hljs-attr">version:</span> <span class="hljs-string">v1.23.17</span><br>  <span class="hljs-attr">components:</span> <br>    <span class="hljs-attr">helm:</span><br>      <span class="hljs-attr">version:</span> <span class="hljs-string">v3.9.0</span><br>    <span class="hljs-attr">cni:</span><br>      <span class="hljs-attr">version:</span> <span class="hljs-string">v1.2.0</span><br>    <span class="hljs-attr">etcd:</span><br>      <span class="hljs-attr">version:</span> <span class="hljs-string">v3.4.13</span><br>    <span class="hljs-attr">calicoctl:</span><br>      <span class="hljs-attr">version:</span> <span class="hljs-string">v3.26.1</span><br>    <span class="hljs-attr">containerRuntimes:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">docker</span><br>      <span class="hljs-attr">version:</span> <span class="hljs-number">20.10</span><span class="hljs-number">.23</span><br>    <span class="hljs-attr">crictl:</span><br>      <span class="hljs-attr">version:</span> <span class="hljs-string">v1.24.0</span><br>    <span class="hljs-attr">docker-registry:</span><br>      <span class="hljs-attr">version:</span> <span class="hljs-string">&quot;2&quot;</span><br>    <span class="hljs-attr">harbor:</span><br>      <span class="hljs-attr">version:</span> <span class="hljs-string">v2.5.3</span><br>    <span class="hljs-attr">docker-compose:</span><br>      <span class="hljs-attr">version:</span> <span class="hljs-string">v2.2.2</span><br>  <span class="hljs-attr">images:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/ks-installer:v3.4.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/ks-apiserver:v3.4.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/ks-console:v3.4.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/ks-controller-manager:v3.4.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kubectl:v1.20.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kubefed:v0.8.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/tower:v0.2.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/minio:RELEASE.2019-08-07T01-59-21Z</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/mc:RELEASE.2019-08-07T23-14-43Z</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/snapshot-controller:v4.0.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/nginx-ingress-controller:v1.3.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/defaultbackend-amd64:1.4</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/metrics-server:v0.4.2</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/redis:5.0.14-alpine</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/haproxy:2.0.25-alpine</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/alpine:3.14</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/openldap:1.3.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/netshoot:v1.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/cloudcore:v1.13.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/iptables-manager:v1.13.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/edgeservice:v0.3.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/gatekeeper:v3.5.2</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/openpitrix-jobs:v3.3.2</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/devops-apiserver:ks-v3.4.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/devops-controller:ks-v3.4.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/devops-tools:ks-v3.4.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/ks-jenkins:v3.4.0-2.319.3-1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/inbound-agent:4.10-2</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-base:v3.2.2</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-nodejs:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-maven:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-maven:v3.2.1-jdk11</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-python:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.2-1.16</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.2-1.17</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.2-1.18</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-base:v3.2.2-podman</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-nodejs:v3.2.0-podman</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-maven:v3.2.0-podman</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-maven:v3.2.1-jdk11-podman</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-python:v3.2.0-podman</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.0-podman</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.2-1.16-podman</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.2-1.17-podman</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.2-1.18-podman</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/s2ioperator:v3.2.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/s2irun:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/s2i-binary:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/tomcat85-java11-centos7:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/tomcat85-java11-runtime:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/tomcat85-java8-centos7:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/tomcat85-java8-runtime:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/java-11-centos7:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/java-8-centos7:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/java-8-runtime:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/java-11-runtime:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/nodejs-8-centos7:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/nodejs-6-centos7:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/nodejs-4-centos7:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/python-36-centos7:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/python-35-centos7:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/python-34-centos7:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/python-27-centos7:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/argocd:v2.3.3</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/argocd-applicationset:v0.4.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/dex:v2.30.2</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/redis:6.2.6-alpine</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/configmap-reload:v0.7.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/prometheus:v2.39.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/prometheus-config-reloader:v0.55.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/prometheus-operator:v0.55.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kube-rbac-proxy:v0.11.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kube-state-metrics:v2.6.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/node-exporter:v1.3.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/alertmanager:v0.23.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/thanos:v0.31.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/grafana:8.3.3</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kube-rbac-proxy:v0.11.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/notification-manager-operator:v2.3.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/notification-manager:v2.3.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/notification-tenant-sidecar:v3.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/elasticsearch-curator:v5.7.6</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/opensearch-curator:v0.0.5</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/elasticsearch-oss:6.8.22</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/opensearch:2.6.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/opensearch-dashboards:2.6.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/fluentbit-operator:v0.14.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/docker:19.03</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/fluent-bit:v1.9.4</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/log-sidecar-injector:v1.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/filebeat:6.7.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kube-events-operator:v0.6.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kube-events-exporter:v0.6.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kube-events-ruler:v0.6.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kube-auditing-operator:v0.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kube-auditing-webhook:v0.2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/pilot:1.14.6</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/proxyv2:1.14.6</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/jaeger-operator:1.29</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/jaeger-agent:1.29</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/jaeger-collector:1.29</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/jaeger-query:1.29</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/jaeger-es-index-cleaner:1.29</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kiali-operator:v1.50.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kiali:v1.50</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/busybox:1.31.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/nginx:1.14-alpine</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/wget:1.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/hello:plain-text</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/wordpress:4.8-apache</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/hpa-example:latest</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/fluentd:v1.4.2-2.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/perl:latest</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/examples-bookinfo-productpage-v1:1.16.2</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/examples-bookinfo-reviews-v1:1.16.2</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/examples-bookinfo-reviews-v2:1.16.2</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/examples-bookinfo-details-v1:1.16.2</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/examples-bookinfo-ratings-v1:1.16.3</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/scope:1.13.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/pause:3.6</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kube-apiserver:v1.23.17</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kube-controller-manager:v1.23.17</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kube-scheduler:v1.23.17</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kube-proxy:v1.23.17</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/k8s-dns-node-cache:1.15.12</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/coredns:1.8.6</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kube-controllers:v3.26.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/cni:v3.26.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/node:v3.26.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/pod2daemon-flexvol:v3.26.1</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/haproxy:2.3</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/provisioner-localpv:3.3.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/linux-utils:3.3.0</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">registry.cn-beijing.aliyuncs.com/kubesphereio/kubectl:v1.22.0</span><br>  <span class="hljs-attr">kubectl:</span> <span class="hljs-string">v1.22.0</span><br>  <span class="hljs-attr">registry:</span><br>    <span class="hljs-attr">auths:</span> &#123;&#125;<br></code></pre></td></tr></table></figure>
@@ -478,6 +482,7 @@
 <li>内核升级包（<strong>可选</strong>）：<strong>kernel-lt-5.4.263-1-upgrade.tar.gz（50M ）</strong></li>
 </ul>
 <p><img src="https://s2.loli.net/2024/09/27/6ogZuMe3bKRCJcQ.png" srcset="/img/loading.gif" lazyload alt="image-20240927113446306"></p>
+<h2 id="4-8-Kernel-升级包"><a href="#4-8-Kernel-升级包" class="headerlink" title="4.8 Kernel 升级包"></a>4.8 Kernel 升级包</h2><p><img src="https://s2.loli.net/2024/09/27/ITVXtn7AvfB4hOy.png" srcset="/img/loading.gif" lazyload alt="image-20240927113601802"></p>
 <h1 id="五、K8s-离线集群服务器-初始化配置"><a href="#五、K8s-离线集群服务器-初始化配置" class="headerlink" title="五、K8s 离线集群服务器-初始化配置"></a>五、K8s 离线集群服务器-初始化配置</h1><h2 id="5-1-操作系统基础配置"><a href="#5-1-操作系统基础配置" class="headerlink" title="5.1 操作系统基础配置"></a>5.1 操作系统基础配置</h2><p>暂无。</p>
 <h2 id="5-2-数据盘配置（可选）"><a href="#5-2-数据盘配置（可选）" class="headerlink" title="5.2 数据盘配置（可选）"></a>5.2 数据盘配置（可选）</h2><p>此次用来搭建k8s环境的三个服务器都配置了一个400G大小的系统盘、一个960G的数据盘。</p>
 <p><img src="https://s2.loli.net/2024/09/27/O2KsM3ZyeQWf5wB.png" srcset="/img/loading.gif" lazyload alt="image-20240927113654261"></p>
@@ -668,7 +673,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/kubekey-%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2-arm64-k8s-kubesphere/" class="print-no-link">#kubekey 离线部署 arm64 k8s kubesphere</a>
+        <a href="/tags/amd64%E6%9E%84%E6%9E%B6-k8s1-23-17-kubesphere3-4-1-%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2/" class="print-no-link">#amd64构架 k8s1.23.17 kubesphere3.4.1 离线部署</a>
       
     </div>
   
@@ -680,8 +685,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>k8s离线部署方法之1-使用kubekey部署arm64单机版k8s1.23.17+ksp3.4.1</div>
-      <div>https://jiangsanyin.github.io/2024/12/06/k8s离线部署方法之1-使用kubekey部署arm64高可用版k8s1-23-17-ksp3-4-1/</div>
+      <div>k8s离线部署-使用kubekey部署amd64高可用版k8s1.23.17-ksp3.4.1</div>
+      <div>https://jiangsanyin.github.io/2024/09/27/k8s离线部署-使用kubekey部署amd64高可用版k8s1-23-17-ksp3-4-1/</div>
     </div>
     <div class="license-meta">
       
@@ -693,7 +698,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年12月6日</div>
+          <div>2024年9月27日</div>
         </div>
       
       
@@ -725,9 +730,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/12/07/docker-compose%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2FastGPT%E4%B8%8E%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/" title="docker-compose本地部署FastGPT与简单使用">
+                      <a href="/2024/10/07/GPU%E8%99%9A%E6%8B%9F%E5%8C%96%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AEHAMi%E4%B8%AD%E4%BD%BF%E7%94%A8prometheus%E4%B8%8Egrafana%E5%81%9A%E7%9B%91%E6%8E%A7/" title="GPU虚拟化开源项目HAMi中使用prometheus与grafana做监控">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">docker-compose本地部署FastGPT与简单使用</span>
+                        <span class="hidden-mobile">GPU虚拟化开源项目HAMi中使用prometheus与grafana做监控</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -735,8 +740,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/12/01/k8s%E5%9C%A8%E7%BA%BF%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95%E4%B9%8B1-%E4%BD%BF%E7%94%A8kubeasz%E9%83%A8%E7%BD%B2amd64%E9%AB%98%E5%8F%AF%E7%94%A8k8s1-23-17/" title="k8s在线部署方法之1-使用kubeasz部署amd64高可用k8s1-23-17">
-                        <span class="hidden-mobile">k8s在线部署方法之1-使用kubeasz部署amd64高可用k8s1-23-17</span>
+                      <a href="/2024/09/07/M3%E8%8A%AF%E7%89%87MacOS14-6-1%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E7%A0%B4%E8%A7%A3%E7%89%88SecureCRT%E4%B8%8ESecureFX/" title="M3芯片MacOS14.6.1系统安装配置破解版SecureCRT与SecureFX">
+                        <span class="hidden-mobile">M3芯片MacOS14.6.1系统安装配置破解版SecureCRT与SecureFX</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

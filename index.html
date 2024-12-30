@@ -522,15 +522,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/12/06/k8s%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95%E4%B9%8B1-%E4%BD%BF%E7%94%A8kubekey%E9%83%A8%E7%BD%B2arm64%E9%AB%98%E5%8F%AF%E7%94%A8%E7%89%88k8s1-23-17-ksp3-4-1/" target="_self">
-          k8s离线部署方法之1-使用kubekey部署arm64单机版k8s1.23.17+ksp3.4.1
+        <a href="/2024/12/06/k8s%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2-%E4%BD%BF%E7%94%A8kubekey%E9%83%A8%E7%BD%B2arm64%E9%AB%98%E5%8F%AF%E7%94%A8%E7%89%88k8s1-23-17-ksp3-4-1/" target="_self">
+          k8s离线部署-使用kubekey部署aarch64高可用版k8s1.23.17+ksp3.4.1
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/12/06/k8s%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95%E4%B9%8B1-%E4%BD%BF%E7%94%A8kubekey%E9%83%A8%E7%BD%B2arm64%E9%AB%98%E5%8F%AF%E7%94%A8%E7%89%88k8s1-23-17-ksp3-4-1/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/12/06/k8s%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2-%E4%BD%BF%E7%94%A8kubekey%E9%83%A8%E7%BD%B2arm64%E9%AB%98%E5%8F%AF%E7%94%A8%E7%89%88k8s1-23-17-ksp3-4-1/" target="_self">
         <div>
-          一、环境信息介绍   主机名 IP root密码 规格 磁盘 操作系统 备注    ksp-deploy 172.25.253.106 cloud@2020 4c8g 400g Ubuntu 20.04.3 LTS-arm64 联网，生成artifact等文件   node01 172.25.253.93 cloud@2020 8c16g 400g Ubuntu 20.04.3 LTS-arm64
+          一、环境信息介绍   主机名 IP root密码 规格 磁盘 操作系统 备注    ksp-deploy 172.25.253.106 cloud@123 4c8g 400g Ubuntu 20.04.3 LTS-aarch64 联网，生成artifact等文件   node01 172.25.253.93 cloud@123 8c16g 400g Ubuntu 20.04.3 LTS-aarch
         </div>
       </a>
 
@@ -562,13 +562,13 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/12/01/k8s%E5%9C%A8%E7%BA%BF%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95%E4%B9%8B1-%E4%BD%BF%E7%94%A8kubeasz%E9%83%A8%E7%BD%B2amd64%E9%AB%98%E5%8F%AF%E7%94%A8k8s1-23-17/" target="_self">
-          k8s在线部署方法之1-使用kubeasz部署amd64高可用k8s1-23-17
+        <a href="/2024/12/01/k8s%E5%9C%A8%E7%BA%BF%E9%83%A8%E7%BD%B2-%E4%BD%BF%E7%94%A8kubeasz%E9%83%A8%E7%BD%B2amd64%E9%AB%98%E5%8F%AF%E7%94%A8k8s1-23-17/" target="_self">
+          k8s在线部署-使用kubeasz部署amd64高可用k8s1-23-17
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/12/01/k8s%E5%9C%A8%E7%BA%BF%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95%E4%B9%8B1-%E4%BD%BF%E7%94%A8kubeasz%E9%83%A8%E7%BD%B2amd64%E9%AB%98%E5%8F%AF%E7%94%A8k8s1-23-17/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/12/01/k8s%E5%9C%A8%E7%BA%BF%E9%83%A8%E7%BD%B2-%E4%BD%BF%E7%94%A8kubeasz%E9%83%A8%E7%BD%B2amd64%E9%AB%98%E5%8F%AF%E7%94%A8k8s1-23-17/" target="_self">
         <div>
           二、部署k8s高可用集群2.1 高可用集群规划高可用集群构架图大致如下（下图是从官网复制过来的，跟本文中k8s集群节点布局稍有差别，但大致不变）：    注意1：确保各节点时区设置一致、时间同步。 如果你的环境没有提供NTP 时间同步，推荐集成安装chrony 注意2：确保在干净的系统上开始安装，不要使用曾经装过kubeadm或其他k8s发行版的环境 注意3：建议操作系统升级到新的稳定内核，请结合
         </div>
@@ -602,13 +602,13 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/11/28/k8s%E5%9C%A8%E7%BA%BF%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95%E4%B9%8B1-%E4%BD%BF%E7%94%A8kubeasz%E9%83%A8%E7%BD%B2amd64%E5%8D%95%E6%9C%BA%E7%89%88k8s1-26-0/" target="_self">
-          k8s在线部署方法之1-使用kubeasz部署amd64单机版k8s1-26-0
+        <a href="/2024/11/28/k8s%E5%9C%A8%E7%BA%BF%E9%83%A8%E7%BD%B2-%E4%BD%BF%E7%94%A8kubeasz%E9%83%A8%E7%BD%B2amd64%E5%8D%95%E6%9C%BA%E7%89%88k8s1-26-0/" target="_self">
+          k8s在线部署-使用kubeasz部署amd64单机版k8s1-26-0
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/11/28/k8s%E5%9C%A8%E7%BA%BF%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95%E4%B9%8B1-%E4%BD%BF%E7%94%A8kubeasz%E9%83%A8%E7%BD%B2amd64%E5%8D%95%E6%9C%BA%E7%89%88k8s1-26-0/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/11/28/k8s%E5%9C%A8%E7%BA%BF%E9%83%A8%E7%BD%B2-%E4%BD%BF%E7%94%A8kubeasz%E9%83%A8%E7%BD%B2amd64%E5%8D%95%E6%9C%BA%E7%89%88k8s1-26-0/" target="_self">
         <div>
           一、单机快速部署-AllinOne部署​	kubeasz 致力于提供快速部署高可用k8s集群的工具, 同时也努力成为k8s实践、使用的参考书；基于二进制方式部署和利用ansible-playbook实现自动化；既提供一键安装脚本, 也可以根据安装指南分步执行安装各个组件。kubeasz 从每一个单独部件组装到完整的集群，提供最灵活的配置能力，几乎可以设置任何组件的任何参数；同时又为集群创建预置一套
         </div>
