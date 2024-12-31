@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://s2.loli.net/2024/12/30/FuNh3jOedGBbZwC.png">
 <meta property="og:image" content="https://s2.loli.net/2024/12/30/OsUv98dunWCNKJy.png">
 <meta property="article:published_time" content="2024-12-06T13:18:42.000Z">
-<meta property="article:modified_time" content="2024-12-31T02:05:22.000Z">
+<meta property="article:modified_time" content="2024-12-31T02:15:40.000Z">
 <meta property="article:author" content="jiangxiaoying">
 <meta property="article:tag" content="kubekey 离线部署 arm64 k8s kubesphere">
 <meta name="twitter:card" content="summary_large_image">
@@ -408,6 +408,7 @@
 
 <h2 id="3-3-设置主机与ip的映射信息"><a href="#3-3-设置主机与ip的映射信息" class="headerlink" title="3.3 设置主机与ip的映射信息"></a>3.3 设置主机与ip的映射信息</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">cat &gt;&gt; /etc/hosts &lt;&lt;EOF<br>172.25.253.106 ksp-deploy<br>172.25.253.93 node01<br>172.25.253.94 node02<br>172.25.253.95 node03<br>172.25.253.113 node04<br>172.25.253.114 node05<br>EOF<br></code></pre></td></tr></table></figure>
 
+<h2 id="3-4-设置时间同步"><a href="#3-4-设置时间同步" class="headerlink" title="3.4 设置时间同步"></a>3.4 设置时间同步</h2><p>​        最好以离线k8s环境的某个节点做时间同步的源服务器。本文为了简化操作，未执行。生产环境中建议执行。</p>
 <h1 id="四、离线部署资源制作"><a href="#四、离线部署资源制作" class="headerlink" title="四、离线部署资源制作"></a>四、离线部署资源制作</h1><p>制作离线部署资源需要找一台能联通互联网的节点（本文中是ksp-deploy），本文为了资源的制作和离线部署验证，单独增加了一个能联网的 <strong>ksp-deploy</strong> 节点。</p>
 <p>在该节点下载 KubeKey （下文简称 KK）<strong>v3.0.13</strong>。具体 KK 版本号可以在 <a target="_blank" rel="noopener" href="https://github.com/kubesphere/kubekey/releases">KubeKey 发行页面</a> 查看。</p>
 <h2 id="4-1-下载-KubeKey"><a href="#4-1-下载-KubeKey" class="headerlink" title="4.1 下载 KubeKey"></a>4.1 下载 KubeKey</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@ksp-deploy:~# mkdir /root/kubekey<br>root@ksp-deploy:~# cd /root/kubekey<br><span class="hljs-meta prompt_"># </span><span class="language-bash">选择中文区下载(访问 GitHub 受限时使用)</span><br>root@ksp-deploy:~/kubekey# export KKZONE=cn<br><span class="hljs-meta prompt_"># </span><span class="language-bash">执行下载命令，获取指定版本的 kk（受限于网络可能会失败，可能需要执行多次）</span><br>root@ksp-deploy:~/kubekey# curl -sfL https://get-kk.kubesphere.io | VERSION=v3.0.13 sh -<br></code></pre></td></tr></table></figure>
