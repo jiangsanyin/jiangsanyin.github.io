@@ -26,13 +26,14 @@
 <meta property="og:site_name" content="jiangxiaoying~">
 <meta property="og:description" content="背景与说明​		HAMi，是一个国产的GPU与国产加速卡（支持的GPU与国产加速卡型号与具体特性请查看此项目官网： https:&#x2F;&#x2F;github.com&#x2F;Project-HAMi&#x2F;HAMi&#x2F; ）虚拟化开源项目，实现以kubernetes为基础的容器场景下GPU或加速卡虚拟化。HAMi原名“k8s-vGPU-scheduler”，最初由第四范式公司开源，现已在国内与国际上愈加流行，是管理Kubern">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/01/10/MQaK3mRcvFzUxfC.png">
 <meta property="og:image" content="https://s2.loli.net/2024/10/03/RFJuthzAGYw5UHk.png">
 <meta property="article:published_time" content="2024-10-07T13:05:55.000Z">
-<meta property="article:modified_time" content="2024-11-28T06:49:00.003Z">
+<meta property="article:modified_time" content="2025-01-10T08:22:10.000Z">
 <meta property="article:author" content="jiangxiaoying">
 <meta property="article:tag" content="HAMi prometheus grafana 监控">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2024/10/03/RFJuthzAGYw5UHk.png">
+<meta name="twitter:image" content="https://s2.loli.net/2025/01/10/MQaK3mRcvFzUxfC.png">
   
   
   
@@ -238,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          1.7k 字
         
       </span>
     
@@ -249,7 +250,7 @@
         
         
         
-          14 分钟
+          15 分钟
         
       </span>
     
@@ -338,6 +339,8 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">等monitorin命名空间下所有资源对象处于正常运行状态后，使用如下方式获取grafana、prometheus与alertmanager的svc信息</span><br>root@controller01:~/kube-prometheus# kubectl -n monitoring get svc | egrep &quot;NAME|grafana|prometheus-k8s|alertmanager-main&quot;<br>NAME                    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                         AGE<br>alertmanager-main       NodePort    10.233.5.65     &lt;none&gt;        9093:30093/TCP,8080:30401/TCP   19h<br>grafana                 NodePort    10.233.56.112   &lt;none&gt;        3000:30300/TCP                  19h<br>prometheus-k8s          NodePort    10.233.38.113   &lt;none&gt;        9090:30090/TCP,8080:31273/TCP   19h<br></code></pre></td></tr></table></figure>
 
 <p>​		此时，假如控制节点的ip是10.0.0.21，则可以分别使用如下url访问grafana、prometheus与alertmanager：<a target="_blank" rel="noopener" href="http://10.0.0.21:30300/">http://10.0.0.21:30300</a> 、<a target="_blank" rel="noopener" href="http://10.0.0.21:30090/">http://10.0.0.21:30090</a> 、<a target="_blank" rel="noopener" href="http://10.0.0.21:30093/">http://10.0.0.21:30093</a> ，其中访问grafana的默认用户名与密码都是admin</p>
+<p>​        笔者后来在部署好上述 kube-prometheus stack后，发现 自己笔记本电脑访问prometheus的nodeport-service+port时 提示连接超时，但在k8s集群内部访问控制节点+service&#x2F;prometheus-k8s加port、service&#x2F;prometheus-k8s的cluster-ip加port、pod&#x2F;prometheus-k8s-xxx加3000端口都没有问题。此时可以检查 下networkpolicies，如果你知道修改networkpolicies规则请直接修改，否则可以直接删除相关networkpolicies，之后在自己笔记本电脑上访问grafana、prometheus与alertmanager相关界面就正常了。</p>
+<p><img src="https://s2.loli.net/2025/01/10/MQaK3mRcvFzUxfC.png" srcset="/img/loading.gif" lazyload alt="image-20250110161557368"></p>
 <h2 id="配置grafana"><a href="#配置grafana" class="headerlink" title="配置grafana"></a>配置grafana</h2><h3 id="创建数据源ALL"><a href="#创建数据源ALL" class="headerlink" title="创建数据源ALL"></a>创建数据源ALL</h3><p>​		访问”Configuration“-&gt;“Data soutces”页面，创建一个名为”ALL”的数据源，其中HTTP.URL的值保持跟默认创建的数据源“prometheus”中的一样即可为 “<a href="http://prometheus-k8s.monitoring.svc:9090”">http://prometheus-k8s.monitoring.svc:9090”</a> ，然后保存上述数据源“ALL”</p>
 <h3 id="导入HAMi默认的dashboard"><a href="#导入HAMi默认的dashboard" class="headerlink" title="导入HAMi默认的dashboard"></a>导入HAMi默认的dashboard</h3><p>​		访问“Dashboards”-&gt;“Browse”页面，导入此dashboard：<a target="_blank" rel="noopener" href="https://grafana.com/grafana/dashboards/21833-hami-vgpu-dashboard/">https://grafana.com/grafana/dashboards/21833-hami-vgpu-dashboard/</a> ，grafana中将创建一个名为“hami-vgpu-dashboard”的dashboard，但此页面中有一些Panel如vGPUCorePercentage还没有数据，请继续看完此文档，执行完”部署dcgm-exporter”与“创建ServiceMonitor”中的步骤之后Panel数据将正常显示。</p>
 <h1 id="部署dcgm-exporter"><a href="#部署dcgm-exporter" class="headerlink" title="部署dcgm-exporter"></a>部署dcgm-exporter</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">下载dcgm-exporter代码仓库（未看到与kubernetes的兼容矩阵说明，此处使用tag 3.2.5-3.1.7）</span><br>git clone -b 3.2.5-3.1.7 https://github.com/NVIDIA/dcgm-exporter.git<br>cd dcgm-exporter<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改 deployment/values.yaml 文件，为其中的serviceMonitor添加relabelings配置，这样dcgm-exporter的监控指标才有node_name与ip属性</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">只有这一处serviceMonitor，relabelings内的内容都是添加的，添加后内容如下</span><br>root@controller01:~/dcgm-exporter# vi deployment/values.yaml<br>...<br>serviceMonitor:<br>  enabled: true<br>  interval: 15s<br>  honorLabels: false<br>  additionalLabels: &#123;&#125;<br>    #monitoring: prometheus<br>  relabelings:<br>  - sourceLabels: [__meta_kubernetes_endpoints_name]<br>    regex: dcgm-exporter<br>    replacement: $1<br>    action: keep<br>  - sourceLabels: [__meta_kubernetes_pod_node_name]<br>    regex: (.*)<br>    targetLabel: node_name<br>    replacement: $&#123;1&#125;<br>    action: replace<br>  - sourceLabels: [__meta_kubernetes_pod_host_ip]<br>    regex: (.*)<br>    targetLabel: ip<br>    replacement: $1<br>    action: replace<br>...<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">使用helm工具在monitoring空间下安装dcgm-exporter</span><br>root@controller01:~/dcgm-exporter# helm install dcgm-exporter deployment/ -n monitoring<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看helm install结果</span><br>root@controller01:~/dcgm-exporter# helm list -n monitoring<br>NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                   APP VERSION<br>dcgm-exporter   monitoring      1               2024-10-02 16:32:35.691073696 +0800 CST deployed        dcgm-exporter-3.1.7     3.1.7<br><span class="hljs-meta prompt_">#</span><span class="language-bash">还需确认dcgm-exporter 相关的pod已经处于running状态</span><br>root@controller01:~/dcgm-exporter# kubectl -n monitoring get pods | egrep &quot;NAME|dcgm-exporter&quot;<br>NAME                                  READY   STATUS             RESTARTS         AGE<br>dcgm-exporter-p4fdp                   1/1     Running            0                4h14m<br></code></pre></td></tr></table></figure>
