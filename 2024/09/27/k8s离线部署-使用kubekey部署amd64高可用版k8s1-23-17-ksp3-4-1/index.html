@@ -28,7 +28,6 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2024/09/27/O2KsM3ZyeQWf5wB.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/12/h9FTtslICbfSEJa.png">
-<meta property="og:image" content="c:\Users\jiangsanyin\AppData\Roaming\Typora\typora-user-images\image-20250113153023085.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/12/9DOjugW2Gxcdsvy.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/12/jLsZ9bpvfydHUGq.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/12/ZPpxCvWJHVTFGNo.png">
@@ -39,7 +38,7 @@
 <meta property="og:image" content="https://s2.loli.net/2025/01/13/tbTjiM39XGsBowg.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/13/uAV8QrZEKHyX35t.png">
 <meta property="article:published_time" content="2024-09-27T02:49:54.000Z">
-<meta property="article:modified_time" content="2025-01-13T07:37:16.000Z">
+<meta property="article:modified_time" content="2025-01-13T07:57:10.000Z">
 <meta property="article:author" content="jiangxiaoying">
 <meta property="article:tag" content="amd64构架 k8s1.23.17 kubesphere3.4.1 离线部署">
 <meta name="twitter:card" content="summary_large_image">
@@ -249,7 +248,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          11k 字
+          12k 字
         
       </span>
     
@@ -260,7 +259,7 @@
         
         
         
-          94 分钟
+          98 分钟
         
       </span>
     
@@ -485,7 +484,8 @@
 <li>新增了storage.openebs.basePath 部分：指定 openebs 默认存储路径（就是默认创建的sc&#x2F;local的存储路径）为 <strong>&#x2F;data&#x2F;openebs&#x2F;local</strong></li>
 <li>registry：添加 type 类型为 harbor，否则后面执行“init registry”时会安装 docker registry 作为镜像仓库，还有<code>auths</code>部分与<code>privateRegistry</code>与<code>namespaceOverride</code>参数（auths部分有参考： <a target="_blank" rel="noopener" href="https://github.com/kubesphere/kubekey/blob/master/docs/config-example.md">kubesphere关于部署配置文件的描述</a>）</li>
 </ul>
-<p><img src="C:\Users\jiangsanyin\AppData\Roaming\Typora\typora-user-images\image-20250113153023085.png" srcset="/img/loading.gif" lazyload alt="image-20250113153023085"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><code class="hljs shell">apiVersion: kubekey.kubesphere.io/v1alpha2<br>kind: Cluster<br>metadata:<br>  name: sample<br>spec:<br>  hosts:<br>  - &#123;name: k8s01-1, address: 10.13.15.16, internalAddress: 10.13.15.16, user: root, password: &quot;cloud@2020&quot;&#125;<br>  - &#123;name: k8s01-2, address: 10.13.15.17, internalAddress: 10.13.15.17, user: root, password: &quot;cloud@2020&quot;&#125;<br>  - &#123;name: k8s01-3, address: 10.13.15.161, internalAddress: 10.13.15.161, user: root, password: &quot;cloud@2020&quot;&#125;<br>  - &#123;name: k8s01-4, address: 10.13.15.99, internalAddress: 10.13.15.99, user: root, password: &quot;cloud@2020&quot;&#125;<br>  - &#123;name: registry, address: 10.13.15.71, internalAddress: 10.13.15.71, user: root, password: &quot;cloud@2020&quot;&#125;<br>  roleGroups:<br>    etcd:<br>    - k8s01-1<br>    - k8s01-2<br>    - k8s01-3<br>    control-plane:<br>    - k8s01-1<br>    - k8s01-2<br>    - k8s01-3<br>    worker:<br>    - k8s01-1<br>    - k8s01-2<br>    - k8s01-3<br>    - k8s01-4<br>    registry:    # 如需使用 kk 自动部署镜像仓库，请设置该主机组 （建议仓库与集群分离部署，减少相互影响）<br>    - registry<br>  controlPlaneEndpoint:<br>    ## Internal loadbalancer for apiservers <br>    internalLoadbalancer: haproxy<br><br>    domain: lb.kubesphere.local<br>    address: &quot;&quot;<br>    port: 6443<br>  kubernetes:<br>    version: v1.23.17<br>    clusterName: cluster.local<br>    autoRenewCerts: true<br>    containerManager: docker<br>  etcd:<br>    type: kubekey<br>  network:<br>    plugin: calico<br>    kubePodsCIDR: 10.233.64.0/18<br>    kubeServiceCIDR: 10.233.0.0/18<br>    ## multus support. https://github.com/k8snetworkplumbingwg/multus-cni<br>    multusCNI:<br>      enabled: false<br>  storage:<br>    openebs:<br>      basePath: /data/openebs/local # 默认没有的新增配置，base path of the local PV provisioner<br>  registry:<br>    # 如需使用 kk 部署 harbor, 可将该参数设置为 harbor，不设置该参数且需使用 kk 创建容器镜像仓库，将默认使用docker registry。<br>    type: harbor<br>    # 如使用 kk 部署的 harbor 或其他需要登录的仓库，可设置对应仓库的auths，如使用 kk 创建的 docker registry 仓库，则无需配置该参数。<br>    # 注意：如使用 kk 部署 harbor，该参数请于 harbor 启动后设置。<br>    #auths:<br>    #  &quot;registry.syjiang.com&quot;:<br>    #    username: admin<br>    #    password: Harbor12345<br>    #    certsPath: &quot;/etc/docker/certs.d/registry.syjiang.com&quot;<br>    #    skipTLSVerify: false # 即使 TLS校验失败了，仍允许通过HTTPS协议连接registry<br>    #    plainHTTP: false # 允许通过HTTP协议连接registry<br>    # 设置集群部署时使用的私有仓库<br>    privateRegistry: &quot;registry.syjiang.com&quot;<br>    namespaceOverride: &quot;kubesphereio&quot;<br>    registryMirrors: []<br>    insecureRegistries: []<br>  addons: []<br></code></pre></td></tr></table></figure>
+
 <h2 id="5-4-修改-KSP-部署相关配置"><a href="#5-4-修改-KSP-部署相关配置" class="headerlink" title="5.4 修改 KSP 部署相关配置"></a>5.4 修改 KSP 部署相关配置</h2><p>k8sV12317-kspV341-offlineconfig.yaml 文件中 <strong>kind: ClusterConfiguration</strong> 部分是关于部署 KubeSphere 及相关插件的配置。</p>
 <h3 id="5-4-1-必须要新增的参数"><a href="#5-4-1-必须要新增的参数" class="headerlink" title="5.4.1 必须要新增的参数"></a>5.4.1 必须要新增的参数</h3><ul>
 <li>添加ClusterConfiguration.spec.namespace_override参数</li>
