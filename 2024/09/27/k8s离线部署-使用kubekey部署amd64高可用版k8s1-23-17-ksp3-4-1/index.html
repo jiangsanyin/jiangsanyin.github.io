@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2024/09/27/O2KsM3ZyeQWf5wB.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/12/h9FTtslICbfSEJa.png">
-<meta property="og:image" content="https://s2.loli.net/2025/01/12/I9S5JoZVg4MEpch.png">
+<meta property="og:image" content="c:\Users\jiangsanyin\AppData\Roaming\Typora\typora-user-images\image-20250113153023085.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/12/9DOjugW2Gxcdsvy.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/12/jLsZ9bpvfydHUGq.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/12/ZPpxCvWJHVTFGNo.png">
@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://s2.loli.net/2025/01/13/tbTjiM39XGsBowg.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/13/uAV8QrZEKHyX35t.png">
 <meta property="article:published_time" content="2024-09-27T02:49:54.000Z">
-<meta property="article:modified_time" content="2025-01-13T07:27:44.000Z">
+<meta property="article:modified_time" content="2025-01-13T07:37:16.000Z">
 <meta property="article:author" content="jiangxiaoying">
 <meta property="article:tag" content="amd64构架 k8s1.23.17 kubesphere3.4.1 离线部署">
 <meta name="twitter:card" content="summary_large_image">
@@ -485,7 +485,7 @@
 <li>新增了storage.openebs.basePath 部分：指定 openebs 默认存储路径（就是默认创建的sc&#x2F;local的存储路径）为 <strong>&#x2F;data&#x2F;openebs&#x2F;local</strong></li>
 <li>registry：添加 type 类型为 harbor，否则后面执行“init registry”时会安装 docker registry 作为镜像仓库，还有<code>auths</code>部分与<code>privateRegistry</code>与<code>namespaceOverride</code>参数（auths部分有参考： <a target="_blank" rel="noopener" href="https://github.com/kubesphere/kubekey/blob/master/docs/config-example.md">kubesphere关于部署配置文件的描述</a>）</li>
 </ul>
-<p><img src="https://s2.loli.net/2025/01/12/I9S5JoZVg4MEpch.png" srcset="/img/loading.gif" lazyload alt="image-20250112214007422"></p>
+<p><img src="C:\Users\jiangsanyin\AppData\Roaming\Typora\typora-user-images\image-20250113153023085.png" srcset="/img/loading.gif" lazyload alt="image-20250113153023085"></p>
 <h2 id="5-4-修改-KSP-部署相关配置"><a href="#5-4-修改-KSP-部署相关配置" class="headerlink" title="5.4 修改 KSP 部署相关配置"></a>5.4 修改 KSP 部署相关配置</h2><p>k8sV12317-kspV341-offlineconfig.yaml 文件中 <strong>kind: ClusterConfiguration</strong> 部分是关于部署 KubeSphere 及相关插件的配置。</p>
 <h3 id="5-4-1-必须要新增的参数"><a href="#5-4-1-必须要新增的参数" class="headerlink" title="5.4.1 必须要新增的参数"></a>5.4.1 必须要新增的参数</h3><ul>
 <li>添加ClusterConfiguration.spec.namespace_override参数</li>
