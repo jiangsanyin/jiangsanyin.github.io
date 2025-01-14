@@ -26,12 +26,10 @@
 <meta property="og:site_name" content="jiangxiaoying~">
 <meta property="og:description" content="1. pod&#x2F;hami-device-plugin一直处于CrashLoopBackOff具体报错信息如下 1234567891011121314151617181920212223242526272829root@controller01:~# kubectl -n kube-system get podsNAME">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2025/01/14/sb6QOhxr57XGEcL.png">
 <meta property="article:published_time" content="2025-01-13T09:53:21.000Z">
-<meta property="article:modified_time" content="2025-01-14T03:34:32.000Z">
+<meta property="article:modified_time" content="2025-01-14T06:58:34.000Z">
 <meta property="article:author" content="jiangxiaoying">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2025/01/14/sb6QOhxr57XGEcL.png">
   
   
   
@@ -237,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          665 字
+          657 字
         
       </span>
     
@@ -311,8 +309,7 @@
 
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:~# helm -n kube-system uninstall hami<br>root@controller01:~# rm -rf /usr/local/vgpu<br><span class="hljs-meta prompt_">#</span><span class="language-bash">重新安装HAMi</span><br>root@controller01:~# helm install hami hami-charts/hami --set resourceName=nvidia.com/vgpu -n kube-system --version 2.4.0<br><span class="hljs-meta prompt_">#</span><span class="language-bash">还是报一样的错误</span><br></code></pre></td></tr></table></figure>
 
-<p>根据在社区群聊中询问项目维护人员，回复说可能是镜像被污染了</p>
-<p><img src="https://s2.loli.net/2025/01/14/sb6QOhxr57XGEcL.png" srcset="/img/loading.gif" lazyload alt="image-20250114113410561"></p>
+<p>根据项目维护人员回复说可能是镜像被污染了</p>
 <p><strong>处理方法：</strong></p>
 <p>已经issue：<a target="_blank" rel="noopener" href="https://github.com/Project-HAMi/HAMi/issues/805">https://github.com/Project-HAMi/HAMi/issues/805</a></p>
 <p>升级到HAMi2.4.1后，问题不再存在。</p>
