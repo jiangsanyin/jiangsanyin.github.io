@@ -19,19 +19,20 @@
   <meta name="author" content="jiangxiaoying">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、关于ns&#x2F;kube-system下svc的分析1234567891011root@controller01:&#x2F;opt&#x2F;installPkgs&#x2F;k8s-vgpu-basedon-HAMi&#x2F;deploy-prometheus# kubectl -n kube-system get svcNAME                         TYPE        CLUSTER-IP">
+    <meta name="description" content="背景及环境123#操作系统：Ubuntu 20.04.3 LTS x86_64#HAMi版本：2.4.1#Kubernetes版本：1.23.17  1234567891011121314151617181920212223242526root@controller01:~# kubectl get nodesNAME          STATUS     ROLES    AGE    VER">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HAMi官方监控文档相关内容分析">
 <meta property="og:url" content="https://jiangsanyin.github.io/2025/01/14/HAMi%E5%AE%98%E6%96%B9%E7%9B%91%E6%8E%A7%E6%96%87%E6%A1%A3%E7%9B%B8%E5%85%B3%E5%86%85%E5%AE%B9%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="jiangxiaoying~">
-<meta property="og:description" content="一、关于ns&#x2F;kube-system下svc的分析1234567891011root@controller01:&#x2F;opt&#x2F;installPkgs&#x2F;k8s-vgpu-basedon-HAMi&#x2F;deploy-prometheus# kubectl -n kube-system get svcNAME                         TYPE        CLUSTER-IP">
+<meta property="og:description" content="背景及环境123#操作系统：Ubuntu 20.04.3 LTS x86_64#HAMi版本：2.4.1#Kubernetes版本：1.23.17  1234567891011121314151617181920212223242526root@controller01:~# kubectl get nodesNAME          STATUS     ROLES    AGE    VER">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="c:\Users\jiangsanyin\AppData\Roaming\Typora\typora-user-images\image-20250116165340426.png">
 <meta property="og:image" content="c:\Users\jiangsanyin\AppData\Roaming\Typora\typora-user-images\image-20250116165713613.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/15/tmAqdpMjJu1IwCh.png">
 <meta property="article:published_time" content="2025-01-14T09:29:31.000Z">
-<meta property="article:modified_time" content="2025-01-16T10:04:56.000Z">
+<meta property="article:modified_time" content="2025-01-17T10:22:26.000Z">
 <meta property="article:author" content="jiangxiaoying">
+<meta property="article:tag" content="HAMi2.4.1 k8s servicemonitor">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="c:\Users\jiangsanyin\AppData\Roaming\Typora\typora-user-images\image-20250116165340426.png">
   
@@ -239,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.7k 字
+          5.8k 字
         
       </span>
     
@@ -250,7 +251,7 @@
         
         
         
-          48 分钟
+          49 分钟
         
       </span>
     
@@ -301,11 +302,15 @@
             
               <div class="markdown-body">
                 
-                <h1 id="一、关于ns-kube-system下svc的分析"><a href="#一、关于ns-kube-system下svc的分析" class="headerlink" title="一、关于ns&#x2F;kube-system下svc的分析"></a>一、关于ns&#x2F;kube-system下svc的分析</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:/opt/installPkgs/k8s-vgpu-basedon-HAMi/deploy-prometheus# kubectl -n kube-system get svc<br>NAME                         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                         AGE<br>dashboard-metrics-scraper    ClusterIP   10.68.5.223     &lt;none&gt;        8000/TCP                        4d2h<br>hami-device-plugin-monitor   NodePort    10.68.183.209   &lt;none&gt;        31992:31992/TCP                 6h35m<br>hami-scheduler               NodePort    10.68.83.62     &lt;none&gt;        443:31998/TCP,31993:31993/TCP   6h35m<br>kube-dns                     ClusterIP   10.68.0.2       &lt;none&gt;        53/UDP,53/TCP,9153/TCP          4d2h<br>kube-dns-upstream            ClusterIP   10.68.48.155    &lt;none&gt;        53/UDP,53/TCP                   4d2h<br>kubelet                      ClusterIP   None            &lt;none&gt;        10250/TCP,10255/TCP,4194/TCP    4d2h<br>kubernetes-dashboard         NodePort    10.68.176.76    &lt;none&gt;        443:30119/TCP                   4d2h<br>metrics-server               ClusterIP   10.68.24.142    &lt;none&gt;        443/TCP                         4d2h<br>node-local-dns               ClusterIP   None            &lt;none&gt;        9253/TCP                        4d2h<br></code></pre></td></tr></table></figure>
+                <h1 id="背景及环境"><a href="#背景及环境" class="headerlink" title="背景及环境"></a>背景及环境</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">操作系统：Ubuntu 20.04.3 LTS x86_64</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">HAMi版本：2.4.1</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Kubernetes版本：1.23.17</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:~# kubectl get nodes<br>NAME          STATUS     ROLES    AGE    VERSION<br>172.20.0.21   Ready      master   7d3h   v1.23.17<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">相关任务负载</span><br>root@controller01:/opt/installPkgs/k8s-vgpu-basedon-HAMi# cat gpu-test5.yaml <br>apiVersion: v1<br>kind: Pod<br>metadata:<br>  name: gpu-test5-01<br>spec:<br>  restartPolicy: OnFailure<br><span class="hljs-meta prompt_">  # </span><span class="language-bash"> nodeName: controller01</span><br>  containers:<br>    - name: gpu-test111<br>      image: 175.6.40.93:8196/k8s-kubekey/ubuntu2004:pytorch2.2.2-classification-example<br>      command:<br>        - python3<br>        - /opt/classification/train.py<br>      resources:<br>        limits:<br>          nvidia.com/vgpu: 2 # requesting 2 vGPUs<br>          nvidia.com/gpumem: 3000 # Each vGPU contains 3000m device memory （Optional,Integer）<br>          #nvidia.com/gpumem-percentage: 10 #Each vGPU containers 10% device memory of that GPU. Can not be used with nvidia.com/gpumem<br>          <br>root@controller01:/opt/installPkgs/k8s-vgpu-basedon-HAMi# kubectl apply -f gpu-test5.yaml<br></code></pre></td></tr></table></figure>
+
+<h1 id="一、关于ns-kube-system下svc的分析"><a href="#一、关于ns-kube-system下svc的分析" class="headerlink" title="一、关于ns&#x2F;kube-system下svc的分析"></a>一、关于ns&#x2F;kube-system下svc的分析</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:/opt/installPkgs/k8s-vgpu-basedon-HAMi/deploy-prometheus# kubectl -n kube-system get svc<br>NAME                         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                         AGE<br>dashboard-metrics-scraper    ClusterIP   10.68.5.223     &lt;none&gt;        8000/TCP                        4d2h<br>hami-device-plugin-monitor   NodePort    10.68.183.209   &lt;none&gt;        31992:31992/TCP                 6h35m<br>hami-scheduler               NodePort    10.68.83.62     &lt;none&gt;        443:31998/TCP,31993:31993/TCP   6h35m<br>kube-dns                     ClusterIP   10.68.0.2       &lt;none&gt;        53/UDP,53/TCP,9153/TCP          4d2h<br>kube-dns-upstream            ClusterIP   10.68.48.155    &lt;none&gt;        53/UDP,53/TCP                   4d2h<br>kubelet                      ClusterIP   None            &lt;none&gt;        10250/TCP,10255/TCP,4194/TCP    4d2h<br>kubernetes-dashboard         NodePort    10.68.176.76    &lt;none&gt;        443:30119/TCP                   4d2h<br>metrics-server               ClusterIP   10.68.24.142    &lt;none&gt;        443/TCP                         4d2h<br>node-local-dns               ClusterIP   None            &lt;none&gt;        9253/TCP                        4d2h<br></code></pre></td></tr></table></figure>
 
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">准备“使用vGPU的yaml例”</span><br>root@controller01:/opt/installPkgs/k8s-vgpu-basedon-HAMi# cat gpu-test5.yaml <br>apiVersion: v1<br>kind: Pod<br>metadata:<br>  name: gpu-test5-01<br>spec:<br>  restartPolicy: OnFailure<br><span class="hljs-meta prompt_">  # </span><span class="language-bash"> nodeName: controller01</span><br>  containers:<br>    - name: gpu-test111<br>      image: 175.6.40.93:8196/k8s-kubekey/ubuntu2004:pytorch2.2.2-classification-example<br>      command:<br>        - python3<br>        - /opt/classification/train.py<br>      resources:<br>        limits:<br>          nvidia.com/vgpu: 2 # requesting 1 vGPUs<br>          nvidia.com/gpumem: 3000 # Each vGPU contains 3000m device memory （Optional,Integer）<br></code></pre></td></tr></table></figure>
 
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:/opt/installPkgs/k8s-vgpu-basedon-HAMi# kubectl apply -f gpu-test5.yaml <br>pod/gpu-test5-01 created<br>root@controller01:/opt/installPkgs/k8s-vgpu-basedon-HAMi# kubectl get pods                <br>NAME           READY   STATUS    RESTARTS   AGE<br>gpu-test5-01   1/1     Running   0          4s<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:/opt/installPkgs/k8s-vgpu-basedon-HAMi# kubectl apply -f gpu-test5.yaml<br>pod/gpu-test5-01 created<br>root@controller01:/opt/installPkgs/k8s-vgpu-basedon-HAMi# kubectl get pods<br>NAME           READY   STATUS    RESTARTS   AGE<br>gpu-test5-01   1/1     Running   0          4s<br></code></pre></td></tr></table></figure>
 
 <h2 id="1-1-svc-hami-device-plugin-monitor"><a href="#1-1-svc-hami-device-plugin-monitor" class="headerlink" title="1.1 svc&#x2F;hami-device-plugin-monitor"></a>1.1 svc&#x2F;hami-device-plugin-monitor</h2><h3 id="1-1-1-svc本身"><a href="#1-1-1-svc本身" class="headerlink" title="1.1.1 svc本身"></a>1.1.1 svc本身</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:~# kubectl -n kube-system get svc hami-device-plugin-monitor -o yaml<br>apiVersion: v1<br>kind: Service<br>metadata:<br>  annotations:<br>    meta.helm.sh/release-name: hami<br>    meta.helm.sh/release-namespace: kube-system<br>  creationTimestamp: &quot;2025-01-14T02:34:24Z&quot;<br>  labels:<br>    app.kubernetes.io/component: hami-device-plugin<br>    app.kubernetes.io/instance: hami<br>    app.kubernetes.io/managed-by: Helm<br>    app.kubernetes.io/name: hami<br>    app.kubernetes.io/version: 2.4.1<br>    helm.sh/chart: hami-2.4.1<br>  name: hami-device-plugin-monitor<br>  namespace: kube-system<br>  resourceVersion: &quot;737654&quot;<br>  uid: 167789e8-f5a4-483a-ab5c-a1d154c8337c<br>spec:<br>  clusterIP: 10.68.183.209<br>  clusterIPs:<br>  - 10.68.183.209<br>  externalTrafficPolicy: Local<br>  internalTrafficPolicy: Cluster<br>  ipFamilies:<br>  - IPv4<br>  ipFamilyPolicy: SingleStack<br>  ports:<br>  - name: monitorport<br>    nodePort: 31992<br>    port: 31992<br>    protocol: TCP<br>    targetPort: 9394<br>  selector:<br>    app.kubernetes.io/component: hami-device-plugin<br>  sessionAffinity: None<br>  type: NodePort<br>status:<br>  loadBalancer: &#123;&#125;<br></code></pre></td></tr></table></figure>
 
@@ -353,6 +358,13 @@
             <div>
               <div class="post-metas my-3">
   
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/HAMi2-4-1-k8s-servicemonitor/" class="print-no-link">#HAMi2.4.1 k8s servicemonitor</a>
+      
+    </div>
   
 </div>
 
@@ -406,6 +418,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2025/01/17/%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E7%9A%84%E8%8E%B7%E5%8F%96%E4%B8%8E%E7%94%9F%E6%88%90/" title="容器镜像的获取与导入">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">容器镜像的获取与导入</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
