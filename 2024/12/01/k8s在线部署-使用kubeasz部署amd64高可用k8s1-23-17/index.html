@@ -30,8 +30,11 @@
 <meta property="og:image" content="https://s2.loli.net/2024/10/31/IMNoUuGV98bCBir.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/10/9mbfwSHUe7C5ozy.png">
 <meta property="og:image" content="https://s2.loli.net/2024/11/05/cjUZ7E3v8epDVdg.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/16/3HMXsCEwkSGOerm.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/16/sbqv1Z24eEdfKmn.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/16/ilxqfoKnpQC6S32.png">
 <meta property="article:published_time" content="2024-12-01T02:24:06.000Z">
-<meta property="article:modified_time" content="2025-01-10T06:58:46.000Z">
+<meta property="article:modified_time" content="2025-01-16T06:59:48.000Z">
 <meta property="article:author" content="jiangxiaoying">
 <meta property="article:tag" content="kubeasz k8s在线部署 二进制 高可用 kubesphere harbor k8s扩容 k8s缩容 k8s卸载">
 <meta name="twitter:card" content="summary_large_image">
@@ -252,7 +255,7 @@
         
         
         
-          90 分钟
+          93 分钟
         
       </span>
     
@@ -632,6 +635,19 @@
 <p><strong>操作步骤：</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">k8s03-1:/# ezctl destroy k8s03<br><span class="hljs-meta prompt_">#</span><span class="language-bash">然后重启所有k8s节点</span><br></code></pre></td></tr></table></figure>
 
+<h2 id="2-6-报错与处理"><a href="#2-6-报错与处理" class="headerlink" title="2.6 报错与处理"></a>2.6 报错与处理</h2><h3 id="2-6-1-添加节点时“TASK-kube-node-轮询等待kubelet启动-”执行失败"><a href="#2-6-1-添加节点时“TASK-kube-node-轮询等待kubelet启动-”执行失败" class="headerlink" title="2.6.1 添加节点时“TASK [kube-node : 轮询等待kubelet启动]”执行失败"></a>2.6.1 添加节点时“TASK [kube-node : 轮询等待kubelet启动]”执行失败</h3><p><img src="https://s2.loli.net/2025/01/16/3HMXsCEwkSGOerm.png" srcset="/img/loading.gif" lazyload alt="image-20250116143621421"></p>
+<p><strong>问题定位：</strong></p>
+<p>t1-gpu节点的ip是10.12.62.25，查看其上kubelet服务有如下报错信息：</p>
+<p><img src="https://s2.loli.net/2025/01/16/sbqv1Z24eEdfKmn.png" srcset="/img/loading.gif" lazyload alt="image-20250116143749619"></p>
+<p>可知，使用kubeasz部署k8s时，安装的kubelet使用的 cgroup driver是”systemd”，但t1-gpu上现有docker cgroup driver 使用cgroupfs，修改t1-gpu上wget r docker cgroup driver 为systemd即可。</p>
+<p><strong>处理办法：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在t1-gpu服务器的/etc/docker/daemon.json文件中添加如下内容</span><br>root@t1-gpu:~# vi /etc/docker/daemon.json <br>&#123;<br>    &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],<br>    ...<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启t1-gpu服务器的docker服务</span><br>root@t1-gpu:~# systemctl daemon-reload &amp;&amp; systemctl restart docker<br><br>root@t1-gpu:~# docker info | grep &quot;Cgroup Driver&quot;<br> Cgroup Driver: systemd<br><span class="hljs-meta prompt_"> </span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">然后在部署节点再次尝试添加k8s节点</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-6-2-添加k8s节点时失败再次添加此节点时提示node已在hosts文件中"><a href="#2-6-2-添加k8s节点时失败再次添加此节点时提示node已在hosts文件中" class="headerlink" title="2.6.2 添加k8s节点时失败再次添加此节点时提示node已在hosts文件中"></a>2.6.2 添加k8s节点时失败再次添加此节点时提示node已在hosts文件中</h3><p><img src="https://s2.loli.net/2025/01/16/ilxqfoKnpQC6S32.png" srcset="/img/loading.gif" lazyload alt="image-20250116144450943"></p>
+<p>处理办法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在部署节点修改/etc/kubeasz/clusters/集群名/hosts</span><br>root@controller01:/etc/kubeasz# vi /etc/kubeasz/clusters/cluster01/hosts<br>...<br><span class="hljs-meta prompt_"># </span><span class="language-bash">work node(s)</span><br>[kube_node]<br>10.12.62.25     #将此行内容删除<br><span class="hljs-meta prompt_">#</span><span class="language-bash">192.168.1.3</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">192.168.1.4</span><br>172.20.0.21<br>...<br></code></pre></td></tr></table></figure>
+
+<p>然后在部署节点再次尝试添加k8s节点</p>
 
                 
               </div>
