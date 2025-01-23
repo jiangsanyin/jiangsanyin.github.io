@@ -29,8 +29,9 @@
 <meta property="og:image" content="c:\Users\jiangsanyin\AppData\Roaming\Typora\typora-user-images\image-20250116165340426.png">
 <meta property="og:image" content="c:\Users\jiangsanyin\AppData\Roaming\Typora\typora-user-images\image-20250116165713613.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/15/tmAqdpMjJu1IwCh.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/23/TNprH1JUtcSihWB.png">
 <meta property="article:published_time" content="2025-01-14T09:29:31.000Z">
-<meta property="article:modified_time" content="2025-01-17T10:22:26.000Z">
+<meta property="article:modified_time" content="2025-01-23T02:53:40.000Z">
 <meta property="article:author" content="jiangxiaoying">
 <meta property="article:tag" content="HAMi2.4.1 k8s servicemonitor">
 <meta name="twitter:card" content="summary_large_image">
@@ -240,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.8k 字
+          5.9k 字
         
       </span>
     
@@ -251,7 +252,7 @@
         
         
         
-          49 分钟
+          50 分钟
         
       </span>
     
@@ -350,6 +351,11 @@
 <h2 id="2-3-对应的smon-dcgm-exporter"><a href="#2-3-对应的smon-dcgm-exporter" class="headerlink" title="2.3 对应的smon&#x2F;dcgm-exporter"></a>2.3 对应的smon&#x2F;dcgm-exporter</h2><p>此smon是在部署dcgm组件时，由其自动创建的。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:/opt/installPkgs/k8s-vgpu-basedon-HAMi# kubectl -n monitoring get smon<br>NAME                      AGE<br>...<br>dcgm-exporter             26h<br>...<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看smon/dcgm-exporter 本身的内容</span><br>root@controller01:/opt/installPkgs/k8s-vgpu-basedon-HAMi# kubectl -n monitoring get smon dcgm-exporter -o yaml<br>apiVersion: monitoring.coreos.com/v1<br>kind: ServiceMonitor<br>metadata:<br>  annotations:<br>    meta.helm.sh/release-name: dcgm-exporter<br>    meta.helm.sh/release-namespace: monitoring<br>  creationTimestamp: &quot;2025-01-14T06:37:49Z&quot;<br>  generation: 1<br>  labels:<br>    app.kubernetes.io/component: dcgm-exporter<br>    app.kubernetes.io/instance: dcgm-exporter<br>    app.kubernetes.io/managed-by: Helm<br>    app.kubernetes.io/name: dcgm-exporter<br>    app.kubernetes.io/version: 3.1.7<br>    helm.sh/chart: dcgm-exporter-3.1.7<br>  name: dcgm-exporter<br>  namespace: monitoring<br>  resourceVersion: &quot;764260&quot;<br>  uid: cb9c11ee-6702-48b6-9780-52b15c3e78a9<br>spec:<br>  endpoints:<br>  - honorLabels: false<br>    interval: 15s<br>    path: /metrics<br>    port: metrics<br>    relabelings:<br>    - action: keep<br>      regex: dcgm-exporter<br>      replacement: $1<br>      sourceLabels:<br>      - __meta_kubernetes_endpoints_name<br>    - action: replace<br>      regex: (.*)<br>      replacement: $&#123;1&#125;<br>      sourceLabels:<br>      - __meta_kubernetes_pod_node_name<br>      targetLabel: node_name<br>    - action: replace<br>      regex: (.*)<br>      replacement: $1<br>      sourceLabels:<br>      - __meta_kubernetes_pod_host_ip<br>      targetLabel: ip<br>  namespaceSelector:<br>    matchNames:<br>    - monitoring<br>  selector:<br>    matchLabels:<br>      app.kubernetes.io/component: dcgm-exporter<br>      app.kubernetes.io/instance: dcgm-exporter<br>      app.kubernetes.io/name: dcgm-exporter<br></code></pre></td></tr></table></figure>
 
+<h2 id="2-4-问题处理"><a href="#2-4-问题处理" class="headerlink" title="2.4 问题处理"></a>2.4 问题处理</h2><h3 id="2-4-1-Device-utilization-desc-of-container-监控数据不正常，一直为0"><a href="#2-4-1-Device-utilization-desc-of-container-监控数据不正常，一直为0" class="headerlink" title="2.4.1 Device_utilization_desc_of_container 监控数据不正常，一直为0"></a>2.4.1 Device_utilization_desc_of_container 监控数据不正常，一直为0</h3><p><img src="https://s2.loli.net/2025/01/23/TNprH1JUtcSihWB.png" srcset="/img/loading.gif" lazyload alt="image-20250123105319763"></p>
+<p>处理办法：</p>
+<p>先前没有在任务中加“nvidia.com&#x2F;gpucores: xxx” 发现Device_utilization_desc_of_container一直为0。不需要显式加 hostPid，声明了“nvidia.com&#x2F;gpucores: xxx”Device_utilization_desc_of_container 就有监控数据了 </p>
+<p>相关源码：<a target="_blank" rel="noopener" href="https://github.com/Project-HAMi/HAMi-core/blob/88dd82117e057b88d5c3c19a546002838242a64f/src/multiprocess/multiprocess_utilization_watcher.c#L223">https://github.com/Project-HAMi/HAMi-core/blob/88dd82117e057b88d5c3c19a546002838242a64f/src/multiprocess/multiprocess_utilization_watcher.c#L223</a></p>
+<p>hami-core里面只有在 sm_limit 大于 0 小于等于 100 时才启动监控线程，然后 <a target="_blank" rel="noopener" href="https://github.com/Project-HAMi/HAMi/blob/4b1cda2ea77107826e0d6836f7b2f2dd1dbfb3b7/charts/hami/templates/scheduler/device-configmap.yaml#L21">https://github.com/Project-HAMi/HAMi/blob/4b1cda2ea77107826e0d6836f7b2f2dd1dbfb3b7/charts/hami/templates/scheduler/device-configmap.yaml#L21</a> 这个 nvidia.defaultCores: 0 不写 nvidia.com&#x2F;gpucores 就是 默认 0，是需要显示声明算力限制才会有对应的监控</p>
 
                 
               </div>
