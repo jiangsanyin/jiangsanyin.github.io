@@ -1,0 +1,770 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、DeepSeek公司**DeepSeek公司 **成立于2023年7月17日，中文名字全称是 杭州深度求索人工智能基础技术研究有限公司 ，由知名量化基金公司 幻方量化 创立（注册总资本1000万，幻方量化的创始人梁文锋占了1%的持股比例）。DeepSeek 作为一家创新型科技公司，成立以来专注于开发先进的大语言模型（LLM）和相关技术，作为大厂外唯一一家储备万张 A100 芯片的公司，幻方量化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="学习DeepSeek公司及其大模型DeepSeek-XX">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/01/27/%E5%AD%A6%E4%B9%A0DeepSeek%E5%85%AC%E5%8F%B8%E5%8F%8A%E5%85%B6%E5%A4%A7%E6%A8%A1%E5%9E%8BDeepSeek-V%E7%B3%BB%E5%88%97/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、DeepSeek公司**DeepSeek公司 **成立于2023年7月17日，中文名字全称是 杭州深度求索人工智能基础技术研究有限公司 ，由知名量化基金公司 幻方量化 创立（注册总资本1000万，幻方量化的创始人梁文锋占了1%的持股比例）。DeepSeek 作为一家创新型科技公司，成立以来专注于开发先进的大语言模型（LLM）和相关技术，作为大厂外唯一一家储备万张 A100 芯片的公司，幻方量化">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/01/27/iyXhSO8bdk6gx3T.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/27/5dFG37UyD1CxXRe.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/27/d1xasNLn94P6Ulq.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/27/Pe2JGhEZMVDp6sc.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/27/mYFA1y2USp4PnNu.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/27/31HemjXDW5QbqLs.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/27/4hwdVJaxQl16RMe.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/27/2OhZ6r48oTnp1RQ.png">
+<meta property="article:published_time" content="2025-01-27T12:19:20.000Z">
+<meta property="article:modified_time" content="2025-02-05T03:24:58.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="DeepSeek 深度求索">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/01/27/iyXhSO8bdk6gx3T.png">
+  
+  
+  
+  <title>学习DeepSeek公司及其大模型DeepSeek-XX - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">学习DeepSeek公司及其大模型DeepSeek-XX</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-27 20:19" pubdate>
+          2025年1月27日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          27 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">学习DeepSeek公司及其大模型DeepSeek-XX</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一、DeepSeek公司"><a href="#一、DeepSeek公司" class="headerlink" title="一、DeepSeek公司"></a>一、DeepSeek公司</h1><p>**<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/DeepSeek/65258669">DeepSeek公司</a> **成立于2023年7月17日，中文名字全称是 <strong>杭州深度求索人工智能基础技术研究有限公司</strong> ，由知名量化基金公司 <strong>幻方量化</strong> 创立（注册总资本1000万，幻方量化的创始人梁文锋占了1%的持股比例）。DeepSeek 作为一家创新型科技公司，成立以来专注于开发先进的大语言模型（LLM）和相关技术，作为大厂外唯一一家储备万张 A100 芯片的公司，幻方量化为DeepSeek的技术研发提供了强大的硬件支持。</p>
+<p><strong>幻方量化</strong> 公司由三名毕业于浙江大学的工程师（其中就包括梁文锋）于2015年创立，是一家总部位于中国浙江省杭州市的对冲基金、量化基金和人工智能公司。2017年幻方量化开始基于机器学习进行交易，并宣称实现投资策略全面AI化。此后的2023年7月创立DeepSeek 公司，所以说DeepSeek 公司是幻方量化公司的子公司。</p>
+<h1 id="二、DeepSeek公司的大模型历史"><a href="#二、DeepSeek公司的大模型历史" class="headerlink" title="二、DeepSeek公司的大模型历史"></a>二、DeepSeek公司的大模型历史</h1><p>此章节按照时间顺序阐述DeepSeek公司发布的重要大模型的概述信息。</p>
+<h2 id="DeepSeek-LLM"><a href="#DeepSeek-LLM" class="headerlink" title="DeepSeek LLM"></a>DeepSeek LLM</h2><p>2024年1月5日，发布第一个大模型<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-LLM">DeepSeek LLM</a>。此模型包含670亿参数，在一个包含2万亿token的数据集上进行了训练，数据集涵盖中英文。为了促进研究社区，公司全部开源了DeepSeek LLM 7B&#x2F;67B Base和DeepSeek LLM 7B&#x2F;67B Chat。DeepSeek LLM的主要特征有如下：</p>
+<ul>
+<li>卓越的综合能力：DeepSeek LLM 67B Base在推理、编码、数学和中文理解等方面超越了Llama2 70B Base。</li>
+<li>精通编程和数学：DeepSeek LLM 67B Chat在编码和数学方面表现出色。</li>
+<li>精通中文：DeepSeek LLM 67B Chat在中文表现上超越了GPT-3.5。</li>
+</ul>
+<p>其他详细介绍参考：<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-LLM">https://github.com/deepseek-ai/DeepSeek-LLM</a></p>
+<h2 id="DeepSeek-Coder"><a href="#DeepSeek-Coder" class="headerlink" title="DeepSeek-Coder"></a>DeepSeek-Coder</h2><p>2024年1月25日，发布DeepSeek-Coder，DeepSeek Coder由一系列代码语言模型组成，每个模型均从零开始在2万亿token上训练，数据集包含87%的代码和13%的中英文自然语言。代码模型尺寸从1B到33B版本不等。DeepSeek Coder在多种编程语言和各种基准测试中达到了开源代码模型的最先进性能。DeepSeek LLM的主要特征有如下：</p>
+<ul>
+<li><p>海量的训练数据：从零开始在拥有2万亿token的数据集上进行了训练，数据集包括87%的代码和13%的中英文语言数据。</p>
+</li>
+<li><p>高度灵活性和可扩展：有1B、5.7B、6.7B、33B四种规格可供选择，用户可根据需要选择最合适的模型及规格</p>
+</li>
+<li><p>卓越的模型性能：在HumanEval、MultiPL-E、MBPP、DS-1000、与APPS多种基准测试中，与其他公开、可用的大模型相比，此模型总体上拥有更卓越的性能</p>
+</li>
+<li><p>高阶代码补全能力：采用16K的窗口大小和额外的填空任务进行训练，以支持项目级代码补全和填充。</p>
+</li>
+</ul>
+<p><img src="https://s2.loli.net/2025/01/27/iyXhSO8bdk6gx3T.png" srcset="/img/loading.gif" lazyload alt="image-20250127223512626"></p>
+<p>其他详细介绍参考：<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-Coder">https://github.com/deepseek-ai/DeepSeek-Coder</a></p>
+<h2 id="DeepSeekMath"><a href="#DeepSeekMath" class="headerlink" title="DeepSeekMath"></a>DeepSeekMath</h2><p>2024年2月5日，发布<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-Math">DeepSeekMath</a>，DeepSeekMath以DeepSeek-Coder-v1.5 7B为基础，继续在从Common Crawl中提取的数学相关token以及自然语言和代码数据上进行预训练，训练规模达5000亿token。DeepSeekMath 7B在竞赛级MATH基准测试中取得了51.7%的优异成绩，且未依赖外部工具包和投票技术，接近Gemini-Ultra和GPT-4的性能水平。</p>
+<p><img src="https://s2.loli.net/2025/01/27/5dFG37UyD1CxXRe.png" srcset="/img/loading.gif" lazyload alt="image-20250127222229328"></p>
+<p>其他详细介绍参考：<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-Math">https://github.com/deepseek-ai/DeepSeek-Math</a></p>
+<h2 id="DeepSeek-VL"><a href="#DeepSeek-VL" class="headerlink" title="DeepSeek-VL"></a>DeepSeek-VL</h2><p>2024年3月11日，发布<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-VL">DeepSeek-VL</a>。DeepSeek-VL大模型是一个开源的视觉语言模型，专为现实世界的视觉和语言理解应用而设计。DeepSeek-VL具有通用的多模态理解能力，能够处理逻辑图、网页、公式识别、科学文献、自然图像和复杂场景下的具身智能，同时保持相对较低的计算开销。DeepSeek-VL系列（包括1.3B和7B模型）在相同模型尺寸下，在广泛的视觉-语言基准测试中达到了最先进或可竞争的性能。</p>
+<p>其他详细介绍参考：<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-VL">https://github.com/deepseek-ai/DeepSeek-VL</a></p>
+<h2 id="DeepSeek-V2"><a href="#DeepSeek-V2" class="headerlink" title="DeepSeek-V2"></a>DeepSeek-V2</h2><p>2024年5月7日，发布第二代开源Mixture-of-Experts（MoE）模型——<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-V2">DeepSeek-V2</a>。DeepSeek-V2是一个强大的混合专家（MoE）语言模型，以经济高效的训练和推理为特点。它包含2360亿个总参数，其中每个token激活210亿个参数。与DeepSeek 67B相比，DeepSeek-V2不仅实现了更强的性能，同时还节省了42.5%的训练成本，将KV缓存减少了93.3%，并将最大生成吞吐量提升至5.76倍。DeepSeek-V2是在一个包含8.1万亿token的多样化且高质量的语料库上进行的预训练。在完成全面的预训练后，通过监督微调（SFT）和强化学习（RL）进一步释放了模型的潜力。评估结果验证了方法的有效性，DeepSeek-V2在标准基准测试和开放式生成评估中均取得了显著的表现。 DeepSeek V2模型因在中文综合能力评测中的出色表现，且以极低的推理成本引发行业关注，被称为“AI界的拼多多”。</p>
+<p><img src="https://s2.loli.net/2025/01/27/d1xasNLn94P6Ulq.png" srcset="/img/loading.gif" lazyload alt="image-20250127223436895"></p>
+<p>其他详细介绍参考：<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-V2">https://github.com/deepseek-ai/DeepSeek-V2</a></p>
+<h2 id="DeepSeek-Coder-V2"><a href="#DeepSeek-Coder-V2" class="headerlink" title="DeepSeek-Coder-V2"></a>DeepSeek-Coder-V2</h2><p>2024年6月17日，发布DeepSeek-Coder-V2，DeepSeek-Coder-V2是一个开源的混合专家（MoE）代码语言模型，在代码特定任务中达到了与GPT4-Turbo相当的性能。DeepSeek-Coder-V2是从DeepSeek-V2的一个中间检查点开始，进一步预训练了额外的6万亿token，显著增强了DeepSeek-V2的编码和数学推理能力，同时在通用语言任务中保持了相当的性能。并在代码相关任务、推理能力和通用能力等多个方面都取得了显著进步。此外，DeepSeek-Coder-V2将支持的编程语言从86种扩展到338种，并将上下文长度从16K扩展到128K。在标准基准测试中，DeepSeek-Coder-V2在编码和数学基准测试中表现优异，超越了GPT4-Turbo、Claude 3 Opus和Gemini 1.5 Pro等闭源模型。</p>
+<p><img src="https://s2.loli.net/2025/01/27/Pe2JGhEZMVDp6sc.png" srcset="/img/loading.gif" lazyload alt="image-20250127223414157"></p>
+<p>其他详细介绍参考：<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-Coder-V2">https://github.com/deepseek-ai/DeepSeek-Coder-V2</a></p>
+<h2 id="DeepSeek-VL2"><a href="#DeepSeek-VL2" class="headerlink" title="DeepSeek-VL2"></a>DeepSeek-VL2</h2><p>2024年12月13日，发布用于高级多模态理解的专家混合视觉语言模型——<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-VL2">DeepSeek-VL2</a>，DeepSeek-VL2是一个先进的大型混合专家（MoE）视觉-语言模型系列，相较于其前身DeepSeek-VL有了显著改进。DeepSeek-VL2在多种任务中展现了卓越的能力，包括但不限于视觉问答、光学字符识别、文档&#x2F;表格&#x2F;图表理解以及视觉定位。模型系列由三个变体组成：DeepSeek-VL2-Tiny、DeepSeek-VL2-Small和DeepSeek-VL2，分别具有10亿、28亿和45亿激活参数。与现有的开源密集模型和基于MoE的模型相比，DeepSeek-VL2在相似或更少的激活参数下实现了具有竞争力或最先进的性能。</p>
+<p><img src="https://s2.loli.net/2025/01/27/mYFA1y2USp4PnNu.png" srcset="/img/loading.gif" lazyload alt="image-20250127223908472"></p>
+<p>其他详细介绍参考：<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-VL2">https://github.com/deepseek-ai/DeepSeek-VL2</a></p>
+<h2 id="DeepSeek-V3"><a href="#DeepSeek-V3" class="headerlink" title="DeepSeek-V3"></a>DeepSeek-V3</h2><p>2024年12月26日晚，DeepSeek公司正式上线全新系列模型 <a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-V3">DeepSeek-V3</a> 首个版本并同步开源。</p>
+<p>后面将有一个单独的章节对此大模型做一个详细的介绍。</p>
+<h2 id="DeepSeek-R1"><a href="#DeepSeek-R1" class="headerlink" title="DeepSeek-R1"></a>DeepSeek-R1</h2><p>2025年1月20日，DeepSeek正式发布 <a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-R1">DeepSeek-R1</a> 模型，并同步开源模型权重。</p>
+<p>后面也有一个单独的章节对此大模型做一个详细的介绍。</p>
+<h1 id="三、DeepSeek-V3大模型"><a href="#三、DeepSeek-V3大模型" class="headerlink" title="三、DeepSeek-V3大模型"></a>三、DeepSeek-V3大模型</h1><p>2024年12月26日晚，DeepSeek公司正式上线全新系列模型 <a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-V3">DeepSeek-V3</a> 首个版本并同步开源。</p>
+<p>论文下载查看：<a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-V3/blob/main/DeepSeek_V3.pdf">https://github.com/deepseek-ai/DeepSeek-V3/blob/main/DeepSeek_V3.pdf</a> 或 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2412.19437">https://arxiv.org/abs/2412.19437</a> 。</p>
+<p>以下关于DeepSeek-V3大模型的阐述，来看DeepSeek-V3的github仓库内容。</p>
+<h2 id="3-1-模型介绍"><a href="#3-1-模型介绍" class="headerlink" title="3.1 模型介绍"></a>3.1 模型介绍</h2><p>是一个强大的专家混合（MoE）语言模型，具有671B个总参数，每个令牌激活37B。为了实现高效的推理和低成本的训练，DeepSeek-V3采用了多头潜注意（MLA）和DeepSeekMoE架构，这两种架构在DeepSeek-V2中得到了充分的验证。此外，DeepSeek-V3开创性提出以下两点：无辅助损失策略、多令牌预测。DeepSeek-V3在14.8万亿个不同的高质量令牌上进行了预训练，然后进行监督微调和强化学习。据DeepSeek官网所述：综合性实验评估表明，DeepSeek-V3优于其他开源模型，并实现了与领先的闭源模型相当的性能。而实现如此优异性能的条件是，DeepSeek-V3的完整训练只花费了 278.8 m H800 GPU小时。此外，DeepSeek-V3的训练过程非常稳定，在整个训练过程中没有经历任何不可恢复的损失峰值或执行任何回滚。</p>
+<p>从下图（来自DeepSeek-V3在github上的官网）可以看出，DeepSeek-V3在知识类任务（MMLU, MMLU-Pro, GPQA, SimpleQA）上的水平相比前代 DeepSeek-V2.5显著提升，接近当前表现最好的由Anthropic公司于10月发布的模型Claude-3.5-Sonnet-1022。在美国数学竞赛（AIME 2024, MATH）上，DeepSeek-V3很大程度地超过了其他所有开源闭源模型。在codeforces测评中，DeepSeek-V3大幅超过其他模型。另外，在生成速度上，DeepSeek-V3的生成吐字速度从20TPS（Transactions Per Second）大幅提高至60TPS，相比V2.5模型实现了3倍的提升，能够带来更加流畅的使用体验。</p>
+<p><img src="https://s2.loli.net/2025/01/27/31HemjXDW5QbqLs.png" srcset="/img/loading.gif" lazyload alt="image-20250127224259093"></p>
+<h2 id="3-2-模型摘要"><a href="#3-2-模型摘要" class="headerlink" title="3.2 模型摘要"></a>3.2 模型摘要</h2><h3 id="架构：采用创新的负载均衡策略与训练目标"><a href="#架构：采用创新的负载均衡策略与训练目标" class="headerlink" title="架构：采用创新的负载均衡策略与训练目标"></a>架构：采用创新的负载均衡策略与训练目标</h3><p><em>DeepSeek</em>-<em>V3</em>开创了一种无辅助损失的<em>负载</em>平衡<em>策略</em>，并为更强性能设置了多tokens预测训练目标。</p>
+<ul>
+<li>在DeepSeek-V2的高效构架基础上，DeepSeek-V3开创性地提出了一种无辅助损失的负载均衡策略，这种策略可以最小化由追求负载均衡而引起的性能下降。</li>
+<li>DeepSeek-V3提出了一种多令牌预测（MTP）目标，事实证明它能提升模型性能。此外它能应用于推测解码以加速推理过程。</li>
+</ul>
+<h3 id="预训练：极高的训练效率"><a href="#预训练：极高的训练效率" class="headerlink" title="预训练：极高的训练效率"></a>预训练：极高的训练效率</h3><ul>
+<li>DeepSeek-V3设计了一个FP8混合精度训练框架，并首次验证了FP8训练在超大规模模型上的可行性与有效性。</li>
+<li>通过对算法、框架与硬件的协同考量与设计，DeppSeek-V3克服了跨节点MoE训练的通信瓶颈，几乎达到了计算与通信二者的完全一致性。这显著地提升了训练效率并减少了训练成本，使得研究人员与用户可以进一步扩展模型规模而无需其他额外的开销。</li>
+<li></li>
+</ul>
+<h3 id="后训练：从DeepSeek-R1中蒸馏知识"><a href="#后训练：从DeepSeek-R1中蒸馏知识" class="headerlink" title="后训练：从DeepSeek-R1中蒸馏知识"></a>后训练：从DeepSeek-R1中蒸馏知识</h3><h2 id="3-3-模型下载"><a href="#3-3-模型下载" class="headerlink" title="3.3 模型下载"></a>3.3 模型下载</h2><h2 id="3-4-评估结果"><a href="#3-4-评估结果" class="headerlink" title="3.4 评估结果"></a>3.4 评估结果</h2><p><a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-V3?tab=readme-ov-file#4-evaluation-results">https://github.com/deepseek-ai/DeepSeek-V3?tab=readme-ov-file#4-evaluation-results</a></p>
+<h1 id="四、DeepSeek-R1大模型"><a href="#四、DeepSeek-R1大模型" class="headerlink" title="四、DeepSeek-R1大模型"></a>四、DeepSeek-R1大模型</h1><p>论文下载查看： <a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-R1/blob/main/DeepSeek_R1.pdf">https://github.com/deepseek-ai/DeepSeek-R1/blob/main/DeepSeek_R1.pdf</a> 或 <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2501.12948">https://arxiv.org/pdf/2501.12948</a> </p>
+<p>2025年1月20日，DeepSeek正式发布 <a target="_blank" rel="noopener" href="https://github.com/deepseek-ai/DeepSeek-R1">DeepSeek-R1</a> 模型，并同步开源模型权重。DeepSeek-R1在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。 DeepSeek-V3和DeepSeek-R1两款大模型，成本价格低廉，性能与OpenAI-O1模型相当，引起了包括美国硅谷在内的多家知名顶尖AI公司的震惊与兴趣。</p>
+<p><img src="https://s2.loli.net/2025/01/27/4hwdVJaxQl16RMe.png" srcset="/img/loading.gif" lazyload alt="image-20250127225153880"></p>
+<h1 id="五、专业名词解释"><a href="#五、专业名词解释" class="headerlink" title="五、专业名词解释"></a>五、专业名词解释</h1><ul>
+<li>AGI：英文全称是“artificial general intelligence”，中文翻译为“<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%80%9A%E7%94%A8%E4%BA%BA%E5%B7%A5%E6%99%BA%E6%85%A7">通用人工智能</a>”，也叫<strong>强人工智能</strong>（英语：strong AI）。是指具备与人类同等智能、或超越人类的人工智能，能表现正常人类所具有的所有智能行为。</li>
+<li><a target="_blank" rel="noopener" href="https://huggingface.co/blog/zh/moe">MoE</a>：英文全称是”Mixture of Experts“，中文翻译为”混合专家模型“，起源于1991 年的论文Adaptive Mixture of Local Experts。混合专家模型 (MoE) 的一个显著优势是它们能够在远少于稠密模型所需的计算资源下进行有效的预训练。这意味着在相同的计算预算条件下，您可以显著扩大模型或数据集的规模。特别是在预训练阶段，与稠密模型相比，混合专家模型通常能够更快地达到相同的质量水平。</li>
+<li></li>
+</ul>
+<h1 id="六、其他信息与相关事件"><a href="#六、其他信息与相关事件" class="headerlink" title="六、其他信息与相关事件"></a>六、其他信息与相关事件</h1><h2 id="6-1-被雷军挖角的天才少女罗福莉"><a href="#6-1-被雷军挖角的天才少女罗福莉" class="headerlink" title="6.1 被雷军挖角的天才少女罗福莉"></a>6.1 被雷军挖角的天才少女罗福莉</h2><p>2024年12月份，雷军以千万级薪酬招揽DeepSeek核心研究员、95后AI天才罗福莉。期望她能领军小米AI大模型团队的发展。</p>
+<h2 id="6-2-2025年1月27日DeepSeek网页-API不可用"><a href="#6-2-2025年1月27日DeepSeek网页-API不可用" class="headerlink" title="6.2 2025年1月27日DeepSeek网页&#x2F;API不可用"></a>6.2 2025年1月27日DeepSeek网页&#x2F;API不可用</h2><p><img src="https://s2.loli.net/2025/01/27/2OhZ6r48oTnp1RQ.png" srcset="/img/loading.gif" lazyload alt="image-20250127211800641"></p>
+<h2 id="6-3-DeepSeek登顶中美应用下载榜首"><a href="#6-3-DeepSeek登顶中美应用下载榜首" class="headerlink" title="6.3 DeepSeek登顶中美应用下载榜首"></a>6.3 DeepSeek登顶中美应用下载榜首</h2><p>2025年1月27日，DeepSeek应用登顶苹果美国地区应用商店免费APP下载排行榜，在美区下载榜上超越了ChatGPT。同日，苹果中国区应用商店免费榜显示，DeepSeek成为中国区第一。</p>
+<h1 id="七、思考与总结"><a href="#七、思考与总结" class="headerlink" title="七、思考与总结"></a>七、思考与总结</h1>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/DeepSeek-%E6%B7%B1%E5%BA%A6%E6%B1%82%E7%B4%A2/" class="print-no-link">#DeepSeek 深度求索</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>学习DeepSeek公司及其大模型DeepSeek-XX</div>
+      <div>https://jiangsanyin.github.io/2025/01/27/学习DeepSeek公司及其大模型DeepSeek-V系列/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年1月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/05/%E5%9F%BA%E4%BA%8Eollama%E9%83%A8%E7%BD%B2DeepSeek/" title="基于Ollama部署DeepSeek">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">基于Ollama部署DeepSeek</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/01/25/kubeflow1-6-1%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%9F%BA%E7%A1%80%E7%A4%BA%E4%BE%8B%E4%BD%BF%E7%94%A8/" title="kubeflow1.6.1的搭建与基础示例使用">
+                        <span class="hidden-mobile">kubeflow1.6.1的搭建与基础示例使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
