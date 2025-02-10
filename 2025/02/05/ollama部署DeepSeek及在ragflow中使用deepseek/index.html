@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="环境信息   主机名 IP 操作系统 规格 GPU情况 备注    t1-gpu 10.12.62.25 Ubuntu 20.04.3 LTS -amd64 8c16g+400G NVIDIA A10*1 部署m3e向量模型   controller01 172.20.0.21 Ubuntu 20.04.3 LTS -amd64 16c64g+400G NVIDIA A40*2    安装配置Ol">
+    <meta name="description" content="环境信息   主机名 IP 操作系统 规格 GPU情况 备注    controller01 172.20.0.21 Ubuntu 20.04.3 LTS -amd64 16c64g+400G NVIDIA A40*2    安装配置Ollama自动安装官网地址：https:&#x2F;&#x2F;ollama.com&#x2F;下载地址：https:&#x2F;&#x2F;ollama.com&#x2F;download 123456789101112#">
 <meta property="og:type" content="article">
-<meta property="og:title" content="基于Ollama部署DeepSeek">
-<meta property="og:url" content="https://jiangsanyin.github.io/2025/02/05/%E5%9F%BA%E4%BA%8Eollama%E9%83%A8%E7%BD%B2DeepSeek/index.html">
+<meta property="og:title" content="ollama部署DeepSeek及在ragflow中使用deepseek">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/02/05/ollama%E9%83%A8%E7%BD%B2DeepSeek%E5%8F%8A%E5%9C%A8ragflow%E4%B8%AD%E4%BD%BF%E7%94%A8deepseek/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="环境信息   主机名 IP 操作系统 规格 GPU情况 备注    t1-gpu 10.12.62.25 Ubuntu 20.04.3 LTS -amd64 8c16g+400G NVIDIA A10*1 部署m3e向量模型   controller01 172.20.0.21 Ubuntu 20.04.3 LTS -amd64 16c64g+400G NVIDIA A40*2    安装配置Ol">
+<meta property="og:description" content="环境信息   主机名 IP 操作系统 规格 GPU情况 备注    controller01 172.20.0.21 Ubuntu 20.04.3 LTS -amd64 16c64g+400G NVIDIA A40*2    安装配置Ollama自动安装官网地址：https:&#x2F;&#x2F;ollama.com&#x2F;下载地址：https:&#x2F;&#x2F;ollama.com&#x2F;download 123456789101112#">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="c:\Users\jiangsanyin\AppData\Roaming\Typora\typora-user-images\image-20250206095806493.png">
 <meta property="og:image" content="https://s2.loli.net/2025/02/06/1re9RnYW6bmwvp5.png">
@@ -43,7 +43,7 @@
 <meta property="og:image" content="https://s2.loli.net/2025/02/06/hJOIvbS3zuyYU9C.png">
 <meta property="og:image" content="https://s2.loli.net/2025/02/06/J4lj5gHoXDOKqWb.png">
 <meta property="article:published_time" content="2025-02-05T06:13:21.000Z">
-<meta property="article:modified_time" content="2025-02-06T08:43:06.000Z">
+<meta property="article:modified_time" content="2025-02-07T08:27:04.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="DeepSeek Ollama">
 <meta name="twitter:card" content="summary_large_image">
@@ -51,7 +51,7 @@
   
   
   
-  <title>基于Ollama部署DeepSeek - sanyinjiang</title>
+  <title>ollama部署DeepSeek及在ragflow中使用deepseek - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -230,7 +230,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">基于Ollama部署DeepSeek</span>
+            <span id="subtitle">ollama部署DeepSeek及在ragflow中使用deepseek</span>
           
         </div>
 
@@ -310,7 +310,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">基于Ollama部署DeepSeek</h1>
+            <h1 id="seo-header">ollama部署DeepSeek及在ragflow中使用deepseek</h1>
             
             
               <div class="markdown-body">
@@ -327,14 +327,6 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>t1-gpu</td>
-<td>10.12.62.25</td>
-<td>Ubuntu 20.04.3 LTS -amd64</td>
-<td>8c16g+400G</td>
-<td>NVIDIA A10*1</td>
-<td>部署m3e向量模型</td>
-</tr>
-<tr>
 <td>controller01</td>
 <td>172.20.0.21</td>
 <td>Ubuntu 20.04.3 LTS -amd64</td>
@@ -366,7 +358,7 @@
 <h3 id="启动-Ollama"><a href="#启动-Ollama" class="headerlink" title="启动 Ollama"></a>启动 Ollama</h3><p>使用以下命令启动 Ollama：<code>systemd</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo systemctl start ollama<br></code></pre></td></tr></table></figure>
 
-<h1 id="使用Ollama运行DeepSeek-r1-7b"><a href="#使用Ollama运行DeepSeek-r1-7b" class="headerlink" title="使用Ollama运行DeepSeek-r1:7b"></a>使用Ollama运行DeepSeek-r1:7b</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">如果本地没有deepseek-r1:7b模型，它会自动下载相关模型文件，此时耗时4个两个小时</span><br>root@controller01:~# ollama run deepseek-r1:7b<br>pulling manifest <br>pulling manifest <br>pulling 96c415656d37... 100% ▕████████████████████████████████████████████████████████████████████▏ 4.7 GB                         <br>pulling 369ca498f347... 100% ▕████████████████████████████████████████████████████████████████████ 387 B                         <br>pulling 6e4c38e1172f... 100% ▕████████████████████████████████████████████████████████████████████▏ 1.1 KB                         <br>pulling f4d24e9138dd... 100% ▕████████████████████████████████████████████████████████████████████▏  148 B                         <br>pulling 40fb844194b2... 100% ▕████████████████████████████████████████████████████████████████████▏  487 B                         <br>verifying sha256 digest <br>writing manifest <br>removing any unused layers <br>success <br></code></pre></td></tr></table></figure>
+<h1 id="使用Ollama运行DeepSeek-r1-7b"><a href="#使用Ollama运行DeepSeek-r1-7b" class="headerlink" title="使用Ollama运行DeepSeek-r1:7b"></a>使用Ollama运行DeepSeek-r1:7b</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">如果本地没有deepseek-r1:7b模型，它会自动下载相关模型文件，此时耗时4个两个小时</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">然后开始执行此大模型</span><br>root@controller01:~# ollama run deepseek-r1:7b<br>pulling manifest <br>pulling manifest <br>pulling 96c415656d37... 100% ▕████████████████████████████████████████████████████████████████████▏ 4.7 GB                         <br>pulling 369ca498f347... 100% ▕████████████████████████████████████████████████████████████████████ 387 B                         <br>pulling 6e4c38e1172f... 100% ▕████████████████████████████████████████████████████████████████████▏ 1.1 KB                         <br>pulling f4d24e9138dd... 100% ▕████████████████████████████████████████████████████████████████████▏  148 B                         <br>pulling 40fb844194b2... 100% ▕████████████████████████████████████████████████████████████████████▏  487 B                         <br>verifying sha256 digest <br>writing manifest <br>removing any unused layers <br>success <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">至此就可以在命令行中进行对话了</span><br></code></pre></td></tr></table></figure>
 
 <h1 id="安装ragflow"><a href="#安装ragflow" class="headerlink" title="安装ragflow"></a>安装ragflow</h1><p>官网 ：<a target="_blank" rel="noopener" href="https://github.com/infiniflow/ragflow">https://github.com/infiniflow/ragflow</a></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:/opt/code_repos# git clone https://github.com/infiniflow/ragflow.git<br><span class="hljs-meta prompt_">#</span><span class="language-bash">或 root@controller01:/opt/code_repos# git <span class="hljs-built_in">clone</span> https://gitee.com/sy-jiang/ragflow.git</span><br><br>root@controller01:/opt/code_repos# cd ragflow/docker/<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改RAGFLOW_IMAGE 镜像为国内镜像源提供的镜像（建议不要使用精简版的ragflow镜像）</span><br>root@controller01:/opt/code_repos/ragflow/docker# vi .env<br><span class="hljs-meta prompt_">#</span><span class="language-bash">RAGFLOW_IMAGE=infiniflow/ragflow:v0.15.1-slim</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">RAGFLOW_IMAGE=infiniflow/ragflow:v0.15.1</span><br>RAGFLOW_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/infiniflow/ragflow:v0.15.1<br><br>root@controller01:/opt/code_repos/ragflow/docker# docker-compose -f docker-compose.yml up -d<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果有NVIDIA GPU，使用如下</span><br>root@controller01:/opt/code_repos/ragflow/docker# docker-compose -f docker-compose-gpu.yml up -d<br></code></pre></td></tr></table></figure>
@@ -419,8 +411,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>基于Ollama部署DeepSeek</div>
-      <div>https://jiangsanyin.github.io/2025/02/05/基于ollama部署DeepSeek/</div>
+      <div>ollama部署DeepSeek及在ragflow中使用deepseek</div>
+      <div>https://jiangsanyin.github.io/2025/02/05/ollama部署DeepSeek及在ragflow中使用deepseek/</div>
     </div>
     <div class="license-meta">
       
