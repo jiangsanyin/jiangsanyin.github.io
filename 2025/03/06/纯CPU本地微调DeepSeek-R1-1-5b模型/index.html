@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、文档说明与服务器准备1.1 文档说明笔者正在从传统云计算行业向AI靠拢中，相关底层理论知识也正在学习中，所以此篇微调DeepSeek-R1-Distill-Llama-8B模型的操作文档是参考其他教学资料（在本文最后已经注明）所做的操作记录，其中已经将相关问题如下载模型大文件、操作过程中相关python库版本问题、wandb认证问题等解决，并记录在此文档中。 所以说这是一篇保姆级别的”微调De">
+    <meta name="description" content="一、文档说明与服务器准备1.1 文档说明这是一篇保姆级别的”微调DeepSeek-R1-Distill-Llama-8B模型”的操作文章，只要稍微懂点计算机软件知识就可以成功复现此文章中所述内容。 此文档中尝试微调DeepSeek-R1蒸馏模型比如1.5B，它仅靠CPU就能运行。 1.2 服务器与GPU准备此次使用的服务器是一个x86_64构架的Hygon C86 5380物理服务器，具体信息如下">
 <meta property="og:type" content="article">
-<meta property="og:title" content="本地微调DeepSeek-R1-8b模型">
-<meta property="og:url" content="https://jiangsanyin.github.io/2025/02/13/%E6%9C%AC%E5%9C%B0%E5%BE%AE%E8%B0%83DeepSeek-R1-8b%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:title" content="纯CPU本地微调DeepSeek-R1-1.5b模型">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/03/06/%E7%BA%AFCPU%E6%9C%AC%E5%9C%B0%E5%BE%AE%E8%B0%83DeepSeek-R1-1-5b%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、文档说明与服务器准备1.1 文档说明笔者正在从传统云计算行业向AI靠拢中，相关底层理论知识也正在学习中，所以此篇微调DeepSeek-R1-Distill-Llama-8B模型的操作文档是参考其他教学资料（在本文最后已经注明）所做的操作记录，其中已经将相关问题如下载模型大文件、操作过程中相关python库版本问题、wandb认证问题等解决，并记录在此文档中。 所以说这是一篇保姆级别的”微调De">
+<meta property="og:description" content="一、文档说明与服务器准备1.1 文档说明这是一篇保姆级别的”微调DeepSeek-R1-Distill-Llama-8B模型”的操作文章，只要稍微懂点计算机软件知识就可以成功复现此文章中所述内容。 此文档中尝试微调DeepSeek-R1蒸馏模型比如1.5B，它仅靠CPU就能运行。 1.2 服务器与GPU准备此次使用的服务器是一个x86_64构架的Hygon C86 5380物理服务器，具体信息如下">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2025/02/13/jBqpIiDF5t48Axc.png">
 <meta property="og:image" content="https://s2.loli.net/2025/02/13/ZJYaFVol2H1vsej.png">
@@ -58,16 +58,16 @@
 <meta property="og:image" content="https://s2.loli.net/2025/02/17/TGyioRtsJHe9wm7.png">
 <meta property="og:image" content="https://s2.loli.net/2025/02/18/qcfBh1Jbox2kjev.png">
 <meta property="og:image" content="https://s2.loli.net/2025/02/18/Hgx4iydTONfpkbv.png">
-<meta property="article:published_time" content="2025-02-13T07:47:30.000Z">
-<meta property="article:modified_time" content="2025-03-07T01:43:36.000Z">
+<meta property="article:published_time" content="2025-03-06T14:04:44.000Z">
+<meta property="article:modified_time" content="2025-03-06T14:51:22.000Z">
 <meta property="article:author" content="sanyinjiang">
-<meta property="article:tag" content="本地微调 DeepSeek-R1-8b">
+<meta property="article:tag" content="微调">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://s2.loli.net/2025/02/13/jBqpIiDF5t48Axc.png">
   
   
   
-  <title>本地微调DeepSeek-R1-8b模型 - sanyinjiang</title>
+  <title>纯CPU本地微调DeepSeek-R1-1.5b模型 - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -246,7 +246,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">本地微调DeepSeek-R1-8b模型</span>
+            <span id="subtitle">纯CPU本地微调DeepSeek-R1-1.5b模型</span>
           
         </div>
 
@@ -257,8 +257,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-02-13 15:47" pubdate>
-          2025年2月13日 下午
+        <time datetime="2025-03-06 22:04" pubdate>
+          2025年3月6日 晚上
         </time>
       </span>
     
@@ -269,7 +269,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.9k 字
+          4.8k 字
         
       </span>
     
@@ -280,7 +280,7 @@
         
         
         
-          41 分钟
+          40 分钟
         
       </span>
     
@@ -326,14 +326,13 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">本地微调DeepSeek-R1-8b模型</h1>
+            <h1 id="seo-header">纯CPU本地微调DeepSeek-R1-1.5b模型</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一、文档说明与服务器准备"><a href="#一、文档说明与服务器准备" class="headerlink" title="一、文档说明与服务器准备"></a>一、文档说明与服务器准备</h1><h2 id="1-1-文档说明"><a href="#1-1-文档说明" class="headerlink" title="1.1 文档说明"></a>1.1 文档说明</h2><p>笔者正在从传统云计算行业向AI靠拢中，相关底层理论知识也正在学习中，所以此篇微调DeepSeek-R1-Distill-Llama-8B模型的操作文档是参考其他教学资料（在本文最后已经注明）所做的操作记录，其中已经将相关问题如下载模型大文件、操作过程中相关python库版本问题、wandb认证问题等解决，并记录在此文档中。</p>
-<p>所以说这是一篇保姆级别的”微调DeepSeek-R1-Distill-Llama-8B模型”的操作文章，只要稍微懂点计算机软件知识就可以成功复现此文章中所述内容。</p>
-<p>此文档中使用到了NVIDIA A40，如果GPU显存或算力更低，可以尝试使用更少参数版本DeepSeek-R1蒸馏模型比如1.5B，它仅靠CPU就可以运行。</p>
+                <h1 id="一、文档说明与服务器准备"><a href="#一、文档说明与服务器准备" class="headerlink" title="一、文档说明与服务器准备"></a>一、文档说明与服务器准备</h1><h2 id="1-1-文档说明"><a href="#1-1-文档说明" class="headerlink" title="1.1 文档说明"></a>1.1 文档说明</h2><p>这是一篇保姆级别的”微调DeepSeek-R1-Distill-Llama-8B模型”的操作文章，只要稍微懂点计算机软件知识就可以成功复现此文章中所述内容。</p>
+<p>此文档中尝试微调DeepSeek-R1蒸馏模型比如1.5B，它仅靠CPU就能运行。</p>
 <h2 id="1-2-服务器与GPU准备"><a href="#1-2-服务器与GPU准备" class="headerlink" title="1.2 服务器与GPU准备"></a>1.2 服务器与GPU准备</h2><p>此次使用的服务器是一个x86_64构架的Hygon C86 5380物理服务器，具体信息如下：</p>
 <table>
 <thead>
@@ -370,10 +369,10 @@
 </ul>
 <h2 id="1-3-大模型微调定义"><a href="#1-3-大模型微调定义" class="headerlink" title="1.3 大模型微调定义"></a>1.3 大模型微调定义</h2><p>利用特定领域的数据集对已预训练的大模型进行进一步训练的过程。它旨在优化模型在特定任务上的性能，使模型能够更好地适应和完成特定领域的任务。其中最重要的是超参数（如学习率、批次大小和训练轮次）调整优化。转成大白话就是调整大模型中一些参数的值，使其在特定数据集上表现更优秀。</p>
 <h1 id="二、相关文件下载"><a href="#二、相关文件下载" class="headerlink" title="二、相关文件下载"></a>二、相关文件下载</h1><h2 id="2-1-模型文件下载"><a href="#2-1-模型文件下载" class="headerlink" title="2.1 模型文件下载"></a>2.1 模型文件下载</h2><p>本来是想去huggingface上下载相关模型文件与数据集，由于huggingface需要梯子才能访问，不便操作。所以此文档中是在国内网络可正常访问魔搭平台上下载模型与数据集。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">访问魔搭：https://modelscope.cn/models/deepseek-ai/DeepSeek-R1-Distill-Llama-8B/files</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">不指定--local_dir 参数，文件将被保存在用户根目录下的.cache子目录下</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">模型总大小在16G左右</span><br>root@t1-gpu:/opt/code_repos/AI_models/unsloth-DeepSeek-R1-Distill-Llama-8B# modelscope download --model unsloth/DeepSeek-R1-Distill-Llama-8B --local_dir ./<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">访问魔搭：https://modelscope.cn/models/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B/files</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">不指定--local_dir 参数，文件将被保存在用户根目录下的.cache子目录下</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">模型总大小在3.3G左右</span><br>(py312) D:\00_code_repos\AI_models&gt;modelscope download --model deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B --local_dir ./deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B<br></code></pre></td></tr></table></figure>
 
 <h2 id="2-2-训练数据集文件下载"><a href="#2-2-训练数据集文件下载" class="headerlink" title="2.2 训练数据集文件下载"></a>2.2 训练数据集文件下载</h2><p>访问魔搭，搜索“medical-o1-reasoning-SFT”数据集并下载（此处会有两个同名数据集，但上传者不同，我选择了下载量更大的<a target="_blank" rel="noopener" href="https://modelscope.cn/datasets/AI-ModelScope/medical-o1-reasoning-SFT%EF%BC%89%E3%80%82">https://modelscope.cn/datasets/AI-ModelScope/medical-o1-reasoning-SFT）。</a></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@t1-gpu:/opt/code_repos/AI_datasets/AI-ModelScope---medical-o1-reasoning-SFT# modelscope download --dataset AI-ModelScope/medical-o1-reasoning-SFT --local_dir ./<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">(py312) D:\00_code_repos\AI_datasets&gt;modelscope download --dataset AI-ModelScope/medical-o1-reasoning-SFT --local_dir ./AI-ModelScope/medical-o1-reasoning-SFT<br></code></pre></td></tr></table></figure>
 
 <h1 id="三、其他准备步骤"><a href="#三、其他准备步骤" class="headerlink" title="三、其他准备步骤"></a>三、其他准备步骤</h1><h2 id="3-1-wandb-token准备"><a href="#3-1-wandb-token准备" class="headerlink" title="3.1 wandb token准备"></a>3.1 wandb token准备</h2><p>去<a target="_blank" rel="noopener" href="https://wandb.ai/">wandb官网</a>注册一个账号、申请一个token，并记录此token，后续要用。</p>
 <p>注：</p>
@@ -395,7 +394,7 @@
 
 <h3 id="3-2-2-创建self-llm虚拟python环境"><a href="#3-2-2-创建self-llm虚拟python环境" class="headerlink" title="3.2.2 创建self-llm虚拟python环境"></a>3.2.2 创建self-llm虚拟python环境</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">更新软件列表</span><br>(base) root@controller01:/opt/installPkgs# apt-get update<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">准备好python3环境与pip3（使用上述conda创建虚拟python3、pip3环境）</span><br>(base) root@controller01:/opt/installPkgs# conda create -n self-llm python=3.12<br>...<br>The following NEW packages will be INSTALLED:<br><br>  _libgcc_mutex      pkgs/main/linux-64::_libgcc_mutex-0.1-main <br>  _openmp_mutex      pkgs/main/linux-64::_openmp_mutex-5.1-1_gnu <br>  bzip2              pkgs/main/linux-64::bzip2-1.0.8-h5eee18b_6 <br>  ca-certificates    pkgs/main/linux-64::ca-certificates-2024.12.31-h06a4308_0 <br>  expat              pkgs/main/linux-64::expat-2.6.4-h6a678d5_0 <br>  ld_impl_linux-64   pkgs/main/linux-64::ld_impl_linux-64-2.40-h12ee557_0 <br>  libffi             pkgs/main/linux-64::libffi-3.4.4-h6a678d5_1 <br>  libgcc-ng          pkgs/main/linux-64::libgcc-ng-11.2.0-h1234567_1 <br>  libgomp            pkgs/main/linux-64::libgomp-11.2.0-h1234567_1 <br>  libstdcxx-ng       pkgs/main/linux-64::libstdcxx-ng-11.2.0-h1234567_1 <br>  libuuid            pkgs/main/linux-64::libuuid-1.41.5-h5eee18b_0 <br>  ncurses            pkgs/main/linux-64::ncurses-6.4-h6a678d5_0 <br>  openssl            pkgs/main/linux-64::openssl-3.0.15-h5eee18b_0 <br>  pip                pkgs/main/linux-64::pip-25.0-py312h06a4308_0 <br>  python             pkgs/main/linux-64::python-3.12.9-h5148396_0 <br>  readline           pkgs/main/linux-64::readline-8.2-h5eee18b_0 <br>  setuptools         pkgs/main/linux-64::setuptools-75.8.0-py312h06a4308_0 <br>  sqlite             pkgs/main/linux-64::sqlite-3.45.3-h5eee18b_0 <br>  tk                 pkgs/main/linux-64::tk-8.6.14-h39e8969_0 <br>  tzdata             pkgs/main/noarch::tzdata-2025a-h04d1e81_0 <br>  wheel              pkgs/main/linux-64::wheel-0.45.1-py312h06a4308_0 <br>  xz                 pkgs/main/linux-64::xz-5.6.4-h5eee18b_1 <br>  zlib               pkgs/main/linux-64::zlib-1.2.13-h5eee18b_1 <br><br><br>Proceed ([y]/n)? Y         #此处输入y并回车<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##然后等待下载与解压提取相关python安装文件与python模块。安装过程的最后几行输出如下</span></span><br>...<br><span class="hljs-meta prompt_"># </span><span class="language-bash">To activate this environment, use</span>                                                                         <br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#     $ conda activate self-llm</span></span>                                                                             <br><span class="hljs-meta prompt_"># </span><span class="language-bash">To deactivate an active environment, use</span>                                                                   <br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#     $ conda deactivate</span></span><br>(base) root@controller01:/opt/installPkgs# <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看现有的conda管理的所有虚拟python环境</span><br>(base) root@controller01:/opt/installPkgs# conda env list<br><span class="hljs-meta prompt_"># </span><span class="language-bash">conda environments:</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"></span><br><span class="language-bash">base                     /root/anaconda3</span><br>self-llm              *  /root/anaconda3/envs/self-llm<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">激活self-llm 这个虚拟python环境，并在其中执行相关命令</span><br>(base) root@controller01:/opt/installPkgs# conda activate self-llm <br>(self-llm) root@controller01:/opt/installPkgs# python -V<br>Python 3.12.9<br>(self-llm) root@controller01:/opt/installPkgs# pip -V<br>pip 25.0 from /root/anaconda3/envs/self-llm/lib/python3.12/site-packages/pip (python 3.12)<br>(self-llm) root@controller01:/opt/installPkgs# <br></code></pre></td></tr></table></figure>
 
-<h3 id="3-2-3-安装jupyter环境"><a href="#3-2-3-安装jupyter环境" class="headerlink" title="3.2.3 安装jupyter环境"></a>3.2.3 安装jupyter环境</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装 IPython 交互式 shell</span><br>(self-llm) root@controller01:/opt/installPkgs# pip install ipython<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">正式安装jupyter</span><br>(self-llm) root@controller01:/opt/installPkgs# apt install jupyter-core jupyter-notebook -qy<br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建目录</span><br>(self-llm) root@controller01:/opt/installPkgs# mkdir finetunning-bigmodles<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">启动jupyter notebook</span><br>(self-llm) root@controller01:/opt/installPkgs# jupyter notebook --allow-root --ip=0.0.0.0 --no-browser<br>[I 01:29:38.744 NotebookApp] Serving notebooks from local directory: /opt/installPkgs<br>[I 01:29:38.744 NotebookApp] The Jupyter Notebook is running at:<br>[I 01:29:38.744 NotebookApp] http://a10:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br>[I 01:29:38.744 NotebookApp]  or http://127.0.0.1:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br>[I 01:29:38.744 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).<br>[W 01:29:38.755 NotebookApp] No web browser found: could not locate runnable browser.<br>[C 01:29:38.756 NotebookApp] <br>    <br>    To access the notebook, open this file in a browser:<br>        file:///root/.local/share/jupyter/runtime/nbserver-41207-open.html<br>    Or copy and paste one of these URLs:<br>        http://a10:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br>     or http://127.0.0.1:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br>[I 01:29:53.755 NotebookApp] 302 GET /?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba (192.168.254.84) 2.07ms<br></code></pre></td></tr></table></figure>
+<h3 id="3-2-3-安装jupyter环境"><a href="#3-2-3-安装jupyter环境" class="headerlink" title="3.2.3 安装jupyter环境"></a>3.2.3 安装jupyter环境</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装 IPython 交互式 shell</span><br>(self-llm) root@controller01:/opt/installPkgs# pip install ipython<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">正式安装jupyter</span><br>(self-llm) root@controller01:/opt/installPkgs# apt install jupyter-core jupyter-notebook -qy<br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建目录</span><br>(self-llm) root@controller01:/opt/installPkgs# mkdir finetunning-bigmodles<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">启动jupyter notebook</span><br>(self-llm) root@controller01:/opt/installPkgs# jupyter notebook --allow-root --ip=0.0.0.0<br>[I 01:29:38.744 NotebookApp] Serving notebooks from local directory: /opt/installPkgs<br>[I 01:29:38.744 NotebookApp] The Jupyter Notebook is running at:<br>[I 01:29:38.744 NotebookApp] http://a10:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br>[I 01:29:38.744 NotebookApp]  or http://127.0.0.1:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br>[I 01:29:38.744 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).<br>[W 01:29:38.755 NotebookApp] No web browser found: could not locate runnable browser.<br>[C 01:29:38.756 NotebookApp] <br>    <br>    To access the notebook, open this file in a browser:<br>        file:///root/.local/share/jupyter/runtime/nbserver-41207-open.html<br>    Or copy and paste one of these URLs:<br>        http://a10:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br>     or http://127.0.0.1:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br>[I 01:29:53.755 NotebookApp] 302 GET /?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba (192.168.254.84) 2.07ms<br></code></pre></td></tr></table></figure>
 
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">将以下url中的127.0.0.1换成服务器IP，即可访问上述创建的jupyter环境，比如当前安装jupyter环境的服务器IP是172.20.0.21，则URL是如下</span><br>http://172.20.0.21:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br><span class="hljs-meta prompt_">#</span><span class="language-bash">最后的参数token类似于访问的密码。访问成功后界面如下，jupyter环境根目录就是执行“jupyter notebook --allow-root --ip=0.0.0.0”命令的所在目录/opt/installPkgs，以下显示了所在目录/opt/installPkgs下的所有文件及文件夹</span><br></code></pre></td></tr></table></figure>
 
@@ -523,7 +522,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E6%9C%AC%E5%9C%B0%E5%BE%AE%E8%B0%83-DeepSeek-R1-8b/" class="print-no-link">#本地微调 DeepSeek-R1-8b</a>
+        <a href="/tags/%E5%BE%AE%E8%B0%83/" class="print-no-link">#微调</a>
       
     </div>
   
@@ -535,8 +534,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>本地微调DeepSeek-R1-8b模型</div>
-      <div>https://jiangsanyin.github.io/2025/02/13/本地微调DeepSeek-R1-8b模型/</div>
+      <div>纯CPU本地微调DeepSeek-R1-1.5b模型</div>
+      <div>https://jiangsanyin.github.io/2025/03/06/纯CPU本地微调DeepSeek-R1-1-5b模型/</div>
     </div>
     <div class="license-meta">
       
@@ -548,7 +547,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年2月13日</div>
+          <div>2025年3月6日</div>
         </div>
       
       
@@ -580,18 +579,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/02/19/%E8%AF%95%E7%94%A8%E8%85%BE%E8%AE%AF%E4%BA%91%E5%BA%94%E7%94%A8%E9%83%A8%E7%BD%B2DeepSeek%E6%9C%8D%E5%8A%A1/" title="试用腾讯云应用快速部署DeepSeek服务">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">试用腾讯云应用快速部署DeepSeek服务</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/02/13/%E5%BE%AE%E8%B0%83DeepSeek-R1-8B%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%8F%AF%E8%A7%86%E5%8C%96%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B/" title="微调DeepSeek-R1-8B模型与可视化训练过程">
-                        <span class="hidden-mobile">微调DeepSeek-R1-8B模型与可视化训练过程</span>
+                      <a href="/2025/03/02/2025%E5%B9%B43%E6%9C%882%E6%97%A5%E9%95%BF%E6%B2%99%E5%B8%82%E6%9C%9B%E6%9C%88%E5%85%AC%E5%9B%AD%E9%9A%8F%E6%8B%8D/" title="2025年3月2日长沙市望月公园随拍">
+                        <span class="hidden-mobile">2025年3月2日长沙市望月公园随拍</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
