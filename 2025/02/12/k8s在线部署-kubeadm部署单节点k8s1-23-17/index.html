@@ -27,7 +27,7 @@
 <meta property="og:description" content="2.1    节点规划   主机名 用途 IP root用户密码 规格 系统盘 OS 备注    controller01 master + worker 172.20.0.21 cloud@2020 8c16g 400G Ubuntu 20.04.3 LTS-amd64 联网   2.2    安装步骤2.2.1     修改各节点主机名1hostnamectl set-hostname con">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-02-12T06:14:34.000Z">
-<meta property="article:modified_time" content="2025-03-09T04:42:02.000Z">
+<meta property="article:modified_time" content="2025-03-12T03:01:50.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="kubeadm k8s1.23.17">
 <meta name="twitter:card" content="summary_large_image">
@@ -247,7 +247,7 @@
         
         
         
-          89 分钟
+          90 分钟
         
       </span>
     
@@ -391,6 +391,8 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">kubectl label node ksp-registry node-role.kubernetes.io/worker=&quot;&quot;<br></code></pre></td></tr></table></figure>
 
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:/opt/cni/bin# kubectl get nodes<br>NAME           STATUS   ROLES                         AGE   VERSION<br>controller01   Ready    control-plane,master,worker   25d   v1.23.17<br>ksp-registry   Ready    worker                        23m   v1.23.17<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-4-卸载集群"><a href="#2-4-卸载集群" class="headerlink" title="2.4 卸载集群"></a>2.4 卸载集群</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">所有节点执行：</span><br>systemctl stop kubelet<br>systemctl stop etcd<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">所有节点执行：</span><br>kubeadm reset <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">所有节点执行：</span><br>dpkg -l | grep kube | awk &#x27;&#123;print $2&#125;&#x27; | xargs dpkg --purge <br>dpkg -l | grep kube<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">所有节点执行：</span><br>rm -rf $HOME/.kube<br>rm -rf ~/.kube/<br>rm -rf /etc/kubernetes/<br>rm -rf /etc/systemd/system/kubelet.service.d<br>rm -rf /etc/systemd/system/kubelet.service<br>rm -rf /usr/bin/kube*<br>rm -rf /etc/cni<br>rm -rf /opt/cni<br>rm -rf /var/lib/etcd/*<br></code></pre></td></tr></table></figure>
 
 
                 
