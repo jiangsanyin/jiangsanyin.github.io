@@ -19,55 +19,21 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、课程学习内容与打卡要求~ 二、正式课程内容2.1 第一课 初识大模型2.1.1 语言模型的发展ChatPGT于2022年11月底上线，引爆全球关注。    语言模型通常是指能够建模自然语言文本生成概率的模型 从语言建模到任务求解，这是科学思维的一次重要跃升                          2.1.2 大模型技术基础大模型：通常是指具有超大规模参数的预训练语言模型。构架上一般使">
+    <meta name="description" content="参考文章： https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;1keAGOQlkTf_dKrzWmCRZQ  https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;C4aTsxzYGV7bFrKyx6juug 下载页面： https:&#x2F;&#x2F;modelscope.cn&#x2F;models&#x2F;unsloth&#x2F;DeepSeek-R1-GGUF&#x2F;files 下载模型文件：  https:&#x2F;&#x2F;modelscope">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Datawhale大语言模型课程分组学习">
-<meta property="og:url" content="https://jiangsanyin.github.io/2025/03/11/Datawhale%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AF%BE%E7%A8%8B%E5%88%86%E7%BB%84%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:title" content="KTransformers部署DeepSeek-R1-Q4_K_M">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/03/12/KTransformers%E9%83%A8%E7%BD%B2DeepSeek-R1-Q4-K-M/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、课程学习内容与打卡要求~ 二、正式课程内容2.1 第一课 初识大模型2.1.1 语言模型的发展ChatPGT于2022年11月底上线，引爆全球关注。    语言模型通常是指能够建模自然语言文本生成概率的模型 从语言建模到任务求解，这是科学思维的一次重要跃升                          2.1.2 大模型技术基础大模型：通常是指具有超大规模参数的预训练语言模型。构架上一般使">
+<meta property="og:description" content="参考文章： https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;1keAGOQlkTf_dKrzWmCRZQ  https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;C4aTsxzYGV7bFrKyx6juug 下载页面： https:&#x2F;&#x2F;modelscope.cn&#x2F;models&#x2F;unsloth&#x2F;DeepSeek-R1-GGUF&#x2F;files 下载模型文件：  https:&#x2F;&#x2F;modelscope">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/Fn16rH4y5GEv3ie.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/9LwhDs5Cx3vAaQu.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/Eq7eFtaM4wvsAx8.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/TZCMtVE8QB9OrfW.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/uK6kTPyD4fFZd1i.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/8deSsAUWn4PuNcD.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/CYwQx3bRq9Hoz2L.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/VsWJOKqiD7ac4Zk.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/LE5ToHOftRIy4N2.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/xep3Ss69PtOaKGZ.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/whv59DG763xdMXP.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/9lCOsNR617KBzpi.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/TXJofI6LqzmtNAR.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/q89iT2NkcfrBtuo.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/35ZkbDROoeSzdG7.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/11/F2sIqAYz1cupiEe.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/ALJPrZtbTjchway.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/Fd5HcJgkEx63KAC.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/CvDBGi2fxbkRlHz.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/NgrFTHPKdieut3w.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/y42W1QeFCdT5hNx.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/2ioV7IMQXzwn8lZ.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/nlyBq39cO7uo4QI.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/2Nof3kXcxeS7b6g.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/pvunfPB51hldmSq.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/Ugl158MZIXScDyd.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/ewPFyAO8ski5lHd.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/FhLoOyrIdipJ8uC.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/UFqktmcT7bf3QYl.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/9PCBlt3vJgTZNKw.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/ZIivOFJsp6HAzYL.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/12/rIGiwfZjsDmT4K1.png">
-<meta property="article:published_time" content="2025-03-11T15:01:56.000Z">
-<meta property="article:modified_time" content="2025-03-12T13:19:36.000Z">
+<meta property="article:published_time" content="2025-03-12T03:33:43.000Z">
+<meta property="article:modified_time" content="2025-03-12T08:38:20.000Z">
 <meta property="article:author" content="sanyinjiang">
-<meta property="article:tag" content="大语言模型课程">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2025/03/11/Fn16rH4y5GEv3ie.png">
   
   
   
-  <title>Datawhale大语言模型课程分组学习 - sanyinjiang</title>
+  <title>KTransformers部署DeepSeek-R1-Q4_K_M - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -246,7 +212,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Datawhale大语言模型课程分组学习</span>
+            <span id="subtitle">KTransformers部署DeepSeek-R1-Q4_K_M</span>
           
         </div>
 
@@ -257,8 +223,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-11 23:01" pubdate>
-          2025年3月11日 晚上
+        <time datetime="2025-03-12 11:33" pubdate>
+          2025年3月12日 中午
         </time>
       </span>
     
@@ -269,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          949 字
+          56 字
         
       </span>
     
@@ -280,7 +246,7 @@
         
         
         
-          8 分钟
+          1 分钟
         
       </span>
     
@@ -326,138 +292,19 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Datawhale大语言模型课程分组学习</h1>
+            <h1 id="seo-header">KTransformers部署DeepSeek-R1-Q4_K_M</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一、课程学习内容与打卡要求"><a href="#一、课程学习内容与打卡要求" class="headerlink" title="一、课程学习内容与打卡要求"></a>一、课程学习内容与打卡要求</h1><p>~</p>
-<h1 id="二、正式课程内容"><a href="#二、正式课程内容" class="headerlink" title="二、正式课程内容"></a>二、正式课程内容</h1><h2 id="2-1-第一课-初识大模型"><a href="#2-1-第一课-初识大模型" class="headerlink" title="2.1 第一课 初识大模型"></a>2.1 第一课 初识大模型</h2><h3 id="2-1-1-语言模型的发展"><a href="#2-1-1-语言模型的发展" class="headerlink" title="2.1.1 语言模型的发展"></a>2.1.1 语言模型的发展</h3><p>ChatPGT于2022年11月底上线，引爆全球关注。</p>
-<p><img src="https://s2.loli.net/2025/03/11/Fn16rH4y5GEv3ie.png" srcset="/img/loading.gif" lazyload alt="image-20250311222953477"></p>
-<hr>
-<ul>
-<li>语言模型通常是指能够建模自然语言文本生成概率的模型</li>
-<li>从语言建模到任务求解，这是科学思维的一次重要跃升</li>
-</ul>
-<p><img src="https://s2.loli.net/2025/03/11/9LwhDs5Cx3vAaQu.png" srcset="/img/loading.gif" lazyload alt="image-20250311223332799"></p>
-<hr>
-<p><img src="https://s2.loli.net/2025/03/11/Eq7eFtaM4wvsAx8.png" srcset="/img/loading.gif" lazyload alt="image-20250311223517477"></p>
-<hr>
-<p><img src="https://s2.loli.net/2025/03/11/TZCMtVE8QB9OrfW.png" srcset="/img/loading.gif" lazyload alt="image-20250311223536000"></p>
-<hr>
-<p><img src="https://s2.loli.net/2025/03/11/uK6kTPyD4fFZd1i.png" srcset="/img/loading.gif" lazyload alt="image-20250311224233248"></p>
-<hr>
-<p><img src="https://s2.loli.net/2025/03/11/8deSsAUWn4PuNcD.png" srcset="/img/loading.gif" lazyload alt="image-20250311224538485"></p>
-<hr>
-<p><img src="https://s2.loli.net/2025/03/11/CYwQx3bRq9Hoz2L.png" srcset="/img/loading.gif" lazyload alt="image-20250311224606930"></p>
-<hr>
-<p><img src="https://s2.loli.net/2025/03/11/VsWJOKqiD7ac4Zk.png" srcset="/img/loading.gif" lazyload alt="image-20250311225240822"></p>
-<hr>
-<p><img src="https://s2.loli.net/2025/03/11/LE5ToHOftRIy4N2.png" srcset="/img/loading.gif" lazyload alt="image-20250311225357961"></p>
-<hr>
-<p><img src="https://s2.loli.net/2025/03/11/xep3Ss69PtOaKGZ.png" srcset="/img/loading.gif" lazyload alt="image-20250311225457744"></p>
-<p><img src="https://s2.loli.net/2025/03/11/whv59DG763xdMXP.png" srcset="/img/loading.gif" lazyload alt="image-20250311225848903"></p>
-<p><img src="https://s2.loli.net/2025/03/11/9lCOsNR617KBzpi.png" srcset="/img/loading.gif" lazyload alt="image-20250311225901215"></p>
-<p><img src="https://s2.loli.net/2025/03/11/TXJofI6LqzmtNAR.png" srcset="/img/loading.gif" lazyload alt="image-20250311225912743"></p>
-<hr>
-<p><img src="https://s2.loli.net/2025/03/11/q89iT2NkcfrBtuo.png" srcset="/img/loading.gif" lazyload alt="image-20250311225956786"></p>
-<p><img src="https://s2.loli.net/2025/03/11/35ZkbDROoeSzdG7.png" srcset="/img/loading.gif" lazyload alt="image-20250311230014329"></p>
-<p><img src="https://s2.loli.net/2025/03/11/F2sIqAYz1cupiEe.png" srcset="/img/loading.gif" lazyload alt="image-20250311230023897"></p>
-<h3 id="2-1-2-大模型技术基础"><a href="#2-1-2-大模型技术基础" class="headerlink" title="2.1.2 大模型技术基础"></a>2.1.2 大模型技术基础</h3><p>大模型：通常是指具有超大规模参数的预训练语言模型。构架上一般使用Transformer解码器构架。其训练包括预训练pre-training（生成base model）与后训练post-training（生成instruct model）</p>
-<p><img src="https://s2.loli.net/2025/03/12/ALJPrZtbTjchway.png" srcset="/img/loading.gif" lazyload alt="image-20250312164208455"></p>
-<p>预训练与后训练的主要区别如下：</p>
-<p><img src="https://s2.loli.net/2025/03/12/Fd5HcJgkEx63KAC.png" srcset="/img/loading.gif" lazyload alt="image-20250312164245159"></p>
-<h4 id="大语言模型构建概览"><a href="#大语言模型构建概览" class="headerlink" title="大语言模型构建概览"></a>大语言模型构建概览</h4><p>预训练： 使用与下游任务无关的规模数据进行模型参数的初始训练。</p>
-<p><img src="https://s2.loli.net/2025/03/12/CvDBGi2fxbkRlHz.png" srcset="/img/loading.gif" lazyload alt="image-20250312163951715"></p>
-<p>后训练采用的方法一般是指令微调（Instrcution Tuning）：</p>
-<ul>
-<li>指令微调：使用输入与输出配对的指令数据对模型进行微调，提升模型通过问答形式进行任务求解的能力。</li>
-</ul>
-<p><img src="https://s2.loli.net/2025/03/12/NgrFTHPKdieut3w.png" srcset="/img/loading.gif" lazyload alt="image-20250312164710415"></p>
-<ul>
-<li>人类对齐：将大语言模型与人类期望、需求以及价值观对齐，基于人类反馈的强化学习对齐方法RLHF（Reinforcement Learning from Human Feedback，人类反馈强化学习）</li>
-</ul>
-<p><img src="https://s2.loli.net/2025/03/12/y42W1QeFCdT5hNx.png" srcset="/img/loading.gif" lazyload alt="image-20250312164952125"></p>
-<p>大模型的研发已经已经成为一项系统工程。</p>
-<h4 id="扩展定律"><a href="#扩展定律" class="headerlink" title="扩展定律"></a>扩展定律</h4><ul>
-<li><p>KM扩展定律</p>
-<ul>
-<li>OpenAI团队建立了神经语言模型性能与参数规模（N）、数据规模（D）和计算规模（C）之间的幂等关系，如下所示</li>
-</ul>
-<p><img src="https://s2.loli.net/2025/03/12/2ioV7IMQXzwn8lZ.png" srcset="/img/loading.gif" lazyload alt="image-20250312172611713"></p>
-</li>
-</ul>
-<img src="https://s2.loli.net/2025/03/12/nlyBq39cO7uo4QI.png" srcset="/img/loading.gif" lazyload alt="image-20250312172731883" style="zoom: 25%;" />
+                <p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/1keAGOQlkTf_dKrzWmCRZQ">https://mp.weixin.qq.com/s/1keAGOQlkTf_dKrzWmCRZQ</a> </p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/C4aTsxzYGV7bFrKyx6juug">https://mp.weixin.qq.com/s/C4aTsxzYGV7bFrKyx6juug</a></p>
+<p>下载页面：</p>
+<p><a target="_blank" rel="noopener" href="https://modelscope.cn/models/unsloth/DeepSeek-R1-GGUF/files">https://modelscope.cn/models/unsloth/DeepSeek-R1-GGUF/files</a></p>
+<p>下载模型文件： </p>
+<p><a target="_blank" rel="noopener" href="https://modelscope.cn/models/unsloth/DeepSeek-R1-GGUF/resolve/master/DeepSeek-R1-Q4_K_M/DeepSeek-R1-Q4_K_M-00001-of-00009.gguf">https://modelscope.cn/models/unsloth/DeepSeek-R1-GGUF/resolve/master/DeepSeek-R1-Q4_K_M/DeepSeek-R1-Q4_K_M-00001-of-00009.gguf</a></p>
 
-<p><strong>数据规模越大，损失越小。相同的数据规模，参数规模越大，损失越小。</strong></p>
-<p><img src="https://s2.loli.net/2025/03/12/2Nof3kXcxeS7b6g.png" srcset="/img/loading.gif" lazyload alt="image-20250312172103891"></p>
-<ul>
-<li><p>Chinachilla扩展定律</p>
-<ul>
-<li>DeepMind团队于2022年提出了另一种形式的扩展定律，旨在指导大语言模型充分利用给定的算力资源优化训练</li>
-</ul>
-<p><img src="https://s2.loli.net/2025/03/12/pvunfPB51hldmSq.png" srcset="/img/loading.gif" lazyload alt="image-20250312205041971"></p>
-</li>
-<li><p>深入讨论</p>
-</li>
-</ul>
-<p><img src="https://s2.loli.net/2025/03/12/Ugl158MZIXScDyd.png" srcset="/img/loading.gif" lazyload alt="image-20250312205447907"></p>
-<hr>
-<h4 id="涌现能力"><a href="#涌现能力" class="headerlink" title="涌现能力"></a>涌现能力</h4><ul>
-<li>什么是涌现能力<ul>
-<li>原始论文定义：“在小型模型中不存在、但在大模型中出现的能力”</li>
-<li>模型扩展到一定规模时，特定任务性能突然出现显著跃升趋势，远超随机水平</li>
-</ul>
-</li>
-</ul>
-<p><img src="https://s2.loli.net/2025/03/12/ewPFyAO8ski5lHd.png" srcset="/img/loading.gif" lazyload alt="image-20250312205725105"></p>
-<p>从上图可以看出，将模型参数规模扩展某个量级时，模型性能出现显著提升。</p>
-<ul>
-<li>涌现能力可能部分归因于评测设置<ul>
-<li>本课程定义其为“代表性能力”，并不区分是否在小模型中存在</li>
-</ul>
-</li>
-</ul>
-<p><img src="https://s2.loli.net/2025/03/12/FhLoOyrIdipJ8uC.png" srcset="/img/loading.gif" lazyload alt="image-20250312210030812"></p>
-<ul>
-<li>代表性能力<ul>
-<li>指令遵循(Instruction Following)<ul>
-<li>大语言模型能够按照自然语言指令来执行对应的任务<img src="https://s2.loli.net/2025/03/12/UFqktmcT7bf3QYl.png" srcset="/img/loading.gif" lazyload alt="image-20250312210223980"></li>
-</ul>
-</li>
-<li>上下文学习（In-context Learning)<ul>
-<li>在提示中为语言模型提供自然语言指令和任务示例，无需显式梯度更新就能为测试样本生成预期输出</li>
-<li><img src="https://s2.loli.net/2025/03/12/9PCBlt3vJgTZNKw.png" srcset="/img/loading.gif" lazyload alt="image-20250312210612103"></li>
-</ul>
-</li>
-<li>逐步推理（Step-by-step Reasoning）<ul>
-<li>在提示中引入任务相关的中间推理步骤来加强复杂任务的求解，从而获得更可靠的答案</li>
-<li><img src="https://s2.loli.net/2025/03/12/ZIivOFJsp6HAzYL.png" srcset="/img/loading.gif" lazyload alt="image-20250312211052574"></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<hr>
-<ul>
-<li>涌现能力与扩展定律的关系<ul>
-<li>涌现能力和扩展定律是两种描述规模效应的度量方法</li>
-<li><img src="https://s2.loli.net/2025/03/12/rIGiwfZjsDmT4K1.png" srcset="/img/loading.gif" lazyload alt="image-20250312211500851"></li>
-</ul>
-</li>
-</ul>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
-<li>大模型核心技术<ul>
-<li>规模扩展：扩展定律奠定了早期大模型的技术路线，产生了巨大的性能提升</li>
-<li>数据工程：数据数量、数据质量以及配制方法极其关键</li>
-<li>高效预训练：需要建立可预测、可扩展的大规模训练架构</li>
-<li>能力激发：预训练后可以通过微调、对齐、提示工程等技术进行能力激活</li>
-<li>人类对齐：需要设计对齐技术减少模型使用风险，并进一步提升模型性能</li>
-<li>工具使用：使用外部工具加强模型的优势，拓展其能力范围</li>
-</ul>
-</li>
-</ul>
-<h3 id="2-1-3-GPT与DeepSeek模型介绍"><a href="#2-1-3-GPT与DeepSeek模型介绍" class="headerlink" title="2.1.3 GPT与DeepSeek模型介绍"></a>2.1.3 GPT与DeepSeek模型介绍</h3>
                 
               </div>
             
@@ -465,13 +312,6 @@
             <div>
               <div class="post-metas my-3">
   
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AF%BE%E7%A8%8B/" class="print-no-link">#大语言模型课程</a>
-      
-    </div>
   
 </div>
 
@@ -481,8 +321,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Datawhale大语言模型课程分组学习</div>
-      <div>https://jiangsanyin.github.io/2025/03/11/Datawhale大语言模型课程分组学习/</div>
+      <div>KTransformers部署DeepSeek-R1-Q4_K_M</div>
+      <div>https://jiangsanyin.github.io/2025/03/12/KTransformers部署DeepSeek-R1-Q4-K-M/</div>
     </div>
     <div class="license-meta">
       
@@ -494,7 +334,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月11日</div>
+          <div>2025年3月12日</div>
         </div>
       
       
@@ -526,9 +366,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/03/12/KTransformers%E9%83%A8%E7%BD%B2DeepSeek-R1-Q4-K-M/" title="KTransformers部署DeepSeek-R1-Q4_K_M">
+                      <a href="/2025/03/14/4%E2%9C%968%E2%9C%96A800%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E6%BB%A1%E8%A1%80%E7%89%88DeepSeek-R1-671B%E6%AD%A5%E9%AA%A4/" title="4✖8✖A800服务器部署满血版DeepSeek-R1-671B步骤">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">KTransformers部署DeepSeek-R1-Q4_K_M</span>
+                        <span class="hidden-mobile">4✖8✖A800服务器部署满血版DeepSeek-R1-671B步骤</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -536,8 +376,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/03/10/%E6%9E%84%E5%BB%BA%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F%E4%B9%8B%E6%9B%B4%E6%96%B0%E7%9F%A5%E8%AF%86%E5%BA%93%E4%B8%8E%E5%BE%AE%E8%B0%83%E4%BA%8C%E8%80%85%E6%AF%94%E8%BE%83/" title="构建问答系统之更新知识库与微调二者比较">
-                        <span class="hidden-mobile">构建问答系统之更新知识库与微调二者比较</span>
+                      <a href="/2025/03/11/Datawhale%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AF%BE%E7%A8%8B%E5%88%86%E7%BB%84%E5%AD%A6%E4%B9%A0/" title="Datawhale大语言模型课程分组学习">
+                        <span class="hidden-mobile">Datawhale大语言模型课程分组学习</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
