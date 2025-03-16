@@ -1,0 +1,767 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 LXC项目介绍​        LXC是在crgoup被引入Linux内核后立即被创建的项目，它被设计用于”full-system” 容器，是用来创建Linux容器的，此时的Linux容器跟我们现在常用的Linux上Docker容器或containerd容器是有区别的，最显著的区别在于它们使用不是容器运行时不同。同时Systemd也获得了类似的容器支持，systemd-nspawn可以运行命名">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LXC容器运行时">
+<meta property="og:url" content="https://jiangsanyin.github.io/2024/12/27/LXC%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="1 LXC项目介绍​        LXC是在crgoup被引入Linux内核后立即被创建的项目，它被设计用于”full-system” 容器，是用来创建Linux容器的，此时的Linux容器跟我们现在常用的Linux上Docker容器或containerd容器是有区别的，最显著的区别在于它们使用不是容器运行时不同。同时Systemd也获得了类似的容器支持，systemd-nspawn可以运行命名">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2024/12/27/s2lMK6STe1YJvDw.png">
+<meta property="og:image" content="https://s2.loli.net/2024/12/27/62NApc1QeoqavCX.png">
+<meta property="og:image" content="https://s2.loli.net/2024/12/27/GWfEhz2O3c1RaCr.png">
+<meta property="article:published_time" content="2024-12-27T15:16:09.000Z">
+<meta property="article:modified_time" content="2024-12-28T08:55:24.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="开源容器运行时 LXC 容器">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2024/12/27/s2lMK6STe1YJvDw.png">
+  
+  
+  
+  <title>LXC容器运行时 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">LXC容器运行时</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-27 23:16" pubdate>
+          2024年12月27日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">LXC容器运行时</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-LXC项目介绍"><a href="#1-LXC项目介绍" class="headerlink" title="1 LXC项目介绍"></a>1 LXC项目介绍</h1><p>​        LXC是在crgoup被引入Linux内核后立即被创建的项目，它被设计用于”full-system” 容器，是用来创建Linux容器的，此时的Linux容器跟我们现在常用的Linux上Docker容器或containerd容器是有区别的，最显著的区别在于它们使用不是容器运行时不同。同时Systemd也获得了类似的容器支持，systemd-nspawn可以运行命名空间进程，systemd本身可以控制cgroup。尽管lxc与systemd-nspawn也在其他项目中被利用到了，但它们还是没有能够吸引足够多的终端用户。现在并不是一个流行的开源容器化项目。</p>
+<h1 id="2-LXC容器运行时介绍"><a href="#2-LXC容器运行时介绍" class="headerlink" title="2 LXC容器运行时介绍"></a>2 LXC容器运行时介绍</h1><p>​        LXC 是一个早期知名的Linux 容器运行时，主要由C语言实现。官网参考 <a target="_blank" rel="noopener" href="https://linuxcontainers.org/lxc/introduction/">https://linuxcontainers.org/lxc/introduction/</a> 。</p>
+<p><img src="https://s2.loli.net/2024/12/27/s2lMK6STe1YJvDw.png" srcset="/img/loading.gif" lazyload alt="image-20241227233124311"></p>
+<p><img src="https://s2.loli.net/2024/12/27/62NApc1QeoqavCX.png" srcset="/img/loading.gif" lazyload alt="image-20241227233051173"></p>
+<p>​        OCI（Open Container Initiative）规范主要定义了容器运行时的标准，包括容器的镜像格式、容器的生命周期管理（如创建、启动、停止、删除）、配置管理（如挂载点、环境变量等）以及资源管理（如CPU、内存分配）等多个方面。符合 OCI 规范的容器运行时可以更好地与其他符合该规范的工具和平台进行交互和协作。</p>
+<p>​        LXC 并不完全符合OCI 规范。LXC 有自己独立的一套容器创建和管理机制，它主要是利用Linux 内核的 cgroups 和 namespaces 特性来实现容器的隔离和资源管理。</p>
+<p>​        尽管 LXC 本身不符合OCI 规范，但在某些场景下可以实现一定程度的兼容。例如，可以通过一些中间层工具或者适配层来使 LXC 容器与基于 OCI 规范的生态系统进行交互。不过，这种方式相对复杂，并且可能会损失一些LXC 本身的特性或者引入额外的开销，笔者未做探讨研究，此文不涉及。</p>
+<h1 id="3-安装LXC"><a href="#3-安装LXC" class="headerlink" title="3 安装LXC"></a>3 安装LXC</h1><h2 id="软硬件要求"><a href="#软硬件要求" class="headerlink" title="软硬件要求"></a>软硬件要求</h2><ul>
+<li><p>支持多种构架如amd64、arm64、riscv64、armhf等</p>
+</li>
+<li><p>要使用 lxc-attach及非特权容器，就必须满足以下条件：</p>
+</li>
+<li><ul>
+<li>Linux kernel &gt;&#x3D; 3.12</li>
+</ul>
+</li>
+<li><ul>
+<li>至少有glibc, musl libc, uclib or bionic 其中一个作为操作系统的 C library</li>
+</ul>
+</li>
+<li><p>其余推荐的信赖库：</p>
+</li>
+<li><ul>
+<li>libcap (to allow for capability drops)</li>
+</ul>
+</li>
+<li><ul>
+<li>libapparmor (to set a different apparmor profile for the container)</li>
+</ul>
+</li>
+<li><ul>
+<li>libselinux (to set a different selinux context for the container)</li>
+</ul>
+</li>
+<li><ul>
+<li>libseccomp (to set a seccomp policy for the container)</li>
+</ul>
+</li>
+<li><ul>
+<li>libgnutls (for various checksumming)</li>
+</ul>
+</li>
+<li><ul>
+<li>liblua (for the LUA binding)</li>
+</ul>
+</li>
+<li><ul>
+<li>python3-dev (for the python3 binding)</li>
+</ul>
+</li>
+</ul>
+<h2 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在ubuntu20.04LTS-amd64上安装lxc</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">apt-get install lxc</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">验证安装成功（成功时输出大致如下）</span><br>root@ubuntu20:~# lxc-info --version4.0.12<br></code></pre></td></tr></table></figure>
+
+<h1 id="4-简单使用LXC"><a href="#4-简单使用LXC" class="headerlink" title="4 简单使用LXC"></a>4 简单使用LXC</h1><h2 id="命令行形式"><a href="#命令行形式" class="headerlink" title="命令行形式"></a>命令行形式</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建lxc容器(第一次创建lxc容器时耗时较长)</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">4.1 只通过-t指定模板（其实就是容器镜像）名称，不指定标签与构架，那么标签与构架与宿主机靠齐</span><br>root@ubuntu20:~# lxc-create -n my_lxc_ubuntu -t ubuntu<br><span class="hljs-meta prompt_">#</span><span class="language-bash">4.2 执行创建lxc容器的命令时不指定模板名称，创建过程中互动指定（指定Distribution、Release、Architecture）</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">所有容器模板好像是被官方维护的（具体还未研究）</span><br>root@ubuntu20:~# lxc-create --template download --name my-container<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果已经知道这三个参数可以是什么，当然也可以在上述命令直接指定下面的3个参数</span><br>root@ubuntu20:~# lxc-create --template download --name my-container -- --dist opensuse --release 15.5 --arch amd64<br><span class="hljs-meta prompt_">#</span><span class="language-bash">没有指定--dist、--release、--<span class="hljs-built_in">arch</span>参数时，创建中通过如下方式指定</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2024/12/27/GWfEhz2O3c1RaCr.png" srcset="/img/loading.gif" lazyload alt="image-20241227232807348"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">4.3 启动容器：创建出来的lxc容器默认是停止状态，需要手动启动</span><br>root@ubuntu20:~# lxc-start -n my-container<br><span class="hljs-meta prompt_">#</span><span class="language-bash">4.4 进入lxc容器内</span><br>root@ubuntu20:~# lxc-attach -n my-container<br><span class="hljs-meta prompt_">#</span><span class="language-bash">4.5 执行命令：进入容器内后，可以在容器内执行命令</span><br>my-container:~ # cat /etc/os-release <br>NAME=&quot;openSUSE Leap&quot;<br>VERSION=&quot;15.5&quot;<br>ID=&quot;opensuse-leap&quot;<br>ID_LIKE=&quot;suse opensuse&quot;<br>…<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">4.6 从lxc容器内退出</span><br>my-container:~ # exit<br><span class="hljs-meta prompt_">#</span><span class="language-bash">4.7查看所有的容器</span><br>root@ubuntu20:~# lxc-ls -f<br><span class="hljs-meta prompt_">#</span><span class="language-bash">4.8查看容器信息</span> <br>root@ubuntu20:~# lxc-info -n my-container<br><span class="hljs-meta prompt_">#</span><span class="language-bash">4.9 停掉容器</span><br>root@ubuntu20:~# lxc-stop -n my-container<br><span class="hljs-meta prompt_">#</span><span class="language-bash">4.10 删除容器</span><br>root@ubuntu20:~# lxc-destroy -n my-container <br><span class="hljs-meta prompt_">#</span><span class="language-bash">暂时未弄清楚是否可以定制lxc容器镜像，理论上应该是可以的。</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">因为这个lxc容器暂时未真正使用，暂时不再研究</span><br></code></pre></td></tr></table></figure>
+
+<p>​        其他关于命令行对lxc容器进行操作的说明，参见官方文档：<a target="_blank" rel="noopener" href="https://linuxcontainers.org/lxc/getting-started/">https://linuxcontainers.org/lxc/getting-started/</a></p>
+<h2 id="API调用形式"><a href="#API调用形式" class="headerlink" title="API调用形式"></a>API调用形式</h2><p>​        从官网看到的内容，目前支持C语言与Python语言通过API形式对lxc容器相关操作。具体参见：<a target="_blank" rel="noopener" href="https://linuxcontainers.org/lxc/documentation/">https://linuxcontainers.org/lxc/documentation/</a></p>
+<h1 id="5-LXC其他资源介绍"><a href="#5-LXC其他资源介绍" class="headerlink" title="5 LXC其他资源介绍"></a>5 LXC其他资源介绍</h1><p>1）lxc容器当前虽然并不是很火，但其一直在迭代，其所有版本信息及下载：<a target="_blank" rel="noopener" href="https://linuxcontainers.org/lxc/downloads/">https://linuxcontainers.org/lxc/downloads/</a> </p>
+<p>2）lxc项目对应代开源代码仓库地址：<a target="_blank" rel="noopener" href="https://github.com/lxc/lxc">https://github.com/lxc/lxc</a> </p>
+<p>3）lxc相关指令的manpage：<a target="_blank" rel="noopener" href="https://linuxcontainers.org/lxc/manpages">https://linuxcontainers.org/lxc/manpages</a> </p>
+<p>4）lxc容器安全机制介绍：<a target="_blank" rel="noopener" href="https://linuxcontainers.org/lxc/security">https://linuxcontainers.org/lxc/security</a></p>
+<h1 id="6-备注与参考文章"><a href="#6-备注与参考文章" class="headerlink" title="6 备注与参考文章"></a>6 备注与参考文章</h1><p>​        订阅号文章不方便更新，如后续有修改或完善，将更新到个人博客，博客地址参考文首。技术操作类文章推荐直接访问个人博客查阅，阅读效果更佳。</p>
+<p>​        某些观点或阐述，笔者水平有限无法给出正式严谨的答案，唯有引用或参考企业单位的官网与其他前辈的描述。本文某些内容来自以下文章：**</p>
+<ul>
+<li>lxc官网：<a target="_blank" rel="noopener" href="https://linuxcontainers.org/lxc">https://linuxcontainers.org/lxc</a></li>
+<li>PolarSPARC文章：<a target="_blank" rel="noopener" href="https://www.polarsparc.com/xhtml/LXC.html">https://www.polarsparc.com/xhtml/LXC.html</a></li>
+<li>csdn博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44281591/article/details/132251767">https://blog.csdn.net/qq_44281591/article/details/132251767</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%BC%80%E6%BA%90%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6-LXC-%E5%AE%B9%E5%99%A8/" class="print-no-link">#开源容器运行时 LXC 容器</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>LXC容器运行时</div>
+      <div>https://jiangsanyin.github.io/2024/12/27/LXC容器运行时/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年12月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/01/05/containerd%E5%AE%B9%E5%99%A8%E5%BC%95%E6%93%8E%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="containerd容器引擎服务的安装与使用">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">containerd容器引擎服务的安装与使用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/27/2024%E5%B9%B4%E5%86%AC%E5%AD%A3%E5%B2%B3%E9%BA%93%E5%B1%B1%E9%9A%8F%E6%8B%8D/" title="2024年冬季岳麓山随拍">
+                        <span class="hidden-mobile">2024年冬季岳麓山随拍</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

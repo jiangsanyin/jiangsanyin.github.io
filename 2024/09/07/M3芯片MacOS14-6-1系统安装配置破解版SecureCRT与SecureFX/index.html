@@ -1,0 +1,783 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、背景​		笔者平时工作、学习、生活以前使用图形化的Windows7&#x2F;8&#x2F;10&#x2F;11操作系统居多，所以平时对Windows上的软件使用比较熟悉、习惯了。比如平时需要访问与使用Linux服务器时，就是在Windows系统上使用终端连接工具SecureCRT与文件传输工具SecureFX，最近有了使用M3芯片的Mac电脑的需求，还是想将在Mac电脑上安装这两个软件的Ma">
+<meta property="og:type" content="article">
+<meta property="og:title" content="M3芯片MacOS14.6.1系统安装配置破解版SecureCRT与SecureFX">
+<meta property="og:url" content="https://jiangsanyin.github.io/2024/09/07/M3%E8%8A%AF%E7%89%87MacOS14-6-1%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E7%A0%B4%E8%A7%A3%E7%89%88SecureCRT%E4%B8%8ESecureFX/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、背景​		笔者平时工作、学习、生活以前使用图形化的Windows7&#x2F;8&#x2F;10&#x2F;11操作系统居多，所以平时对Windows上的软件使用比较熟悉、习惯了。比如平时需要访问与使用Linux服务器时，就是在Windows系统上使用终端连接工具SecureCRT与文件传输工具SecureFX，最近有了使用M3芯片的Mac电脑的需求，还是想将在Mac电脑上安装这两个软件的Ma">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/1h2ISsATrbz68dn.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/hoqDXFWcIMSjzH3.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/i498nLujyp5gZKd.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/VaAG7L1lPxNzbu3.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/TUbpjIGAf2ODLaV.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/NuOnDLTmbJjr5yI.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/CuVwyfv3zSig2Gn.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/Ikr49BJTb6fjtNv.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/bTe9JHUcwkf2umy.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/W7XimBIjPlL2uKU.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/GdmUC78haWKYnib.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/jsNRgXFtOwPMqWy.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/qbTCntJPDBskXem.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/YHCVmNgUFo6t2pS.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/IeXNm7OARfpzQno.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/Fr3PMTKUDZjfuGd.png">
+<meta property="og:image" content="https://s2.loli.net/2024/09/07/6TRDgvJMCXdiblL.png">
+<meta property="article:published_time" content="2024-09-07T13:27:56.000Z">
+<meta property="article:modified_time" content="2024-09-07T15:00:20.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="M3芯片 MacOS14.6.1 破解 SecureCRT SecureFX">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2024/09/07/1h2ISsATrbz68dn.png">
+  
+  
+  
+  <title>M3芯片MacOS14.6.1系统安装配置破解版SecureCRT与SecureFX - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">M3芯片MacOS14.6.1系统安装配置破解版SecureCRT与SecureFX</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-09-07 21:27" pubdate>
+          2024年9月7日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          9 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">M3芯片MacOS14.6.1系统安装配置破解版SecureCRT与SecureFX</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>​		笔者平时工作、学习、生活以前使用图形化的Windows7&#x2F;8&#x2F;10&#x2F;11操作系统居多，所以平时对Windows上的软件使用比较熟悉、习惯了。比如平时需要访问与使用Linux服务器时，就是在Windows系统上使用终端连接工具SecureCRT与文件传输工具SecureFX，最近有了使用M3芯片的Mac电脑的需求，还是想将在Mac电脑上安装这两个软件的Mac版。</p>
+<p>相关软硬件版本：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>软硬件名称</th>
+<th>版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>硬件</td>
+<td>电脑</td>
+<td>MacBook Pro</td>
+</tr>
+<tr>
+<td></td>
+<td>芯片</td>
+<td>M3</td>
+</tr>
+<tr>
+<td>软件</td>
+<td>电脑操作系统</td>
+<td>macOS Sonoma 版本14.6.1</td>
+</tr>
+<tr>
+<td></td>
+<td>SecureCRT</td>
+<td>9.1.1</td>
+</tr>
+<tr>
+<td></td>
+<td>SecureFX</td>
+<td>9.1.1</td>
+</tr>
+</tbody></table>
+<h1 id="二、实施步骤"><a href="#二、实施步骤" class="headerlink" title="二、实施步骤"></a>二、实施步骤</h1><h2 id="2-1-下载安装文件"><a href="#2-1-下载安装文件" class="headerlink" title="2.1 下载安装文件"></a>2.1 下载安装文件</h2><p>下载需要用到的SecureCRT9.1.1与SecureFX9.1.1安装文件，笔者已经保存在百度网盘，分离链接如下：</p>
+<p>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/17XFbILxW63Jg7j43CLXlmw?pwd=zs41">https://pan.baidu.com/s/17XFbILxW63Jg7j43CLXlmw?pwd=zs41</a><br>提取码：zs41</p>
+<p>比如，我将下载得到的两个文件保存在家目录下的“Downloads”即“下载”目录下：</p>
+<p><img src="https://s2.loli.net/2024/09/07/1h2ISsATrbz68dn.png" srcset="/img/loading.gif" lazyload alt="image-20240907215529191"></p>
+<h2 id="2-2-安装与配置SecureCRT9-1-1"><a href="#2-2-安装与配置SecureCRT9-1-1" class="headerlink" title="2.2 安装与配置SecureCRT9.1.1"></a>2.2 安装与配置SecureCRT9.1.1</h2><h3 id="2-2-1-安装SecureCRT9-1-1"><a href="#2-2-1-安装SecureCRT9-1-1" class="headerlink" title="2.2.1 安装SecureCRT9.1.1"></a>2.2.1 安装SecureCRT9.1.1</h3><p>双击“SecureCRT_9.1.1_macyy.cn.dmg”，选择同意后，将看到如下窗口。按照下图中提示操作。</p>
+<p><img src="https://s2.loli.net/2024/09/07/hoqDXFWcIMSjzH3.png" srcset="/img/loading.gif" lazyload alt="image-20240907220524436"></p>
+<p>然后进入MacBook Pro的”应用程序“窗口，双击尝试打开SecureCRT，但此时SecureCRT会提示导入license文件或直接输入license，我们现在直接选择“close”关闭此软件。</p>
+<h3 id="2-2-2-破解SecureCRT9-1-1"><a href="#2-2-2-破解SecureCRT9-1-1" class="headerlink" title="2.2.2 破解SecureCRT9.1.1"></a>2.2.2 破解SecureCRT9.1.1</h3><p>打开上图中“激活步骤”，按照其中说明操作。在 Mac电脑中使用”command + shift +g”组合键，打开“前往”窗口，输入“~&#x2F;Library&#x2F;Application Support&#x2F;VanDyke&#x2F;”</p>
+<p><img src="https://s2.loli.net/2024/09/07/i498nLujyp5gZKd.png" srcset="/img/loading.gif" lazyload alt="image-20240907220839326"></p>
+<p>在打开的文件夹窗口，双击“SecureCRT”文件夹，将前面提到的”SecureCRT_SecureFX.lic”文件拷贝到此文件夹下。拷贝完成后如下：</p>
+<p><img src="https://s2.loli.net/2024/09/07/VaAG7L1lPxNzbu3.png" srcset="/img/loading.gif" lazyload alt="image-20240907221349322"></p>
+<p>此时再打开SecureCRT软件，就不会再提示你输入license了，而是直接进入SecureCRT使用界面了，大致如下：</p>
+<p><img src="https://s2.loli.net/2024/09/07/TUbpjIGAf2ODLaV.png" srcset="/img/loading.gif" lazyload alt="image-20240907221856712"></p>
+<p>至此，SecureCRT9.1.1破解版已经安装好，功能上已经能够正常使用。</p>
+<h3 id="2-2-3-配置SecureCRT9-1-1"><a href="#2-2-3-配置SecureCRT9-1-1" class="headerlink" title="2.2.3 配置SecureCRT9.1.1"></a>2.2.3 配置SecureCRT9.1.1</h3><p>Mac版的SecureCRT的配置菜单是不显示出来的，在SecureCRT使用界面边缘空白处“鼠标右键”或者“Mac触摸屏上食指+中指轻击”，将弹出如下小弹窗，单击它。</p>
+<p><img src="https://s2.loli.net/2024/09/07/NuOnDLTmbJjr5yI.png" srcset="/img/loading.gif" lazyload alt="image-20240907222206709"></p>
+<p>单击后，将弹出如下窗口。将其中常用的工具拖放到“SecureCRT使用界面边缘空白处”</p>
+<p><img src="https://s2.loli.net/2024/09/07/CuVwyfv3zSig2Gn.png" srcset="/img/loading.gif" lazyload alt="image-20240907222429909"></p>
+<p>之后将在“SecureCRT使用界面边缘空白处”看到如下一个“扳手+起子的图标”，这就是配置窗口的入口处</p>
+<p><img src="https://s2.loli.net/2024/09/07/Ikr49BJTb6fjtNv.png" srcset="/img/loading.gif" lazyload alt="image-20240907223244480"></p>
+<h4 id="2-2-3-1-配置终端窗口背景色为豆沙绿"><a href="#2-2-3-1-配置终端窗口背景色为豆沙绿" class="headerlink" title="2.2.3.1 配置终端窗口背景色为豆沙绿"></a>2.2.3.1 配置终端窗口背景色为豆沙绿</h4><p><img src="https://s2.loli.net/2024/09/07/bTe9JHUcwkf2umy.png" srcset="/img/loading.gif" lazyload alt="image-20240907223117166"></p>
+<p><img src="https://s2.loli.net/2024/09/07/W7XimBIjPlL2uKU.png" srcset="/img/loading.gif" lazyload alt="image-20240907222959748"></p>
+<p>这样，创建Session后，打开的会话中背景色就是豆沙绿的（听说这样有助于保护眼睛，不论真假反正笔者已经用习惯这种背景色）</p>
+<h4 id="2-2-3-2-配置终端窗口字符样式如大小"><a href="#2-2-3-2-配置终端窗口字符样式如大小" class="headerlink" title="2.2.3.2 配置终端窗口字符样式如大小"></a>2.2.3.2 配置终端窗口字符样式如大小</h4><p><img src="https://s2.loli.net/2024/09/07/GdmUC78haWKYnib.png" srcset="/img/loading.gif" lazyload alt="image-20240907223619566"></p>
+<p>设置字符的字体与大小。笔者下图字体保持默认，只设置了字符大小：</p>
+<p><img src="https://s2.loli.net/2024/09/07/jsNRgXFtOwPMqWy.png" srcset="/img/loading.gif" lazyload alt="image-20240907223930227"></p>
+<p>之后新创建的终端窗口就是如下样式：</p>
+<p><img src="https://s2.loli.net/2024/09/07/qbTCntJPDBskXem.png" srcset="/img/loading.gif" lazyload alt="image-20240907224136221"></p>
+<h4 id="2-2-3-3-设置会话文件传输协议为sftp"><a href="#2-2-3-3-设置会话文件传输协议为sftp" class="headerlink" title="2.2.3.3 设置会话文件传输协议为sftp"></a>2.2.3.3 设置会话文件传输协议为sftp</h4><p><img src="https://s2.loli.net/2024/09/07/YHCVmNgUFo6t2pS.png" srcset="/img/loading.gif" lazyload alt="image-20240907225419343"></p>
+<h2 id="2-3-安装与配置SecureFX9-1-1"><a href="#2-3-安装与配置SecureFX9-1-1" class="headerlink" title="2.3 安装与配置SecureFX9.1.1"></a>2.3 安装与配置SecureFX9.1.1</h2><h3 id="2-3-1-安装与破解SecureFX9-1-1"><a href="#2-3-1-安装与破解SecureFX9-1-1" class="headerlink" title="2.3.1 安装与破解SecureFX9.1.1"></a>2.3.1 安装与破解SecureFX9.1.1</h3><p>双击“SecureFX_9.1.1_macyy.cn.dmg”，选择同意后，将看到如下窗口。按照下图中提示操作。</p>
+<p>其实，如果你先前按照前述步骤安装、破解了SecureCRT9.1.1的话，只需要执行下图中的步骤1即可，因为SecureCRT9.1.1与SecureFX_9.1.1的破解文件文件与内容是一样的，且放在同一个目录下</p>
+<p><img src="https://s2.loli.net/2024/09/07/IeXNm7OARfpzQno.png" srcset="/img/loading.gif" lazyload alt="image-20240907224319446"></p>
+<p>此时就可以正常打开SecureFX软件来传输文件了。</p>
+<h3 id="2-3-2-从SecureCRT9-1-1会话中直接打开SecureFX9-1-1会话"><a href="#2-3-2-从SecureCRT9-1-1会话中直接打开SecureFX9-1-1会话" class="headerlink" title="2.3.2 从SecureCRT9.1.1会话中直接打开SecureFX9.1.1会话"></a>2.3.2 从SecureCRT9.1.1会话中直接打开SecureFX9.1.1会话</h3><p>此时，你创建了一个SecureCRT会话后，在会话tab标题上右键，可以看到”Open SecureFX“选项，但如果现在直接点击并不能连接对应的服务器成功，显示如下：</p>
+<p><img src="https://s2.loli.net/2024/09/07/Fr3PMTKUDZjfuGd.png" srcset="/img/loading.gif" lazyload alt="image-20240907225301379"></p>
+<p>解决方法是修改SecureCRT中的配置，具体见SecureCRT”设置会话文件传输协议为sftp“章节内容。然后重新创建SecureCRT会话，再操作就成功。</p>
+<p><img src="https://s2.loli.net/2024/09/07/6TRDgvJMCXdiblL.png" srcset="/img/loading.gif" lazyload alt="image-20240907225837472"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/M3%E8%8A%AF%E7%89%87-MacOS14-6-1-%E7%A0%B4%E8%A7%A3-SecureCRT-SecureFX/" class="print-no-link">#M3芯片 MacOS14.6.1 破解 SecureCRT SecureFX</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>M3芯片MacOS14.6.1系统安装配置破解版SecureCRT与SecureFX</div>
+      <div>https://jiangsanyin.github.io/2024/09/07/M3芯片MacOS14-6-1系统安装配置破解版SecureCRT与SecureFX/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年9月7日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/09/27/k8s%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2-%E4%BD%BF%E7%94%A8kubekey%E9%83%A8%E7%BD%B2amd64%E9%AB%98%E5%8F%AF%E7%94%A8%E7%89%88k8s1-23-17-ksp3-4-1/" title="k8s离线部署-使用kubekey部署amd64高可用版k8s1.23.17-ksp3.4.1">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">k8s离线部署-使用kubekey部署amd64高可用版k8s1.23.17-ksp3.4.1</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/08/10/%E6%90%AD%E5%BB%BA%E4%BA%92%E4%B8%BA%E4%B8%BB%E5%A4%87MySQL5-7%E9%9B%86%E7%BE%A4%E5%B9%B6%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2/" title="搭建互为主备MySQL5.7集群并实现自动切换">
+                        <span class="hidden-mobile">搭建互为主备MySQL5.7集群并实现自动切换</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,904 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、文档说明与服务器准备1.1 文档说明这是一篇保姆级别的”微调DeepSeek-R1-Distill-Llama-8B模型”的操作文章，只要稍微懂点计算机软件知识就可以成功复现此文章中所述内容。 此文档中尝试微调DeepSeek-R1蒸馏模型比如1.5B，它仅靠CPU就能运行。 1.2 服务器与GPU准备此次使用的服务器是一个x86_64构架的Hygon C86 5380物理服务器，具体信息如下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="纯CPU本地微调DeepSeek-R1-1.5b模型(还在完善中)">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/03/06/%E7%BA%AFCPU%E6%9C%AC%E5%9C%B0%E5%BE%AE%E8%B0%83DeepSeek-R1-1.5b%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、文档说明与服务器准备1.1 文档说明这是一篇保姆级别的”微调DeepSeek-R1-Distill-Llama-8B模型”的操作文章，只要稍微懂点计算机软件知识就可以成功复现此文章中所述内容。 此文档中尝试微调DeepSeek-R1蒸馏模型比如1.5B，它仅靠CPU就能运行。 1.2 服务器与GPU准备此次使用的服务器是一个x86_64构架的Hygon C86 5380物理服务器，具体信息如下">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/02/13/jBqpIiDF5t48Axc.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/13/ZJYaFVol2H1vsej.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/21/prnxAkaSZcHGPdE.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/13/4gxCbyk1P95sULh.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/17/pacKOlYbVuzrJqQ.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/14/qQlTesIb7oC1YNW.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/17/ACp5NZeaJiPuqFQ.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/17/KDAFQO4sftwLU7H.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/17/JKr4Pjd3HSI2RXy.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/17/nA4xkQ1DazvZSUW.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/17/HvOjDMkZ4KG7FAS.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/17/9XLU8GbwDToWsmr.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/17/1pZPTJlGaed78XB.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/gac186mtlIDJnZu.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/TCQhspmOINxR2ri.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/17/z2x8lfMR4iL75X6.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/17/oyNrqQCiWLxwVBA.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/17/TSfnkEKOji5szyl.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/mXcTxGyh8iYzQHS.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/LnV3JCvGxXrD6se.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/fp8cOs7QYrxCVz3.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/SEr27bQL3MVWYDd.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/SJ1XaUf2Gecx4Im.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/KdSrm9CYI7xTJcg.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/oECSlrJxPam3RGV.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/OAoxhREBX45DvHi.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/jR7BLXGMQWYw5fb.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/l8cP9d3pRemtzQT.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/17/ltvbC9sAd4gLKwx.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/17/TGyioRtsJHe9wm7.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/qcfBh1Jbox2kjev.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/18/Hgx4iydTONfpkbv.png">
+<meta property="article:published_time" content="2025-03-06T14:04:44.000Z">
+<meta property="article:modified_time" content="2025-03-07T01:45:20.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="微调">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/02/13/jBqpIiDF5t48Axc.png">
+  
+  
+  
+  <title>纯CPU本地微调DeepSeek-R1-1.5b模型(还在完善中) - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">纯CPU本地微调DeepSeek-R1-1.5b模型(还在完善中)</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-06 22:04" pubdate>
+          2025年3月6日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          40 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">纯CPU本地微调DeepSeek-R1-1.5b模型(还在完善中)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一、文档说明与服务器准备"><a href="#一、文档说明与服务器准备" class="headerlink" title="一、文档说明与服务器准备"></a>一、文档说明与服务器准备</h1><h2 id="1-1-文档说明"><a href="#1-1-文档说明" class="headerlink" title="1.1 文档说明"></a>1.1 文档说明</h2><p>这是一篇保姆级别的”微调DeepSeek-R1-Distill-Llama-8B模型”的操作文章，只要稍微懂点计算机软件知识就可以成功复现此文章中所述内容。</p>
+<p>此文档中尝试微调DeepSeek-R1蒸馏模型比如1.5B，它仅靠CPU就能运行。</p>
+<h2 id="1-2-服务器与GPU准备"><a href="#1-2-服务器与GPU准备" class="headerlink" title="1.2 服务器与GPU准备"></a>1.2 服务器与GPU准备</h2><p>此次使用的服务器是一个x86_64构架的Hygon C86 5380物理服务器，具体信息如下：</p>
+<table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>IP</th>
+<th>操作系统</th>
+<th>规格</th>
+<th>GPU情况</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>controller01</td>
+<td>172.20.0.21</td>
+<td>Ubuntu 20.04.3 LTS -amd64</td>
+<td>32c64g+960G</td>
+<td>NVIDIA A40*1</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>相关重要软件版本（后面3个是python库的版本，建议使用conda创建一个虚拟环境并安装此版本。在其他软件版本固定的情况下，unsloth使用2025.2.5之外的版本就报错）：</p>
+<ul>
+<li><p>GPU驱动版本：550.54.15</p>
+</li>
+<li><p>Cuda版本：V12.4.131</p>
+</li>
+<li><p>torch版本：2.6.0</p>
+</li>
+<li><p>transformers版本：4.48.3</p>
+</li>
+<li><p>unsloth版本：2025.2.5</p>
+</li>
+</ul>
+<h2 id="1-3-大模型微调定义"><a href="#1-3-大模型微调定义" class="headerlink" title="1.3 大模型微调定义"></a>1.3 大模型微调定义</h2><p>利用特定领域的数据集对已预训练的大模型进行进一步训练的过程。它旨在优化模型在特定任务上的性能，使模型能够更好地适应和完成特定领域的任务。其中最重要的是超参数（如学习率、批次大小和训练轮次）调整优化。转成大白话就是调整大模型中一些参数的值，使其在特定数据集上表现更优秀。</p>
+<h1 id="二、相关文件下载"><a href="#二、相关文件下载" class="headerlink" title="二、相关文件下载"></a>二、相关文件下载</h1><h2 id="2-1-模型文件下载"><a href="#2-1-模型文件下载" class="headerlink" title="2.1 模型文件下载"></a>2.1 模型文件下载</h2><p>本来是想去huggingface上下载相关模型文件与数据集，由于huggingface需要梯子才能访问，不便操作。所以此文档中是在国内网络可正常访问魔搭平台上下载模型与数据集。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">访问魔搭：https://modelscope.cn/models/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B/files</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">不指定--local_dir 参数，文件将被保存在用户根目录下的.cache子目录下</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">模型总大小在3.3G左右</span><br>(py312) D:\00_code_repos\AI_models&gt;modelscope download --model deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B --local_dir ./deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-2-训练数据集文件下载"><a href="#2-2-训练数据集文件下载" class="headerlink" title="2.2 训练数据集文件下载"></a>2.2 训练数据集文件下载</h2><p>访问魔搭，搜索“medical-o1-reasoning-SFT”数据集并下载（此处会有两个同名数据集，但上传者不同，我选择了下载量更大的<a target="_blank" rel="noopener" href="https://modelscope.cn/datasets/AI-ModelScope/medical-o1-reasoning-SFT%EF%BC%89%E3%80%82">https://modelscope.cn/datasets/AI-ModelScope/medical-o1-reasoning-SFT）。</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">(py312) D:\00_code_repos\AI_datasets&gt;modelscope download --dataset AI-ModelScope/medical-o1-reasoning-SFT --local_dir ./AI-ModelScope/medical-o1-reasoning-SFT<br></code></pre></td></tr></table></figure>
+
+<h1 id="三、其他准备步骤"><a href="#三、其他准备步骤" class="headerlink" title="三、其他准备步骤"></a>三、其他准备步骤</h1><h2 id="3-1-wandb-token准备"><a href="#3-1-wandb-token准备" class="headerlink" title="3.1 wandb token准备"></a>3.1 wandb token准备</h2><p>去<a target="_blank" rel="noopener" href="https://wandb.ai/">wandb官网</a>注册一个账号、申请一个token，并记录此token，后续要用。</p>
+<p>注：</p>
+<ul>
+<li><p>wandb的意思是”weights and biases“，网上没有找到现成的翻译，我直译为权重与偏差。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://wandb.ai/wandb_fc/chinese/reports/-Weights-Biases---Vmlldzo4MDEwNzM">关于W&amp;B的介绍</a>：W&amp;B 是一个平台，可帮助数据科学家跟踪他们的模型、数据集、系统信息等。 只需几行代码，就可以开始跟踪有关这些功能的所有内容。 它是免费供个人使用的。 团队使用通常是付费的，但用于学术目的的团队是免费的。 可以将 W&amp;B 与自己喜欢的框架一起使用，例如 TensorFlow、Keras、PyTorch、SKlearn、fastai 等。</p>
+<p>所有跟踪信息都发送到 W&amp;B UI 上的专用项目页面，可以在其中打开高质量的可视化、汇总信息并比较模型或参数。</p>
+</li>
+</ul>
+<h3 id="3-1-1-wandb官网账号注册"><a href="#3-1-1-wandb官网账号注册" class="headerlink" title="3.1.1 wandb官网账号注册"></a>3.1.1 wandb官网账号注册</h3><p>如下使用我自己的github账号进行注册。当然也可以使用手动邮箱与密码进行注册（如下图最下部分所示）</p>
+<p><img src="https://s2.loli.net/2025/02/13/jBqpIiDF5t48Axc.png" srcset="/img/loading.gif" lazyload alt="image-20250213162023573"></p>
+<p><img src="https://s2.loli.net/2025/02/13/ZJYaFVol2H1vsej.png" srcset="/img/loading.gif" lazyload alt="image-20250213162111736"></p>
+<p><img src="https://s2.loli.net/2025/02/21/prnxAkaSZcHGPdE.png" srcset="/img/loading.gif" lazyload alt="image-20250221230552719"></p>
+<h3 id="3-1-2-获取token"><a href="#3-1-2-获取token" class="headerlink" title="3.1.2 获取token"></a>3.1.2 获取token</h3><p>进入wandb官网中自己账号的主页，可以看到如下内容。在如下位置复制自己的wandb token</p>
+<p><img src="https://s2.loli.net/2025/02/13/4gxCbyk1P95sULh.png" srcset="/img/loading.gif" lazyload alt="image-20250213162624545"></p>
+<h2 id="3-2-准备jupyter环境"><a href="#3-2-准备jupyter环境" class="headerlink" title="3.2 准备jupyter环境"></a>3.2 准备jupyter环境</h2><p>以下以在Ubuntu 20.04.3 LTS -amd64上安装jupyter环境为例，说明安装jupyter环境的步骤。</p>
+<h3 id="3-2-1-安装conda"><a href="#3-2-1-安装conda" class="headerlink" title="3.2.1 安装conda"></a>3.2.1 安装conda</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:/opt/installPkgs# mkdir /root/.pip<br>root@controller01:/opt/installPkgs# cat &gt; /root/.pip/pip.conf  &lt;&lt;EOF<br>[global]<br>trusted-host = mirrors.aliyun.com<br>index-url = https://mirrors.aliyun.com/pypi/simple<br>EOF<br><br>root@controller01:/opt/installPkgs# wget --user-agent=“Mozilla” + https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2024.06-1-Linux-x86_64.sh<br><br>root@controller01:/opt/installPkgs# bash Anaconda3-2024.06-1-Linux-x86_64.sh<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##安装过程中，会询问相关问题，保持默认配置直接回车或输入YES再回车（整个安装过程可能需要耗时几分钟）</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##conda的默认安装目录是/root/anaconda3</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##安装过程中最几行如下</span></span><br>....<br>You can undo this by running `conda init --reverse $SHELL`? [yes|no]<br>[no] &gt;&gt;&gt; yes             #此处输入yes并回车<br>no change     /root/anaconda3/condabin/conda<br>no change     /root/anaconda3/bin/conda<br>no change     /root/anaconda3/bin/conda-env<br>no change     /root/anaconda3/bin/activate<br>no change     /root/anaconda3/bin/deactivate<br>no change     /root/anaconda3/etc/profile.d/conda.sh<br>no change     /root/anaconda3/etc/fish/conf.d/conda.fish<br>no change     /root/anaconda3/shell/condabin/Conda.psm1<br>no change     /root/anaconda3/shell/condabin/conda-hook.ps1<br>no change     /root/anaconda3/lib/python3.12/site-packages/xontrib/conda.xsh<br>no change     /root/anaconda3/etc/profile.d/conda.csh<br>modified      /root/.bashrc<br><br>==&gt; For changes to take effect, close and re-open your current shell. &lt;==<br><br>Thank you for installing Anaconda3!<br>root@controller01:/opt/installPkgs# <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重新加载环境变量，并启用默认的base conda环境</span><br>root@controller01:/opt/installPkgs# source ~/.bashrc<br>(base) root@controller01:/opt/installPkgs# which python<br>/root/anaconda3/bin/python<br>(base) root@controller01:/opt/installPkgs# which pip<br>/root/anaconda3/bin/pip<br>(base) root@controller01:/opt/installPkgs# python -V<br>Python 3.12.4<br>(base) root@controller01:/opt/installPkgs# pip -V<br>pip 24.0 from /root/anaconda3/lib/python3.12/site-packages/pip (python 3.12)<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看现有的conda管理的所有虚拟python环境</span><br>(base) root@controller01:/opt/installPkgs# conda env list<br><span class="hljs-meta prompt_"># </span><span class="language-bash">conda environments:</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"></span><br><span class="language-bash">base                  *  /root/anaconda3</span><br><br>(base) root@controller01:/opt/installPkgs# <br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-2-创建self-llm虚拟python环境"><a href="#3-2-2-创建self-llm虚拟python环境" class="headerlink" title="3.2.2 创建self-llm虚拟python环境"></a>3.2.2 创建self-llm虚拟python环境</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">更新软件列表</span><br>(base) root@controller01:/opt/installPkgs# apt-get update<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">准备好python3环境与pip3（使用上述conda创建虚拟python3、pip3环境）</span><br>(base) root@controller01:/opt/installPkgs# conda create -n self-llm python=3.12<br>...<br>The following NEW packages will be INSTALLED:<br><br>  _libgcc_mutex      pkgs/main/linux-64::_libgcc_mutex-0.1-main <br>  _openmp_mutex      pkgs/main/linux-64::_openmp_mutex-5.1-1_gnu <br>  bzip2              pkgs/main/linux-64::bzip2-1.0.8-h5eee18b_6 <br>  ca-certificates    pkgs/main/linux-64::ca-certificates-2024.12.31-h06a4308_0 <br>  expat              pkgs/main/linux-64::expat-2.6.4-h6a678d5_0 <br>  ld_impl_linux-64   pkgs/main/linux-64::ld_impl_linux-64-2.40-h12ee557_0 <br>  libffi             pkgs/main/linux-64::libffi-3.4.4-h6a678d5_1 <br>  libgcc-ng          pkgs/main/linux-64::libgcc-ng-11.2.0-h1234567_1 <br>  libgomp            pkgs/main/linux-64::libgomp-11.2.0-h1234567_1 <br>  libstdcxx-ng       pkgs/main/linux-64::libstdcxx-ng-11.2.0-h1234567_1 <br>  libuuid            pkgs/main/linux-64::libuuid-1.41.5-h5eee18b_0 <br>  ncurses            pkgs/main/linux-64::ncurses-6.4-h6a678d5_0 <br>  openssl            pkgs/main/linux-64::openssl-3.0.15-h5eee18b_0 <br>  pip                pkgs/main/linux-64::pip-25.0-py312h06a4308_0 <br>  python             pkgs/main/linux-64::python-3.12.9-h5148396_0 <br>  readline           pkgs/main/linux-64::readline-8.2-h5eee18b_0 <br>  setuptools         pkgs/main/linux-64::setuptools-75.8.0-py312h06a4308_0 <br>  sqlite             pkgs/main/linux-64::sqlite-3.45.3-h5eee18b_0 <br>  tk                 pkgs/main/linux-64::tk-8.6.14-h39e8969_0 <br>  tzdata             pkgs/main/noarch::tzdata-2025a-h04d1e81_0 <br>  wheel              pkgs/main/linux-64::wheel-0.45.1-py312h06a4308_0 <br>  xz                 pkgs/main/linux-64::xz-5.6.4-h5eee18b_1 <br>  zlib               pkgs/main/linux-64::zlib-1.2.13-h5eee18b_1 <br><br><br>Proceed ([y]/n)? Y         #此处输入y并回车<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##然后等待下载与解压提取相关python安装文件与python模块。安装过程的最后几行输出如下</span></span><br>...<br><span class="hljs-meta prompt_"># </span><span class="language-bash">To activate this environment, use</span>                                                                         <br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#     $ conda activate self-llm</span></span>                                                                             <br><span class="hljs-meta prompt_"># </span><span class="language-bash">To deactivate an active environment, use</span>                                                                   <br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#     $ conda deactivate</span></span><br>(base) root@controller01:/opt/installPkgs# <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看现有的conda管理的所有虚拟python环境</span><br>(base) root@controller01:/opt/installPkgs# conda env list<br><span class="hljs-meta prompt_"># </span><span class="language-bash">conda environments:</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"></span><br><span class="language-bash">base                     /root/anaconda3</span><br>self-llm              *  /root/anaconda3/envs/self-llm<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">激活self-llm 这个虚拟python环境，并在其中执行相关命令</span><br>(base) root@controller01:/opt/installPkgs# conda activate self-llm <br>(self-llm) root@controller01:/opt/installPkgs# python -V<br>Python 3.12.9<br>(self-llm) root@controller01:/opt/installPkgs# pip -V<br>pip 25.0 from /root/anaconda3/envs/self-llm/lib/python3.12/site-packages/pip (python 3.12)<br>(self-llm) root@controller01:/opt/installPkgs# <br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-3-安装jupyter环境"><a href="#3-2-3-安装jupyter环境" class="headerlink" title="3.2.3 安装jupyter环境"></a>3.2.3 安装jupyter环境</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装 IPython 交互式 shell</span><br>(self-llm) root@controller01:/opt/installPkgs# pip install ipython<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">正式安装jupyter</span><br>(self-llm) root@controller01:/opt/installPkgs# apt install jupyter-core jupyter-notebook -qy<br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建目录</span><br>(self-llm) root@controller01:/opt/installPkgs# mkdir finetunning-bigmodles<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">启动jupyter notebook</span><br>(self-llm) root@controller01:/opt/installPkgs# jupyter notebook --allow-root --ip=0.0.0.0<br>[I 01:29:38.744 NotebookApp] Serving notebooks from local directory: /opt/installPkgs<br>[I 01:29:38.744 NotebookApp] The Jupyter Notebook is running at:<br>[I 01:29:38.744 NotebookApp] http://a10:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br>[I 01:29:38.744 NotebookApp]  or http://127.0.0.1:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br>[I 01:29:38.744 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).<br>[W 01:29:38.755 NotebookApp] No web browser found: could not locate runnable browser.<br>[C 01:29:38.756 NotebookApp] <br>    <br>    To access the notebook, open this file in a browser:<br>        file:///root/.local/share/jupyter/runtime/nbserver-41207-open.html<br>    Or copy and paste one of these URLs:<br>        http://a10:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br>     or http://127.0.0.1:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br>[I 01:29:53.755 NotebookApp] 302 GET /?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba (192.168.254.84) 2.07ms<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">将以下url中的127.0.0.1换成服务器IP，即可访问上述创建的jupyter环境，比如当前安装jupyter环境的服务器IP是172.20.0.21，则URL是如下</span><br>http://172.20.0.21:8888/?token=96f565e66d149b1803474ff3bf7c15e43fbaf9cc59c192ba<br><span class="hljs-meta prompt_">#</span><span class="language-bash">最后的参数token类似于访问的密码。访问成功后界面如下，jupyter环境根目录就是执行“jupyter notebook --allow-root --ip=0.0.0.0”命令的所在目录/opt/installPkgs，以下显示了所在目录/opt/installPkgs下的所有文件及文件夹</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/17/pacKOlYbVuzrJqQ.png" srcset="/img/loading.gif" lazyload alt="image-20250217093519584"></p>
+<p>如果要自定义jupyter的家目录及其他配置，可以修改它的配置文件（默认已经创建：&#x2F;root&#x2F;.jupyter&#x2F;jupyter_notebook_config.py），以后每次启动时，它都是优先使用这个配置文件中的配置项。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">(self-llm) root@controller01:/opt/installPkgs/finetunning-bigmodles# vi /root/.jupyter/jupyter_notebook_config.py<br>...<br>931 # c.ServerApp.notebook_dir = &#x27;&#x27;<br>932 c.ServerApp.notebook_dir = &#x27;/opt/installPkgs/finetunning-bigmodles/&#x27;<br>...<br></code></pre></td></tr></table></figure>
+
+<p>修改上述文件后，需要重新启动jupyter进程，才会生效。</p>
+<h3 id="3-2-4-报错处理"><a href="#3-2-4-报错处理" class="headerlink" title="3.2.4 报错处理"></a>3.2.4 报错处理</h3><h4 id="启动jupyter-notebook时报“Fail-to-get-yarn-configuration”"><a href="#启动jupyter-notebook时报“Fail-to-get-yarn-configuration”" class="headerlink" title="启动jupyter notebook时报“Fail to get yarn configuration”"></a>启动jupyter notebook时报“Fail to get yarn configuration”</h4><p>但此错误并未不影响jupyter notebook的使用</p>
+<p><img src="https://s2.loli.net/2025/02/14/qQlTesIb7oC1YNW.png" srcset="/img/loading.gif" lazyload alt="image-20250214175252854"></p>
+<p>解决办法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">方法1：此报错不影响jupyter notebook的使用，暂时不予理会</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">方法2：需要升级Node版本（先前是v10.19.6，升级到v12.22.6即可）。参考：https://discourse.jupyter.org/t/jupyter-lab-4-0-6-error-on-startup-about-yarn-configuration-and-worker-threads/21859</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">使用nvm升级nodejs版本：</span><br>nvm install 12.22.6<br></code></pre></td></tr></table></figure>
+
+<h1 id="四、在-ipynb中进行微调"><a href="#四、在-ipynb中进行微调" class="headerlink" title="四、在.ipynb中进行微调"></a>四、在.ipynb中进行微调</h1><h2 id="4-1-打开一个已经存在的-ipynb文件"><a href="#4-1-打开一个已经存在的-ipynb文件" class="headerlink" title="4.1 打开一个已经存在的.ipynb文件"></a>4.1 打开一个已经存在的.ipynb文件</h2><p>比如下载<a target="_blank" rel="noopener" href="https://github.com/jiangsanyin/unsloth-DeepSeek-R1-Distill-Llama-8B/blob/main/deepseekr1_8b%E6%9C%AC%E5%9C%B0%E5%BE%AE%E8%B0%83.ipynb">deepseekr1_8b本地微调.ipynb</a> ，保存到<code>/opt/installPkgs/finetunning-bigmodles</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:/opt/installPkgs/finetunning-bigmodles# ll<br>total 104<br>drwxr-xr-x  2 root root  4096 Feb 17 10:02 ./<br>drwxr-xr-x 12 root root  4096 Feb 17 09:48 ../<br>-rw-r--r--  1 root root 95152 Feb 17 09:46 deepseekr1_8b本地微调.ipynb<br><br></code></pre></td></tr></table></figure>
+
+<p>然后按照如下方式，在jupyter图形界面找到上述文件并使用”Notebook”打开：</p>
+<p><img src="https://s2.loli.net/2025/02/17/ACp5NZeaJiPuqFQ.png" srcset="/img/loading.gif" lazyload alt="image-20250217100452758"></p>
+<p>打开后界面如下：</p>
+<p><img src="https://s2.loli.net/2025/02/17/KDAFQO4sftwLU7H.png" srcset="/img/loading.gif" lazyload alt="image-20250217100932951"></p>
+<h3 id="4-1-1-设置此-ipynb文件可信"><a href="#4-1-1-设置此-ipynb文件可信" class="headerlink" title="4.1.1 设置此.ipynb文件可信"></a>4.1.1 设置此.ipynb文件可信</h3><p><img src="https://s2.loli.net/2025/02/17/JKr4Pjd3HSI2RXy.png" srcset="/img/loading.gif" lazyload alt="image-20250217101948104"></p>
+<h3 id="4-1-2-为-ipynb文件选择kernel"><a href="#4-1-2-为-ipynb文件选择kernel" class="headerlink" title="4.1.2 为.ipynb文件选择kernel"></a>4.1.2 为.ipynb文件选择kernel</h3><p><img src="https://s2.loli.net/2025/02/17/nA4xkQ1DazvZSUW.png" srcset="/img/loading.gif" lazyload alt="image-20250217110822311"></p>
+<h3 id="4-1-3-运行此-ipynb文件"><a href="#4-1-3-运行此-ipynb文件" class="headerlink" title="4.1.3 运行此.ipynb文件"></a>4.1.3 运行此.ipynb文件</h3><p>上述文件<code>deepseekr1_8b本地微调.ipynb</code>从网上下载下来后，有些地方需要修改下，否则在未翻墙的服务器上运行会失败或执行速度很慢。</p>
+<p>以下未列举出来的cell，不需要修改，直接执行即可。</p>
+<h4 id="第1个cell-安装unsloth"><a href="#第1个cell-安装unsloth" class="headerlink" title="第1个cell-安装unsloth"></a><strong>第1个cell</strong>-安装unsloth</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">%</span><span class="language-bash">%capture</span><br>!pip install unsloth==2025.2.5 -i https://mirrors.aliyun.com/pypi/simple<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Also get the latest nightly Unsloth!</span><br>!pip install --force-reinstall --no-cache-dir --no-deps git+https://gitee.com/sy-jiang/unsloth.git -i https://mirrors.aliyun.com/pypi/simple<br><span class="hljs-meta prompt_">#</span><span class="language-bash">上述命令中又会安装最新的unsloth 2025.2.12（后续使用中会有问题），所以重新安装nsloth 2025.2.12</span><br>!pip install unsloth==2025.2.5 -i https://mirrors.aliyun.com/pypi/simple<br></code></pre></td></tr></table></figure>
+
+<p>然后光标选中此cell，使用组合键“shift+ener”或点击如下按钮，即可执行选中的cell</p>
+<p><img src="https://s2.loli.net/2025/02/17/HvOjDMkZ4KG7FAS.png" srcset="/img/loading.gif" lazyload alt="image-20250217110958036"></p>
+<p>第一个cell执行所需要的时间较长，因为安装的python库较大。cell执行未结果时，前面会一直有个”*”</p>
+<p><img src="https://s2.loli.net/2025/02/17/9XLU8GbwDToWsmr.png" srcset="/img/loading.gif" lazyload alt="image-20250217111048204"></p>
+<p>当前cell执行结束后，会在当面所有执行cell次数的基础加1，结果显示在cell左上角。如下图，这是这个页面此cell第一次执行，所以执行结束后，显示1</p>
+<p><img src="https://s2.loli.net/2025/02/17/1pZPTJlGaed78XB.png" srcset="/img/loading.gif" lazyload alt="image-20250217111458869"></p>
+<h4 id="第3个cell-安装wandb"><a href="#第3个cell-安装wandb" class="headerlink" title="第3个cell-安装wandb"></a><strong>第3个cell</strong>-安装wandb</h4><figure class="highlight d"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs d"><span class="hljs-meta">#!pip install wandb</span><br>#修改成如下以使用国内pip安装源<br>!pip install wandb -i https:<span class="hljs-comment">//mirrors.aliyun.com/pypi/simple</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="第4个cell-初始化wandb"><a href="#第4个cell-初始化wandb" class="headerlink" title="第4个cell-初始化wandb"></a>第4个cell-初始化wandb</h4><p>如下配置的key就是在wandb官网申请后获取的token，请修改成自己的tokenwanb token</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 这里不使用环境变量，直接填入wandb的token,如果没有token可以去官网下载一个</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 为了安全，我此处只粘贴了自己token的前部分内容</span></span><br>import wandb<br><br>wandb.login(key=&quot;b11f575fd0f6c8cae0cb016b24&quot;)<br>run = wandb.init(<br>    project=&#x27;my fint-tune on deepseek r1 with medical data&#x27;,<br>    job_type=&quot;training&quot;,<br>    anonymous=&quot;allow&quot;<br>)<br></code></pre></td></tr></table></figure>
+
+<p>如果上述cell内容运行不成功，则采用如下方法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">1)首先在self-llm这个虚拟机python环境登录到wandb.ai，成功后会将相关信息保存在/root/.netrc</span><br>(self-llm) root@controller01:/opt/installPkgs/finetunning-bigmodles# wandb login --relogin<br>wandb: Logging into wandb.ai. (Learn how to deploy a W&amp;B server locally: https://wandb.me/wandb-server)<br>wandb: You can find your API key in your browser here: https://wandb.ai/authorize<br>wandb: Paste an API key from your profile and hit enter, or press ctrl+c to quit: <br>wandb: Appending key for api.wandb.ai to your netrc file: /root/.netrc<br>wandb: W&amp;B API key is configured. Use `wandb login --relogin` to force relogin<br>(self-llm) root@controller01:/opt/installPkgs/finetunning-bigmodles# <br>(self-llm) root@controller01:/opt/installPkgs/finetunning-bigmodles# vi /root/.netrc <br>(self-llm) root@controller01:/opt/installPkgs/finetunning-bigmodles# <br>(self-llm) root@controller01:/opt/installPkgs/finetunning-bigmodles# cat /root/.netrc   <br>machine api.wandb.ai<br>  login user<br>  password b11f575fd0f6c8cae0cb016b24<br><span class="hljs-meta prompt_">  </span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">2)修改上述cell内容为如下，然后重新执行此cell</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 这里不使用环境变量，直接填入wandb的token,如果没有token可以去官网下载一个</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 同时wandb.init时默认超时时间是90s，因为网站是国外网站可能经常出现init超过90s的现象，所以增加超时时间为300s</span></span><br>import wandb<br>import os<br><span class="hljs-meta prompt_">#</span><span class="language-bash">os.environ[<span class="hljs-string">&quot;WANDB_API_KEY&quot;</span>] = <span class="hljs-string">&#x27;b11f575fd0f6c8cae0cb016b24&#x27;</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#os.environ[&quot;WANDB_MODE&quot;] = &quot;offline&quot;</span></span><br>os.environ[&#x27;WANDB_INIT_TIMEOUT&#x27;] = &#x27;1200&#x27;  #Increase timeout settings<br>os.environ[&#x27;WANDB_DEBUG&#x27;] = &quot;true&quot;           #Enable debugging<br><span class="hljs-meta prompt_">#</span><span class="language-bash">wandb.login(key=<span class="hljs-string">&quot;b11f575fd0f6c8cae0cb016b24&quot;</span>)</span><br>run = wandb.init(<br>    project=&#x27;my fint-tune on deepseek r1 with medical data&#x27;,<br>    job_type=&quot;training&quot;,<br>    anonymous=&quot;allow&quot;,<br>    settings=wandb.Settings(init_timeout=1200)<br>)<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">3)执行成功时，输出如下</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/18/gac186mtlIDJnZu.png" srcset="/img/loading.gif" lazyload alt="image-20250218100844293"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">4)之后按照上述输出的内容，查看wandb.ai网站中自己的主页，看到如下类似内容。之后往后执行下一个cell</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/18/TCQhspmOINxR2ri.png" srcset="/img/loading.gif" lazyload alt="image-20250218101102349"></p>
+<h4 id="第5个cell-加载模型文件-创建model实例"><a href="#第5个cell-加载模型文件-创建model实例" class="headerlink" title="第5个cell-加载模型文件&#x2F;创建model实例"></a>第5个cell-加载模型文件&#x2F;创建model实例</h4><p>此cell需要保证你的服务器上有NVIDIA GPU。如下所示，我使用的是NVIDIA A40，它有44G左右显存</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">model, tokenizer = FastLanguageModel.from_pretrained(<br>    model_name = &quot;/opt/code_repos/AI_models/unsloth-DeepSeek-R1-Distill-Llama-8B&quot;, # 这里改成你本地模型，以我的为例，我已经huggingface上的模型文件下载到本地。<br>    max_seq_length = max_seq_length,<br>    dtype = dtype,<br>    load_in_4bit = load_in_4bit,<br>)<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/17/z2x8lfMR4iL75X6.png" srcset="/img/loading.gif" lazyload alt="image-20250217152019243"></p>
+<h4 id="第6与第7个cell-微调前执行推理"><a href="#第6与第7个cell-微调前执行推理" class="headerlink" title="第6与第7个cell-微调前执行推理"></a>第6与第7个cell-微调前执行推理</h4><p>第6个cell提供中英文两种形式的问题：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">question = <span class="hljs-string">&quot;A 61-year-old woman with a long history of involuntary urine loss during activities like coughing or sneezing but no leakage at night undergoes a gynecological exam and Q-tip test. Based on these findings, what would cystometry most likely reveal about her residual volume and detrusor contractions?&quot;</span></span><br>question = &quot;一名61岁女性，长期在咳嗽或打喷嚏等活动时不自觉排尿，但夜间无漏尿，现接受妇科检查和Q-tip检查。基于这些发现，膀胱造瘘术最有可能揭示她的残余容量和逼尿肌收缩情况？&quot;<br><br><br>FastLanguageModel.for_inference(model)  # Unsloth has 2x faster inference!<br>inputs = tokenizer([prompt_style.format(question, &quot;&quot;)], return_tensors=&quot;pt&quot;).to(&quot;cuda&quot;)<br><br>outputs = model.generate(<br>    input_ids=inputs.input_ids,<br>    attention_mask=inputs.attention_mask,<br>    max_new_tokens=1200,<br>    use_cache=True,<br>)<br>response = tokenizer.batch_decode(outputs)<br>print(response[0].split(&quot;### Response:&quot;)[1])<br></code></pre></td></tr></table></figure>
+
+<p>执行时，输出内容如下：</p>
+<p><img src="https://s2.loli.net/2025/02/17/oyNrqQCiWLxwVBA.png" srcset="/img/loading.gif" lazyload alt="image-20250217170314515"></p>
+<h4 id="第8个cell-创建框架model实例"><a href="#第8个cell-创建框架model实例" class="headerlink" title="第8个cell-创建框架model实例"></a>第8个cell-创建框架model实例</h4><p>这个cell的内容无需修改。它使用的lora框架中低秩矩阵的方法对模型进行快速有效微调。（需要对lora框架知识进行学习）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs shell">model = FastLanguageModel.get_peft_model(<br>    model,<br>    r=16,<br>    target_modules=[<br>        &quot;q_proj&quot;,<br>        &quot;k_proj&quot;,<br>        &quot;v_proj&quot;,<br>        &quot;o_proj&quot;,<br>        &quot;gate_proj&quot;,<br>        &quot;up_proj&quot;,<br>        &quot;down_proj&quot;,<br>    ],<br>    lora_alpha=16,<br>    lora_dropout=0,<br>    bias=&quot;none&quot;,<br>    use_gradient_checkpointing=&quot;unsloth&quot;,  # True or &quot;unsloth&quot; for very long context<br>    random_state=3407,<br>    use_rslora=False,<br>    loftq_config=None,<br>)<br></code></pre></td></tr></table></figure>
+
+<h4 id="第9与第10个cell-数据集规整化准备"><a href="#第9与第10个cell-数据集规整化准备" class="headerlink" title="第9与第10个cell-数据集规整化准备"></a>第9与第10个cell-数据集规整化准备</h4><p>预处理数据集，对数据集进行规整。规整成第9个cell中样式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell">train_prompt_style = &quot;&quot;&quot;Below is an instruction that describes a task, paired with an input that provides further context.<br>Write a response that appropriately completes the request.<br>Before answering, think carefully about the question and create a step-by-step chain of thoughts to ensure a logical and accurate response.<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">## Instruction:</span></span><br>You are a medical expert with advanced knowledge in clinical reasoning, diagnostics, and treatment planning.<br>Please answer the following medical question.<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">## Question:</span></span><br>&#123;&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">## Response:</span></span><br>&lt;think&gt;<br>&#123;&#125;<br>&lt;/think&gt;<br>&#123;&#125;&quot;&quot;&quot;<br></code></pre></td></tr></table></figure>
+
+<p>利用如下第10个cell中如下函数对数据集进行规整，将问题、思维链与回答填充到上述prompt中</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell">EOS_TOKEN = tokenizer.eos_token  # Must add EOS_TOKEN<br><br><br>def formatting_prompts_func(examples):<br>    inputs = examples[&quot;Question&quot;]<br>    cots = examples[&quot;Complex_CoT&quot;]<br>    outputs = examples[&quot;Response&quot;]<br>    texts = []<br>    for input, cot, output in zip(inputs, cots, outputs):<br>        text = train_prompt_style.format(input, cot, output) + EOS_TOKEN<br>        texts.append(text)<br>    return &#123;<br>        &quot;text&quot;: texts,<br>    &#125;<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="第11个cell-加载dataset"><a href="#第11个cell-加载dataset" class="headerlink" title="第11个cell-加载dataset"></a>第11个cell-加载dataset</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">from datasets import load_dataset<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">load_dataset方法调用的第1个参数（数据集目录）、第2个参数（使用数据集中哪种语言.cn表示英文，zh表示中文）。其余不变（第3个参数表示使用前500条数据）</span><br>dataset = load_dataset(&quot;/opt/code_repos/AI_datasets/AI-ModelScope---medical-o1-reasoning-SFT&quot;, &quot;zh&quot;,split = &quot;train[0:500]&quot;) # 这里同样去huggingface上面下载数据集，然后放到本地<br>dataset = dataset.map(formatting_prompts_func, batched = True,)<br>dataset[&quot;text&quot;][0]<br></code></pre></td></tr></table></figure>
+
+<p>执行上述cell前，还需要做如下操作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">备份unsloth-DeepSeek-R1-Distill-Llama-8B的README.md文件</span><br>root@controller01:/opt/code_repos/AI_models/unsloth-DeepSeek-R1-Distill-Llama-8B# mv README.md unsloth-DeepSeek-R1-Distill-Llama-8B---README.md <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">将数据集AI-ModelScope---medical-o1-reasoning-SFT下面*.json与README.md文件复制到上述目录下</span><br>root@controller01:/opt/code_repos/AI_models/unsloth-DeepSeek-R1-Distill-Llama-8B# cp -p /opt/code_repos/AI_datasets/AI-ModelScope---medical-o1-reasoning-SFT/*.json ./<br>root@controller01:/opt/code_repos/AI_models/unsloth-DeepSeek-R1-Distill-Llama-8B# cp -p /opt/code_repos/AI_datasets/AI-ModelScope---medical-o1-reasoning-SFT/README.md ./<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">此时所有文件</span><br>root@controller01:/opt/code_repos/AI_models/unsloth-DeepSeek-R1-Distill-Llama-8B# ls -alh<br>total 16G<br>drwxr-xr-x 3 root root 4.0K Feb 17 16:21 .<br>drwxr-xr-x 6 root root 4.0K Feb 14 10:49 ..<br>-rw-r--r-- 1 root root  959 Feb 13 17:59 config.json<br>-rw-r--r-- 1 root root   73 Feb 13 17:59 configuration.json<br>-rw-r--r-- 1 root root  236 Feb 13 17:59 generation_config.json<br>-rw-r--r-- 1 root root  62M Feb 13 21:36 medical_o1_sft_Chinese.json<br>-rw-r--r-- 1 root root  71M Feb 13 21:36 medical_o1_sft.json<br>-rw-r--r-- 1 root root 4.7G Feb 13 19:11 model-00001-of-00004.safetensors<br>-rw-r--r-- 1 root root 4.7G Feb 13 19:02 model-00002-of-00004.safetensors<br>-rw-r--r-- 1 root root 4.6G Feb 13 19:10 model-00003-of-00004.safetensors<br>-rw-r--r-- 1 root root 1.1G Feb 13 18:17 model-00004-of-00004.safetensors<br>-rw-r--r-- 1 root root  24K Feb 13 17:59 model.safetensors.index.json<br>-rw------- 1 root root  952 Feb 13 19:11 .msc<br>-rw-r--r-- 1 root root   36 Feb 13 19:11 .mv<br>-rw-r--r-- 1 root root 1.3K Feb 13 21:36 README.md<br>-rw-r--r-- 1 root root  483 Feb 13 17:59 special_tokens_map.json<br>drwxr-xr-x 2 root root 4.0K Feb 13 19:11 ._____temp<br>-rw-r--r-- 1 root root  52K Feb 13 17:59 tokenizer_config.json<br>-rw-r--r-- 1 root root  17M Feb 13 18:00 tokenizer.json<br>-rw-r--r-- 1 root root  16K Feb 13 17:59 unsloth-DeepSeek-R1-Distill-Llama-8B---README.md<br></code></pre></td></tr></table></figure>
+
+<p>执行上述cell，输出内容如下：</p>
+<p><img src="https://s2.loli.net/2025/02/17/TSfnkEKOji5szyl.png" srcset="/img/loading.gif" lazyload alt="image-20250217162802449"></p>
+<h4 id="第12个cell-创建SFTTrainer实例"><a href="#第12个cell-创建SFTTrainer实例" class="headerlink" title="第12个cell-创建SFTTrainer实例"></a>第12个cell-创建SFTTrainer实例</h4><p>使用trl这个python库来进行训练（微调）。</p>
+<p>TrainingArguments(…)中有很多参数，它们是训练（此处是深度学习）时用到的参数。其中最后一个参数output_dir定义输出的checkpoint的输出目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs shell">from trl import SFTTrainer<br>from transformers import TrainingArguments<br>from unsloth import is_bfloat16_supported<br><br>trainer = SFTTrainer(<br>    model=model,<br>    tokenizer=tokenizer,<br>    train_dataset=dataset,<br>    dataset_text_field=&quot;text&quot;,<br>    max_seq_length=max_seq_length,<br>    dataset_num_proc=2,<br>    args=TrainingArguments(<br>        per_device_train_batch_size=2,<br>        gradient_accumulation_steps=4,<br>        # Use num_train_epochs = 1, warmup_ratio for full training runs!<br>        warmup_steps=5,<br>        max_steps=60,<br>        learning_rate=2e-4,<br>        fp16=not is_bfloat16_supported(),<br>        bf16=is_bfloat16_supported(),<br>        logging_steps=10,<br>        optim=&quot;adamw_8bit&quot;,<br>        weight_decay=0.01,<br>        lr_scheduler_type=&quot;linear&quot;,<br>        seed=3407,<br>        output_dir=&quot;outputs&quot;,<br>    ),<br>)<br></code></pre></td></tr></table></figure>
+
+<h4 id="第13个cell-Model-training"><a href="#第13个cell-Model-training" class="headerlink" title="第13个cell-Model training"></a>第13个cell-Model training</h4><p>此cell偶尔会出现运行失败的问题，提示【failed to upsert bucket: returned error 401 Unauthorized: {“errors”:[{“message”:”user is not logged in”…】这样的信息，重复运行试试</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">trainer_stats = trainer.train()<br></code></pre></td></tr></table></figure>
+
+<p>此cell正常运行过程中输出如下：</p>
+<p><img src="https://s2.loli.net/2025/02/18/mXcTxGyh8iYzQHS.png" srcset="/img/loading.gif" lazyload alt="image-20250218101724006"></p>
+<p>此cell正常结束如下：</p>
+<p><img src="https://s2.loli.net/2025/02/18/LnV3JCvGxXrD6se.png" srcset="/img/loading.gif" lazyload alt="image-20250218102147794"></p>
+<h4 id="第14个cell-保存微调模型"><a href="#第14个cell-保存微调模型" class="headerlink" title="第14个cell-保存微调模型"></a>第14个cell-保存微调模型</h4><p>cell内容无需修改。执行后，输出如果如下。</p>
+<p><img src="https://s2.loli.net/2025/02/18/fp8cOs7QYrxCVz3.png" srcset="/img/loading.gif" lazyload alt="image-20250218102321298"></p>
+<p>此时在wandb.ai网站中查看对应project的运行情况，发现状态已经是Finished：</p>
+<p><img src="https://s2.loli.net/2025/02/18/SEr27bQL3MVWYDd.png" srcset="/img/loading.gif" lazyload alt="image-20250218102558319"></p>
+<p>点击project名字，可以看到如下详细信息：</p>
+<p><img src="https://s2.loli.net/2025/02/18/SJ1XaUf2Gecx4Im.png" srcset="/img/loading.gif" lazyload alt="image-20250218102633733"></p>
+<h4 id="第15个cell-微调后执行推理"><a href="#第15个cell-微调后执行推理" class="headerlink" title="第15个cell-微调后执行推理"></a>第15个cell-微调后执行推理</h4><p>仅仅将问题从英文形式换成中文形式。其余内容不变</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">question = <span class="hljs-string">&quot;A 61-year-old woman with a long history of involuntary urine loss during activities like coughing or sneezing but no leakage at night undergoes a gynecological exam and Q-tip test. Based on these findings, what would cystometry most likely reveal about her residual volume and detrusor contractions?&quot;</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##仅仅将问题从英文形式换成中文形式。其余内容不变</span></span><br>question = &quot;一名61岁女性，长期在咳嗽或打喷嚏等活动时不自觉排尿，但夜间无漏尿，现接受妇科检查和Q-tip检查。基于这些发现，膀胱造瘘术最有可能揭示她的残余容量和逼尿肌收缩情况？&quot;<br><br>FastLanguageModel.for_inference(model)  # Unsloth has 2x faster inference!<br>inputs = tokenizer([prompt_style.format(question, &quot;&quot;)], return_tensors=&quot;pt&quot;).to(&quot;cuda&quot;)<br><br>outputs = model.generate(<br>    input_ids=inputs.input_ids,<br>    attention_mask=inputs.attention_mask,<br>    max_new_tokens=1200,<br>    use_cache=True,<br>)<br>response = tokenizer.batch_decode(outputs)<br>print(response[0].split(&quot;### Response:&quot;)[1])<br></code></pre></td></tr></table></figure>
+
+<p>执行后，输出内容如下：</p>
+<p><img src="https://s2.loli.net/2025/02/18/KdSrm9CYI7xTJcg.png" srcset="/img/loading.gif" lazyload alt="image-20250218103431363"></p>
+<p>以下是微调前后推理的思维链与结果比较（可以看到微调后结果精简准确一些）：</p>
+<p><img src="https://s2.loli.net/2025/02/18/oECSlrJxPam3RGV.png" srcset="/img/loading.gif" lazyload alt="image-20250218103525077"></p>
+<h4 id="第16个cell-微调后其他问题推理"><a href="#第16个cell-微调后其他问题推理" class="headerlink" title="第16个cell-微调后其他问题推理"></a>第16个cell-微调后其他问题推理</h4><p>第6个cell提供中英文两种形式的问题：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">question = <span class="hljs-string">&quot;A 59-year-old man presents with a fever, chills, night sweats, and generalized fatigue, and is found to have a 12 mm vegetation on the aortic valve. Blood cultures indicate gram-positive, catalase-negative, gamma-hemolytic cocci in chains that do not grow in a 6.5% NaCl medium. What is the most likely predisposing factor for this patient&#x27;s condition?&quot;</span></span><br>question = &quot;59岁男性，发热，寒颤，盗汗，全身疲劳，主动脉瓣上有12毫米的赘生物。血液培养显示革兰氏阳性，过氧化氢酶阴性，γ -溶血性球菌链，不能在6.5%的NaCl培养基中生长。这个病人的病情最有可能的诱发因素是什么？&quot;<br><br>inputs = tokenizer([prompt_style.format(question, &quot;&quot;)], return_tensors=&quot;pt&quot;).to(&quot;cuda&quot;)<br><br>outputs = model.generate(<br>    input_ids=inputs.input_ids,<br>    attention_mask=inputs.attention_mask,<br>    max_new_tokens=1200,<br>    use_cache=True,<br>)<br>response = tokenizer.batch_decode(outputs)<br>print(response[0].split(&quot;### Response:&quot;)[1])<br></code></pre></td></tr></table></figure>
+
+<p>输出结果如下：</p>
+<p><img src="https://s2.loli.net/2025/02/18/OAoxhREBX45DvHi.png" srcset="/img/loading.gif" lazyload alt="image-20250218104828178"></p>
+<h4 id="第17个cell-保存模型权重文件等到本地"><a href="#第17个cell-保存模型权重文件等到本地" class="headerlink" title="第17个cell-保存模型权重文件等到本地"></a>第17个cell-保存模型权重文件等到本地</h4><p>cell内容无需修改，直接执行。输出如下图</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">new_model_online = <span class="hljs-string">&quot;kingabzpro/DeepSeek-R1-Medical-COT&quot;</span></span><br>new_model_local = &quot;DeepSeek-R1-Medical-COT&quot;<br>model.save_pretrained(new_model_local) # Local saving<br>tokenizer.save_pretrained(new_model_local)<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/18/jR7BLXGMQWYw5fb.png" srcset="/img/loading.gif" lazyload alt="image-20250218105536427"></p>
+<p>同时会在jupyter根目录下创建一个”DeepSeek-R1-Medical-COT“目录，其中内容如下：</p>
+<p><img src="https://s2.loli.net/2025/02/18/l8cP9d3pRemtzQT.png" srcset="/img/loading.gif" lazyload alt="image-20250218105707008"></p>
+<h4 id="第18与第19个cell-把模型发布到huggingface"><a href="#第18与第19个cell-把模型发布到huggingface" class="headerlink" title="第18与第19个cell-把模型发布到huggingface"></a>第18与第19个cell-把模型发布到huggingface</h4><p>huggingface需要翻墙访问，省略。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">model.push_to_hub(new_model_online) # Online saving<br>tokenizer.push_to_hub(new_model_online) # Online saving<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">----------------</span><br>model.save_pretrained_merged(new_model_local, tokenizer, save_method = &quot;merged_16bit&quot;,)<br>model.push_to_hub_merged(new_model_online, tokenizer, save_method = &quot;merged_16bit&quot;)<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="4-2-创建一个新的-ipynb文件"><a href="#4-2-创建一个新的-ipynb文件" class="headerlink" title="4.2 创建一个新的.ipynb文件"></a>4.2 创建一个新的.ipynb文件</h2><p><img src="https://s2.loli.net/2025/02/17/ltvbC9sAd4gLKwx.png" srcset="/img/loading.gif" lazyload alt="image-20250217093919718"></p>
+<p><img src="https://s2.loli.net/2025/02/17/TGyioRtsJHe9wm7.png" srcset="/img/loading.gif" lazyload alt="image-20250217094028950"></p>
+<p>重命名：</p>
+<p><img src="https://s2.loli.net/2025/02/18/qcfBh1Jbox2kjev.png" srcset="/img/loading.gif" lazyload alt="image-20250218110117175"></p>
+<h2 id="4-3-查看快捷键"><a href="#4-3-查看快捷键" class="headerlink" title="4.3 查看快捷键"></a>4.3 查看快捷键</h2><p><img src="https://s2.loli.net/2025/02/18/Hgx4iydTONfpkbv.png" srcset="/img/loading.gif" lazyload alt="image-20250218110248372"></p>
+<h1 id="五、参考资料"><a href="#五、参考资料" class="headerlink" title="五、参考资料"></a>五、参考资料</h1><p>参考教学视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1rSNmekEa7?spm_id_from=333.788.videopod.sections&vd_source=0b5fe5d5aa31f64bf7462d1d094b70a2">如何在本地微调DeepSeek-R1-8b模型</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%BE%AE%E8%B0%83/" class="print-no-link">#微调</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>纯CPU本地微调DeepSeek-R1-1.5b模型(还在完善中)</div>
+      <div>https://jiangsanyin.github.io/2025/03/06/纯CPU本地微调DeepSeek-R1-1.5b模型/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/03/07/%E4%BB%80%E4%B9%88%E6%98%AF%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83/" title="什么是模型微调">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">什么是模型微调</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/03/02/2025%E5%B9%B43%E6%9C%882%E6%97%A5%E9%95%BF%E6%B2%99%E5%B8%82%E6%9C%9B%E6%9C%88%E5%85%AC%E5%9B%AD%E9%9A%8F%E6%8B%8D/" title="2025年3月2日长沙市望月公园随拍">
+                        <span class="hidden-mobile">2025年3月2日长沙市望月公园随拍</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

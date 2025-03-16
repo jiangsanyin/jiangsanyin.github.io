@@ -1,0 +1,751 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景与说明​		HAMi，是一个国产的GPU与国产加速卡（支持的GPU与国产加速卡型号与具体特性请查看此项目官网： https:&#x2F;&#x2F;github.com&#x2F;Project-HAMi&#x2F;HAMi&#x2F; ）虚拟化开源项目，实现以kubernetes为基础的容器场景下GPU或加速卡虚拟化。HAMi原名“k8s-vGPU-scheduler”，最初由第四范式公司开源，现已在国内与国际上愈加流行，是管理Kubern">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GPU虚拟化开源项目HAMi中使用prometheus与grafana做监控">
+<meta property="og:url" content="https://jiangsanyin.github.io/2024/10/07/GPU%E8%99%9A%E6%8B%9F%E5%8C%96%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AEHAMi%E4%B8%AD%E4%BD%BF%E7%94%A8prometheus%E4%B8%8Egrafana%E5%81%9A%E7%9B%91%E6%8E%A7/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="背景与说明​		HAMi，是一个国产的GPU与国产加速卡（支持的GPU与国产加速卡型号与具体特性请查看此项目官网： https:&#x2F;&#x2F;github.com&#x2F;Project-HAMi&#x2F;HAMi&#x2F; ）虚拟化开源项目，实现以kubernetes为基础的容器场景下GPU或加速卡虚拟化。HAMi原名“k8s-vGPU-scheduler”，最初由第四范式公司开源，现已在国内与国际上愈加流行，是管理Kubern">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/01/10/MQaK3mRcvFzUxfC.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/03/RFJuthzAGYw5UHk.png">
+<meta property="article:published_time" content="2024-10-07T13:05:55.000Z">
+<meta property="article:modified_time" content="2025-01-14T06:44:54.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="HAMi prometheus grafana 监控">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/01/10/MQaK3mRcvFzUxfC.png">
+  
+  
+  
+  <title>GPU虚拟化开源项目HAMi中使用prometheus与grafana做监控 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">GPU虚拟化开源项目HAMi中使用prometheus与grafana做监控</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-10-07 21:05" pubdate>
+          2024年10月7日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          15 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">GPU虚拟化开源项目HAMi中使用prometheus与grafana做监控</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="背景与说明"><a href="#背景与说明" class="headerlink" title="背景与说明"></a>背景与说明</h1><p>​		HAMi，是一个国产的GPU与国产加速卡（支持的GPU与国产加速卡型号与具体特性请查看此项目官网： <a target="_blank" rel="noopener" href="https://github.com/Project-HAMi/HAMi/">https://github.com/Project-HAMi/HAMi/</a> ）虚拟化开源项目，实现以kubernetes为基础的容器场景下GPU或加速卡虚拟化。HAMi原名“k8s-vGPU-scheduler”，最初由第四范式公司开源，现已在国内与国际上愈加流行，是管理Kubernetes中异构设备的中间件。它可以管理不同类型的异构设备（如GPU、NPU等），在Pod之间共享异构设备，根据设备的拓扑信息和调度策略做出更好的调度决策。</p>
+<p>​	为了阐述的简明性，本文只提供一种可行的办法，最终实现使用prometheus抓取监控指标并作为数据源、使用grafana来展示监控信息的目的。</p>
+<p>​        本文假定已经部署好Kubernetes集群、HAMi。以下涉及到的相关组件都是在kubernetes集群内安装的，相关组件或软件版本信息如下：</p>
+<table>
+<thead>
+<tr>
+<th>组件或软件名称</th>
+<th>版本</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>kubernetes集群</td>
+<td>v1.23.10</td>
+<td>AMD64构架服务器环境下</td>
+</tr>
+<tr>
+<td>HAMi</td>
+<td>根据向开源作者提问，当前HAMi版本发行机制还不够成熟，暂以安装HAMi的scheduler.kubeScheduler.imageTag 参数值为其版本，此值要跟kubernetes版本看齐</td>
+<td>项目地址：<a target="_blank" rel="noopener" href="https://github.com/Project-HAMi/HAMi/">https://github.com/Project-HAMi/HAMi/</a></td>
+</tr>
+<tr>
+<td>kube-prometheus stack</td>
+<td>分支 release-0.11</td>
+<td></td>
+</tr>
+<tr>
+<td>dcgm-exporter</td>
+<td>tag 3.2.5-3.1.7</td>
+<td></td>
+</tr>
+</tbody></table>
+<h1 id="部署与配置kube-prometheus-stack"><a href="#部署与配置kube-prometheus-stack" class="headerlink" title="部署与配置kube-prometheus stack"></a>部署与配置kube-prometheus stack</h1><h2 id="部署kube-prometheus-stack"><a href="#部署kube-prometheus-stack" class="headerlink" title="部署kube-prometheus stack"></a>部署kube-prometheus stack</h2><p>**注：**kubernetes与kube-prometheus stack的版本兼容矩阵请查看 <a target="_blank" rel="noopener" href="https://github.com/prometheus-operator/kube-prometheus?tab=readme-ov-file#compatibility">https://github.com/prometheus-operator/kube-prometheus?tab=readme-ov-file#compatibility</a> ，请根据自己的kubernetes版本选择合适版本的kube-prometheus stack</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">下载kube-prometheus代码仓库（此处使用分支 release-0.11）</span><br>git clone -b release-0.11 https://github.com/prometheus-operator/kube-prometheus.git<br>cd kube-prometheus<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改下grafana的service类型为NodePort。即在spec下添加<span class="hljs-built_in">type</span>配置项</span><br>vi manifests/grafana-service.yaml<br>...<br>spec:<br>  type: NodePort<br>...<br><span class="hljs-meta prompt_">#</span><span class="language-bash">类似的方法修改prometheus与alertmanager service类型为NodePort，它们的配置文件分别是manifests目录下的prometheus-service.yaml与alertmanager-service.yaml</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">执行部署</span><br>kubectl create -f manifests/setup/<br>kubectl create -f manifests/.<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建的所有资源对象都在monitorin命名空间下，使用如下命令查看资源对象的运行状态</span><br>kubectl -n monitoring get all<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">等monitorin命名空间下所有资源对象处于正常运行状态后，使用如下方式获取grafana、prometheus与alertmanager的svc信息</span><br>root@controller01:~/kube-prometheus# kubectl -n monitoring get svc | egrep &quot;NAME|grafana|prometheus-k8s|alertmanager-main&quot;<br>NAME                    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                         AGE<br>alertmanager-main       NodePort    10.233.5.65     &lt;none&gt;        9093:30093/TCP,8080:30401/TCP   19h<br>grafana                 NodePort    10.233.56.112   &lt;none&gt;        3000:30300/TCP                  19h<br>prometheus-k8s          NodePort    10.233.38.113   &lt;none&gt;        9090:30090/TCP,8080:31273/TCP   19h<br></code></pre></td></tr></table></figure>
+
+<p>​		此时，假如控制节点的ip是10.0.0.21，则可以分别使用如下url访问grafana、prometheus与alertmanager：<a target="_blank" rel="noopener" href="http://10.0.0.21:30300/">http://10.0.0.21:30300</a> 、<a target="_blank" rel="noopener" href="http://10.0.0.21:30090/">http://10.0.0.21:30090</a> 、<a target="_blank" rel="noopener" href="http://10.0.0.21:30093/">http://10.0.0.21:30093</a> ，其中访问grafana的默认用户名与密码都是admin</p>
+<p>​        笔者后来在部署好上述 kube-prometheus stack后，发现 自己笔记本电脑访问prometheus的nodeport-service+port时 提示连接超时，但在k8s集群内部访问控制节点+service&#x2F;prometheus-k8s加port、service&#x2F;prometheus-k8s的cluster-ip加port、pod&#x2F;prometheus-k8s-xxx加3000端口都没有问题。此时可以检查 下networkpolicies，如果你知道修改networkpolicies规则请直接修改，否则可以直接删除相关networkpolicies，之后在自己笔记本电脑上访问grafana、prometheus与alertmanager相关界面就正常了。</p>
+<p><img src="https://s2.loli.net/2025/01/10/MQaK3mRcvFzUxfC.png" srcset="/img/loading.gif" lazyload alt="image-20250110161557368"></p>
+<h2 id="配置grafana"><a href="#配置grafana" class="headerlink" title="配置grafana"></a>配置grafana</h2><h3 id="创建数据源ALL"><a href="#创建数据源ALL" class="headerlink" title="创建数据源ALL"></a>创建数据源ALL</h3><p>​		访问”Configuration“-&gt;“Data soutces”页面，创建一个名为”ALL”的数据源，其中HTTP.URL的值保持跟默认创建的数据源“prometheus”中的一样即可为 “<a href="http://prometheus-k8s.monitoring.svc:9090”">http://prometheus-k8s.monitoring.svc:9090”</a> ，然后保存上述数据源“ALL”</p>
+<h3 id="导入HAMi默认的dashboard"><a href="#导入HAMi默认的dashboard" class="headerlink" title="导入HAMi默认的dashboard"></a>导入HAMi默认的dashboard</h3><p>​		访问“Dashboards”-&gt;“Browse”页面，导入此dashboard： <a target="_blank" rel="noopener" href="https://grafana.com/grafana/dashboards/22043-hami-vgpu-metrics-dashboard/">https://grafana.com/grafana/dashboards/22043-hami-vgpu-metrics-dashboard/</a> ，grafana中将创建一个名为“hami-vgpu-metrics-dashboard”的dashboard，此时此页面中有一些Panel如vGPUCorePercentage还没有数据，请继续看完此文档，执行完”部署dcgm-exporter”与“创建ServiceMonitor”中的步骤之后Panel数据将正常显示。</p>
+<h1 id="部署dcgm-exporter"><a href="#部署dcgm-exporter" class="headerlink" title="部署dcgm-exporter"></a>部署dcgm-exporter</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">下载dcgm-exporter代码仓库（未看到与kubernetes的兼容矩阵说明，此处使用tag 3.2.5-3.1.7）</span><br>git clone -b 3.2.5-3.1.7 https://github.com/NVIDIA/dcgm-exporter.git<br>cd dcgm-exporter<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改 deployment/values.yaml 文件，为其中的serviceMonitor添加relabelings配置，这样dcgm-exporter的监控指标才有node_name与ip属性</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">只有这一处serviceMonitor，relabelings内的内容都是添加的，添加后内容如下</span><br>root@controller01:~/dcgm-exporter# vi deployment/values.yaml<br>...<br>serviceMonitor:<br>  enabled: true<br>  interval: 15s<br>  honorLabels: false<br>  additionalLabels: &#123;&#125;<br>    #monitoring: prometheus<br>  relabelings:<br>  - sourceLabels: [__meta_kubernetes_endpoints_name]<br>    regex: dcgm-exporter<br>    replacement: $1<br>    action: keep<br>  - sourceLabels: [__meta_kubernetes_pod_node_name]<br>    regex: (.*)<br>    targetLabel: node_name<br>    replacement: $&#123;1&#125;<br>    action: replace<br>  - sourceLabels: [__meta_kubernetes_pod_host_ip]<br>    regex: (.*)<br>    targetLabel: ip<br>    replacement: $1<br>    action: replace<br>...<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">使用helm工具在monitoring空间下安装dcgm-exporter</span><br>root@controller01:~/dcgm-exporter# helm install dcgm-exporter deployment/ -n monitoring<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看helm install结果</span><br>root@controller01:~/dcgm-exporter# helm list -n monitoring<br>NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                   APP VERSION<br>dcgm-exporter   monitoring      1               2024-10-02 16:32:35.691073696 +0800 CST deployed        dcgm-exporter-3.1.7     3.1.7<br><span class="hljs-meta prompt_">#</span><span class="language-bash">还需确认dcgm-exporter 相关的pod已经处于running状态</span><br>root@controller01:~/dcgm-exporter# kubectl -n monitoring get pods | egrep &quot;NAME|dcgm-exporter&quot;<br>NAME                                  READY   STATUS             RESTARTS         AGE<br>dcgm-exporter-p4fdp                   1/1     Running            0                4h14m<br></code></pre></td></tr></table></figure>
+
+<h1 id="创建ServiceMonitor"><a href="#创建ServiceMonitor" class="headerlink" title="创建ServiceMonitor"></a>创建ServiceMonitor</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建文件hami-device-plugin-svc-monitor.yaml</span><br>root@controller01:~# touch hami-device-plugin-svc-monitor.yaml<br><span class="hljs-meta prompt_">#</span><span class="language-bash">文件hami-device-plugin-svc-monitor.yaml内容如下</span><br>root@controller01:~# cat hami-device-plugin-svc-monitor.yaml<br>apiVersion: monitoring.coreos.com/v1<br>kind: ServiceMonitor<br>metadata:<br>  name: hami-device-plugin-svc-monitor<br>  namespace: kube-system<br>spec:<br>  selector:<br>    matchLabels:<br>      app.kubernetes.io/component: hami-device-plugin<br>  namespaceSelector:<br>    matchNames:<br>      - &quot;kube-system&quot;<br>  endpoints:<br>  - path: /metrics<br>    port: monitorport<br>    interval: &quot;15s&quot;<br>    honorLabels: false<br>    relabelings:<br>    - sourceLabels: [__meta_kubernetes_endpoints_name]<br>      regex: hami-.*<br>      replacement: $1<br>      action: keep<br>    - sourceLabels: [__meta_kubernetes_pod_node_name]<br>      regex: (.*)<br>      targetLabel: node_name<br>      replacement: $&#123;1&#125;<br>      action: replace<br>    - sourceLabels: [__meta_kubernetes_pod_host_ip]<br>      regex: (.*)<br>      targetLabel: ip<br>      replacement: $1<br>      action: replace<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">应用此文件</span><br>root@controller01:~# kubectl apply -f hami-device-plugin-svc-monitor.yaml<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建文件hami-scheduler-svc-monitor.yaml</span><br>root@controller01:~# touch hami-scheduler-svc-monitor.yaml<br><span class="hljs-meta prompt_">#</span><span class="language-bash">文件hami-scheduler-svc-monitor.yaml内容如下</span><br>root@controller01:~# cat hami-scheduler-svc-monitor.yaml<br>apiVersion: monitoring.coreos.com/v1<br>kind: ServiceMonitor<br>metadata:<br>  name: hami-scheduler-svc-monitor<br>  namespace: kube-system<br>spec:<br>  selector:<br>    matchLabels:<br>      app.kubernetes.io/component: hami-scheduler<br>  namespaceSelector:<br>    matchNames:<br>      - &quot;kube-system&quot;<br>  endpoints:<br>  - path: /metrics<br>    port: monitor<br>    interval: &quot;15s&quot;<br>    honorLabels: false<br>    relabelings:<br>    - sourceLabels: [__meta_kubernetes_endpoints_name]<br>      regex: hami-.*<br>      replacement: $1<br>      action: keep<br>    - sourceLabels: [__meta_kubernetes_pod_node_name]<br>      regex: (.*)<br>      targetLabel: node_name<br>      replacement: $&#123;1&#125;<br>      action: replace<br>    - sourceLabels: [__meta_kubernetes_pod_host_ip]<br>      regex: (.*)<br>      targetLabel: ip<br>      replacement: $1<br>      action: replace<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">应用此文件</span><br>root@controller01:~# kubectl apply -f hami-scheduler-svc-monitor.yaml<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">确认创建的ServiceMonitor</span><br>root@controller01:~# kubectl -n kube-system get servicemonitor<br>NAME                             AGE<br>hami-device-plugin-svc-monitor   28h<br>hami-scheduler-svc-monitor       28h<br></code></pre></td></tr></table></figure>
+
+<h1 id="确认最终监控效果"><a href="#确认最终监控效果" class="headerlink" title="确认最终监控效果"></a>确认最终监控效果</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建文件gpu-pod.yaml，尝试使用HAMi虚拟出来的NVIDIA vGPU</span><br>root@controller01:~# touch gpu-pod.yaml<br>root@controller01:~# cat gpu-pod.yaml<br>apiVersion: v1<br>kind: Pod<br>metadata:<br>  name: gpu-pod-01<br>spec:<br>  restartPolicy: Never<br>  containers:<br>  - name: cuda-container<br>    image: nvcr.io/nvidia/k8s/cuda-sample:vectoradd-cuda10.2<br>    resources:<br>      limits:<br>        nvidia.com/vgpu: 2 # 请求2个vGPUs<br>        nvidia.com/gpumem: 3000 # 每个vGPU申请3000m显存 （可选，整数类型）<br>        nvidia.com/gpucores: 10 # 每个vGPU的算力为10%实际显卡的算力 （可选，整数类型）<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">应用此文件</span><br>root@controller01:~# kubectl apply -f gpu-pod.yaml<br>root@controller01:~# kubectl get pods -o wide<br>NAME           READY   STATUS        RESTARTS   AGE   IP               NODE           NOMINATED NODE   READINESS GATES<br>gpu-pod-01     0/1     Completed     0          52s   10.233.81.70     controller01   &lt;none&gt;           &lt;none&gt;<br></code></pre></td></tr></table></figure>
+
+<p>​		此时，应该可以dashboard中看到监控详情。</p>
+<p>​		导入dashboard时少许panel如“GPU Total”的内容可能未被正确解析，将造成其内容不能正常显示，此时请将dashboard文件下载下来，手动编辑对应内容，将数据源“Data source”修改为”ALL”，同时将“Metrics browser”修改正确的promQL语句（可以从下载下来的dashboard中查找），其他默认即可。<strong>如果不会修改，这里也提供一份在grafana8.5.5中可用的dashboard，阿里云盘分享链接<a target="_blank" rel="noopener" href="https://www.alipan.com/s/1X8fTqisx6y">https://www.alipan.com/s/1X8fTqisx6y</a> 提取码: r48s</strong> </p>
+<p>​		正常时，内容大概如下</p>
+<p><img src="https://s2.loli.net/2024/10/03/RFJuthzAGYw5UHk.png" srcset="/img/loading.gif" lazyload alt="image-20241003215400685"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/HAMi-prometheus-grafana-%E7%9B%91%E6%8E%A7/" class="print-no-link">#HAMi prometheus grafana 监控</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>GPU虚拟化开源项目HAMi中使用prometheus与grafana做监控</div>
+      <div>https://jiangsanyin.github.io/2024/10/07/GPU虚拟化开源项目HAMi中使用prometheus与grafana做监控/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年10月7日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/10/21/%E5%9C%A8PC%E4%B8%8A%E4%B8%8B%E8%BD%BD%E5%BA%94%E7%94%A8%E5%AE%89%E5%8D%93%E7%89%88%E5%AE%89%E8%A3%85%E5%8C%85/" title="在PC上下载应用安卓版安装包">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">在PC上下载应用安卓版安装包</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/09/27/k8s%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2-%E4%BD%BF%E7%94%A8kubekey%E9%83%A8%E7%BD%B2amd64%E9%AB%98%E5%8F%AF%E7%94%A8%E7%89%88k8s1-23-17-ksp3-4-1/" title="k8s离线部署-使用kubekey部署amd64高可用版k8s1.23.17-ksp3.4.1">
+                        <span class="hidden-mobile">k8s离线部署-使用kubekey部署amd64高可用版k8s1.23.17-ksp3.4.1</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

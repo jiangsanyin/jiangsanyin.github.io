@@ -1,0 +1,1042 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="二、部署k8s高可用集群2.1 高可用集群规划高可用集群构架图大致如下（下图是从官网复制过来的，跟本文中k8s集群节点布局稍有差别，但大致不变）：    注意1：确保各节点时区设置一致、时间同步。 如果你的环境没有提供NTP 时间同步，推荐集成安装chrony 注意2：确保在干净的系统上开始安装，不要使用曾经装过kubeadm或其他k8s发行版的环境 注意3：建议操作系统升级到新的稳定内核，请结合">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s在线部署-使用kubeasz部署amd64高可用k8s1-23-17">
+<meta property="og:url" content="https://jiangsanyin.github.io/2024/12/01/k8s%E5%9C%A8%E7%BA%BF%E9%83%A8%E7%BD%B2-%E4%BD%BF%E7%94%A8kubeasz%E9%83%A8%E7%BD%B2amd64%E9%AB%98%E5%8F%AF%E7%94%A8k8s1-23-17/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="二、部署k8s高可用集群2.1 高可用集群规划高可用集群构架图大致如下（下图是从官网复制过来的，跟本文中k8s集群节点布局稍有差别，但大致不变）：    注意1：确保各节点时区设置一致、时间同步。 如果你的环境没有提供NTP 时间同步，推荐集成安装chrony 注意2：确保在干净的系统上开始安装，不要使用曾经装过kubeadm或其他k8s发行版的环境 注意3：建议操作系统升级到新的稳定内核，请结合">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2024/10/11/9pqcV4iXyCxbjsW.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/31/IMNoUuGV98bCBir.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/10/9mbfwSHUe7C5ozy.png">
+<meta property="og:image" content="https://s2.loli.net/2024/11/05/cjUZ7E3v8epDVdg.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/16/3HMXsCEwkSGOerm.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/16/sbqv1Z24eEdfKmn.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/16/ilxqfoKnpQC6S32.png">
+<meta property="article:published_time" content="2024-12-01T02:24:06.000Z">
+<meta property="article:modified_time" content="2025-01-16T06:59:48.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="kubeasz k8s在线部署 二进制 高可用 kubesphere harbor k8s扩容 k8s缩容 k8s卸载">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2024/10/11/9pqcV4iXyCxbjsW.png">
+  
+  
+  
+  <title>k8s在线部署-使用kubeasz部署amd64高可用k8s1-23-17 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">k8s在线部署-使用kubeasz部署amd64高可用k8s1-23-17</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-01 10:24" pubdate>
+          2024年12月1日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          93 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">k8s在线部署-使用kubeasz部署amd64高可用k8s1-23-17</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="二、部署k8s高可用集群"><a href="#二、部署k8s高可用集群" class="headerlink" title="二、部署k8s高可用集群"></a>二、部署k8s高可用集群</h1><h2 id="2-1-高可用集群规划"><a href="#2-1-高可用集群规划" class="headerlink" title="2.1 高可用集群规划"></a>2.1 高可用集群规划</h2><p>高可用集群构架图大致如下（下图是从官网复制过来的，跟本文中k8s集群节点布局稍有差别，但大致不变）：</p>
+<img src="https://s2.loli.net/2024/10/11/9pqcV4iXyCxbjsW.png" srcset="/img/loading.gif" lazyload alt="image-20241011112321181" style="zoom: 50%;" />
+
+<ul>
+<li>注意1：确保各节点时区设置一致、时间同步。 如果你的环境没有提供NTP 时间同步，推荐集成安装<a target="_blank" rel="noopener" href="https://github.com/easzlab/kubeasz/blob/3.5.3/docs/guide/chrony.md">chrony</a></li>
+<li>注意2：确保在干净的系统上开始安装，不要使用曾经装过kubeadm或其他k8s发行版的环境</li>
+<li>注意3：建议操作系统升级到新的稳定内核，请结合阅读<a target="_blank" rel="noopener" href="https://github.com/easzlab/kubeasz/blob/3.5.3/docs/guide/kernel_upgrade.md">内核升级文档</a></li>
+<li>注意4：在公有云上创建多主集群，请结合阅读<a target="_blank" rel="noopener" href="https://github.com/easzlab/kubeasz/blob/3.5.3/docs/setup/kubeasz_on_public_cloud.md">在公有云上部署 kubeasz</a></li>
+</ul>
+<p>高可用集群所需节点配置如下：</p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>数量</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>部署节点</td>
+<td>1</td>
+<td>运行ansible&#x2F;ezctl命令，一般复用第一个master节点</td>
+</tr>
+<tr>
+<td>etcd节点</td>
+<td>3</td>
+<td>注意etcd集群需要1,3,5,…奇数个节点，一般复用master节点</td>
+</tr>
+<tr>
+<td>master节点</td>
+<td>3</td>
+<td>高可用集群至少3个master节点（上图来自kubeasz官网，只画出两个master节点不准确）</td>
+</tr>
+<tr>
+<td>node节点</td>
+<td>n</td>
+<td>运行应用负载的节点，可根据需要提升机器配置&#x2F;增加节点数</td>
+</tr>
+</tbody></table>
+<p>机器配置：</p>
+<ul>
+<li>master节点：4c&#x2F;8g内存&#x2F;50g硬盘</li>
+<li>worker节点：建议8c&#x2F;32g内存&#x2F;200g硬盘以上</li>
+</ul>
+<p>注意：默认配置下容器运行时和kubelet会占用&#x2F;var的磁盘空间，如果磁盘分区特殊，可以设置config.yml中的容器运行时和kubelet数据目录：<code>CONTAINERD_STORAGE_DIR</code> <code>DOCKER_STORAGE_DIR</code> <code>KUBELET_ROOT_DIR</code></p>
+<p>在 kubeasz 2x 版本，多节点高可用集群安装可以使用2种方式：</p>
+<ul>
+<li>1.按照本文步骤先规划准备，预先配置节点信息后，直接安装多节点高可用集群</li>
+<li>2.先部署单节点集群 <a target="_blank" rel="noopener" href="https://github.com/easzlab/kubeasz/blob/3.5.3/docs/setup/quickStart.md">AllinOne部署</a>，然后通过 <a target="_blank" rel="noopener" href="https://github.com/easzlab/kubeasz/blob/3.5.3/docs/op/op-index.md">节点添加</a> 扩容成高可用集群</li>
+</ul>
+<h2 id="2-2-高可用集群部署步骤"><a href="#2-2-高可用集群部署步骤" class="headerlink" title="2.2 高可用集群部署步骤"></a>2.2 高可用集群部署步骤</h2><p>以下示例创建一个5节点的多主高可用集群，最后添加一个节点k8s03-6，文档中命令默认都需要root权限运行。</p>
+<table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>IP</th>
+<th>root密码</th>
+<th>规格</th>
+<th>磁盘</th>
+<th>操作系统</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>k8s03-1</td>
+<td>10.13.15.61</td>
+<td>cloud@2020</td>
+<td>8c16g</td>
+<td>400G</td>
+<td>Ubuntu20.04.3 LTS-amd64</td>
+<td>控制节点、Harbor服务器</td>
+</tr>
+<tr>
+<td>k8s03-2</td>
+<td>10.13.15.62</td>
+<td>cloud@2020</td>
+<td>8c16g</td>
+<td>400G</td>
+<td>Ubuntu20.04.3 LTS-amd64</td>
+<td>控制节点</td>
+</tr>
+<tr>
+<td>k8s03-3</td>
+<td>10.13.15.63</td>
+<td>cloud@2020</td>
+<td>8c16g</td>
+<td>400G</td>
+<td>Ubuntu20.04.3 LTS-amd64</td>
+<td>控制节点</td>
+</tr>
+<tr>
+<td></td>
+<td>10.13.15.70</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>多控制节点做keepalived与l4lb后的虚拟ip</td>
+</tr>
+<tr>
+<td>k8s03-4</td>
+<td>10.13.15.64</td>
+<td>cloud@2020</td>
+<td>8c16g</td>
+<td>400G</td>
+<td>Ubuntu20.04.3 LTS-amd64</td>
+<td>工作节点</td>
+</tr>
+<tr>
+<td>k8s03-5</td>
+<td>10.13.15.65</td>
+<td>cloud@2020</td>
+<td>8c16g</td>
+<td>400G</td>
+<td>Ubuntu20.04.3 LTS-amd64</td>
+<td>工作节点</td>
+</tr>
+<tr>
+<td>k8s03-6</td>
+<td>10.13.15.66</td>
+<td>cloud@2020</td>
+<td>8c16g</td>
+<td>400G</td>
+<td>Ubuntu20.04.3 LTS-amd64</td>
+<td>控制节点（演示添加工作节点）</td>
+</tr>
+</tbody></table>
+<h3 id="2-2-1-基础系统配置"><a href="#2-2-1-基础系统配置" class="headerlink" title="2.2.1 基础系统配置"></a>2.2.1 基础系统配置</h3><ul>
+<li>开发环境每个节点8C核心16G内核&#x2F;50G磁盘+，生产环境的配置要更高（具体看业务数量。建议直接用128C256G+物理服务器）、磁盘空间建议1T+</li>
+<li>最小化安装<code>Ubuntu 16.04+ server或者CentOS 7+ Minimal</code></li>
+<li>配置基础网络、更新源、SSH登录等</li>
+<li>推荐使用ansible in docker 容器化方式运行，无需安装额外依赖</li>
+</ul>
+<h3 id="2-2-2-在每个节点配置时间同步"><a href="#2-2-2-在每个节点配置时间同步" class="headerlink" title="2.2.2 在每个节点配置时间同步"></a>2.2.2 在每个节点配置时间同步</h3><h4 id="2-2-2-1-配置时区"><a href="#2-2-2-1-配置时区" class="headerlink" title="2.2.2.1 配置时区"></a>2.2.2.1 配置时区</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">所有节点时区都配置为东八区</span><br>timedatectl set-timezone Asia/Shanghai<br><span class="hljs-meta prompt_">#</span><span class="language-bash">手动设置时间为北京时间（尽量靠近准确的北京时间）</span><br>timedatectl set-time &quot;YYYY-MM-DD HH:MM:SS&quot;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看时区与时间</span><br>timedatectl<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-2-2-安装配置时间同步服务"><a href="#2-2-2-2-安装配置时间同步服务" class="headerlink" title="2.2.2.2 安装配置时间同步服务"></a>2.2.2.2 安装配置时间同步服务</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">1.安装 chrony 作为时间同步软件：</span><br>apt-get install chrony -qy<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">2.修改配置文件 /etc/chrony/chrony.conf，修改 ntp 服务器配置（以下3种方式任选其一）：</span><br>vi /etc/chrony/chrony.conf<br><span class="hljs-meta prompt_"># </span><span class="language-bash">2.1 使用默认的 pool 配置</span><br>pool ntp.ubuntu.com        iburst maxsources 4<br>pool 0.ubuntu.pool.ntp.org iburst maxsources 1<br>pool 1.ubuntu.pool.ntp.org iburst maxsources 1<br>pool 2.ubuntu.pool.ntp.org iburst maxsources 2<br><span class="hljs-meta prompt_"># </span><span class="language-bash">2.2 增加国内的 ntp 服务器，或是指定其他常用的时间服务器</span><br>server ntp.aliyun.com iburst<br>server ntp1.aliyun.com iburst<br>server ntp2.aliyun.com iburst<br>server ntp1.cloud.aliyuncs.com iburst<br>server ntp2.cloud.aliyuncs.com iburst<br>server ntp3.cloud.aliyuncs.com iburst<br>server ntp7.cloud.aliyuncs.com iburst<br>server ntp8.cloud.aliyuncs.com iburst<br>server ntp9.cloud.aliyuncs.com iburst<br>server ntp.api.bz iburst<br><span class="hljs-meta prompt_"># </span><span class="language-bash">2.3 若要使用本地NTP服务器，可以将上面的删除，然后添加自己的NTP服务器（假设10.0.0.1是本地NTP服务器）：</span><br>server 10.0.0.1 iburst<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">重启 chrony 服务：</span><br>systemctl restart chrony<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">验证 chrony 同步状态：</span><br>chronyc sourcestats -v<br><span class="hljs-meta prompt_">#</span><span class="language-bash">输出内容大致如下</span><br>210 Number of sources = 8<br>                             .- Number of sample points in measurement set.<br>                            /    .- Number of residual runs with same sign.<br>                           |    /    .- Length of measurement set (time).<br>                           |   |    /      .- Est. clock freq error (ppm).<br>                           |   |   |      /           .- Est. error in freq.<br>                           |   |   |     |           /         .- Est. offset.<br>                           |   |   |     |          |          |   On the -.<br>                           |   |   |     |          |          |   samples. \<br>                           |   |   |     |          |          |             |<br>Name/IP Address            NP  NR  Span  Frequency  Freq Skew  Offset  Std Dev<br>==============================================================================<br>prod-ntp-3.ntp1.ps5.cano&gt;   4   3     9   +704.136  21532.734    -17ms  4358us<br>prod-ntp-4.ntp1.ps5.cano&gt;   4   3    10  +1534.234  26545.184   +395us  5834us<br>alphyn.canonical.com        4   3    11   -633.039  22169.467  -3371us  4248us<br>prod-ntp-5.ntp4.ps5.cano&gt;   4   3     9   -218.393   5069.837    -28ms  1108us<br>tick.ntp.infomaniak.ch      4   3     9   +179.013  18164.828  +4135us  3693us<br>ntp5.flashdance.cx          0   0     0     +0.000   2000.000     +0ns  4000ms<br>ntp7.flashdance.cx          4   3     9  -2025.918  26238.625    -25ms  5856us<br>dns1.synet.edu.cn           4   3     8    +53.828   9119.362   +422us  1610us<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-3-在每个节点安装依赖工具"><a href="#2-2-3-在每个节点安装依赖工具" class="headerlink" title="2.2.3 在每个节点安装依赖工具"></a>2.2.3 在每个节点安装依赖工具</h3><p>推荐使用ansible in docker 容器化方式运行，无需安装额外依赖</p>
+<h3 id="2-2-4-安装k8s"><a href="#2-2-4-安装k8s" class="headerlink" title="2.2.4 安装k8s"></a>2.2.4 安装k8s</h3><p>k8s与kubeasz推荐的匹配版本对照表：</p>
+<table>
+<thead>
+<tr>
+<th>Kubernetes version</th>
+<th>1.19</th>
+<th>1.20</th>
+<th>1.21</th>
+<th>1.22</th>
+<th>1.23</th>
+<th>1.24</th>
+<th>1.25</th>
+<th>1.26</th>
+<th>1.27</th>
+<th>1.28</th>
+<th>1.29</th>
+<th>1.30</th>
+<th>1.31</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>kubeasz version</td>
+<td>2.2.2</td>
+<td>3.0.1</td>
+<td>3.1.0</td>
+<td>3.1.1</td>
+<td>3.2.0</td>
+<td>3.6.2</td>
+<td>3.6.2</td>
+<td>3.6.2</td>
+<td>3.6.2</td>
+<td>3.6.2</td>
+<td>3.6.3</td>
+<td>3.6.4</td>
+<td>3.6.5</td>
+</tr>
+</tbody></table>
+<h4 id="2-2-4-1-下载项目源码、二进制及离线镜像"><a href="#2-2-4-1-下载项目源码、二进制及离线镜像" class="headerlink" title="2.2.4.1 下载项目源码、二进制及离线镜像"></a>2.2.4.1 下载项目源码、二进制及离线镜像</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">下载工具脚本ezdown，举例使用kubeasz版本3.2.0</span><br>root@k8s03-1:~# mkdir /opt/kubeasz-deployk8s<br>root@k8s03-1:~# cd /opt/kubeasz-deployk8s<br>root@k8s03-1:/opt/kubeasz-deployk8s# export release=3.2.0<br>root@k8s03-1:/opt/kubeasz-deployk8s# wget https://github.com/easzlab/kubeasz/releases/download/$&#123;release&#125;/ezdown<br>root@k8s03-1:/opt/kubeasz-deployk8s# chmod +x ./ezdown<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">下载kubeasz代码、二进制、默认容器镜像（更多关于ezdown的参数，运行./ezdown 查看）</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">国内环境（-k指定k8s版本，其他参数执行“./ezdown”查看），以下命令会创建并启动local_registry容器</span><br>./ezdown -D -m &quot;CN&quot; -k &quot;v1.23.17&quot;<br><span class="hljs-meta prompt_"># </span><span class="language-bash">海外环境</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">./ezdown -D -m standard</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">下载harbor相关镜像</span><br>root@k8s03-1:/opt/kubeasz-deployk8s# ./ezdown -R -m &quot;CN&quot;<br>root@k8s03-1:/opt/kubeasz-deployk8s# ls -alh /etc/kubeasz/down/harbor-offline-installer*<br>-rw-r--r-- 1 root root 534M Feb  6  2021 /etc/kubeasz/down/harbor-offline-installer-v2.1.3.tgz<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">【可选】下载额外容器镜像（cilium,flannel,prometheus等）</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">./ezdown -X -m <span class="hljs-string">&quot;CN&quot;</span> -k <span class="hljs-string">&quot;v1.23.17&quot;</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">【可选】下载离线系统包 (适用于无法使用yum/apt仓库情形)</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">./ezdown -P -m <span class="hljs-string">&quot;CN&quot;</span> -k <span class="hljs-string">&quot;v1.23.17&quot;</span></span><br></code></pre></td></tr></table></figure>
+
+<p>上述脚本运行成功后，所有文件（kubeasz代码、二进制、离线镜像）均已整理好放入目录<code>/etc/kubeasz</code></p>
+<h4 id="2-2-4-2-创建集群配置实例"><a href="#2-2-4-2-创建集群配置实例" class="headerlink" title="2.2.4.2 创建集群配置实例"></a>2.2.4.2 创建集群配置实例</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">容器化运行kubeasz（会创建并启动kubeasz容器）</span><br>./ezdown -S<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">创建新集群 k8s03</span><br>root@k8s03-1:/opt/kubeasz-deployk8s# docker exec -it kubeasz ezctl new k8s03<br>2024-10-15 11:33:29 DEBUG generate custom cluster files in /etc/kubeasz/clusters/k8s03<br>2024-10-15 11:33:30 DEBUG set versions<br>2024-10-15 11:33:30 DEBUG cluster k8s03: files successfully created.<br>2024-10-15 11:33:30 INFO next steps 1: to config &#x27;/etc/kubeasz/clusters/k8s03/hosts&#x27;<br>2024-10-15 11:33:30 INFO next steps 2: to config &#x27;/etc/kubeasz/clusters/k8s03/config.yml&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>然后根据提示配置’&#x2F;etc&#x2F;kubeasz&#x2F;clusters&#x2F;k8s03&#x2F;hosts’ 和 ‘&#x2F;etc&#x2F;kubeasz&#x2F;clusters&#x2F;k8s03&#x2F;config.yml’：根据前面节点规划修改hosts 文件和其他集群层面的主要配置选项；其他集群组件等配置项可以在config.yml 文件中修改。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">按住alt键 + 鼠标左键，可以按列选择</span><br>root@k8s03-1:/opt/kubeasz-deployk8s# vi /etc/kubeasz/clusters/k8s03/hosts<br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-string">&#x27;etcd&#x27;</span> cluster should have odd member(s) (1,3,5,...)</span><br>[etcd]<br>10.13.15.61   #这个需要修改成控制节点ip<br>10.13.15.62   #这个需要修改成控制节点ip<br>10.13.15.63   #这个需要修改成控制节点ip<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">master node(s), <span class="hljs-built_in">set</span> unique <span class="hljs-string">&#x27;k8s_nodename&#x27;</span> <span class="hljs-keyword">for</span> each node</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">CAUTION: <span class="hljs-string">&#x27;k8s_nodename&#x27;</span> must consist of lower <span class="hljs-keyword">case</span> alphanumeric characters, <span class="hljs-string">&#x27;-&#x27;</span> or <span class="hljs-string">&#x27;.&#x27;</span>,</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">and must start and end with an alphanumeric character</span><br>[kube_master]<br><span class="hljs-meta prompt_">#</span><span class="language-bash">10.13.15.61 k8s_nodename=<span class="hljs-string">&quot;k8s03-1&quot;</span>   <span class="hljs-comment">#这个需要修改（如果没有k8s_nodename配置，则安装后将直接使用ip作为k8s节点名）</span></span><br>10.13.15.61                          #这个需要修改成控制节点ip<br>10.13.15.62                          #这个需要修改成控制节点ip<br>10.13.15.63                          #这个需要修改成控制节点ip<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">work node(s), <span class="hljs-built_in">set</span> unique <span class="hljs-string">&#x27;k8s_nodename&#x27;</span> <span class="hljs-keyword">for</span> each node</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">CAUTION: <span class="hljs-string">&#x27;k8s_nodename&#x27;</span> must consist of lower <span class="hljs-keyword">case</span> alphanumeric characters, <span class="hljs-string">&#x27;-&#x27;</span> or <span class="hljs-string">&#x27;.&#x27;</span>,</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">and must start and end with an alphanumeric character</span><br>[kube_node]<br>10.13.15.64                          #这个需要修改成工作节点ip<br>10.13.15.65                          #这个需要修改成工作节点ip<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">[optional] harbor server, a private docker registry</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-string">&#x27;NEW_INSTALL&#x27;</span>: <span class="hljs-string">&#x27;true&#x27;</span> to install a harbor server; <span class="hljs-string">&#x27;false&#x27;</span> to integrate with existed one</span><br>[harbor]<br>10.13.15.61 NEW_INSTALL=true        #需要在服务器上搭建harbor服务，就配置成此服务器的ip <br><span class="hljs-meta prompt_">#</span><span class="language-bash">192.168.1.8 NEW_INSTALL=<span class="hljs-literal">false</span></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">[optional] loadbalance <span class="hljs-keyword">for</span> accessing k8s from outside</span><br>[ex_lb]<br><span class="hljs-meta prompt_">#</span><span class="language-bash">10.13.15.70是3个控制节点组成keepalived与l4lb集群后的虚拟ip</span><br>10.13.15.63 LB_ROLE=backup EX_APISERVER_VIP=10.13.15.70 EX_APISERVER_PORT=8443   <br>10.13.15.62 LB_ROLE=backup EX_APISERVER_VIP=10.13.15.70 EX_APISERVER_PORT=8443<br>10.13.15.61 LB_ROLE=master EX_APISERVER_VIP=10.13.15.70 EX_APISERVER_PORT=8443<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">[optional] ntp server <span class="hljs-keyword">for</span> the cluster</span><br>[chrony]<br><span class="hljs-meta prompt_">#</span><span class="language-bash">192.168.1.1</span><br><br>[all:vars]<br><span class="hljs-meta prompt_"># </span><span class="language-bash">--------- Main Variables ---------------</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Secure port <span class="hljs-keyword">for</span> apiservers</span><br>SECURE_PORT=&quot;6443&quot;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Cluster container-runtime supported: docker, containerd</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-keyword">if</span> k8s version &gt;= 1.24, docker is not supported</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">CONTAINER_RUNTIME=<span class="hljs-string">&quot;containerd&quot;</span></span><br>CONTAINER_RUNTIME=&quot;docker&quot;   #这个需要修改<br>...<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@k8s03-1:/opt/kubeasz-deployk8s# vi /etc/kubeasz/clusters/k8s03/config.yml <br><span class="hljs-meta prompt_"># </span><span class="language-bash">k8s version</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">K8S_VER: <span class="hljs-string">&quot;1.23.1&quot;</span></span><br>K8S_VER: &quot;1.23.17&quot;  #修改<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###########################</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">role:etcd</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###########################</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">设置不同的wal目录，可以避免磁盘io竞争，提高性能</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">ETCD_DATA_DIR: <span class="hljs-string">&quot;/var/lib/etcd&quot;</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">ETCD_WAL_DIR: <span class="hljs-string">&quot;&quot;</span></span><br>ETCD_DATA_DIR: &quot;/var/lib/etcd/data&quot;  #修改<br>ETCD_WAL_DIR: &quot;/var/lib/etcd/wal&quot;    #修改<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###########################</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">role:runtime [containerd,docker]</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###########################</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">[containerd]..................</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">SANDBOX_IMAGE: <span class="hljs-string">&quot;easzlab/pause:3.6&quot;</span></span><br>SANDBOX_IMAGE: &quot;easzlab.io.local/easzlab/pause:3.6&quot;  #如果创建了docker registry就修改成此行配置，否则保持默认<br><span class="hljs-meta prompt_"># </span><span class="language-bash">[docker].........HTTP......</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">INSECURE_REG: <span class="hljs-string">&#x27;[&quot;127.0.0.1/8&quot;]&#x27;</span></span><br>INSECURE_REG: &#x27;[&quot;easzlab.io.local&quot;]&#x27;  #如果创建了docker registry就修改成此行配置，否则保持默认<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">nfs-provisioner ............</span><br>nfs_provisioner_install: &quot;yes&quot;  #修改为yes，可以自动安装nfs类型的sc（前提是先有一个可用的nfs服务端）<br>nfs_provisioner_namespace: &quot;kube-system&quot;<br>nfs_provisioner_ver: &quot;v4.0.2&quot;<br>nfs_storage_class: &quot;managed-nfs-storage&quot;<br>nfs_server: &quot;10.13.15.61&quot;  #修改（修改成nfs服务端的ip）<br>nfs_path: &quot;/nfs&quot;           #修改（修改成nfs服务端的共享目录）<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###########################</span></span>   <br><span class="hljs-meta prompt_"># </span><span class="language-bash">role:harbor</span>    <br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###########################</span></span>       <br><span class="hljs-meta prompt_"># </span><span class="language-bash">harbor version..................</span><br>HARBOR_VER: &quot;v2.1.3&quot;<br>HARBOR_DOMAIN: &quot;harbor.yourdomain.com&quot;<br>HARBOR_TLS_PORT: 8444                #8443改成8444<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-4-3-开始安装"><a href="#2-2-4-3-开始安装" class="headerlink" title="2.2.4.3 开始安装"></a>2.2.4.3 开始安装</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">以下操作是在k8s节点操作系统上，不是在容器内。也可以进容器kubeasz直接操作</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">建议使用<span class="hljs-built_in">alias</span>命令，查看~/.bashrc 文件应该包含：<span class="hljs-built_in">alias</span> dk=<span class="hljs-string">&#x27;docker exec -it kubeasz&#x27;</span></span><br>source ~/.bashrc<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-4-3-0-安装配置docker-registry"><a href="#2-2-4-3-0-安装配置docker-registry" class="headerlink" title="2.2.4.3.0 安装配置docker registry"></a>2.2.4.3.0 安装配置docker registry</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@k8s03-1:/opt/kubeasz-deployk8s# openssl req  -addext &quot;subjectAltName = DNS:easzlab.io.local&quot; \<br>  -newkey rsa:4096 -nodes -sha256 -keyout certs/domain.key \<br>  -x509 -days 36500 -out certs/domain.crt<br><br>root@k8s03-1:/opt/kubeasz-deployk8s# docker run -d \<br> --restart=always \<br> --name local_registry \<br> -v &quot;$(pwd)&quot;/certs:/certs \<br> -v /mnt/registry:/var/lib/registry \<br> -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \<br> -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \<br> -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \<br> -p 443:443 \<br> registry:2<br><br>root@k8s03-1:/opt/kubeasz-deployk8s# mkdir -p  /etc/docker/certs.d/easzlab.io.local<br>root@k8s03-1:/opt/kubeasz-deployk8s# cp certs/domain.crt  /etc/docker/certs.d/easzlab.io.local/ca.crt<br><br>root@k8s03-1:/opt/kubeasz-deployk8s# docker tag registry:2 easzlab.io.local/registry:2<br>root@k8s03-1:/opt/kubeasz-deployk8s# docker push easzlab.io.local/registry:2<br>root@k8s03-1:/opt/kubeasz-deployk8s# docker pull easzlab.io.local/registry:2<br><br>docker tag registry:2 easzlab.io.local/library/registry:2<br>docker push easzlab.io.local/library/registry:2<br>docker pull easzlab.io.local/library/registry:2<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-4-3-1-配置ssh免密登录"><a href="#2-2-4-3-1-配置ssh免密登录" class="headerlink" title="2.2.4.3.1 配置ssh免密登录"></a>2.2.4.3.1 配置ssh免密登录</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@k8s03-1:~# cat /etc/hosts<br>...<br>10.13.15.61    k8s03-1<br>10.13.15.62    k8s03-2<br>10.13.15.63    k8s03-3<br>10.13.15.64    k8s03-4<br>10.13.15.65    k8s03-5<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-variable">$IP</span>为所有节点地址包括自身，按照提示输入<span class="hljs-built_in">yes</span> 和root密码</span><br>root@k8s03-1:~# ssh-keygen -P &quot;&quot;<br>root@k8s03-1:~# ssh-copy-id root@$IP<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">为每个节点设置python软链接</span><br>for i in &#123;61..65&#125;; do<br>  ssh root@10.13.15.$&#123;i&#125; &#x27;if [ ! -L /usr/bin/python ];then ln -s /usr/bin/python3 /usr/bin/python; fi&#x27;;<br>done<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-4-3-2-搭建nfs服务器"><a href="#2-2-4-3-2-搭建nfs服务器" class="headerlink" title="2.2.4.3.2 搭建nfs服务器"></a>2.2.4.3.2 搭建nfs服务器</h5><p>本文以在k8s03-1节点上搭建nfs服务端为例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##nfs服务端</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">执行以下命令安装 NFS 服务，</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">apt 会自动安装 nfs-common、rpcbind 等软件包</span><br>root@k8s03-1:~# apt install nfs-kernel-server -y<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建作为nfs服务端的根目录</span><br>root@k8s03-1:~# mkdir /nfs<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">编写配置文件</span><br>root@k8s03-1:~# vim /etc/exports<br><span class="hljs-meta prompt_">#</span><span class="language-bash">[任意主机所有权限]</span><br>root@k8s03-1:~# /nfs   *(rw,sync,insecure,no_subtree_check,no_root_squash)<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启 NFS 服务</span><br>root@k8s03-1:~# systemctl restart nfs-kernel-server<br>root@k8s03-1:~# systemctl enable nfs-kernel-server &amp;&amp; systemctl status nfs-kernel-server <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">常用命令工具</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">在安装 NFS 服务器时，已包含常用的命令行工具，无需额外安装</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">显示已经 mount 到本机 NFS 目录的客户端机器</span><br>sudo showmount -e localhost<br><span class="hljs-meta prompt_">#</span><span class="language-bash">将配置文件中的目录全部重新 <span class="hljs-built_in">export</span> 一次，无需重启服务</span><br>sudo exportfs -rv<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看 NFS 的运行状态</span><br>sudo nfsstat<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看 rpc 执行信息，可以用于检测 rpc 运行情况</span><br>sudo rpcinfo<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-4-3-3-一键部署与分步部署"><a href="#2-2-4-3-3-一键部署与分步部署" class="headerlink" title="2.2.4.3.3 一键部署与分步部署"></a>2.2.4.3.3 一键部署与分步部署</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在k8s节点上操作，当然也可以进容器kubeasz内操作</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">建议使用<span class="hljs-built_in">alias</span>命令，查看~/.bashrc 文件应该包含：<span class="hljs-built_in">alias</span> dk=<span class="hljs-string">&#x27;docker exec -it kubeasz&#x27;</span></span><br>root@k8s03-1:~# source ~/.bashrc<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">一键安装，等价于执行docker <span class="hljs-built_in">exec</span> -it kubeasz ezctl setup k8s03 all</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">对于不熟悉的操作者而言，建议分步执行，执行完一个步骤后查看此步骤的结果以熟悉整个部署流程</span><br>root@k8s03-1:~# dk ezctl setup k8s03 all<br><span class="hljs-meta prompt_"># </span><span class="language-bash">或者分步安装，具体使用 dk ezctl <span class="hljs-built_in">help</span> setup 查看分步安装帮助信息</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">dk ezctl setup k8s03 01</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">dk ezctl setup k8s03 02</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">dk ezctl setup k8s03 03</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">dk ezctl setup k8s03 04</span><br>...<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-4-3-4-01-创建证书和安装准备"><a href="#2-2-4-3-4-01-创建证书和安装准备" class="headerlink" title="2.2.4.3.4 01-创建证书和安装准备"></a>2.2.4.3.4 01-创建证书和安装准备</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">容器内操作</span><br>k8s03-1:/# ezctl setup k8s03 01<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">在k8s节点上操作</span><br>root@k8s03-1:~# source ~/.bashrc<br>root@k8s03-1:~# dk ezctl setup k8s03 01<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-4-3-5-02-安装etcd集群"><a href="#2-2-4-3-5-02-安装etcd集群" class="headerlink" title="2.2.4.3.5 02-安装etcd集群"></a>2.2.4.3.5 02-安装etcd集群</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">k8s03-1:/# ezctl setup k8s03 02<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-4-3-6-03-安装容器运行时"><a href="#2-2-4-3-6-03-安装容器运行时" class="headerlink" title="2.2.4.3.6 03-安装容器运行时"></a>2.2.4.3.6 03-安装容器运行时</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">k8s03-1:/# ezctl setup k8s03 03<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-4-3-7-04-安装master节点"><a href="#2-2-4-3-7-04-安装master节点" class="headerlink" title="2.2.4.3.7 04-安装master节点"></a>2.2.4.3.7 04-安装master节点</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">k8s03-1:/# ezctl setup k8s03 04<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">上述安装master节点相关命令执行成功后，可以查看集群中的master节点，如下</span><br>k8s03-1:/etc/kubeasz/clusters/k8s03# kubectl get nodes<br>NAME      STATUS                     ROLES    AGE   VERSION<br>10.13.15.61   Ready,SchedulingDisabled   master   57s   v1.23.17<br>10.13.15.62   Ready,SchedulingDisabled   master   57s   v1.23.17<br>10.13.15.63   Ready,SchedulingDisabled   master   57s   v1.23.17<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-4-3-8-05-安装node节点"><a href="#2-2-4-3-8-05-安装node节点" class="headerlink" title="2.2.4.3.8 05-安装node节点"></a>2.2.4.3.8 05-安装node节点</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">k8s03-1:/# ezctl setup k8s03 05<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">上述安装node节点相关命令执行成功后，可以查看集群中的所有节点，如下</span><br>k8s03-1:/etc/kubeasz/clusters/k8s03# kubectl get nodes   <br>NAME          STATUS                     ROLES    AGE     VERSION<br>10.13.15.61   Ready,SchedulingDisabled   master   4m59s   v1.23.17<br>10.13.15.62   Ready,SchedulingDisabled   master   4m59s   v1.23.17<br>10.13.15.63   Ready,SchedulingDisabled   master   4m59s   v1.23.17<br>10.13.15.64   Ready                      node     22s     v1.23.17<br>10.13.15.65   Ready                      node     22s     v1.23.17<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-4-3-906-安装集群网络"><a href="#2-2-4-3-906-安装集群网络" class="headerlink" title="2.2.4.3.906-安装集群网络"></a>2.2.4.3.906-安装集群网络</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">k8s03-1:/# ezctl setup k8s03 06<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-4-3-10-07-安装集群插件"><a href="#2-2-4-3-10-07-安装集群插件" class="headerlink" title="2.2.4.3.10 07-安装集群插件"></a>2.2.4.3.10 07-安装集群插件</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell">k8s03-1:/# ezctl setup k8s03 07<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看创建的sc</span><br>root@k8s03-1:/# kubectl get sc<br>NAME                  PROVISIONER                                   RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE<br>managed-nfs-storage   k8s-sigs.io/nfs-subdir-external-provisioner   Delete          Immediate              false                  7m47s<br><span class="hljs-meta prompt_">#</span><span class="language-bash">将sc/managed-nfs-storage 设置为默认的sc</span><br>root@k8s03-1:/# kubectl patch storageclass managed-nfs-storage -p &#x27;&#123;&quot;metadata&quot;: &#123;&quot;annotations&quot;:&#123;&quot;storageclass.kubernetes.io/is-default-class&quot;:&quot;true&quot;&#125;&#125;&#125;&#x27;<br>root@k8s03-1:/# kubectl get sc<br>NAME                            PROVISIONER                                   RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE<br>managed-nfs-storage (default)   k8s-sigs.io/nfs-subdir-external-provisioner   Delete          Immediate              false                  9m13s<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-4-3-11-10-ex-lb"><a href="#2-2-4-3-11-10-ex-lb" class="headerlink" title="2.2.4.3.11 10-ex-lb"></a>2.2.4.3.11 10-ex-lb</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">k8s03-1:/# ezctl setup k8s03 10<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">3个控制节点上现在应该都正常运行了以下两个服务</span><br>root@k8s03-1:~# systemctl status l4lb.service <br>root@k8s03-1:~# systemctl status keepalived.service <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">因为默认情况下，k8s03-1 是keepalived 集群的主节点，所以此时VIP 10.13.15.70 应该是在k8s03-1上</span><br>root@k8s03-1:~# ip a<br>...<br>2: ens3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000<br>    link/ether fa:16:3e:65:87:be brd ff:ff:ff:ff:ff:ff<br>    inet 10.13.15.61/24 brd 10.13.15.255 scope global dynamic ens3<br>       valid_lft 72162sec preferred_lft 72162sec<br>    inet 10.13.15.70/32 scope global ens3<br>       valid_lft forever preferred_lft forever<br>    inet6 fe80::f816:3eff:fe65:87be/64 scope link <br>       valid_lft forever preferred_lft forever<br>...<br></code></pre></td></tr></table></figure>
+
+<h6 id="2-2-4-3-11-1-负载均衡相关设置"><a href="#2-2-4-3-11-1-负载均衡相关设置" class="headerlink" title="2.2.4.3.11.1 负载均衡相关设置"></a>2.2.4.3.11.1 负载均衡相关设置</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#以下是OpenStack虚拟机特定操作，在openstack 控制节点上执行</span></span><br>root@controller01:~# docker exec -it kolla-ansible bash<br>root@controller01:~# source /root/admin-openrc.sh <br>root@controller01:~# openstack port list | egrep &quot;10.13.15.61|10.13.15.62|10.13.15.63&quot;<br>| 10194efa-abee-4f04-9638-dd7e554d0be9 | 10.13.15.61  | fa:16:3e:65:87:be | ip_address=&#x27;10.13.15.61&#x27;, subnet_id=&#x27;596d5b92-6db8-480c-a8b3-e672cc39b531&#x27;   | ACTIVE |<br>| 23ef271f-40ee-489c-a219-3f8ca6fab8e1 | 10.13.15.63  | fa:16:3e:87:3a:47 | ip_address=&#x27;10.13.15.63&#x27;, subnet_id=&#x27;596d5b92-6db8-480c-a8b3-e672cc39b531&#x27;   | ACTIVE |<br>| ec016664-03d5-45a2-94b2-c2306c3c0136 | 10.13.15.62  | fa:16:3e:97:af:b4 | ip_address=&#x27;10.13.15.62&#x27;, subnet_id=&#x27;596d5b92-6db8-480c-a8b3-e672cc39b531&#x27;   | ACTIVE |<br><br>root@controller01:~# openstack port set --allowed-address ip-address=10.13.15.70 10194efa-abee-4f04-9638-dd7e554d0be9<br>root@controller01:~# openstack port set --allowed-address ip-address=10.13.15.70 23ef271f-40ee-489c-a219-3f8ca6fab8e1<br>root@controller01:~# openstack port set --allowed-address ip-address=10.13.15.70 ec016664-03d5-45a2-94b2-c2306c3c0136<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">回到k8s节点上操作</span><br>root@k8s03-1:/var/data/harbor# kubectl -n kube-system get svc<br>NAME                        TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                  AGE<br>dashboard-metrics-scraper   ClusterIP   10.68.38.156    &lt;none&gt;        8000/TCP                 49m<br>kube-dns                    ClusterIP   10.68.0.2       &lt;none&gt;        53/UDP,53/TCP,9153/TCP   50m<br>kube-dns-upstream           ClusterIP   10.68.209.167   &lt;none&gt;        53/UDP,53/TCP            50m<br>kubernetes-dashboard        NodePort    10.68.173.217   &lt;none&gt;        443:32268/TCP            49m<br>metrics-server              ClusterIP   10.68.168.180   &lt;none&gt;        443/TCP                  50m<br>node-local-dns              ClusterIP   None            &lt;none&gt;        9253/TCP                 50m<br><span class="hljs-meta prompt_">#</span><span class="language-bash">NodePort类型的 service/kubernetes-dashboard 在k8s节点上映射的端口是 32268</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">以下使用vip + 32268 即 https://10.13.15.70:32268 来访问kuboard（建议使用 firefox 浏览器访问）</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">另外，当然也可以使用k8s集群任何一个节点的IP+32268，以访问kubernetes原生dashboard即kuboard（建议使用 firefox 浏览器访问）</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2024/10/31/IMNoUuGV98bCBir.png" srcset="/img/loading.gif" lazyload alt="image-20241031173526066"></p>
+<h4 id="2-2-4-4-查看集群信息与状态"><a href="#2-2-4-4-查看集群信息与状态" class="headerlink" title="2.2.4.4 查看集群信息与状态"></a>2.2.4.4 查看集群信息与状态</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">查看k8s节点列表</span><br>root@k8s03-1:/var/data/harbor# kubectl get nodes<br>NAME      STATUS                     ROLES    AGE   VERSION<br>k8s03-1   Ready,SchedulingDisabled   master   32m   v1.23.17<br>k8s03-2   Ready,SchedulingDisabled   master   32m   v1.23.17<br>k8s03-3   Ready,SchedulingDisabled   master   32m   v1.23.17<br>k8s03-4   Ready                      node     16m   v1.23.17<br>k8s03-5   Ready                      node     16m   v1.23.17<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看集群中pod列表</span><br>root@k8s03-1:/var/data/harbor# kubectl get pods -A<br>NAMESPACE     NAME                                         READY   STATUS    RESTARTS   AGE<br>kube-system   calico-kube-controllers-754966f84c-mmsdm     1/1     Running   0          15m<br>kube-system   calico-node-5dgf7                            1/1     Running   0          15m<br>kube-system   calico-node-c2gn5                            1/1     Running   0          15m<br>kube-system   calico-node-j5xbk                            1/1     Running   0          15m<br>kube-system   calico-node-rfdbh                            1/1     Running   0          15m<br>kube-system   calico-node-s9r9k                            1/1     Running   0          15m<br>kube-system   coredns-596755dbff-d6ds5                     1/1     Running   0          4m36s<br>kube-system   dashboard-metrics-scraper-799d786dbf-rc4kn   1/1     Running   0          3m56s<br>kube-system   kubernetes-dashboard-9f8c8b989-448zj         1/1     Running   0          3m56s<br>kube-system   metrics-server-5d648558d9-npj5m              1/1     Running   0          4m25s<br>kube-system   nfs-client-provisioner-f97c77ddd-ltrdv       1/1     Running   0          4m25s<br>kube-system   node-local-dns-5zxbn                         1/1     Running   0          4m34s<br>kube-system   node-local-dns-jt7hh                         1/1     Running   0          4m34s<br>kube-system   node-local-dns-p52ck                         1/1     Running   0          4m34s<br>kube-system   node-local-dns-vk2sc                         1/1     Running   0          4m34s<br>kube-system   node-local-dns-vr87v                         1/1     Running   0          4m34s<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看component status</span><br>root@k8s03-1:/var/data/harbor# kubectl get cs<br>Warning: v1 ComponentStatus is deprecated in v1.19+<br>NAME                 STATUS    MESSAGE                         ERROR<br>controller-manager   Healthy   ok                              <br>scheduler            Healthy   ok                              <br>etcd-0               Healthy   &#123;&quot;health&quot;:&quot;true&quot;,&quot;reason&quot;:&quot;&quot;&#125;   <br>etcd-2               Healthy   &#123;&quot;health&quot;:&quot;true&quot;,&quot;reason&quot;:&quot;&quot;&#125;   <br>etcd-1               Healthy   &#123;&quot;health&quot;:&quot;true&quot;,&quot;reason&quot;:&quot;&quot;&#125; <br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">查看namespace/kube-system下的svc</span><br>root@k8s03-1:/var/data/harbor# kubectl -n kube-system get svc<br>NAME                        TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                  AGE<br>dashboard-metrics-scraper   ClusterIP   10.68.38.156    &lt;none&gt;        8000/TCP                 49m<br>kube-dns                    ClusterIP   10.68.0.2       &lt;none&gt;        53/UDP,53/TCP,9153/TCP   50m<br>kube-dns-upstream           ClusterIP   10.68.209.167   &lt;none&gt;        53/UDP,53/TCP            50m<br>kubernetes-dashboard        NodePort    10.68.173.217   &lt;none&gt;        443:32268/TCP            49m<br>metrics-server              ClusterIP   10.68.168.180   &lt;none&gt;        443/TCP                  50m<br>node-local-dns              ClusterIP   None            &lt;none&gt;        9253/TCP                 50m<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-4-5-登录kubernetes-dashboard"><a href="#2-2-4-5-登录kubernetes-dashboard" class="headerlink" title="2.2.4.5 登录kubernetes-dashboard"></a>2.2.4.5 登录kubernetes-dashboard</h4><p><img src="https://s2.loli.net/2025/01/10/9mbfwSHUe7C5ozy.png" srcset="/img/loading.gif" lazyload alt="image-20250110145004619"></p>
+<p>选择Kubeconfig时，如果提示“Internal error (500): Not enough data to create auth info structure.”，请参照如下方式处理：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建如下3个文件，然后分别apply或bash执行</span><br>root@k8s03-1:/opt/kubeasz-deployk8s# cat 01-ServiceAccount-admin-user.yaml <br>apiVersion: v1<br>kind: ServiceAccount<br>metadata:<br>  name: admin-user<br>  namespace: kubernetes-dashboard<br><br>root@k8s03-1:/opt/kubeasz-deployk8s# cat 02-ClusterRoleBinding-admin-user.yaml <br>apiVersion: rbac.authorization.k8s.io/v1<br>kind: ClusterRoleBinding<br>metadata:<br>  name: admin-user<br>roleRef:<br>  apiGroup: rbac.authorization.k8s.io<br>  kind: ClusterRole<br>  name: cluster-admin<br>subjects:<br>- kind: ServiceAccount<br>  name: admin-user<br>  namespace: kubernetes-dashboard<br><br>root@k8s03-1:/opt/kubeasz-deployk8s# kubectl apply -f 01-ServiceAccount-admin-user.yaml <br>root@k8s03-1:/opt/kubeasz-deployk8s# kubectl apply -f 02-ClusterRoleBinding-admin-user.yaml <br>root@k8s03-1:/opt/kubeasz-deployk8s# cat 03-Getting-a-Bearer-Token-for-ServiceAccount.sh <br><span class="hljs-meta prompt_">#</span><span class="language-bash">!/bin/bash</span><br>kubectl -n kubernetes-dashboard get secret $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath=&quot;&#123;.secrets[0].name&#125;&quot;) -o go-template=&quot;&#123;&#123;.data.token | base64decode&#125;&#125;&quot;<br><br>root@k8s03-1:/opt/kubeasz-deployk8s# bash 03-Getting-a-Bearer-Token-for-ServiceAccount.sh <br><span class="hljs-meta prompt_">#</span><span class="language-bash">上述脚本文件执行时输出如下内容</span><br>eyJhbGciOiJSUzI1NiIsImtpZCI6IkJyV2xQLWZ5REZ6cUtOb1VBVzB0ZVZCUzBoVElWcWNyVVhtM1lhZnpGVjgifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLWRnYmJsIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI2N2ViMWIzZi0wYjU0LTQ5M2ItOWQ4Mi00MWU0OGMxNzRmMDQiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.ieO-n3yTYnz7Z0PkGLvaoNq_0VxO9ENWh5gJXK6qzf3h7ifUC4kbSbr5M7ksF7A3Z6pGl9w7ZLnGuXF7Hguva7NmF_-3gXKQYRstDePrZNo0pBZFO13SZmCOKiLIMNyJFYv93WYJYwLeXhfRf61bi1BNxMapGC62oVyyjQ0UTpbqIzVbWElkhKPzwYl_shp_nyCXwDO0KVZsq8z0Tln-Xne7CwQGjDcoZBtqFfaRalTolS7iUwKBkXqp98luShk-Tecik11ICacCQLpYRMgi-3NE-WR4bnbAe2PKwYkYMv0TlfNL1MSA4-9zhQD9gHOik-eWfscPG_a6s7tknRaaWQ<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">将上述输出内容复制，按如下形式粘贴到/root/.kube/config文件中</span><br>apiVersion: v1<br>clusters:<br>- cluster:<br>    server: https://XXXX<br>  name: kubernetes<br>contexts:<br>- context:<br>    cluster: kubernetes<br>    user: YOUR UER<br>  name: kubernetes<br>current-context: &quot;kubernetes&quot;<br>kind: Config<br>preferences: &#123;&#125;<br>users:<br>- name: YOUR USER<br>  user:<br>    client-certificate-data: CODED<br>    client-key-data: CODED<br>    token: CODED  #粘贴到这里，替换此处的CODED<br><br></code></pre></td></tr></table></figure>
+
+<p>使用上述&#x2F;root&#x2F;.kube&#x2F;config 文件即可登录kubernetes-dashboard 。</p>
+<h3 id="2-2-5-安装harbor"><a href="#2-2-5-安装harbor" class="headerlink" title="2.2.5 安装harbor"></a>2.2.5 安装harbor</h3><h4 id="2-2-5-1-使用默认配置安装Harbor"><a href="#2-2-5-1-使用默认配置安装Harbor" class="headerlink" title="2.2.5.1 使用默认配置安装Harbor"></a>2.2.5.1 使用默认配置安装Harbor</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">如果是彻底重新安装harbor，要先删除harbor服务器上 /var/data/database /var/data/registry /var/data/redis /var/data/job_logs /var/data/harbor 这几个目录</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">k8s节点上、kubeasz容器外执行如下命令，查看harbor相关容器</span><br>root@k8s03-1:~# rm -rf /var/data/database /var/data/registry /var/data/redis /var/data/job_logs /var/data/harbor<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装harbor（kubeasz容器内执行）</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果是前面安装了ex-lb，则k8s03-1节点上的8443端口将被占用了。而安装harbor时也尝试去使用8443端口，此时此步骤就会在最后阶段失败，即“TASK [harbor : 安装 harbor]”任务失败，<span class="hljs-string">&quot;msg&quot;</span>: <span class="hljs-string">&quot;non-zero return code&quot;</span>。</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">所以使用kubeasz安装harbor之前要先将 clusters/k8s03/config.yml 文件中的 HARBOR_TLS_PORT 参数值修改为其他值，比如修改为8444</span><br>k8s03-1:/etc/kubeasz/clusters/k8s03# ezctl setup k8s03 11 或 ezctl setup k8s03 harbor                      <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">k8s节点上、kubeasz容器外执行如下命令，查看harbor相关容器</span><br>root@k8s03-1:~# cd /var/data/harbor<br>root@k8s03-1:/var/data/harbor# docker-compose ps<br>chartmuseum         ./docker-entrypoint.sh           Up (healthy)                                                                                 <br>harbor-core         /harbor/entrypoint.sh            Up (healthy)                                                                                 <br>harbor-db           /docker-entrypoint.sh            Up (healthy)                                                                                 <br>harbor-jobservice   /harbor/entrypoint.sh            Up (healthy)                                                                                 <br>harbor-log          /bin/sh -c /usr/local/bin/ ...   Up (healthy)   127.0.0.1:1514-&gt;10514/tcp                                                     <br>harbor-portal       nginx -g daemon off;             Up (healthy)                                                                                 <br>nginx               nginx -g daemon off;             Up (healthy)   0.0.0.0:80-&gt;8080/tcp,:::80-&gt;8080/tcp, 0.0.0.0:8444-&gt;8443/tcp,:::8444-&gt;8443/tcp<br>redis               redis-server /etc/redis.conf     Up (healthy)                                                                                 <br>registry            /home/harbor/entrypoint.sh       Up (healthy)                                                                                 <br>registryctl         /home/harbor/start.sh            Up (healthy)   <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">harbor的安装目录默认在：/var/data，它由“/etc/kubeasz/clusters/k8s03/config.yml”中的 HARBOR_PATH 配置项决定</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">harbor系统admin用户的密码，在harbor部署服务器的如下文件中查看：/var/data/harbor/harbor.yml</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Dgyj08NOYtvhMc7x</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">在k8s集群所有节点上，可以登录此harbor仓库。用户：admin，密码就是在harbor部署服务器的如下文件/var/data/harbor/harbor.yml中harbor_admin_password 配置值</span><br>root@k8s03-1:/etc/kubeasz# docker login harbor.easzlab.io.local:8444<br>Username: admin<br>Password: <br>WARNING! Your password will be stored unencrypted in /root/.docker/config.json.<br>Configure a credential helper to remove this warning. See<br>https://docs.docker.com/engine/reference/commandline/login/#credentials-store<br><br>Login Succeeded<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-5-2-修改Harbor服务的端口"><a href="#2-2-5-2-修改Harbor服务的端口" class="headerlink" title="2.2.5.2 修改Harbor服务的端口"></a>2.2.5.2 修改Harbor服务的端口</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@k8s03-1:~# cd /var/data/harbor<br><span class="hljs-meta prompt_">#</span><span class="language-bash">先停掉harbor相关容器</span><br>root@k8s03-1:/var/data/harbor# docker-compose down<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">将所有 8444 字符串替换成 8445</span><br>root@k8s03-1:/var/data/harbor# sed -i &quot;s/8444/8445/g&quot; `grep 8444 -rl ./`<br><span class="hljs-meta prompt_">#</span><span class="language-bash">重新启动harbor相关容器</span><br>root@k8s03-1:/var/data/harbor# docker-compose up -d<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改证书目录</span><br>root@k8s03-1:/var/data/harbor# cd /etc/docker/certs.d/<br>root@k8s03-1:/etc/docker/certs.d# mkdir harbor.yourdomain.com\:8445<br>root@k8s03-1:/etc/docker/certs.d# docker cp kubeasz:/etc/kubeasz/down/ca.pem ./harbor.yourdomain.com:8445/<br><span class="hljs-meta prompt_">#</span><span class="language-bash">登录</span><br>root@k8s03-1:/etc/docker/certs.d# docker login harbor.yourdomain.com:8445<br><span class="hljs-meta prompt_">#</span><span class="language-bash">尝试提交镜像...</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-6-继续安装Kubesphere"><a href="#2-2-6-继续安装Kubesphere" class="headerlink" title="2.2.6 继续安装Kubesphere"></a>2.2.6 继续安装Kubesphere</h3><p>​		本文已经使用kubeasz3.2.0 安装好kubernetes1.23.17，现准备部署kubesphere3.4.1。</p>
+<p><strong>前提条件</strong></p>
+<blockquote>
+<ul>
+<li>安装之前，Kubernetes 集群已配置<strong>默认</strong>存储类型 (StorageClass)；</li>
+<li>当使用 <code>--cluster-signing-cert-file</code> 和 <code>--cluster-signing-key-file</code> 参数启动时，在 <code>kube-apiserver</code> 中会激活 CSR 签名功能。请参见 <a target="_blank" rel="noopener" href="https://github.com/kubesphere/kubesphere/issues/1925#issuecomment-591698309">RKE 安装问题</a>；（暂时无需关注）</li>
+<li>有关在 Kubernetes 上安装 KubeSphere 的准备工作，请参见<a target="_blank" rel="noopener" href="https://kubesphere.io/zh/docs/installing-on-kubernetes/introduction/prerequisites/">准备工作</a>。</li>
+</ul>
+</blockquote>
+<h4 id="2-2-6-1-手动创建sc-local"><a href="#2-2-6-1-手动创建sc-local" class="headerlink" title="2.2.6.1 手动创建sc&#x2F;local"></a>2.2.6.1 手动创建sc&#x2F;local</h4><p>​		使用kubeadm或kubeasz部署的k8s环境，没有创建任何storage class资源对象，需要自己创建。一个默认的sc是部署的kubesphere的前提条件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@k8s03-1:~# cd /etc/kubeasz/clusters/k8s03/<br>root@k8s03-1:/etc/kubeasz/clusters/k8s03# cat &gt;&gt; default-storage-class.yaml &lt;&lt;-EOF<br>kind: StorageClass<br>apiVersion: storage.k8s.io/v1<br>metadata:<br>  name: local<br>  annotations:<br>    cas.openebs.io/config: |<br>      - name: StorageType<br>        value: &quot;hostpath&quot;<br>      - name: BasePath<br>        value: &quot;/var/openebs/local/&quot;<br>    openebs.io/cas-type: local<br>    storageclass.beta.kubernetes.io/is-default-class: &#x27;false&#x27;<br>    storageclass.kubesphere.io/supported-access-modes: &#x27;[&quot;ReadWriteOnce&quot;]&#x27;<br>provisioner: openebs.io/local<br>reclaimPolicy: Delete<br>volumeBindingMode: WaitForFirstConsumer<br>EOF<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">应用上述yaml文件，创建<span class="hljs-built_in">local</span> sc</span><br>root@k8s03-1:/etc/kubeasz/clusters/k8s03# kubectl get sc<br>No resources found<br>root@k8s03-1:/etc/kubeasz/clusters/k8s03# kubectl apply -f default-storage-class.yaml<br>storageclass.storage.k8s.io/local created<br>root@k8s03-1:/etc/kubeasz/clusters/k8s03# kubectl get sc<br>NAME              PROVISIONER        RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE<br>local             openebs.io/local   Delete          WaitForFirstConsumer   false                  1s<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">设置为默认StorageClass</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">kubectl patch storageclass <span class="hljs-built_in">local</span> -p <span class="hljs-string">&#x27;&#123;&quot;metadata&quot;: &#123;&quot;annotations&quot;:&#123;&quot;storageclass.kubernetes.io/is-default-class&quot;:&quot;true&quot;&#125;&#125;&#125;&#x27;</span></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">集群中创建默认StorageClass</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">默认没有，可以自建</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建 StorageClass：https://kubernetes.io/zh-cn/docs/concepts/storage/storage-classes/</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">设置默认 StorageClass：https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/change-default-storage-class/</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-6-2-手动创建sc-nfs"><a href="#2-2-6-2-手动创建sc-nfs" class="headerlink" title="2.2.6.2 手动创建sc&#x2F;nfs"></a>2.2.6.2 手动创建sc&#x2F;nfs</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在k8s03-1节点上搭建nfs服务端：参考“2.2.4.3.2 搭建nfs服务器”章节</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">1 下载并创建storageclass</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# mkdir sc-nfs &amp;&amp; cd sc-nfs<br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# wget https://raw.githubusercontent.com/kubernetes-sigs/nfs-subdir-external-provisioner/master/deploy/class.yaml<br><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# mv class.yaml storageclass-nfs.yml<br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# cat storageclass-nfs.yml <br>apiVersion: storage.k8s.io/v1<br>kind: StorageClass # 类型<br>metadata:<br>  name: nfs-client # 名称,要使用就需要调用此名称<br>provisioner: k8s-sigs.io/nfs-subdir-external-provisioner # or choose another name, must match deployment&#x27;s env PROVISIONER_NAME&#x27;<br>parameters:<br>  archiveOnDelete: &quot;false&quot; # 删除数据时是否存档，false表示不存档，true表示存档<br><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl apply -f storageclass-nfs.yml<br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl get sc<br>NAME         PROVISIONER                                   RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE<br>local        kubernetes.io/no-provisioner                  Delete          WaitForFirstConsumer   false                  2m16s<br>nfs-client   k8s-sigs.io/nfs-subdir-external-provisioner   Delete          Immediate              false                  4s<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">将nfs-client sc设置为默认sc</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl patch storageclass nfs-client -p &#x27;&#123;&quot;metadata&quot;: &#123;&quot;annotations&quot;:&#123;&quot;storageclass.kubernetes.io/is-default-class&quot;:&quot;true&quot;&#125;&#125;&#125;&#x27;<br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl get sc<br>NAME                   PROVISIONER                                   RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE<br>local                  kubernetes.io/no-provisioner                  Delete          WaitForFirstConsumer   false                  2m40s<br>nfs-client (default)   k8s-sigs.io/nfs-subdir-external-provisioner   Delete          Immediate              false                  28s<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">RECLAIMPOLICY pv回收策略，pod或pvc被删除后，pv是否删除还是保留。</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">VOLUMEBINDINGMODE Immediate 模式下PVC与PV立即绑定，主要是不等待相关Pod调度完成，不关心其运行节点，直接完成绑定。相反的 WaitForFirstConsumer模式下需要等待Pod调度完成后进行PV绑定。</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">ALLOWVOLUMEEXPANSION pvc扩容</span><br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">2 下载并创建rbac</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">因为storage自动创建pv需要经过kube-apiserver，所以需要授权</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# wget https://raw.githubusercontent.com/kubernetes-sigs/nfs-subdir-external-provisioner/master/deploy/rbac.yaml<br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# mv rbac.yaml storageclass-nfs-rbac.yaml<br><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl apply -f storageclass-nfs-rbac.yaml<br>serviceaccount/nfs-client-provisioner created<br>clusterrole.rbac.authorization.k8s.io/nfs-client-provisioner-runner created<br>clusterrolebinding.rbac.authorization.k8s.io/run-nfs-client-provisioner created<br>role.rbac.authorization.k8s.io/leader-locking-nfs-client-provisioner created<br>rolebinding.rbac.authorization.k8s.io/leader-locking-nfs-client-provisioner created<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">3 创建动态供给的deployment</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">需要一个deployment来专门实现pv与pvc的自动创建</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# cat deploy-nfs-client-provisioner.yml<br>apiVersion: apps/v1<br>kind: Deployment<br>metadata:<br>  name: nfs-client-provisioner<br>spec:<br>  replicas: 1<br>  strategy:<br>    type: Recreate<br>  selector:<br>    matchLabels:<br>      app: nfs-client-provisioner<br>  template:<br>    metadata:<br>      labels:<br>        app: nfs-client-provisioner<br>    spec:<br>      serviceAccount: nfs-client-provisioner<br>      containers:<br>        - name: nfs-client-provisioner<br>          image: registry.cn-beijing.aliyuncs.com/pylixm/nfs-subdir-external-provisioner:v4.0.0<br>          volumeMounts:<br>            - name: nfs-client-root<br>              mountPath: /persistentvolumes<br>          env:<br>            - name: PROVISIONER_NAME<br>              value: k8s-sigs.io/nfs-subdir-external-provisioner<br>            - name: NFS_SERVER<br>              value: 10.13.15.61          #nfs服务器ip<br>            - name: NFS_PATH<br>              value: /nfs          #nfs服务器共享盘挂载在nfs服务器上的目录<br>      volumes:<br>        - name: nfs-client-root<br>          nfs:<br>            server: 10.13.15.61<br>            path: /nfs<br><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl apply -f deploy-nfs-client-provisioner.yml <br>deployment.apps/nfs-client-provisioner created<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl get pods -o wide<br>NAME                                      READY   STATUS    RESTARTS   AGE   IP               NODE          NOMINATED NODE   READINESS GATES<br>nfs-client-provisioner-7cdb58c49d-4slt7   1/1     Running   0          44s   172.20.197.147   10.13.15.65   &lt;none&gt;           &lt;none&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">4 测试存储动态供给是否可用</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# cat nginx-sc.yaml<br>---<br>apiVersion: v1<br>kind: Service<br>metadata:<br>  name: nginx<br>  labels:<br>    app: nginx<br>spec:<br>  ports:<br>  - port: 80<br>    name: web<br>  clusterIP: None<br>  selector:<br>    app: nginx<br>---<br>apiVersion: apps/v1<br>kind: StatefulSet<br>metadata:<br>  name: web<br>spec:<br>  selector:<br>    matchLabels:<br>      app: nginx<br>  serviceName: &quot;nginx&quot;<br>  replicas: 2<br>  template:<br>    metadata:<br>      labels:<br>        app: nginx<br>    spec:<br>      imagePullSecrets:<br>      - name: huoban-harbor<br>      terminationGracePeriodSeconds: 10<br>      containers:<br>      - name: nginx<br>        image: nginx:latest<br>        ports:<br>        - containerPort: 80<br>          name: web<br>        volumeMounts:<br>        - name: www<br>          mountPath: /usr/share/nginx/html<br>  volumeClaimTemplates:<br>  - metadata:<br>      name: www<br>    spec:<br>      accessModes: [ &quot;ReadWriteOnce&quot; ]<br>      storageClassName: &quot;nfs-client&quot;<br>      resources:<br>        requests:<br>          storage: 1Gi<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">应用</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl apply -f nginx-sc.yaml <br>service/nginx created<br>statefulset.apps/web created<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看pv与pvc创建情况</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl get pv<br>NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM               STORAGECLASS   REASON   AGE<br>pvc-0a9b8046-b364-4146-816d-815dd5696ac5   1Gi        RWO            Delete           Bound    default/www-web-0   nfs-client              64s<br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl get pvc<br>NAME        STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE<br>www-web-0   Bound    pvc-0a9b8046-b364-4146-816d-815dd5696ac5   1Gi        RWO            nfs-client     60s<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看pod</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl get pods -o wide | egrep &quot;NAME|web&quot;<br>NAME                           READY   STATUS    RESTARTS   AGE     IP               NODE          NOMINATED NODE   READINESS GATES<br>web-0                          1/1     Running   0          5m11s   172.20.46.31     10.13.15.64   &lt;none&gt;           &lt;none&gt;<br>web-1                          1/1     Running   0          3m23s   172.20.197.148   10.13.15.65   &lt;none&gt;           &lt;none&gt;<br></code></pre></td></tr></table></figure>
+
+<p>如果要删除stoarageclass&#x2F;nfs-client 相关资源对象与配置，执行如下操作：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl delete -f deploy-nfs-client-provisioner.yml<br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl delete -f storageclass-nfs-rbac.yaml<br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341/sc-nfs# kubectl delete -f storageclass-nfs.yml<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-6-3-手动创建sc-ceph"><a href="#2-2-6-3-手动创建sc-ceph" class="headerlink" title="2.2.6.3 手动创建sc&#x2F;ceph"></a>2.2.6.3 手动创建sc&#x2F;ceph</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">暂略，后续可能更新在个人github博客：https://jiangsanyin.github.io/archives/</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-6-4-下载kubesphere安装文件"><a href="#2-2-6-4-下载kubesphere安装文件" class="headerlink" title="2.2.6.4 下载kubesphere安装文件"></a>2.2.6.4 下载kubesphere安装文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# wget https://github.com/kubesphere/ks-installer/releases/download/v3.4.1/kubesphere-installer.yaml<br><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# wget https://github.com/kubesphere/ks-installer/releases/download/v3.4.1/cluster-configuration.yaml<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-6-5-准备安装镜像"><a href="#2-2-6-5-准备安装镜像" class="headerlink" title="2.2.6.5 准备安装镜像"></a>2.2.6.5 准备安装镜像</h4><h5 id="2-2-6-5-1-准备镜像清单文件"><a href="#2-2-6-5-1-准备镜像清单文件" class="headerlink" title="2.2.6.5.1 准备镜像清单文件"></a>2.2.6.5.1 准备镜像清单文件</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建镜像清单文件 images-list-aliyuncs.txt</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# touch images-list-aliyuncs.txt<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">images-list-aliyuncs.txt文件内容如下</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">使用经验告诉笔者，如果只使用最基础的kubesphere功能，下列镜像列表可以进一步被裁剪（笔者暂未做裁剪）</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# cat images-list-aliyuncs.txt<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#kubesphere-images</span></span><br>registry.cn-beijing.aliyuncs.com/kubesphereio/ks-installer:v3.4.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/ks-apiserver:v3.4.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/ks-console:v3.4.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/ks-controller-manager:v3.4.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/kubectl:v1.20.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/kubectl:v1.22.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/kubefed:v0.8.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/tower:v0.2.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/minio:RELEASE.2019-08-07T01-59-21Z<br>registry.cn-beijing.aliyuncs.com/kubesphereio/mc:RELEASE.2019-08-07T23-14-43Z<br>registry.cn-beijing.aliyuncs.com/kubesphereio/snapshot-controller:v4.0.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/nginx-ingress-controller:v1.3.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/defaultbackend-amd64:1.4<br>registry.cn-beijing.aliyuncs.com/kubesphereio/metrics-server:v0.4.2<br>registry.cn-beijing.aliyuncs.com/kubesphereio/redis:5.0.14-alpine<br>registry.cn-beijing.aliyuncs.com/kubesphereio/haproxy:2.0.25-alpine<br>registry.cn-beijing.aliyuncs.com/kubesphereio/alpine:3.14<br>registry.cn-beijing.aliyuncs.com/kubesphereio/openldap:1.3.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/netshoot:v1.0<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#kubeedge-images</span></span><br>registry.cn-beijing.aliyuncs.com/kubesphereio/cloudcore:v1.13.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/iptables-manager:v1.13.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/edgeservice:v0.3.0<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#gatekeeper-images</span></span><br>registry.cn-beijing.aliyuncs.com/kubesphereio/gatekeeper:v3.5.2<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#openpitrix-images</span></span><br>registry.cn-beijing.aliyuncs.com/kubesphereio/openpitrix-jobs:v3.3.2<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#kubesphere-devops-images</span></span><br>registry.cn-beijing.aliyuncs.com/kubesphereio/devops-apiserver:ks-v3.4.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/devops-controller:ks-v3.4.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/devops-tools:ks-v3.4.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/ks-jenkins:v3.4.0-2.319.3-1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/inbound-agent:4.10-2<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-base:v3.2.2<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-nodejs:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-maven:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-maven:v3.2.1-jdk11<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-python:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.2-1.16<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.2-1.17<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.2-1.18<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-base:v3.2.2-podman<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-nodejs:v3.2.0-podman<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-maven:v3.2.0-podman<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-maven:v3.2.1-jdk11-podman<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-python:v3.2.0-podman<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.0-podman<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.2-1.16-podman<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.2-1.17-podman<br>registry.cn-beijing.aliyuncs.com/kubesphereio/builder-go:v3.2.2-1.18-podman<br>registry.cn-beijing.aliyuncs.com/kubesphereio/s2ioperator:v3.2.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/s2irun:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/s2i-binary:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/tomcat85-java11-centos7:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/tomcat85-java11-runtime:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/tomcat85-java8-centos7:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/tomcat85-java8-runtime:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/java-11-centos7:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/java-8-centos7:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/java-8-runtime:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/java-11-runtime:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/nodejs-8-centos7:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/nodejs-6-centos7:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/nodejs-4-centos7:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/python-36-centos7:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/python-35-centos7:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/python-34-centos7:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/python-27-centos7:v3.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/argocd:v2.3.3<br>registry.cn-beijing.aliyuncs.com/kubesphereio/argocd-applicationset:v0.4.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/dex:v2.30.2<br>registry.cn-beijing.aliyuncs.com/kubesphereio/redis:6.2.6-alpine<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#kubesphere-monitoring-images</span></span><br>registry.cn-beijing.aliyuncs.com/kubesphereio/configmap-reload:v0.7.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/prometheus:v2.39.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/prometheus-config-reloader:v0.55.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/prometheus-operator:v0.55.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/kube-rbac-proxy:v0.11.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/kube-state-metrics:v2.6.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/node-exporter:v1.3.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/alertmanager:v0.23.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/thanos:v0.31.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/grafana:8.3.3<br>registry.cn-beijing.aliyuncs.com/kubesphereio/kube-rbac-proxy:v0.11.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/notification-manager-operator:v2.3.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/notification-manager:v2.3.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/notification-tenant-sidecar:v3.2.0<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#kubesphere-logging-images</span></span><br>registry.cn-beijing.aliyuncs.com/kubesphereio/elasticsearch-curator:v5.7.6<br>registry.cn-beijing.aliyuncs.com/kubesphereio/opensearch-curator:v0.0.5<br>registry.cn-beijing.aliyuncs.com/kubesphereio/elasticsearch-oss:6.8.22<br>registry.cn-beijing.aliyuncs.com/kubesphereio/opensearch:2.6.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/opensearch-dashboards:2.6.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/fluentbit-operator:v0.14.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/docker:19.03<br>registry.cn-beijing.aliyuncs.com/kubesphereio/fluent-bit:v1.9.4<br>registry.cn-beijing.aliyuncs.com/kubesphereio/log-sidecar-injector:v1.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/filebeat:6.7.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/kube-events-operator:v0.6.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/kube-events-exporter:v0.6.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/kube-events-ruler:v0.6.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/kube-auditing-operator:v0.2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/kube-auditing-webhook:v0.2.0<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#istio-images</span></span><br>registry.cn-beijing.aliyuncs.com/kubesphereio/pilot:1.14.6<br>registry.cn-beijing.aliyuncs.com/kubesphereio/proxyv2:1.14.6<br>registry.cn-beijing.aliyuncs.com/kubesphereio/jaeger-operator:1.29<br>registry.cn-beijing.aliyuncs.com/kubesphereio/jaeger-agent:1.29<br>registry.cn-beijing.aliyuncs.com/kubesphereio/jaeger-collector:1.29<br>registry.cn-beijing.aliyuncs.com/kubesphereio/jaeger-query:1.29<br>registry.cn-beijing.aliyuncs.com/kubesphereio/jaeger-es-index-cleaner:1.29<br>registry.cn-beijing.aliyuncs.com/kubesphereio/kiali-operator:v1.50.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/kiali:v1.50<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#example-images</span></span><br>registry.cn-beijing.aliyuncs.com/kubesphereio/busybox:1.31.1<br>registry.cn-beijing.aliyuncs.com/kubesphereio/nginx:1.14-alpine<br>registry.cn-beijing.aliyuncs.com/kubesphereio/wget:1.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/hello:plain-text<br>registry.cn-beijing.aliyuncs.com/kubesphereio/wordpress:4.8-apache<br>registry.cn-beijing.aliyuncs.com/kubesphereio/hpa-example:latest<br>registry.cn-beijing.aliyuncs.com/kubesphereio/fluentd:v1.4.2-2.0<br>registry.cn-beijing.aliyuncs.com/kubesphereio/perl:latest<br>registry.cn-beijing.aliyuncs.com/kubesphereio/examples-bookinfo-productpage-v1:1.16.2<br>registry.cn-beijing.aliyuncs.com/kubesphereio/examples-bookinfo-reviews-v1:1.16.2<br>registry.cn-beijing.aliyuncs.com/kubesphereio/examples-bookinfo-reviews-v2:1.16.2<br>registry.cn-beijing.aliyuncs.com/kubesphereio/examples-bookinfo-details-v1:1.16.2<br>registry.cn-beijing.aliyuncs.com/kubesphereio/examples-bookinfo-ratings-v1:1.16.3<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#weave-scope-images</span></span><br>registry.cn-beijing.aliyuncs.com/kubesphereio/scope:1.13.0<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-6-5-2-下载-offline-installation-tool-sh"><a href="#2-2-6-5-2-下载-offline-installation-tool-sh" class="headerlink" title="2.2.6.5.2 下载 offline-installation-tool.sh"></a>2.2.6.5.2 下载 <code>offline-installation-tool.sh</code></h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">下载offline-installation-tool.sh</span> <br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# curl -L -O https://github.com/kubesphere/ks-installer/releases/download/v3.4.1/offline-installation-tool.sh<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">如果不能正常下载，此处准备了此文件的内容，如下</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# cat offline-installation-tool.sh<br><span class="hljs-meta prompt_">#</span><span class="language-bash">!/usr/bin/env bash</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Copyright 2018 The KubeSphere Authors.</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"></span><br><span class="language-bash"><span class="hljs-comment"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">you may not use this file except <span class="hljs-keyword">in</span> compliance with the License.</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">You may obtain a copy of the License at</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"></span><br><span class="language-bash"><span class="hljs-comment">#     http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"></span><br><span class="language-bash"><span class="hljs-comment"># Unless required by applicable law or agreed to in writing, software</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">distributed under the License is distributed on an <span class="hljs-string">&quot;AS IS&quot;</span> BASIS,</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">See the License <span class="hljs-keyword">for</span> the specific language governing permissions and</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">limitations under the License.</span><br><br><br>CurrentDIR=$(cd &quot;$(dirname &quot;$0&quot;)&quot; || exit;pwd)<br>ImagesDirDefault=$&#123;CurrentDIR&#125;/kubesphere-images<br>save=&quot;false&quot;<br>registryurl=&quot;&quot;<br>reposUrl=(&quot;quay.azk8s.cn&quot; &quot;gcr.azk8s.cn&quot; &quot;docker.elastic.co&quot; &quot;quay.io&quot; &quot;k8s.gcr.io&quot;)<br>KUBERNETES_VERSION=$&#123;KUBERNETES_VERSION:-&quot;v1.21.5&quot;&#125;<br>HELM_VERSION=$&#123;HELM_VERSION:-&quot;v3.6.3&quot;&#125;<br>CNI_VERSION=$&#123;CNI_VERSION:-&quot;v0.9.1&quot;&#125;<br>ETCD_VERSION=$&#123;ETCD_VERSION:-&quot;v3.4.13&quot;&#125;<br>CRICTL_VERSION=$&#123;CRICTL_VERSION:-&quot;v1.22.0&quot;&#125;<br>DOCKER_VERSION=$&#123;DOCKER_VERSION:-&quot;20.10.8&quot;&#125;<br><br>func() &#123;<br>    echo &quot;Usage:&quot;<br>    echo<br>    echo &quot;  $0 [-l IMAGES-LIST] [-d IMAGES-DIR] [-r PRIVATE-REGISTRY] [-v KUBERNETES_VERSION ]&quot;<br>    echo<br>    echo &quot;Description:&quot;<br>    echo &quot;  -b                     : save kubernetes&#x27; binaries.&quot;<br>    echo &quot;  -d IMAGES-DIR          : the dir of files (tar.gz) which generated by \`docker save\`. default: $&#123;ImagesDirDefault&#125;&quot;<br>    echo &quot;  -l IMAGES-LIST         : text file with list of images.&quot;<br>    echo &quot;  -r PRIVATE-REGISTRY    : target private registry:port.&quot;<br>    echo &quot;  -s                     : save model will be applied. Pull the images in the IMAGES-LIST and save images as a tar.gz file.&quot;<br>    echo &quot;  -v KUBERNETES_VERSION  : download kubernetes&#x27; binaries. default: v1.21.5&quot;<br>    echo &quot;  -h                     : usage message&quot;<br>    echo<br>    echo &quot;Examples:&quot;<br>    echo<br>    echo &quot;# Download the default kubernetes version dependency binaries.(default: [kubernetes: v1.21.5], [helm: v3.6.3], [cni: v0.9.1], [etcd: v3.4.13])&quot;<br>    echo &quot;./offline-installtion-tool.sh -b&quot;<br>    echo<br>    echo &quot;# Custom download the kubernetes version dependecy binaries.&quot;<br>    echo &quot;export KUBERNETES_VERSION=v1.22.1;export HELM_VERSION=v3.6.3;&quot;<br>    echo &quot;./offline-installtion-tool.sh -b&quot;<br>    exit<br>&#125;<br><br>while getopts &#x27;bsl:r:d:v:h&#x27; OPT; do<br>    case $OPT in<br>        b) binary=&quot;true&quot;;;<br>        d) ImagesDir=&quot;$OPTARG&quot;;;<br>        l) ImagesList=&quot;$OPTARG&quot;;;<br>        r) Registry=&quot;$OPTARG&quot;;;<br>        s) save=&quot;true&quot;;;<br>        v) KUBERNETES_VERSION=&quot;$OPTARG&quot;;;<br>        h) func;;<br>        ?) func;;<br>        *) func;;<br>    esac<br>done<br><br>if [ -z &quot;$&#123;ImagesDir&#125;&quot; ]; then<br>    ImagesDir=$&#123;ImagesDirDefault&#125;<br>fi<br><br>if [ -n &quot;$&#123;Registry&#125;&quot; ]; then<br>   registryurl=$&#123;Registry&#125;<br>fi<br><br>if [ -z &quot;$&#123;ARCH&#125;&quot; ]; then<br>  case &quot;$(uname -m)&quot; in<br>  x86_64)<br>    ARCH=amd64<br>    ;;<br>  armv8*)<br>    ARCH=arm64<br>    ;;<br>  aarch64*)<br>    ARCH=arm64<br>    ;;<br>  armv*)<br>    ARCH=armv7<br>    ;;<br>  *)<br>    echo &quot;$&#123;ARCH&#125;, isn&#x27;t supported&quot;<br>    exit 1<br>    ;;<br>  esac<br>fi<br><br>binariesDIR=$&#123;CurrentDIR&#125;/kubekey/$&#123;KUBERNETES_VERSION&#125;/$&#123;ARCH&#125;<br><br>if [[ $&#123;binary&#125; == &quot;true&quot; ]]; then<br>  mkdir -p $&#123;binariesDIR&#125;<br>  if [ -n &quot;$&#123;KKZONE&#125;&quot; ] &amp;&amp; [ &quot;x$&#123;KKZONE&#125;&quot; == &quot;xcn&quot; ]; then<br>     echo &quot;Download kubeadm ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/kubeadm https://kubernetes-release.pek3b.qingstor.com/release/$&#123;KUBERNETES_VERSION&#125;/bin/linux/$&#123;ARCH&#125;/kubeadm<br>     echo &quot;Download kubelet ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/kubelet https://kubernetes-release.pek3b.qingstor.com/release/$&#123;KUBERNETES_VERSION&#125;/bin/linux/$&#123;ARCH&#125;/kubelet<br>     echo &quot;Download kubectl ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/kubectl https://kubernetes-release.pek3b.qingstor.com/release/$&#123;KUBERNETES_VERSION&#125;/bin/linux/$&#123;ARCH&#125;/kubectl<br>     echo &quot;Download helm ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/helm https://kubernetes-helm.pek3b.qingstor.com/linux-$&#123;ARCH&#125;/$&#123;HELM_VERSION&#125;/helm<br>     echo &quot;Download cni plugins ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/cni-plugins-linux-$&#123;ARCH&#125;-$&#123;CNI_VERSION&#125;.tgz https://containernetworking.pek3b.qingstor.com/plugins/releases/download/$&#123;CNI_VERSION&#125;/cni-plugins-linux-$&#123;ARCH&#125;-$&#123;CNI_VERSION&#125;.tgz<br>     echo &quot;Download etcd ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/etcd-$&#123;ETCD_VERSION&#125;-linux-$&#123;ARCH&#125;.tar.gz https://kubernetes-release.pek3b.qingstor.com/etcd/release/download/$&#123;ETCD_VERSION&#125;/etcd-$&#123;ETCD_VERSION&#125;-linux-$&#123;ARCH&#125;.tar.gz<br>     echo &quot;Download crictl ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/crictl-$&#123;CRICTL_VERSION&#125;-linux-$&#123;ARCH&#125;.tar.gz https://kubernetes-release.pek3b.qingstor.com/cri-tools/releases/download/$&#123;CRICTL_VERSION&#125;/crictl-$&#123;CRICTL_VERSION&#125;-linux-$&#123;ARCH&#125;.tar.gz<br>     echo &quot;Download docker ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/docker-$&#123;DOCKER_VERSION&#125;.tgz https://mirrors.aliyun.com/docker-ce/linux/static/stable/$&#123;ARCH&#125;/docker-$&#123;DOCKER_VERSION&#125;.tgz<br>  else<br>     echo &quot;Download kubeadm ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/kubeadm https://storage.googleapis.com/kubernetes-release/release/$&#123;KUBERNETES_VERSION&#125;/bin/linux/$&#123;ARCH&#125;/kubeadm<br>     echo &quot;Download kubelet ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/kubelet https://storage.googleapis.com/kubernetes-release/release/$&#123;KUBERNETES_VERSION&#125;/bin/linux/$&#123;ARCH&#125;/kubelet<br>     echo &quot;Download kubectl ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/kubectl https://storage.googleapis.com/kubernetes-release/release/$&#123;KUBERNETES_VERSION&#125;/bin/linux/$&#123;ARCH&#125;/kubectl<br>     echo &quot;Download helm ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/helm-$&#123;HELM_VERSION&#125;-linux-$&#123;ARCH&#125;.tar.gz https://get.helm.sh/helm-$&#123;HELM_VERSION&#125;-linux-$&#123;ARCH&#125;.tar.gz &amp;&amp; cd $&#123;binariesDIR&#125; &amp;&amp; tar -zxf helm-$&#123;HELM_VERSION&#125;-linux-$&#123;ARCH&#125;.tar.gz &amp;&amp; mv linux-$&#123;ARCH&#125;/helm . &amp;&amp; rm -rf *linux-$&#123;ARCH&#125;* &amp;&amp; cd -<br>     echo &quot;Download cni plugins ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/cni-plugins-linux-$&#123;ARCH&#125;-$&#123;CNI_VERSION&#125;.tgz https://github.com/containernetworking/plugins/releases/download/$&#123;CNI_VERSION&#125;/cni-plugins-linux-$&#123;ARCH&#125;-$&#123;CNI_VERSION&#125;.tgz<br>     echo &quot;Download etcd ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/etcd-$&#123;ETCD_VERSION&#125;-linux-$&#123;ARCH&#125;.tar.gz https://github.com/coreos/etcd/releases/download/$&#123;ETCD_VERSION&#125;/etcd-$&#123;ETCD_VERSION&#125;-linux-$&#123;ARCH&#125;.tar.gz<br>     echo &quot;Download crictl ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/crictl-$&#123;CRICTL_VERSION&#125;-linux-$&#123;ARCH&#125;.tar.gz https://github.com/kubernetes-sigs/cri-tools/releases/download/$&#123;CRICTL_VERSION&#125;/crictl-$&#123;CRICTL_VERSION&#125;-linux-$&#123;ARCH&#125;.tar.gz<br>     echo &quot;Download docker ...&quot;<br>     curl -L -o $&#123;binariesDIR&#125;/docker-$&#123;DOCKER_VERSION&#125;.tgz https://download.docker.com/linux/static/stable/$&#123;ARCH&#125;/docker-$&#123;DOCKER_VERSION&#125;.tgz<br>  fi<br>fi<br><br>if [[ $&#123;save&#125; == &quot;true&quot; ]] &amp;&amp; [[ -n &quot;$&#123;ImagesList&#125;&quot; ]]; then<br>    if [ ! -d $&#123;ImagesDir&#125; ]; then<br>       mkdir -p $&#123;ImagesDir&#125;<br>    fi<br>    ImagesListLen=$(cat $&#123;ImagesList&#125; | wc -l)<br>    name=&quot;&quot;<br>    images=&quot;&quot;<br>    index=0<br>    for image in $(&lt;$&#123;ImagesList&#125;); do<br>        if [[ $&#123;image&#125; =~ ^\#\#.* ]]; then<br>           if [[ -n $&#123;images&#125; ]]; then<br>              echo &quot;&quot;<br>              echo &quot;Save images: &quot;$&#123;name&#125;&quot; to &quot;$&#123;ImagesDir&#125;&quot;/&quot;$&#123;name&#125;&quot;.tar.gz  &lt;&lt;&lt;&quot;<br>              docker save $&#123;images&#125; | gzip -c &gt; $&#123;ImagesDir&#125;&quot;/&quot;$&#123;name&#125;.tar.gz<br>              echo &quot;&quot;<br>           fi<br>           images=&quot;&quot;<br>           name=$(echo &quot;$&#123;image&#125;&quot; | sed &#x27;s/#//g&#x27; | sed -e &#x27;s/[[:space:]]//g&#x27;)<br>           ((index++))<br>           continue<br>        fi<br><br>        image=$(echo &quot;$&#123;image&#125;&quot; |tr -d &#x27;\r&#x27;)<br>        docker pull &quot;$&#123;image&#125;&quot;<br>        images=$&#123;images&#125;&quot; &quot;$&#123;image&#125;<br><br>        if [[ $&#123;index&#125; -eq $&#123;ImagesListLen&#125;-1 ]]; then<br>           if [[ -n $&#123;images&#125; ]]; then<br>              docker save $&#123;images&#125; | gzip -c &gt; $&#123;ImagesDir&#125;&quot;/&quot;$&#123;name&#125;.tar.gz<br>           fi<br>        fi<br>        ((index++))<br>    done<br>elif [ -n &quot;$&#123;ImagesList&#125;&quot; ]; then<br>    # shellcheck disable=SC2045<br>    for image in $(ls $&#123;ImagesDir&#125;/*.tar.gz); do<br>      echo &quot;Load images: &quot;$&#123;image&#125;&quot;  &lt;&lt;&lt;&quot;<br>      docker load  &lt; $image<br>    done<br><br>    if [[ -n $&#123;registryurl&#125; ]]; then<br>       for image in $(&lt;$&#123;ImagesList&#125;); do<br>          if [[ $&#123;image&#125; =~ ^\#\#.* ]]; then<br>             continue<br>          fi<br>          url=$&#123;image%%/*&#125;   # $&#123;image&#125;第一个/左边的所有字符串<br>          ImageName=$&#123;image#*/&#125;   # $&#123;image&#125;第一个/右边的所有字符串<br>          echo $image<br><br>          if echo &quot;$&#123;reposUrl[@]&#125;&quot; | grep -Fx &quot;$url&quot; &amp;&gt;/dev/null; then<br>            imageurl=$registryurl&quot;/&quot;$&#123;image#*/&#125;<br>          elif [ $url == $registryurl ]; then<br>              if [[ $ImageName != */* ]]; then<br>                 imageurl=$registryurl&quot;/library/&quot;$ImageName<br>              else<br>                 imageurl=$image<br>              fi<br>          elif [ &quot;$(echo $url | grep &#x27;:&#x27;)&quot; != &quot;&quot; ]; then<br>              imageurl=$registryurl&quot;/library/&quot;$image<br>          else<br>              imageurl=$registryurl&quot;/&quot;$image<br>          fi<br><br>          ## push image<br>          image=$(echo &quot;$&#123;image&#125;&quot; |tr -d &#x27;\r&#x27;)<br>          imageurl=$(echo &quot;$&#123;imageurl&#125;&quot; |tr -d &#x27;\r&#x27;)<br>          echo $imageurl<br>          docker tag $image $imageurl<br>          docker push $imageurl<br>       done<br>    fi<br>fi<br><br></code></pre></td></tr></table></figure>
+
+<p>使 <code>.sh</code> 文件可执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">chmod +x offline-installation-tool.sh<br></code></pre></td></tr></table></figure>
+
+<p>查看如何使用脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./offline-installation-tool.sh -h<br></code></pre></td></tr></table></figure>
+
+<h5 id="2-2-6-5-3-拉取镜像"><a href="#2-2-6-5-3-拉取镜像" class="headerlink" title="2.2.6.5.3 拉取镜像"></a>2.2.6.5.3 拉取镜像</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# ./offline-installation-tool.sh -s -l images-list-aliyuncs.txt -d ./kubesphere-images<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-6-6-推送镜像至私有仓库"><a href="#2-2-6-6-推送镜像至私有仓库" class="headerlink" title="2.2.6.6 推送镜像至私有仓库"></a>2.2.6.6 推送镜像至私有仓库</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">推送到docker registry中</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# ./offline-installation-tool.sh -l images-list-aliyuncs.txt -d ./kubesphere-images -r easzlab.io.local<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果你已经按照前面的步骤安装了Harbor（默认已经创建一个library项目），此处还可以将镜像推送到Harbor仓库中</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# ./offline-installation-tool.sh -l images-list-aliyuncs.txt -d ./kubesphere-images -r harbor.yourdomain.com:8444</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-6-7-修改ks-installer-v3-4-1镜像"><a href="#2-2-6-7-修改ks-installer-v3-4-1镜像" class="headerlink" title="2.2.6.7 修改ks-installer:v3.4.1镜像"></a>2.2.6.7 修改ks-installer:v3.4.1镜像</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">不修改的话，的会提示“after connection broken by ‘SSLError(SSLCertVerificationError(1, ’[SSL: CERTIFICATE_VERIFY_FAILED] certifica”报错</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建Dockerfile文件，内容如下</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# cat Dockerfile <br>FROM registry.cn-beijing.aliyuncs.com/kubesphereio/ks-installer:v3.4.1<br>USER root<br>RUN sed -i &#x27;s/self.verify_ssl = True/self.verify_ssl = False/g&#x27; /usr/local/lib/python3.10/site-packages/kubernetes/client/configuration.py<br>USER kubesphere<br><br><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# docker build -f Dockerfile ./ -t easzlab.io.local/registry.cn-beijing.aliyuncs.com/kubesphereio/ks-installer:v3.4.1<br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# docker push easzlab.io.local/registry.cn-beijing.aliyuncs.com/kubesphereio/ks-installer:v3.4.1<br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# docker tag easzlab.io.local/registry.cn-beijing.aliyuncs.com/kubesphereio/ks-installer:v3.4.1 easzlab.io.local/library/ks-installer:v3.4.1<br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# docker push easzlab.io.local/library/ks-installer:v3.4.1<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改kubesphere-installer.yaml 文件中使用的ks-installer镜像</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# sed -i &#x27;s#image: kubesphere/ks-installer:v3.4.1#image: easzlab.io.local/library/ks-installer:v3.4.1#g&#x27; kubesphere-installer.yaml<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-6-8-上传镜像到指定registry项目下"><a href="#2-2-6-8-上传镜像到指定registry项目下" class="headerlink" title="2.2.6.8 上传镜像到指定registry项目下"></a>2.2.6.8 上传镜像到指定registry项目下</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建push-image-to-easzlab.io.local.sh 文件</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# touch push-image-to-easzlab.io.local.sh <br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">push-image-to-easzlab.io.local.sh 文件内容如下</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# cat push-image-to-easzlab.io.local.sh <br><span class="hljs-meta prompt_">#</span><span class="language-bash">!/bin/bash</span><br>images=`docker images | egrep &quot;^registry.cn-beijing.aliyuncs.com&quot;`<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">上传所有镜像到library项目下</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">使用 <span class="hljs-keyword">while</span> 循环遍历每一行</span><br>while IFS= read -r line; do<br>  echo &quot;$line&quot;<br>  image=`echo $line | awk &#x27;&#123;print $1&#125;&#x27;`<br>  tag=`echo $line | awk &#x27;&#123;print $2&#125;&#x27;`<br>  ImageName=$&#123;image##*/&#125;  #镜像名，不包含前面的所有repository名及斜线<br>  newImageTag=&quot;easzlab.io.local/library/$&#123;ImageName&#125;:$&#123;tag&#125;&quot;<br>  echo $&#123;newImageTag&#125;<br>  docker tag &quot;$&#123;image&#125;:$&#123;tag&#125;&quot; $&#123;newImageTag&#125;<br>  docker push $&#123;newImageTag&#125;<br>  echo &quot;---------------&quot;<br>done &lt;&lt;&lt; &quot;$images&quot;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">经验证给部署kubesphere3.4.1过程中需要用到的镜像重新命名</span><br>docker tag easzlab.io.local/library/snapshot-controller:v4.0.0 easzlab.io.local/csiplugin/snapshot-controller:v4.0.0<br>docker push easzlab.io.local/csiplugin/snapshot-controller:v4.0.0<br>docker tag easzlab.io.local/library/defaultbackend-amd64:1.4 easzlab.io.local/mirrorgooglecontainers/defaultbackend-amd64:1.4<br>docker push easzlab.io.local/mirrorgooglecontainers/defaultbackend-amd64:1.4<br>docker tag easzlab.io.local/library/ks-console:v3.4.1 easzlab.io.local/kubesphere/ks-console:v3.4.1<br>docker push easzlab.io.local/kubesphere/ks-console:v3.4.1<br>docker tag easzlab.io.local/library/kube-state-metrics:v2.6.0 easzlab.io.local/kubesphere/kube-state-metrics:v2.6.0<br>docker push easzlab.io.local/kubesphere/kube-state-metrics:v2.6.0<br>docker tag easzlab.io.local/library/kube-rbac-proxy:v0.11.0 easzlab.io.local/kubesphere/kube-rbac-proxy:v0.11.0<br>docker push easzlab.io.local/kubesphere/kube-rbac-proxy:v0.11.0<br>docker tag easzlab.io.local/library/node-exporter:v1.3.1 easzlab.io.local/prom/node-exporter:v1.3.1<br>docker push easzlab.io.local/prom/node-exporter:v1.3.1<br>docker tag easzlab.io.local/library/ks-apiserver:v3.4.1 easzlab.io.local/kubesphere/ks-apiserver:v3.4.1<br>docker push easzlab.io.local/kubesphere/ks-apiserver:v3.4.1<br>docker tag easzlab.io.local/library/ks-controller-manager:v3.4.1 easzlab.io.local/kubesphere/ks-controller-manager:v3.4.1<br>docker push easzlab.io.local/kubesphere/ks-controller-manager:v3.4.1<br>docker tag easzlab.io.local/library/prometheus-operator:v0.55.1 easzlab.io.local/kubesphere/prometheus-operator:v0.55.1<br>docker push easzlab.io.local/kubesphere/prometheus-operator:v0.55.1<br>docker tag easzlab.io.local/library/kubectl:v1.22.0 easzlab.io.local/kubesphere/kubectl:v1.22.0<br>docker push easzlab.io.local/kubesphere/kubectl:v1.22.0<br>docker tag easzlab.io.local/library/alertmanager:v0.23.0 easzlab.io.local/prom/alertmanager:v0.23.0<br>docker push easzlab.io.local/prom/alertmanager:v0.23.0<br>docker tag easzlab.io.local/library/prometheus-config-reloader:v0.55.1 easzlab.io.local/kubesphere/prometheus-config-reloader:v0.55.1<br>docker push easzlab.io.local/kubesphere/prometheus-config-reloader:v0.55.1<br>docker tag easzlab.io.local/library/prometheus:v2.39.1 easzlab.io.local/prom/prometheus:v2.39.1<br>docker push easzlab.io.local/prom/prometheus:v2.39.1<br>docker tag easzlab.io.local/library/notification-manager-operator:v2.3.0 easzlab.io.local/kubesphere/notification-manager-operator:v2.3.0<br>docker push easzlab.io.local/kubesphere/notification-manager-operator:v2.3.0<br>docker tag easzlab.io.local/library/notification-manager:v2.3.0 easzlab.io.local/kubesphere/notification-manager:v2.3.0<br>docker push easzlab.io.local/kubesphere/notification-manager:v2.3.0<br>docker tag easzlab.io.local/library/notification-tenant-sidecar:v3.2.0 easzlab.io.local/kubesphere/notification-tenant-sidecar:v3.2.0<br>docker push easzlab.io.local/kubesphere/notification-tenant-sidecar:v3.2.0<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">执行push-image-to-easzlab.io.local.sh 文件</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# bash push-image-to-easzlab.io.local.sh<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-6-9-执行安装kubesphere"><a href="#2-2-6-9-执行安装kubesphere" class="headerlink" title="2.2.6.9 执行安装kubesphere"></a>2.2.6.9 执行安装kubesphere</h4><p>执行以下命令部署 KubeSphere：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">应用以下两个文件，以安装kubesphere</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# kubectl apply -f kubesphere-installer.yaml <br>customresourcedefinition.apiextensions.k8s.io/clusterconfigurations.installer.kubesphere.io created<br>namespace/kubesphere-system created<br>serviceaccount/ks-installer created<br>clusterrole.rbac.authorization.k8s.io/ks-installer created<br>clusterrolebinding.rbac.authorization.k8s.io/ks-installer created<br>deployment.apps/ks-installer created<br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# kubectl apply -f cluster-configuration.yaml <br>clusterconfiguration.installer.kubesphere.io/ks-installer created<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看安装进度与日志</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# kubectl -n kubesphere-system logs ks-installer-64c97c9dc5-nbrlt -f<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">给k8s集群的控制平台节点打标签</span><br>kubectl label node 10.13.15.61 node-role.kubernetes.io/control-plane=&quot;&quot;<br>kubectl label node 10.13.15.61 node-role.kubernetes.io/master=&quot;&quot;<br>kubectl label node 10.13.15.61 node.kubernetes.io/exclude-from-external-load-balancers=&quot;&quot;<br>kubectl label node 10.13.15.62 node-role.kubernetes.io/control-plane=&quot;&quot;<br>kubectl label node 10.13.15.62 node-role.kubernetes.io/master=&quot;&quot;<br>kubectl label node 10.13.15.62 node.kubernetes.io/exclude-from-external-load-balancers=&quot;&quot;<br>kubectl label node 10.13.15.63 node-role.kubernetes.io/control-plane=&quot;&quot;<br>kubectl label node 10.13.15.63 node-role.kubernetes.io/master=&quot;&quot;<br>kubectl label node 10.13.15.63 node.kubernetes.io/exclude-from-external-load-balancers=&quot;&quot;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看k8s集群的节点列表</span><br>root@k8s03-1:/opt/kubeasz-deployk8s/deploy-kubesphere341# kubectl get nodes<br>NAME          STATUS                     ROLES                  AGE     VERSION<br>10.13.15.61   Ready,SchedulingDisabled   control-plane,master   4d17h   v1.23.17<br>10.13.15.62   Ready,SchedulingDisabled   control-plane,master   4d17h   v1.23.17<br>10.13.15.63   Ready,SchedulingDisabled   control-plane,master   4d17h   v1.23.17<br>10.13.15.64   Ready                      node                   4d17h   v1.23.17<br>10.13.15.65   Ready                      node                   4d17h   v1.23.17<br>10.13.15.66   Ready                      node                   4d17h   v1.23.17<br></code></pre></td></tr></table></figure>
+
+<p>使用vip+30880端口，可以正常访问kubesphere的web系统：</p>
+<p><img src="https://s2.loli.net/2024/11/05/cjUZ7E3v8epDVdg.png" srcset="/img/loading.gif" lazyload alt="image-20241105111401577"></p>
+<h4 id="2-2-6-10-从k8s中卸载kubesphere"><a href="#2-2-6-10-从k8s中卸载kubesphere" class="headerlink" title="2.2.6.10 从k8s中卸载kubesphere"></a>2.2.6.10 从k8s中卸载kubesphere</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">参考：https://kubesphere.io/zh/docs/v3.4/installing-on-kubernetes/uninstall-kubesphere-from-k8s/</span><br><br>wget https://raw.githubusercontent.com/kubesphere/ks-installer/release-3.1/scripts/kubesphere-delete.sh<br>bash kubesphere-delete.sh<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-3-删除节点"><a href="#2-3-删除节点" class="headerlink" title="2.3 删除节点"></a>2.3 删除节点</h2><p>参考：<a target="_blank" rel="noopener" href="https://github.com/easzlab/kubeasz/blob/3.2.0/docs/op/op-node.md">https://github.com/easzlab/kubeasz/blob/3.2.0/docs/op/op-node.md</a></p>
+<p>删除 node 节点流程：(参考ezctl 里面del-node函数 和 playbooks&#x2F;32.delnode.yml)</p>
+<ul>
+<li>检测是否可以删除</li>
+<li>迁移节点上的 pod</li>
+<li>删除 node 相关服务及文件</li>
+<li>从集群删除 node</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">删除节点前</span><br>k8s03-1:~# kubectl get nodes<br>NAME          STATUS                     ROLES    AGE     VERSION<br>10.13.15.61   Ready,SchedulingDisabled   master   3h23m   v1.23.17<br>10.13.15.62   Ready,SchedulingDisabled   master   3h23m   v1.23.17<br>10.13.15.63   Ready,SchedulingDisabled   master   3h23m   v1.23.17<br>10.13.15.64   Ready                      node     3h7m    v1.23.17<br>10.13.15.65   Ready                      node     3h7m    v1.23.17<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">删除节点（一次只能删除一个节点），它的IP是10.13.15.65</span><br>k8s03-1:~# ezctl del-node k8s03 10.13.15.65    # 假设待删除节点为 10.13.15.65<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">删除节点成功后</span><br>k8s03-1:~# kubectl get nodes               <br>NAME          STATUS                     ROLES    AGE     VERSION<br>10.13.15.61   Ready,SchedulingDisabled   master   3h25m   v1.23.17<br>10.13.15.62   Ready,SchedulingDisabled   master   3h25m   v1.23.17<br>10.13.15.63   Ready,SchedulingDisabled   master   3h25m   v1.23.17<br>10.13.15.64   Ready                      node     3h9m    v1.23.17<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-4-添加节点"><a href="#2-4-添加节点" class="headerlink" title="2.4 添加节点"></a>2.4 添加节点</h2><p>新增<code>kube_node</code>节点大致流程为：(参考ezctl 里面add-node函数 和 playbooks&#x2F;22.addnode.yml)</p>
+<ul>
+<li>[可选]新节点安装 chrony 时间同步</li>
+<li>新节点预处理 prepare</li>
+<li>新节点安装 docker 服务</li>
+<li>新节点安装 kube_node 服务</li>
+<li>新节点安装网络插件相关</li>
+</ul>
+<p><strong>操作步骤</strong>：</p>
+<p><em><strong>首先配置 ssh 免密码登录新增节点</strong></em>，然后执行 (假设k8s集群名为 k8s03，待增加节点为 10.13.15.66、它的IP同时也是其节点名)：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">一次只能添加一个节点（添加k8s节点前记得配置ssh免密登录）</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">ezctl add-node k8s03 10.13.15.66</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">要添加多个节点，就执行添加节点命令多次</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">可能需要在新节点上执行：<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;10.13.15.61    easzlab.io.local&quot;</span> &gt;&gt; /etc/hosts</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>验证</strong>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">验证新节点状态</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">kubectl get node</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">验证新节点的网络插件calico 或flannel 的Pod 状态</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">kubectl get pod -n kube-system -o wide</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">验证新建pod能否调度到新节点，略</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-5-卸载集群"><a href="#2-5-卸载集群" class="headerlink" title="2.5 卸载集群"></a>2.5 卸载集群</h2><p>在宿主机上，按照如下步骤清理</p>
+<ul>
+<li>清理集群 <code>docker exec -it kubeasz ezctl destroy &lt;集群名称&gt;</code></li>
+<li>重启节点，以确保清理残留的虚拟网卡、路由等信息</li>
+</ul>
+<p><strong>操作步骤：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">k8s03-1:/# ezctl destroy k8s03<br><span class="hljs-meta prompt_">#</span><span class="language-bash">然后重启所有k8s节点</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-6-报错与处理"><a href="#2-6-报错与处理" class="headerlink" title="2.6 报错与处理"></a>2.6 报错与处理</h2><h3 id="2-6-1-添加节点时“TASK-kube-node-轮询等待kubelet启动-”执行失败"><a href="#2-6-1-添加节点时“TASK-kube-node-轮询等待kubelet启动-”执行失败" class="headerlink" title="2.6.1 添加节点时“TASK [kube-node : 轮询等待kubelet启动]”执行失败"></a>2.6.1 添加节点时“TASK [kube-node : 轮询等待kubelet启动]”执行失败</h3><p><img src="https://s2.loli.net/2025/01/16/3HMXsCEwkSGOerm.png" srcset="/img/loading.gif" lazyload alt="image-20250116143621421"></p>
+<p><strong>问题定位：</strong></p>
+<p>t1-gpu节点的ip是10.12.62.25，查看其上kubelet服务有如下报错信息：</p>
+<p><img src="https://s2.loli.net/2025/01/16/sbqv1Z24eEdfKmn.png" srcset="/img/loading.gif" lazyload alt="image-20250116143749619"></p>
+<p>可知，使用kubeasz部署k8s时，安装的kubelet使用的 cgroup driver是”systemd”，但t1-gpu上现有docker cgroup driver 使用cgroupfs，修改t1-gpu上wget r docker cgroup driver 为systemd即可。</p>
+<p><strong>处理办法：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在t1-gpu服务器的/etc/docker/daemon.json文件中添加如下内容</span><br>root@t1-gpu:~# vi /etc/docker/daemon.json <br>&#123;<br>    &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],<br>    ...<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启t1-gpu服务器的docker服务</span><br>root@t1-gpu:~# systemctl daemon-reload &amp;&amp; systemctl restart docker<br><br>root@t1-gpu:~# docker info | grep &quot;Cgroup Driver&quot;<br> Cgroup Driver: systemd<br><span class="hljs-meta prompt_"> </span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">然后在部署节点再次尝试添加k8s节点</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-6-2-添加k8s节点时失败再次添加此节点时提示node已在hosts文件中"><a href="#2-6-2-添加k8s节点时失败再次添加此节点时提示node已在hosts文件中" class="headerlink" title="2.6.2 添加k8s节点时失败再次添加此节点时提示node已在hosts文件中"></a>2.6.2 添加k8s节点时失败再次添加此节点时提示node已在hosts文件中</h3><p><img src="https://s2.loli.net/2025/01/16/ilxqfoKnpQC6S32.png" srcset="/img/loading.gif" lazyload alt="image-20250116144450943"></p>
+<p>处理办法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在部署节点修改/etc/kubeasz/clusters/集群名/hosts</span><br>root@controller01:/etc/kubeasz# vi /etc/kubeasz/clusters/cluster01/hosts<br>...<br><span class="hljs-meta prompt_"># </span><span class="language-bash">work node(s)</span><br>[kube_node]<br>10.12.62.25     #将此行内容删除<br><span class="hljs-meta prompt_">#</span><span class="language-bash">192.168.1.3</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">192.168.1.4</span><br>172.20.0.21<br>...<br></code></pre></td></tr></table></figure>
+
+<p>然后在部署节点再次尝试添加k8s节点</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/kubeasz-k8s%E5%9C%A8%E7%BA%BF%E9%83%A8%E7%BD%B2-%E4%BA%8C%E8%BF%9B%E5%88%B6-%E9%AB%98%E5%8F%AF%E7%94%A8-kubesphere-harbor-k8s%E6%89%A9%E5%AE%B9-k8s%E7%BC%A9%E5%AE%B9-k8s%E5%8D%B8%E8%BD%BD/" class="print-no-link">#kubeasz k8s在线部署 二进制 高可用 kubesphere harbor k8s扩容 k8s缩容 k8s卸载</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>k8s在线部署-使用kubeasz部署amd64高可用k8s1-23-17</div>
+      <div>https://jiangsanyin.github.io/2024/12/01/k8s在线部署-使用kubeasz部署amd64高可用k8s1-23-17/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年12月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/06/k8s%E7%A6%BB%E7%BA%BF%E9%83%A8%E7%BD%B2-%E4%BD%BF%E7%94%A8kubekey%E9%83%A8%E7%BD%B2arm64%E9%AB%98%E5%8F%AF%E7%94%A8%E7%89%88k8s1-23-17-ksp3-4-1/" title="k8s离线部署-使用kubekey部署aarch64高可用版k8s1.23.17+ksp3.4.1">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">k8s离线部署-使用kubekey部署aarch64高可用版k8s1.23.17+ksp3.4.1</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/11/28/k8s%E5%9C%A8%E7%BA%BF%E9%83%A8%E7%BD%B2-%E4%BD%BF%E7%94%A8kubeasz%E9%83%A8%E7%BD%B2amd64%E5%8D%95%E6%9C%BA%E7%89%88k8s1-26-0/" title="k8s在线部署-使用kubeasz部署amd64单机版k8s1-26-0">
+                        <span class="hidden-mobile">k8s在线部署-使用kubeasz部署amd64单机版k8s1-26-0</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,700 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. pod&#x2F;hami-device-plugin一直处于CrashLoopBackOff具体报错信息如下 1234567891011121314151617181920212223242526272829root@controller01:~# kubectl -n kube-system get podsNAME">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HAMi安装部署时报错处理归纳">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/01/13/HAMi%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%97%B6%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86%E5%BD%92%E7%BA%B3/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="1. pod&#x2F;hami-device-plugin一直处于CrashLoopBackOff具体报错信息如下 1234567891011121314151617181920212223242526272829root@controller01:~# kubectl -n kube-system get podsNAME">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-01-13T09:53:21.000Z">
+<meta property="article:modified_time" content="2025-01-14T06:58:34.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>HAMi安装部署时报错处理归纳 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">HAMi安装部署时报错处理归纳</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-13 17:53" pubdate>
+          2025年1月13日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          657 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          6 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">HAMi安装部署时报错处理归纳</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-pod-hami-device-plugin一直处于CrashLoopBackOff"><a href="#1-pod-hami-device-plugin一直处于CrashLoopBackOff" class="headerlink" title="1. pod&#x2F;hami-device-plugin一直处于CrashLoopBackOff"></a>1. pod&#x2F;hami-device-plugin一直处于CrashLoopBackOff</h1><p>具体报错信息如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:~# kubectl -n kube-system get pods<br>NAME                                         READY   STATUS             RESTARTS      AGE<br>calico-kube-controllers-754966f84c-7nm8r     1/1     Running            3 (17h ago)   3d19h<br>calico-node-84csz                            1/1     Running            3 (17h ago)   3d19h<br>coredns-596755dbff-94m7w                     1/1     Running            4 (17h ago)   3d19h<br>dashboard-metrics-scraper-799d786dbf-swl8b   1/1     Running            4 (17h ago)   3d19h<br>hami-device-plugin-n9s94                     1/2     CrashLoopBackOff   4 (88s ago)   2m57s<br>hami-scheduler-cdcc75c6f-s2hp5               2/2     Running            0             2m57s<br>kubernetes-dashboard-9f8c8b989-f4cqj         1/1     Running            4 (17h ago)   3d19h<br>metrics-server-5d648558d9-49q98              1/1     Running            5 (17h ago)   3d19h<br>nfs-client-provisioner-6994b84bd-2w7vr       1/1     Running            4 (17h ago)   3d19h<br>node-local-dns-2mqv2                         1/1     Running            5 (17h ago)   3d19h<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看pod/hami-device-plugin-n9s94 日志</span><br>root@controller01:~# kubectl -n kube-system describe pod hami-device-plugin-n9s94<br>...<br>Events:<br>  Type     Reason               Age                From               Message<br>  ----     ------               ----               ----               -------<br>  Normal   Scheduled            60s                default-scheduler  Successfully assigned kube-system/hami-device-plugin-n9s94 to 172.20.0.21<br>  Normal   Pulled               58s                kubelet            Container image &quot;projecthami/hami:latest&quot; already present on machine<br>  Normal   Created              58s                kubelet            Created container vgpu-monitor<br>  Normal   Started              58s                kubelet            Started container vgpu-monitor<br>  Warning  FailedPostStartHook  42s (x3 over 59s)  kubelet            Exec lifecycle hook ([/bin/sh -c cp -f /k8s-vgpu/lib/nvidia/* /usr/local/vgpu/]) for Container &quot;device-plugin&quot; in Pod &quot;hami-device-plugin-n9s94_kube-system(70f823fa-d042-400d-abd1-0527921e60a6)&quot; failed - error: command &#x27;/bin/sh -c cp -f /k8s-vgpu/lib/nvidia/* /usr/local/vgpu/&#x27; exited with 126: , message: &quot;OCI runtime exec failed: exec failed: cannot exec in a stopped container: unknown\r\n&quot;<br>  Normal   Killing              42s (x3 over 59s)  kubelet            FailedPostStartHook<br>  Warning  BackOff              26s (x4 over 56s)  kubelet            Back-off restarting failed container<br>  Normal   Pulled               14s (x4 over 59s)  kubelet            Container image &quot;projecthami/hami:latest&quot; already present on machine<br>  Normal   Created              14s (x4 over 59s)  kubelet            Created container device-plugin<br>  Normal   Started              13s (x4 over 59s)  kubelet            Started container device-plugin<br></code></pre></td></tr></table></figure>
+
+<p><strong>分析定位：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:~# ll /usr/local/vgpu/<br>total 636<br>drwxr-xr-x  3 root root   4096 Aug 28 15:37 ./<br>drwxr-xr-x 17 root root   4096 Nov 15 16:56 ../<br>drwxr-xr-x  5 root root   4096 Jan  8 15:27 containers/<br>-rw-r--r--  1 root root     26 Jan  8 17:20 ld.so.preload<br>-rwxr-xr-x  1 root root 631456 Jan  8 17:20 libvgpu.so*<br>root@controller01:~# <br>root@controller01:~# cd /usr/local/vgpu/<br>root@controller01:/usr/local/vgpu# ll<br>total 636<br>drwxr-xr-x  3 root root   4096 Aug 28 15:37 ./<br>drwxr-xr-x 17 root root   4096 Nov 15 16:56 ../<br>drwxr-xr-x  5 root root   4096 Jan  8 15:27 containers/<br>-rw-r--r--  1 root root     26 Jan  8 17:20 ld.so.preload<br>-rwxr-xr-x  1 root root 631456 Jan  8 17:20 libvgpu.so*<br>root@controller01:/usr/local/vgpu# cd containers/<br>root@controller01:/usr/local/vgpu/containers# ll<br>total 20<br>drwxr-xr-x 5 root root 4096 Jan  8 15:27 ./<br>drwxr-xr-x 3 root root 4096 Aug 28 15:37 ../<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:~# kubectl -n kube-system logs hami-device-plugin-n9s94 -c device-plugin<br>I0114 02:25:43.181802   36787 client.go:53] BuildConfigFromFlags failed for file /root/.kube/config: stat /root/.kube/config: no such file or directory using inClusterConfig<br>Incorrect Usage: invalid value &quot;false&quot; for flag -v: parse error<br><br>NAME:<br>   NVIDIA Device Plugin - NVIDIA device plugin for Kubernetes<br><br>USAGE:<br>   NVIDIA Device Plugin [global options] command [command options] <br><br>COMMANDS:<br>   version  Show the version of NVIDIA Device Plugin<br>   help, h  Shows a list of commands or help for one command<br><br>GLOBAL OPTIONS:<br>   --mig-strategy value                                           the desired strategy for exposing MIG devices on GPUs that support it:<br>                                                                    [none | single | mixed] (default: &quot;none&quot;) [$MIG_STRATEGY]<br>   --fail-on-init-error                                           fail the plugin if an error is encountered during initialization, otherwise block indefinitely (default: true) [$FAIL_ON_INIT_ERROR]<br>   --nvidia-driver-root value                                     the root path for the NVIDIA driver installation (typical values are &#x27;/&#x27; or &#x27;/run/nvidia/driver&#x27;) (default: &quot;/&quot;) [$NVIDIA_DRIVER_ROOT]<br>   --pass-device-specs                                            pass the list of DeviceSpecs to the kubelet on Allocate() (default: false) [$PASS_DEVICE_SPECS]<br>   --device-list-strategy value [ --device-list-strategy value ]  the desired strategy for passing the device list to the underlying runtime:<br>                                                                    [envvar | volume-mounts | cdi-annotations] (default: &quot;envvar&quot;) [$DEVICE_LIST_STRATEGY]<br>   --device-id-strategy value                                     the desired strategy for passing device IDs to the underlying runtime:<br>                                                                    [uuid | index] (default: &quot;uuid&quot;) [$DEVICE_ID_STRATEGY]<br>   --gds-enabled                                                  ensure that containers are started with NVIDIA_GDS=enabled (default: false) [$GDS_ENABLED]<br>   --mofed-enabled                                                ensure that containers are started with NVIDIA_MOFED=enabled (default: false) [$MOFED_ENABLED]<br>   --config-file value                                            the path to a config file as an alternative to command line options or environment variables [$CONFIG_FILE]<br>   --cdi-annotation-prefix value                                  the prefix to use for CDI container annotation keys (default: &quot;cdi.k8s.io/&quot;) [$CDI_ANNOTATION_PREFIX]<br>   --nvidia-ctk-path value                                        the path to use for the nvidia-ctk in the generated CDI specification (default: &quot;/usr/bin/nvidia-ctk&quot;) [$NVIDIA_CTK_PATH]<br>   --container-driver-root value                                  the path where the NVIDIA driver root is mounted in the container; used for generating CDI specifications (default: &quot;/driver-root&quot;) [$CONTAINER_DRIVER_ROOT]<br>   -v value                                                       number for the log level verbosity (default: 0)<br>   --node-name value                                              node name (default: &quot;172.20.0.21&quot;) [$NodeName]<br>   --device-split-count value                                     the number for NVIDIA device split (default: 2) [$DEVICE_SPLIT_COUNT]<br>   --device-memory-scaling value                                  the ratio for NVIDIA device memory scaling (default: 1) [$DEVICE_MEMORY_SCALING]<br>   --device-cores-scaling value                                   the ratio for NVIDIA device cores scaling (default: 1) [$DEVICE_CORES_SCALING]<br>   --disable-core-limit                                           If set, the core utilization limit will be ignored (default: false) [$DISABLE_CORE_LIMIT]<br>   --resource-name value                                          the name of field for number GPU visible in container (default: &quot;nvidia.com/gpu&quot;)<br>   --help, -h                                                     show help<br>E0114 02:25:43.184839   36787 main.go:153] invalid value &quot;false&quot; for flag -v: parse error<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:~# kubectl -n kube-system logs hami-device-plugin-n9s94 -c vgpu-monitor | more<br>I0114 02:04:27.527629   34952 client.go:53] BuildConfigFromFlags failed for file /root/.kube/config: stat /root/.kube/config: no such file or directory using inClusterConfig<br>W0114 02:04:27.528191   34952 client_config.go:618] Neither --kubeconfig nor --master was specified.  Using the inClusterConfig.  This might not work.<br>I0114 02:04:27.528497   34952 metrics.go:353] Initializing metrics for vGPUmonitor<br>E0114 02:04:32.537271   34952 feedback.go:269] Failed to update container list: env NODE_NAME not set<br>E0114 02:04:37.541471   34952 feedback.go:269] Failed to update container list: env NODE_NAME not set<br>E0114 02:04:42.541695   34952 feedback.go:269] Failed to update container list: env NODE_NAME not set<br><span class="hljs-meta prompt_">#</span><span class="language-bash">一直重复“E0114 02:04:42.541695   34952 feedback.go:269] Failed to update container list: <span class="hljs-built_in">env</span> NODE_NAME not <span class="hljs-built_in">set</span>”</span><br>...<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:~# helm -n kube-system uninstall hami<br>root@controller01:~# rm -rf /usr/local/vgpu<br><span class="hljs-meta prompt_">#</span><span class="language-bash">重新安装HAMi</span><br>root@controller01:~# helm install hami hami-charts/hami --set resourceName=nvidia.com/vgpu -n kube-system --version 2.4.0<br><span class="hljs-meta prompt_">#</span><span class="language-bash">还是报一样的错误</span><br></code></pre></td></tr></table></figure>
+
+<p>根据项目维护人员回复说可能是镜像被污染了</p>
+<p><strong>处理方法：</strong></p>
+<p>已经issue：<a target="_blank" rel="noopener" href="https://github.com/Project-HAMi/HAMi/issues/805">https://github.com/Project-HAMi/HAMi/issues/805</a></p>
+<p>升级到HAMi2.4.1后，问题不再存在。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>HAMi安装部署时报错处理归纳</div>
+      <div>https://jiangsanyin.github.io/2025/01/13/HAMi安装部署时报错处理归纳/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年1月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/01/14/HAMi%E5%AE%98%E6%96%B9%E7%9B%91%E6%8E%A7%E6%96%87%E6%A1%A3%E7%9B%B8%E5%85%B3%E5%86%85%E5%AE%B9%E5%88%86%E6%9E%90/" title="HAMi官方监控文档相关内容分析">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">HAMi官方监控文档相关内容分析</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/01/05/containerd%E5%AE%B9%E5%99%A8%E5%BC%95%E6%93%8E%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" title="containerd容器引擎服务的安装与使用">
+                        <span class="hidden-mobile">containerd容器引擎服务的安装与使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

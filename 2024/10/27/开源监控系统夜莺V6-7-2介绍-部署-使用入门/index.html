@@ -1,0 +1,897 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、介绍1.1 简介​		夜莺监控是一款开源云原生观测分析工具，采用 All-in-One 的设计理念，集数据采集、可视化、监控告警、数据分析于一体，与云原生生态紧密集成，提供开箱即用的企业级监控分析和告警能力。夜莺于 2020 年 3 月 20 日，在 github 上发布 v1 版本，已累计迭代 100 多个版本。它最初由滴滴开发和开源，并于 2022 年 5 月 11 日，捐赠予中国计算机学">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开源监控系统夜莺V6-7-2介绍-部署-使用入门">
+<meta property="og:url" content="https://jiangsanyin.github.io/2024/10/27/%E5%BC%80%E6%BA%90%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%A4%9C%E8%8E%BAV6-7-2%E4%BB%8B%E7%BB%8D-%E9%83%A8%E7%BD%B2-%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、介绍1.1 简介​		夜莺监控是一款开源云原生观测分析工具，采用 All-in-One 的设计理念，集数据采集、可视化、监控告警、数据分析于一体，与云原生生态紧密集成，提供开箱即用的企业级监控分析和告警能力。夜莺于 2020 年 3 月 20 日，在 github 上发布 v1 版本，已累计迭代 100 多个版本。它最初由滴滴开发和开源，并于 2022 年 5 月 11 日，捐赠予中国计算机学">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/chCmQ8bKjwTZN4V.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/jDpqwNy35HKJ79V.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/Udo7cpgYxGsNt18.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/WFdu9zw3rAhpvKL.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/D4vRBUHp2mICWuQ.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/eb235h9dNAgHlX1.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/HTvd5pO21ZgGAi3.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/76VrEiwyYq1f5PX.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/Bj6JRhFetmykoIl.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/RiErvmyUs4oqbMA.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/F8zGBrDYpkyLmqn.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/mO6IC8TtDlE5B2b.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/NxRH1UczZeoiDMB.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/29/eugmKTJybG53l8q.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/rbKXLuyedAvsg1S.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/UJmPW1NqKIgdCYw.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/29/Ttglb6deoSiRUNc.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/HWapfo31FODgvLy.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/LGI8snSCHqipePo.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/9Z7xFYG46aWfw2s.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/bGmkQZgFqBRnTUX.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/tCNmaKYVIfuUZFP.png">
+<meta property="og:image" content="https://s2.loli.net/2024/10/28/2gaTSyFUW1LwvPp.png">
+<meta property="article:published_time" content="2024-10-27T10:40:14.000Z">
+<meta property="article:modified_time" content="2024-10-29T01:55:24.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="开源 监控系统 夜莺V6.7.2">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2024/10/28/chCmQ8bKjwTZN4V.png">
+  
+  
+  
+  <title>开源监控系统夜莺V6-7-2介绍-部署-使用入门 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">开源监控系统夜莺V6-7-2介绍-部署-使用入门</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-10-27 18:40" pubdate>
+          2024年10月27日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">开源监控系统夜莺V6-7-2介绍-部署-使用入门</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h1><h2 id="1-1-简介"><a href="#1-1-简介" class="headerlink" title="1.1 简介"></a>1.1 简介</h2><p>​		夜莺监控是一款开源云原生观测分析工具，采用 All-in-One 的设计理念，集数据采集、可视化、监控告警、数据分析于一体，与云原生生态紧密集成，提供开箱即用的企业级监控分析和告警能力。夜莺于 2020 年 3 月 20 日，在 github 上发布 v1 版本，已累计迭代 100 多个版本。它最初由滴滴开发和开源，并于 2022 年 5 月 11 日，捐赠予中国计算机学会开源发展委员会（CCF ODC），为 CCF ODC 成立后接受捐赠的第一个开源项目。夜莺的核心研发团队，也是 Open-Falcon 项目原核心研发人员。</p>
+<p>​		夜莺的代码库分前端代码库与后端代码库，已经托管址在github平台，后端主要实现语言是Go，前端主要实现语言是TypeScript。</p>
+<ul>
+<li>后端：<a target="_blank" rel="noopener" href="https://github.com/ccfos/nightingale">💡 https://github.com/ccfos/nightingale</a></li>
+<li>前端：<a target="_blank" rel="noopener" href="https://github.com/n9e/fe">💡 https://github.com/n9e/fe</a></li>
+</ul>
+<h2 id="1-2-思考与分析"><a href="#1-2-思考与分析" class="headerlink" title="1.2 思考与分析"></a>1.2 思考与分析</h2><p>​		在夜莺监控这个软件之前，监控告警、告警自愈与图表展示已经有了一套可行的开源解决方案即“Prometheus+Grafana+AlertManager”组合。那为什么还需要再开发一套“重复的”、有着相同功能的软件解决方案呢？其实它们主体功能是重复的，但它们的优势与可组合性不一样，这样用户可以根据自己的实际需求来选择适合自己的解决方案。</p>
+<p>​		为了叙述的简洁性，以下使用“PGA组合”代替“Prometheus+Grafana+AlertManager”组合。</p>
+<table>
+<thead>
+<tr>
+<th>功能特征或实际需求</th>
+<th>“PGA组合”</th>
+<th>夜莺</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>先前已经使用“PGA组合”搭建好自己监控告警与图表展示，功能已经基本满足需求且没有痛点</td>
+<td>+1’</td>
+<td></td>
+</tr>
+<tr>
+<td>需要使用Grafana社区中庞大而炫酷的图表</td>
+<td>+1’</td>
+<td>（夜Grafana中一般常见的基础的图表图表在夜莺都是有的或可重用的）</td>
+</tr>
+<tr>
+<td>需要使用多个TSDB如Prometheus、VictoriaMetrics、Thanos等，需要一个统一的平台来管理告警、看图</td>
+<td></td>
+<td>+1’</td>
+</tr>
+<tr>
+<td>让多个团队自行采用图形化方式灵活方便地定制自己的告警规则与图表</td>
+<td></td>
+<td>+1’</td>
+</tr>
+<tr>
+<td>让多个团队自行采用图形化方式灵活方便地定制自己的告警策略配置，比如控制生效时间、一套规则生效多个集群</td>
+<td></td>
+<td>+1’</td>
+</tr>
+<tr>
+<td>需要告警自愈能力，如告警之后自动执行个脚本</td>
+<td></td>
+<td>+1’</td>
+</tr>
+<tr>
+<td>以图形化方式开箱即用内置告警规则和内置仪表盘</td>
+<td></td>
+<td>+1’</td>
+</tr>
+</tbody></table>
+<p>​		可以看到，“PGA组合”由于产生的时间更早，可能已在相当一部企业或场景的生产环境中使用，如其功能已能基本满足需求、使用中确实没有痛点、需要Grafana社区中庞大而炫酷的图表，可以继续使用“PGA组合”。否则就可以尝试夜莺这一套解决方案。</p>
+<h2 id="1-3-构架介绍"><a href="#1-3-构架介绍" class="headerlink" title="1.3 构架介绍"></a>1.3 构架介绍</h2><p><img src="https://s2.loli.net/2024/10/28/chCmQ8bKjwTZN4V.png" srcset="/img/loading.gif" lazyload alt="20230531103435"></p>
+<p>​	首先上图中间的飞鸟代表夜莺的核心进程 n9e （下文以 n9e 代替），它的集群方式非常简单只需部署多节点即可实现。</p>
+<p>​	对于 n9e 来说，它本身依赖的存储有两个</p>
+<ul>
+<li>Mysql : 存放配置类别信息，如用户，监控大盘，告警规则等</li>
+<li>Redis : 存放访问令牌(JWT Token)，心跳信息，如机器列表中CPU、内存、时间偏移、核数、操作系统、CPU架构等</li>
+</ul>
+<p>​	从 v6 版本开始，夜莺尝试转型为统一可观测性平台，n9e 不再仅支持接入时序数据源(Prometheus、Victoriametrics、M3DB、Thanos)，也可以接入日志类数据源（Elasticsearch，Loki【预】），链路追踪数据源（Jaeger）。</p>
+<p>​	左侧就是 n9e 的数据来源，n9e 可以支持多种采集器 agent，比如 Datadog-Agent，Telegraf，Grafana-Agent，OpenTSDB agent，Node-Exporter，vmagent 都可以对接，不过最推荐的还是 Categraf。比如在 n9e 中机器列表页面的心跳信息都是 Categraf 才会去采集并上报的，所以为了更丝滑使用更推荐使用 Categraf，并且 Categraf 采用 All-In-One 的设计，采集日志，指标，链路追踪，所有的采集工作使用一个 agent 来解决。</p>
+<p>​	介绍完中心部署架构，我们再来描述一下它的数据流：假设是时序指标数据的采集，agent 把采集到的数据推送给 n9e （端口:17000），然后经由 n9e 加工（自动添加附加标签）转发给对应的时序数据库保存。另外在 n9e 把数据的转发给时序数据库之前，会先从监控数据中提取出 ident 标签写入 mysql 的 target 表（机器列表）中，同时如果 agent 用的是 Categraf 并且配置了心跳(heartbeat&#x3D;true)，则会把心跳上报的 metadata 存入 Redis（就是那些核数、操作系统、CPU架构等）。</p>
+<p>​		更复杂的部署方案请查看官方文档：<a target="_blank" rel="noopener" href="https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v6/arch/%E3%80%82">https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v6/arch/。</a></p>
+<h1 id="二、部署"><a href="#二、部署" class="headerlink" title="二、部署"></a>二、部署</h1><h2 id="2-1-基础环境"><a href="#2-1-基础环境" class="headerlink" title="2.1    基础环境"></a>2.1    基础环境</h2><h3 id="2-1-1-环境信息"><a href="#2-1-1-环境信息" class="headerlink" title="2.1.1     环境信息"></a>2.1.1     环境信息</h3><table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>IP</th>
+<th>操作系统</th>
+<th>规格</th>
+<th>磁盘</th>
+<th>root用户密码</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>k8s03-1</td>
+<td>10.13.15.61</td>
+<td>Ubuntu 20.04.3 LTS-amd64</td>
+<td>8c16g</td>
+<td>400G</td>
+<td>Changeme@123</td>
+</tr>
+</tbody></table>
+<h3 id="2-1-2-安装要求说明"><a href="#2-1-2-安装要求说明" class="headerlink" title="2.1.2     安装要求说明"></a>2.1.2     安装要求说明</h3><p>（1）服务器构架：支持x84_64，也支持 arm64构架。amd64 是 x84 的包，下载站点也提供 arm64 的包。如果需要其他平台的包则要自行编译验证。</p>
+<p>（2）操作系统：笔者在centos7.9-amd64与Ubuntu20.04.x LTS-amd64上都验证过，可行。其他基于Linux内核的操作系统理论上都支持，具体要验证。</p>
+<p>（3）操作系统规格：如果就是用来检验一下、不上生产环境，2核CPU+4G内存+50G磁盘空间即可。如果上生产环境，建议8C16G及以上+300G磁盘以上，且最好搭建一个夜莺高可用集群，搭建夜莺高可用集群方法见其官网。</p>
+<p>（4）夜莺官网安装文档：<a target="_blank" rel="noopener" href="https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v6/install/intro/">https://flashcat.cloud/docs/content/flashcat-monitor/nightingale-v6/install/intro/</a></p>
+<h2 id="2-2-下载安装包"><a href="#2-2-下载安装包" class="headerlink" title="2.2    下载安装包"></a>2.2    下载安装包</h2><p>以下假设安装文件与安装目录分别在：&#x2F;data&#x2F;softs、&#x2F;data&#x2F;server</p>
+<h3 id="2-2-1-夜莺下载地址"><a href="#2-2-1-夜莺下载地址" class="headerlink" title="2.2.1     夜莺下载地址"></a>2.2.1     夜莺下载地址</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">使用n9e-v6.7.2</span><br>cd /data/softs<br>wget https://github.com/ccfos/nightingale/releases/download/v6.7.2/n9e-v6.7.2-linux-amd64.tar.gz<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-2-categraf下载地址"><a href="#2-2-2-categraf下载地址" class="headerlink" title="2.2.2     categraf下载地址"></a>2.2.2     categraf下载地址</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">以categraf-v0.3.61-linux-amd64为例</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Linux上categraf：https://github.com/flashcatcloud/categraf/releases/download/v0.3.61/categraf-v0.3.61-linux-amd64.tar.gz</span><br>cd /data/softs<br>wget https://github.com/flashcatcloud/categraf/releases/download/v0.3.61/categraf-v0.3.61-linux-amd64.tar.gz<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Windows上categraf：https://github.com/flashcatcloud/categraf/releases/download/v0.3.61/categraf-v0.3.61-windows-amd64.zip</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-3-victoria-metrics下载地址"><a href="#2-2-3-victoria-metrics下载地址" class="headerlink" title="2.2.3     victoria-metrics下载地址"></a>2.2.3     victoria-metrics下载地址</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">使用单机版VM-v1.93.10</span><br>cd /data/softs<br>wget https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v1.93.10/victoria-metrics-linux-amd64-v1.93.10.tar.gz<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-3-部署夜莺相关各服务"><a href="#2-3-部署夜莺相关各服务" class="headerlink" title="2.3    部署夜莺相关各服务"></a>2.3    部署夜莺相关各服务</h2><p>依赖 mysql 存储用户配置类数据，依赖 redis 存储 jwt token 和机器心跳上报的 metadata，所以，先准备 mysql 和 redis。</p>
+<h3 id="2-3-1-安装victoriametrics"><a href="#2-3-1-安装victoriametrics" class="headerlink" title="2.3.1     安装victoriametrics"></a>2.3.1     安装victoriametrics</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell">tar -zxf victoria-metrics-linux-amd64-v1.93.10.tar.gz -C /data/server<br>chown root:root /data/server/victoria-metrics-prod<br>chmod 755 /data/server/victoria-metrics-prod<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建用户和用户组</span><br>useradd -u 1003 victoriametrics<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">部署二进制文件</span><br>cd /data/server<br>install -o victoriametrics -g victoriametrics -m 0755 victoria-metrics-prod /usr/local/bin/victoriametrics<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建进程文件与数据存储目录</span><br>mkdir -p /run/victoriametrics &amp;&amp; chown victoriametrics:victoriametrics /run/victoriametrics<br>mkdir -p /data/server/victoriametrics/data/ &amp;&amp; chown -R victoriametrics:victoriametrics /data/server/victoriametrics/<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">配置systemd管理服务</span><br>cat &gt; /etc/systemd/system/victoriametrics.service &lt;&lt;EOF<br>[Unit]<br>Description=VictoriaMetrics<br>After=network.target<br><br>[Service]<br>Type=simple<br>StartLimitBurst=5<br>StartLimitInterval=0<br>Restart=on-failure<br>RestartSec=1<br>PIDFile=/run/victoriametrics/victoriametrics.pid<br>ExecStart=/usr/local/bin/victoriametrics -storageDataPath /data/server/victoriametrics/data/ -retentionPeriod 1098 <br>ExecStop=/bin/kill -s SIGTERM $MAINPID<br>User=victoriametrics<br><br>[Install]<br>WantedBy=multi-user.target<br>EOF<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-built_in">ulimit</span></span> <br>mkdir -p /etc/systemd/system/victoriametrics.service.d<br><br>cat &gt; /etc/systemd/system/victoriametrics.service.d/ulimit.conf &lt;&lt; EOF<br>[Service]<br>LimitNOFILE=32000<br>LimitNPROC=32000<br>EOF<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">systemctl daemon-reload<br>systemctl start victoriametrics.service<br><br>systemctl enable victoriametrics.service<br>systemctl status victoriametrics.service<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2024/10/28/jDpqwNy35HKJ79V.png" srcset="/img/loading.gif" lazyload alt="image-20241028111538618"></p>
+<h3 id="2-3-2-安装mysql"><a href="#2-3-2-安装mysql" class="headerlink" title="2.3.2     安装mysql"></a>2.3.2     安装mysql</h3><p>对于夜莺来说，它本身依赖的存储有两个</p>
+<ul>
+<li>Mysql : 存放配置类别信息，如用户，监控大盘，告警规则等</li>
+<li>Redis : 存放访问令牌(JWT Token)，心跳信息，如机器列表中CPU、内存、时间偏移、核数、操作系统、CPU架构等</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">apt -y install mariadb*<br>systemctl enable mariadb<br>systemctl status mariadb<br><br>mysql -e &quot;SET PASSWORD FOR &#x27;root&#x27;@&#x27;localhost&#x27; = PASSWORD(&#x27;1234&#x27;);&quot;<br>mysql -uroot -p1234<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2024/10/28/Udo7cpgYxGsNt18.png" srcset="/img/loading.gif" lazyload alt="image-20241028111612351"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">如果远程登录mysql服务端的话，需要修改50-server.cnf文件的bind-address为0.0.0.0(否则只能从本机登录)</span><br>vi /etc/mysql/mariadb.conf.d/50-server.cnf<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2024/10/28/WFdu9zw3rAhpvKL.png" srcset="/img/loading.gif" lazyload alt="image-20241028111915017"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">修改cracklib_password_check.cnf以修改 mysql密码校验策略</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">将cracklib_password_check 插件注释</span><br>vi /etc/mysql/mariadb.conf.d/cracklib_password_check.cn<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2024/10/28/D4vRBUHp2mICWuQ.png" srcset="/img/loading.gif" lazyload alt="image-20241028112132636"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">重启数据库服务</span><br>systemctl restart mariadb.service<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">不加-h参数，默认以本机为客户端登录数据库</span><br>mysql -uroot -p1234<br><span class="hljs-meta prompt_">#</span><span class="language-bash">允许root用户可以从任意机器上登入mysql的任意数据库、操作任意数据库的任意表</span><br>GRANT ALL PRIVILEGES ON *.* TO &#x27;root&#x27;@&#x27;%&#x27; IDENTIFIED BY &quot;1234&quot;;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">远程登录数据库内，修改root用户的登录密码</span><br>mysql -hxxx -uroot -p1234<br><span class="hljs-meta prompt_">#</span><span class="language-bash">允许root用户可以从任意机器上登入mysql的任意数据库、操作任意数据库的任意表</span><br>GRANT ALL PRIVILEGES ON *.* TO &#x27;root&#x27;@&#x27;%&#x27; IDENTIFIED BY &quot;1234&quot;;<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-3-安装redis"><a href="#2-3-3-安装redis" class="headerlink" title="2.3.3     安装redis"></a>2.3.3     安装redis</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">apt install -y redis<br><br>systemctl enable redis<br>systemctl status redis<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-4-安装n9e"><a href="#2-3-4-安装n9e" class="headerlink" title="2.3.4     安装n9e"></a>2.3.4     安装n9e</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">mkdir -p mkdir /data/server/n9e-v6.7.2<br>tar -zxf ztmonitor-v2.0.tar.gz -C /data/server/n9e-v6.7.2/<br><br>cd /data/server/n9e-v6.7.2/ <br><span class="hljs-meta prompt_"># </span><span class="language-bash">解压缩之后，可以看到 n9e.sql 是建表语句，导入数据库</span> <br>mysql -uroot -p1234 &lt; n9e.sql<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-3-4-1-封装n9e-service"><a href="#2-3-4-1-封装n9e-service" class="headerlink" title="2.3.4.1 封装n9e.service"></a>2.3.4.1 封装n9e.service</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs shell">cat &gt;&gt; /usr/lib/systemd/system/n9e.service &lt;&lt;EOF<br>[Unit]<br>Description=&quot;n9e&quot;<br>After=network.target mariadb.service<br>[Service]<br>Type=simple<br>ExecStart=/data/server/n9e-v6.7.2/n9e<br>WorkingDirectory=/data/server/n9e-v6.7.2/<br>Restart=on-failure<br>SuccessExitStatus=0<br>LimitNOFILE=65536<br>StandardOutput=syslog<br>StandardError=syslog<br>SyslogIdentifier=n9e<br>[Install]<br>WantedBy=multi-user.target<br>EOF<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-3-4-2-修改n9e配置文件"><a href="#2-3-4-2-修改n9e配置文件" class="headerlink" title="2.3.4.2 修改n9e配置文件"></a>2.3.4.2 修改n9e配置文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">修改./etc/config.toml文件</span><br>vi ./etc/config.toml<br>...<br>[[Pushgw.Writers]]<br>Url = &quot;http://10.13.15.61:8428/api/v1/write&quot;<br>...<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2024/10/28/eb235h9dNAgHlX1.png" srcset="/img/loading.gif" lazyload alt="image-20241028140727607"></p>
+<h4 id="2-3-4-3-启动n9e服务"><a href="#2-3-4-3-启动n9e服务" class="headerlink" title="2.3.4.3 启动n9e服务"></a>2.3.4.3 启动n9e服务</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">systemctl daemon-reload <br>systemctl restart n9e &amp;&amp; systemctl enable n9e<br>systemctl status n9e<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-3-4-4-访问n9e的web界面"><a href="#2-3-4-4-访问n9e的web界面" class="headerlink" title="2.3.4.4 访问n9e的web界面"></a>2.3.4.4 访问n9e的web界面</h4><p>链接是：<a target="_blank" rel="noopener" href="http://10.13.15.61:17000/login">http://10.13.15.61:17000/login</a></p>
+<p><img src="https://s2.loli.net/2024/10/28/HTvd5pO21ZgGAi3.png" srcset="/img/loading.gif" lazyload alt="image-20241028141145325"></p>
+<h4 id="2-3-4-5-添加数据源"><a href="#2-3-4-5-添加数据源" class="headerlink" title="2.3.4.5 添加数据源"></a>2.3.4.5 添加数据源</h4><p><img src="https://s2.loli.net/2024/10/28/76VrEiwyYq1f5PX.png" srcset="/img/loading.gif" lazyload alt="image-20241028141904842"></p>
+<p><img src="https://s2.loli.net/2024/10/28/Bj6JRhFetmykoIl.png" srcset="/img/loading.gif" lazyload alt="image-20241028141958225"></p>
+<h1 id="三、使用入门"><a href="#三、使用入门" class="headerlink" title="三、使用入门"></a>三、使用入门</h1><h2 id="3-1-夜莺能监控什么"><a href="#3-1-夜莺能监控什么" class="headerlink" title="3.1 夜莺能监控什么"></a>3.1 夜莺能监控什么</h2><p>​		夜莺能够监控的对象有很多，但它本身并没有采集被监控的数据。它是一个服务端组件，类似 Grafana，可以接入不同的数据源，比如 Prometheus、VictoriaMetrics、Thanos 等等，只要数据进到这些库里了，夜莺就可以对数据源的数据进行分析、告警、可视化，以及后续的事件处理、告警自愈。</p>
+<h2 id="3-2-夜莺如何获取监控数据"><a href="#3-2-夜莺如何获取监控数据" class="headerlink" title="3.2 夜莺如何获取监控数据"></a>3.2 夜莺如何获取监控数据</h2><p>​		夜莺有端口接收监控数据，只要各监控采集器跟夜莺打通了就能将数据推送给夜莺，夜莺接收到采集数据后，可能会进行少量处理如添加少许标签，然后会保存到n9e配置文件中配置的时序数据库中（如上述.&#x2F;etc&#x2F;config.toml文件中[Pushgw.Writers]组下Url配置的victoria-metrics）。然后在夜莺的web界面，可以创建夜莺中的数据源，数据源是各仪表盘可视化与告警分析的数据来源。</p>
+<p>​		常用的开源采集器如 Telegraf、Categraf、Grafana-agent、Datadog-agent、Prometheus 生态的各类 Exporter 等等，都是可以跟夜莺结合一起使用的。这些 agent （也就是采集器）采集了数据推给夜莺，夜莺适配了这些 agent 的数据传输协议，所以可以接收这些 agent 上报的监控数据，转存到后端对接的时序数据库，之后就可以对这些数据做告警分析、可视化。</p>
+<p>​		Categraf 是一个开源的监控采集 Agent，由快猫星云技术团队（也就是夜莺的开发团队）研发并开源，提供了对所有常见监控对象如Linux&#x2F;Windows服务器、MySQl数据库、k8s、容器、NVIDIA GPU等等提供高质量的监控数据采集能力，采用了 All-in-one 的设计理念，可以同时支持指标、日志、链路追踪数据的采集。以下以 categraf 采集器为例进行说明与操作。</p>
+<p>​		一般来说，被监控对象都有一个对应 Categraf 进程。比如说要监控 10.13.15.61 这个服务器的NVIDIA GPU、cpu、内存、磁盘、上传下载网速等这类服务器固有信息，或这其上部署的软件如MySQL、k8s 等，就需要在10.13.15.61 这个服务器的操作系统上安装categraf，并进行配置。Categraf目前支持的操作系统包括Windows、Linux及macOS，具体的版本细节请查看官方文档。</p>
+<h2 id="3-3-安装与配置-categraf"><a href="#3-3-安装与配置-categraf" class="headerlink" title="3.3 安装与配置 categraf"></a>3.3 安装与配置 categraf</h2><p>​		categraf 其实是一个采集插件集合，其中包含了多个针对常见被监控对象的插件，如input.cpu、input.disk、input.mysql等等，这些插件都放在categraf安装目录下的 conf 子目录下，每个以 ”input.“ 开头的子目录就是categraf 的一个采集插件。</p>
+<p>​		如果要禁用某个插件，把 input.xx 改个其他前缀(或者删除这个目录)，比如 bak.input.xx，categraf 就会忽略这个采集器。</p>
+<p>​		categraf安装好后，如果不对默认插件配置目录及文件进行修改，它默认也会启用常基本的插件如input.cpu、input.disk等，以采集最常见的服务器与操作系统数指标数据如cpu、内存、磁盘大小与io、上传下载速率等。默认没有采集的指标数据就需要使用其他 Categraf 插件来客制化采集。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">tar -zxf /data/softs/categraf-v0.3.61-linux-amd64.tar.gz -C /data/server/<br>cd /data/server<br>cp categraf-v0.3.61-linux-amd64/conf/categraf.service /usr/lib/systemd/system/<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs shell">vi /usr/lib/systemd/system/categraf.service<br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改后内容如下</span><br>[Unit]<br>Description=&quot;Categraf&quot;<br>After=network.target<br><br>[Service]<br>Type=simple<br><br>ExecStart=/data/server/categraf-v0.3.61-linux-amd64/categraf  #这里<br>WorkingDirectory=/data/server/categraf-v0.3.61-linux-amd64    #这里<br><br>Restart=on-failure<br>SuccessExitStatus=0<br>LimitNOFILE=65536<br>StandardOutput=syslog<br>StandardError=syslog<br>SyslogIdentifier=categraf<br><br><br>[Install]<br>WantedBy=multi-user.target<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell">vi categraf-v0.3.61-linux-amd64/conf/config.toml <br><span class="hljs-meta prompt_">#</span><span class="language-bash">以下修改后的几点</span><br>[global]<br>...<br>hostname = &quot;$ip&quot;   #夜莺中以自动获取到的服务器ip标识服务器<br>...<br>[[writers]]<br>url = &quot;http://10.13.15.61:17000/prometheus/v1/write&quot;       #夜莺接收监控数据的url<br>...<br>[heartbeat]<br>...<br><span class="hljs-meta prompt_"># </span><span class="language-bash">report os version cpu.util mem.util metadata</span><br>url = &quot;http://10.13.15.61:17000/v1/n9e/heartbeat?gid=1&quot;    #夜莺中接收监控对象心跳的url。最后加上&quot;gid=1&quot;会自动将被监控服务器归到默认业务组内<br>...<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">启动categraf服务</span><br>systemctl daemon-reload <br>systemctl start categraf.service &amp;&amp; systemctl enable categraf.service<br>systemctl status categraf.service<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2024/10/28/RiErvmyUs4oqbMA.png" srcset="/img/loading.gif" lazyload alt="image-20241028145210919"></p>
+<h2 id="3-4-监控"><a href="#3-4-监控" class="headerlink" title="3.4 监控"></a>3.4 监控</h2><h3 id="3-4-1-监控服务器信息"><a href="#3-4-1-监控服务器信息" class="headerlink" title="3.4.1 监控服务器信息"></a>3.4.1 监控服务器信息</h3><p>​		categraf安装好后，默认会启用常基本的插件如input.cpu、input.disk等，以采集最常见的服务器与操作系统数指标数据如cpu、内存、磁盘大小与io、上传下载速率等。</p>
+<p><img src="https://s2.loli.net/2024/10/28/F8zGBrDYpkyLmqn.png" srcset="/img/loading.gif" lazyload alt="image-20241028145414264"></p>
+<p><img src="https://s2.loli.net/2024/10/28/mO6IC8TtDlE5B2b.png" srcset="/img/loading.gif" lazyload alt="image-20241028145442200"></p>
+<p>查看刚刚克隆的仪表盘及其中数据：</p>
+<p><img src="https://s2.loli.net/2024/10/28/NxRH1UczZeoiDMB.png" srcset="/img/loading.gif" lazyload alt="image-20241028145535733"></p>
+<p><img src="https://s2.loli.net/2024/10/29/eugmKTJybG53l8q.png" srcset="/img/loading.gif" lazyload alt="image-20241029095051041"></p>
+<h3 id="3-5-1-监控k8s及容器"><a href="#3-5-1-监控k8s及容器" class="headerlink" title="3.5.1 监控k8s及容器"></a>3.5.1 监控k8s及容器</h3><p>​		参考笔者以前写的文章：<a href="https://jiangsanyin.github.io/2024/05/26/%E5%A4%9C%E8%8E%BAnightingalev6-7-2%E9%80%9A%E8%BF%87kubelet%E9%87%87%E9%9B%86docker%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7%E6%95%B0%E6%8D%AE/">https://jiangsanyin.github.io/2024/05/26/%E5%A4%9C%E8%8E%BAnightingalev6-7-2%E9%80%9A%E8%BF%87kubelet%E9%87%87%E9%9B%86docker%E5%AE%B9%E5%99%A8%E7%9B%91%E6%8E%A7%E6%95%B0%E6%8D%AE/</a></p>
+<h3 id="3-6-1-采集监控其他对象数据"><a href="#3-6-1-采集监控其他对象数据" class="headerlink" title="3.6.1 采集监控其他对象数据"></a>3.6.1 采集监控其他对象数据</h3><p>​		关于其他插件的用法，参考官方文档：<a target="_blank" rel="noopener" href="https://flashcat.cloud/docs/content/flashcat-monitor/categraf/plugin/introduction/">https://flashcat.cloud/docs/content/flashcat-monitor/categraf/plugin/introduction/</a></p>
+<h2 id="3-5-基础设施-机器列表"><a href="#3-5-基础设施-机器列表" class="headerlink" title="3.5 基础设施-机器列表"></a>3.5 基础设施-机器列表</h2><p>​		n9e 把数据的转发给时序数据库之前，会先从监控数据中提取出 ident 标签写入 mysql 的 target 表（机器列表）中，同时 Categraf 会把心跳上报的 metadata 存入 Redis（就是那些核数、操作系统、CPU架构等）。这些数据就是就是展示在“基础设施-机器列表”页面的服务器。</p>
+<p><img src="https://s2.loli.net/2024/10/28/rbKXLuyedAvsg1S.png" srcset="/img/loading.gif" lazyload alt="image-20241028220233328"></p>
+<h2 id="3-6-人员组织"><a href="#3-6-人员组织" class="headerlink" title="3.6 人员组织"></a>3.6 人员组织</h2><h3 id="3-6-1-用户管理"><a href="#3-6-1-用户管理" class="headerlink" title="3.6.1 用户管理"></a>3.6.1 用户管理</h3><p>​		此页面的用户是夜莺系统中的用户，更直观地讲就是可以登录此web系统的用户。ta可能是某个使用者的逻辑映射，也可能是某个机器人如钉钉机器人。仅有一个默认的root用户也可以继续使用此系统。</p>
+<p><img src="https://s2.loli.net/2024/10/28/UJmPW1NqKIgdCYw.png" srcset="/img/loading.gif" lazyload alt="image-20241028224349420"></p>
+<h3 id="3-6-2-团队管理"><a href="#3-6-2-团队管理" class="headerlink" title="3.6.2 团队管理"></a>3.6.2 团队管理</h3><p>​		团队就是多个用户的集合。</p>
+<p><img src="https://s2.loli.net/2024/10/29/Ttglb6deoSiRUNc.png" srcset="/img/loading.gif" lazyload alt="image-20241029095403547"></p>
+<h3 id="3-6-3-业务组管理"><a href="#3-6-3-业务组管理" class="headerlink" title="3.6.3 业务组管理"></a>3.6.3 业务组管理</h3><p>​		业务组下面包含多个团队，每个团队又有各自的成员。这样划分结构，在使用告警规则非常有用，即某个业务组下的可能有多个告警规则，而这些告警则检查的对象如服务器可能是由不同的团队负责的，这样一来，相应的报警就应该发送给对应团队下面的用户，有利于避免打扰与权责的界定。</p>
+<p><img src="https://s2.loli.net/2024/10/28/HWapfo31FODgvLy.png" srcset="/img/loading.gif" lazyload alt="image-20241028225018637"></p>
+<h2 id="3-7-告警管理"><a href="#3-7-告警管理" class="headerlink" title="3.7 告警管理"></a>3.7 告警管理</h2><h3 id="3-6-1-内置规则"><a href="#3-6-1-内置规则" class="headerlink" title="3.6.1 内置规则"></a>3.6.1 内置规则</h3><p>​		内置规则是夜莺默认已经内置的一些常用或基础的告警规则，用户开箱即用的。</p>
+<p>​		将其进行克隆即可形成自己的告警规则，可以对内置规则进行克隆再进行修改，创建满足自己实际需求的告警规则。如下两张图的操作，从内置告警组克隆一个告警规则到默认业务组下，但并没有启用。当然也可查看“内置规则”的内容，从而确定是否是自己想要的准告警规则。</p>
+<p><img src="https://s2.loli.net/2024/10/28/LGI8snSCHqipePo.png" srcset="/img/loading.gif" lazyload alt="image-20241028220625744"></p>
+<p><img src="https://s2.loli.net/2024/10/28/9Z7xFYG46aWfw2s.png" srcset="/img/loading.gif" lazyload alt="image-20241028221656103"></p>
+<h3 id="3-6-2-告警规则"><a href="#3-6-2-告警规则" class="headerlink" title="3.6.2 告警规则"></a>3.6.2 告警规则</h3><p>​		克隆得到的告警规则在如下的“告警规则”页面，点击规则名称可以再次对其进行编辑。编辑好的告警规则一定确认已经启用，否则相当于被禁用了。</p>
+<p><img src="https://s2.loli.net/2024/10/28/bGmkQZgFqBRnTUX.png" srcset="/img/loading.gif" lazyload alt="image-20241028221953883"></p>
+<p><img src="https://s2.loli.net/2024/10/28/tCNmaKYVIfuUZFP.png" srcset="/img/loading.gif" lazyload alt="image-20241028222701515"></p>
+<p><img src="https://s2.loli.net/2024/10/28/2gaTSyFUW1LwvPp.png" srcset="/img/loading.gif" lazyload alt="image-20241028224050927"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%BC%80%E6%BA%90-%E7%9B%91%E6%8E%A7%E7%B3%BB%E7%BB%9F-%E5%A4%9C%E8%8E%BAV6-7-2/" class="print-no-link">#开源 监控系统 夜莺V6.7.2</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>开源监控系统夜莺V6-7-2介绍-部署-使用入门</div>
+      <div>https://jiangsanyin.github.io/2024/10/27/开源监控系统夜莺V6-7-2介绍-部署-使用入门/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年10月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/10/30/arm64%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8B%E7%9A%84Harbor-v2-11-1%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="arm64服务器下的Harbor-v2.11.1环境搭建">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">arm64服务器下的Harbor-v2.11.1环境搭建</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/10/22/%E5%BC%82%E6%9E%84%E7%AE%97%E5%8A%9B%E8%99%9A%E6%8B%9F%E5%8C%96%E4%B8%AD%E9%97%B4%E4%BB%B6HAMi%E4%BB%8B%E7%BB%8D%E4%B8%8E%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/" title="异构算力虚拟化中间件HAMi介绍与简单使用">
+                        <span class="hidden-mobile">异构算力虚拟化中间件HAMi介绍与简单使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

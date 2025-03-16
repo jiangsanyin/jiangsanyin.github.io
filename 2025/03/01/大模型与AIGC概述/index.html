@@ -1,0 +1,931 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、大模型是什么将以国产大模型阿里巴巴公司推出的“通义千问”为例子进行演示。它需要提前注册账号（其实用支付宝或淘宝账号也能登录）比如用手机号进行注册登录。  1.1 大模型的定义起源：大语言模型（Large language Models，LLMs），围绕自然语言处理任务而创建的一系列模型。 发展：基础模型（Foundation Models），可以处理多模态数据，不局限于自然语言。 下图粗略地概">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大模型与AIGC概述">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/03/01/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%8EAIGC%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、大模型是什么将以国产大模型阿里巴巴公司推出的“通义千问”为例子进行演示。它需要提前注册账号（其实用支付宝或淘宝账号也能登录）比如用手机号进行注册登录。  1.1 大模型的定义起源：大语言模型（Large language Models，LLMs），围绕自然语言处理任务而创建的一系列模型。 发展：基础模型（Foundation Models），可以处理多模态数据，不局限于自然语言。 下图粗略地概">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/02/25/l7fN8wIWLJeOPaz.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/25/6BRsMmWC4eXpoGi.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/25/lYWvqCp64LOV2wG.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/25/fRtx65YhjZW7HmE.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/X1KgpxbFoIjB84E.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/d6hUSRkp57N4Mgl.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/OHu8BJzQC3UsqnA.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/Bj7uIfTNmEkGO4X.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/YO7gGNp8KHhRont.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/W8wXGeNgiq5uad9.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/d6hUSRkp57N4Mgl.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/W8wXGeNgiq5uad9.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/f7GXjwoECgRqvxn.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/W8wXGeNgiq5uad9.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/25/GgVRSJF5PAIoWMj.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/MagVuHTK3L1nZWS.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/BdS52EkqgOvDYno.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/GxhFHbdUPAV6p34.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/YEwbFnqWCkGMhUV.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/BoDrb3Eu6Wtp2dj.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/26/FoLf4GXNTAJO3xR.png">
+<meta property="article:published_time" content="2025-03-01T04:14:17.000Z">
+<meta property="article:modified_time" content="2025-03-01T04:14:54.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="大模型与AIGC概述">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/02/25/l7fN8wIWLJeOPaz.png">
+  
+  
+  
+  <title>大模型与AIGC概述 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">大模型与AIGC概述</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-01 12:14" pubdate>
+          2025年3月1日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          40 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">大模型与AIGC概述</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一、大模型是什么"><a href="#一、大模型是什么" class="headerlink" title="一、大模型是什么"></a>一、大模型是什么</h1><p>将以国产大模型阿里巴巴公司推出的“<a target="_blank" rel="noopener" href="https://tongyi.aliyun.com/">通义千问</a>”为例子进行演示。它需要提前注册账号（其实用支付宝或淘宝账号也能登录）比如用手机号进行注册登录。</p>
+<p><img src="https://s2.loli.net/2025/02/25/l7fN8wIWLJeOPaz.png" srcset="/img/loading.gif" lazyload alt="image-20250225120223430"></p>
+<h2 id="1-1-大模型的定义"><a href="#1-1-大模型的定义" class="headerlink" title="1.1 大模型的定义"></a>1.1 大模型的定义</h2><p>起源：大语言模型（Large language Models，LLMs），围绕自然语言处理任务而创建的一系列模型。</p>
+<p>发展：基础模型（Foundation Models），可以处理多模态数据，不局限于自然语言。</p>
+<p>下图粗略地概括了工人智能、机器学习、深度学习、大模型之间的关系。</p>
+<p><img src="https://s2.loli.net/2025/02/25/6BRsMmWC4eXpoGi.png" srcset="/img/loading.gif" lazyload alt="image-20250225205847972"></p>
+<h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>定义1：是一种由包含数百亿以上参数的深度神经网络构建的语言模型，通常使用<strong>自监督学习</strong>方法，通过大量<strong>无标注文本</strong>进行训练。—出自书籍《大规模语言模型从理论到实践》</p>
+<p>定义2：任意的在大规模数据上训练并且可以适配（例如微调）广泛下游任务的模型。—出自论文《On the Opportunities and Risks of Foundation Models》</p>
+<h3 id="发散思考与学习内容"><a href="#发散思考与学习内容" class="headerlink" title="发散思考与学习内容"></a>发散思考与学习内容</h3><ul>
+<li>自监督学习</li>
+</ul>
+<p><strong>自监督学习</strong>是一种<strong>机器学习范式</strong>，它不依赖人工标注的数据，而是通过数据自身提供的<strong>内在结构</strong>或<strong>隐藏信息</strong>来生成监督信号，从而进行模型训练。它可以被看作是一种特殊的<strong>无监督学习</strong>，因为它不需要人工标签，但它的训练方式类似于监督学习。</p>
+<ul>
+<li>无标注文本</li>
+</ul>
+<p>无标注文本（Unlabeled Text）指的是<strong>没有附加人工标注信息</strong>的文本数据，通常只是<strong>原始的自然语言数据</strong>，不包含类别标签、情感评分、实体标注等额外信息。</p>
+<p>无标注文本在**自然语言处理（NLP）<strong>任务中被广泛使用，尤其在</strong>自监督学习（Self-Supervised Learning）<strong>和</strong>无监督学习（Unsupervised Learning）**中，它们用于预训练语言模型，帮助模型学习语言结构和语义信息，而无需人工标注数据。</p>
+<h2 id="1-2-大模型的特性"><a href="#1-2-大模型的特性" class="headerlink" title="1.2 大模型的特性"></a>1.2 大模型的特性</h2><h3 id="基本特点"><a href="#基本特点" class="headerlink" title="基本特点"></a>基本特点</h3><p>1.大规模参数量，超过百亿参数规模的神经网络模型。</p>
+<p>2.大规模训练数据，通过海量数据进行自监督预训练。</p>
+<p>3.涌现能力，表现出了人类才会有的智能（上下文学习、思维链）。</p>
+<p>4.多模态数据多领域适应性（通用人工智能，AGI，artificial general intelligence），经适当微调或提示，能应用于不同领域，且效果显著。</p>
+<p>5.超长上下文感知，基于Transformers的注意力机制（<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.03762">Google的论文《Attention is All You Need》</a>）保证其能充分理解信息，并做出合理推断。</p>
+<p>6.不是搜索引擎，无法感知实时数据。（这个不足可以能过联网搜索来加以弥补，但不是大模型本身的推理能力即离开了互联网大模型将缺失这种能力）</p>
+<h3 id="其他特点"><a href="#其他特点" class="headerlink" title="其他特点"></a>其他特点</h3><p>1.模型同质化。当前大模型都是以Transformer为基础衍生而来的</p>
+<p>2.大力出奇迹。<strong>参数规模</strong>与<strong>预训练语料量级</strong>是模型性能的关键影响因素。例如与GPT-2的15亿参数相比，GPT-3有1750亿个参数，从而在性能方面有关质的提升。</p>
+<p>3.从开源走向闭源。某些模型根本不会对外发布或只对少数提供API访问权限（如openai的模型），甚至一些数据集（如GPT-2）也没有公开发布</p>
+<p>4.头部垄断。由于数据资源与算力制约，中小型企业基本无法与头部科技公司竞争。</p>
+<h3 id="典型代表（国外）"><a href="#典型代表（国外）" class="headerlink" title="典型代表（国外）"></a>典型代表（国外）</h3><ol>
+<li>GPT系列：<a target="_blank" rel="noopener" href="https://chat.openai.com/">https://chat.openai.com/</a></li>
+<li>谷歌gemini：<a target="_blank" rel="noopener" href="https://gemini.google.com/">https://gemini.google.com/</a></li>
+<li>微软Copilot：<a target="_blank" rel="noopener" href="https://www.bing.com/chat">https://www.bing.com/chat</a></li>
+<li>Meta的Llama：<a target="_blank" rel="noopener" href="https://llama.meta.com/llama2">https://llama.meta.com/llama2</a></li>
+<li>Claude系列：<a target="_blank" rel="noopener" href="https://claude.ai/">https://claude.ai</a></li>
+<li>XAI的grok：<a target="_blank" rel="noopener" href="https://x.ai、https//grok.com/">https://x.ai、https://grok.com/</a></li>
+<li>MistralAI：<a target="_blank" rel="noopener" href="https://mistralai7b.com/">https://mistralai7b.com/</a></li>
+</ol>
+<h3 id="典型代表（国内）"><a href="#典型代表（国内）" class="headerlink" title="典型代表（国内）"></a>典型代表（国内）</h3><ol>
+<li>通义千问：<a target="_blank" rel="noopener" href="https://tongyi.aliyun.com/qianwen/">https://tongyi.aliyun.com/qianwen/</a></li>
+<li>文心一言：<a target="_blank" rel="noopener" href="https://yiyan.baidu.com/welcome">https://yiyan.baidu.com/welcome</a></li>
+<li>智谱清言：<a target="_blank" rel="noopener" href="https://chatglm.cn/main/detail">https://chatglm.cn/main/detail</a></li>
+<li>百川大模型：<a target="_blank" rel="noopener" href="https://www.baichuan-ai.com/home">https://www.baichuan-ai.com/home</a></li>
+<li>豆包：<a target="_blank" rel="noopener" href="https://www.doubao.com/">https://www.doubao.com/</a></li>
+<li>讯飞星火：<a target="_blank" rel="noopener" href="https://xinghuo.xfyun.cn/">https://xinghuo.xfyun.cn/</a></li>
+<li>天工：<a target="_blank" rel="noopener" href="https://www.tiangong.cn/">https://www.tiangong.cn/</a></li>
+<li>商汤商量：<a target="_blank" rel="noopener" href="https://chat.sensetime.com/wb/login">https://chat.sensetime.com/wb/login</a></li>
+<li>腾讯混元大模型：<a target="_blank" rel="noopener" href="https://hunyuan.tencent.com/?ref=feizhuke.com">https://hunyuan.tencent.com/?ref=feizhuke.com</a></li>
+<li>Kimi：<a target="_blank" rel="noopener" href="https://kimi.moonshot.cn/">https://kimi.moonshot.cn/</a></li>
+<li>华为盘古大模型（需提前申请）：<a target="_blank" rel="noopener" href="https://www.huaweicloud.com/product/pangu.html">https://www.huaweicloud.com/product/pangu.html</a></li>
+<li>360智脑：<a target="_blank" rel="noopener" href="https://chat.360.com/?src=ai_360_com">https://chat.360.com/?src=ai_360_com</a></li>
+<li>深度求索DeepSeek：<a target="_blank" rel="noopener" href="https://chat.deepseek.com/">https://chat.deepseek.com/</a></li>
+</ol>
+<h2 id="1-3-大模型能做什么"><a href="#1-3-大模型能做什么" class="headerlink" title="1.3 大模型能做什么"></a>1.3 大模型能做什么</h2><ol>
+<li>文本生成：问题回答、文稿撰写、代码生成、数学解题。</li>
+<li>智能客服：包括通用聊天机器人和基于RAG技术的垂直领域机器人。</li>
+<li>机器翻译：生成目标语言的高质量译文。</li>
+<li>文本摘要：对于长篇文章或报告，模型可以提炼关键信息生成简洁的摘要。</li>
+<li>情感分析：分析文本中的情感色彩，判断作者的态度是正面、负面还是中立。</li>
+<li>视觉任务：文生图、文生视频、看图说话等</li>
+</ol>
+<h2 id="1-4-大模型应用"><a href="#1-4-大模型应用" class="headerlink" title="1.4 大模型应用"></a>1.4 大模型应用</h2><ol>
+<li><p>医疗保健和生物医学《On the Opportunities and Risks of Foundation Models》</p>
+</li>
+<li><p>法律《On the Opportunities and Risks of Foundation Models》</p>
+<p>民事案件各个步骤的示例以及基础模型可能有帮助的地方</p>
+</li>
+<li><p>教育《On the Opportunities and Risks of Foundation Models》</p>
+</li>
+</ol>
+<h1 id="二、大模型的前世今生"><a href="#二、大模型的前世今生" class="headerlink" title="二、大模型的前世今生"></a>二、大模型的前世今生</h1><h2 id="2-1-从神经网络到大模型"><a href="#2-1-从神经网络到大模型" class="headerlink" title="2.1 从神经网络到大模型"></a>2.1 从神经网络到大模型</h2><ol>
+<li>单层感知机（解决线性可分问题，20世纪40年代） </li>
+<li>BP传播算法（解决线性不可分问题，20世纪80年代）</li>
+<li>深度神经网络（海量图片分类，2010年左右）</li>
+<li>大模型&#x2F;基础模型（通用人工智能，2020年左右）</li>
+</ol>
+<h2 id="2-2-大模型发展大事件"><a href="#2-2-大模型发展大事件" class="headerlink" title="2.2 大模型发展大事件"></a>2.2 大模型发展大事件</h2><ol>
+<li>2017年谷歌发表论文《Attention Is All You Need》，正式提出Transformer网络，革<strong>RNN</strong>（循环神经网络，Recurrent Neural Network）&#x2F;<strong>CNN</strong>（卷积神经网络，Convolutional Neural Network）的命。</li>
+<li>2018年OPENAI发表论文《Improving Language Understanding by Generative Pre-Training》即“通过生成式预训练提高语言理解能力”，GPT诞生。</li>
+<li>2018年Google发布BERT，该模型在诸多自然语言处理任务中展现了卓越的性能，激发了大量以预训练语言模<br>型为基础的自然语言处理研究。</li>
+<li>2020年6月，OpenAI发布了 GPT-3模型。</li>
+<li>2022年11月，ChatGPT（就是GPT-3.5-turbo）的问世引爆全球关注。</li>
+<li>2023年初至今，各大科技公司纷纷推出自己的大模型，“万模大战”开始。</li>
+<li>2024年12月下旬与2025年1月下旬，DeepSeek相继发布 DeepSeek-V3 模型、DeepSeek-R1 模型，创新的架构与训练方法、低训练成本、优惠的API调用价格与强大高效的语言处理能力，使其迅速火遍全球、登顶中美应用下载榜首，成为中国骄傲与争相学习、推广的对象、以美国为首的西方大模型强国研究的对象。</li>
+</ol>
+<p><img src="https://s2.loli.net/2025/02/25/lYWvqCp64LOV2wG.png" srcset="/img/loading.gif" lazyload alt="image-20250225225633082"></p>
+<h2 id="2-3-大语言模型的三个发展阶段"><a href="#2-3-大语言模型的三个发展阶段" class="headerlink" title="2.3 大语言模型的三个发展阶段"></a>2.3 大语言模型的三个发展阶段</h2><p>来自复旦大学张奇等人编写书籍《大规模语言模型从理论到实践》</p>
+<ol>
+<li><strong>基础模型阶段</strong>，主要集中在2018年至2021年期间，期间发布了一系列代表性的大语言模型，如BERT、GPT、百 度ERNIE、华为盘古-α、Palm等。这些模型的发布为大语言模型的研究打下了基础。</li>
+<li><strong>能力探索阶段</strong>，主要发生在2019年至2022年期间。研究人员开始尝试指令微调（Instruction Tuning）方案，将各种类型的任务统一为<em>生成式自然语言理解框架</em>，并使用<em>构造的训练语料</em>对模型进行微调。</li>
+<li><strong>突破发展阶段</strong>，以2022年11月ChatGPT的发布为起点。ChatGPT通过一个简单的对话框，利用一个大语言模型就能够实现问题回答、文稿撰写、代码生成、数学解题等多种任务</li>
+</ol>
+<h1 id="三、大模型爆火的原因"><a href="#三、大模型爆火的原因" class="headerlink" title="三、大模型爆火的原因"></a>三、大模型爆火的原因</h1><h2 id="3-1-原因一-能通过图灵测试"><a href="#3-1-原因一-能通过图灵测试" class="headerlink" title="3.1 原因一 能通过图灵测试"></a>3.1 原因一 能通过图灵测试</h2><p><strong>让人们看到了通用人工智能乃至强人工智能的希望</strong></p>
+<p>➢ 功能极其强大，（ChatGPT）远超同期其他模型 </p>
+<p>➢ 可以完成跨领域、跨模态任务</p>
+<p>在ChatGPT之前，还没有大模型能通过图灵测试。它不仅可以进行日常对话，还能够完成复杂任务，如撰写文章、回答问题等。令人惊讶的是，所有这些任务 都由一个模型完成。在许多任务上，ChatGPT的性能甚至超过了针对单一任务进行训练的有监督算法。这对于 人工智能领 域具有重大意义。</p>
+<hr>
+<p><strong>注：什么是图灵测试？</strong></p>
+<ul>
+<li>测试者(人)与被测试者(机器)隔开</li>
+<li>测试者通过一些装置(如键盘)向被测试者随意提问</li>
+<li>测试者根据所接受回答判定对方是人或机器</li>
+<li>多次测试后平均每个测试者做出超过30%的误判(将机器判定成人)</li>
+<li>这台机器就被认为具有人类智能</li>
+</ul>
+<h2 id="3-2-原因二-极具争议的AI觉醒"><a href="#3-2-原因二-极具争议的AI觉醒" class="headerlink" title="3.2 原因二 极具争议的AI觉醒"></a>3.2 原因二 极具争议的AI觉醒</h2><ul>
+<li>“ChatGPT是我一生中见到的两项最具革命性技术之一”——比尔盖茨</li>
+<li>“AI将是人类未来文明的最大风险之一”——埃隆·马斯克</li>
+<li>“AI是谷歌正在开发的最深奥的技术”——谷歌CEO桑达尔•皮查伊 </li>
+<li>“AI将颠覆社会”——巴菲特</li>
+</ul>
+<h2 id="3-3-原因三-使用方式极其简单"><a href="#3-3-原因三-使用方式极其简单" class="headerlink" title="3.3 原因三 使用方式极其简单"></a>3.3 原因三 使用方式极其简单</h2><p>在对话框中提出你的需求即可，ChatGPT活跃用户数一个月内就破亿。</p>
+<p><img src="https://s2.loli.net/2025/02/25/fRtx65YhjZW7HmE.png" srcset="/img/loading.gif" lazyload alt="image-20250225232920381"></p>
+<h1 id="四、大模型原理介绍"><a href="#四、大模型原理介绍" class="headerlink" title="四、大模型原理介绍"></a>四、大模型原理介绍</h1><h2 id="4-1-GPT-生成式模型-的工作过程-单字接龙"><a href="#4-1-GPT-生成式模型-的工作过程-单字接龙" class="headerlink" title="4.1 GPT(生成式模型)的工作过程:单字接龙"></a>4.1 GPT(生成式模型)的工作过程:单字接龙</h2><p>GPT是英文“Generative Pre-trained Transformer”的缩写，它的中文全称是生成式预训练变换器，是一种生成式模型。</p>
+<hr>
+<p>模型输入：我们</p>
+<p>模型输出：发明了一个新的和简单的模型</p>
+<hr>
+<p><img src="https://s2.loli.net/2025/02/26/X1KgpxbFoIjB84E.png" srcset="/img/loading.gif" lazyload alt="image-20250226101327422"></p>
+<p>文本生成的过程本质就是单字接龙。</p>
+<p>那么单字接龙为什么可以产生这么大的威力？</p>
+<h2 id="4-2-ChatGPT构建流程"><a href="#4-2-ChatGPT构建流程" class="headerlink" title="4.2 ChatGPT构建流程"></a>4.2 ChatGPT构建流程</h2><p>ChatGPT构建主要包含四个阶段：<strong>预训练</strong>、<strong>有监督微调</strong>、<strong>奖励建模</strong>、<strong>强化学习</strong>。这四个阶段都需要不同规模 <em>数据集合</em> 以及不同类型的 <em>算法</em> ，会产出不同类型的 <em>模型</em> ，同时所需要的 <em>计算资源</em> 也有非常大的差别。</p>
+<p><img src="https://s2.loli.net/2025/02/26/d6hUSRkp57N4Mgl.png" srcset="/img/loading.gif" lazyload alt="image-20250226104450061"></p>
+<p>通过上图，我们也较容易归纳出“<strong>人工智能发展的三大因素：<em>数据</em>（上图中的数据集合）、<em>算法</em>（上图中的算法）和<em>算力</em>（上图中的资源需求）</strong>”。上图中还有一个内容“模型”，它其实是数据集合与算法的产物。</p>
+<p>上图中相关专业术语解释：</p>
+<ul>
+<li><em>SFT模型</em>：Supervised Fine-Tuning Model，即监督微调模型</li>
+<li>RM模型：Reward Model，即奖励模型</li>
+<li>RL模型：Reinforcement Learning Model，即强化学习模型</li>
+</ul>
+<hr>
+<p><img src="https://s2.loli.net/2025/02/26/OHu8BJzQC3UsqnA.png" srcset="/img/loading.gif" lazyload alt="image-20250226113420068"></p>
+<h2 id="4-3-阶段一-自监督预训练"><a href="#4-3-阶段一-自监督预训练" class="headerlink" title="4.3 阶段一 自监督预训练"></a>4.3 阶段一 自监督预训练</h2><p>自监督预训练，英文全称”Unsupervised pre-training“</p>
+<hr>
+<p>核心思路：利用前k个词（token）预测第k+1个词。</p>
+<p>设有语料<code>𝑈=&#123;𝑢1,…,𝑢𝑛&#125;</code>，其中 <code>𝑢𝑖 </code>表示语料中的第 <code>i</code>个词（token）。</p>
+<p>预训练的目标是最大化以下 <em>对数似然函数</em> ：</p>
+<img src="https://s2.loli.net/2025/02/26/Bj7uIfTNmEkGO4X.png" srcset="/img/loading.gif" lazyload alt="image-20250226113732162" style="zoom:50%;" />
+
+<p>其中，<code>P(ui∣ui−k,...,ui−1;θ)</code>表示在给定前 <code>k</code> 个词 <code>ui−k,...,ui−1</code> 的条件下，模型预测下一个词是 <code>ui</code>的概率。<code>𝜃</code>表 示模型中的可变参数。</p>
+<hr>
+<p>概括性地说，上述内容描述一种通过利用前 <code>k</code> 个词来预测下一个词的语言模型预训练方法，并通过最大化对数似然函数来优化模型参数。</p>
+<hr>
+<p><img src="https://s2.loli.net/2025/02/26/YO7gGNp8KHhRont.png" srcset="/img/loading.gif" lazyload alt="image-20250226113810162"></p>
+<hr>
+<p>海量训练数据包括互联网网页、维基百科、书籍、GitHub、论文、问答网站等，构建包含数千亿甚至数万亿单词 的具有多样性的内容。</p>
+<p>基础大模型构建了 <em>长文本建模能力</em> ，隐含的构建了包括 <em>事实性知识</em> 和 <em>常识知识</em> 在内的 <em>世界知识</em> ，根据输入的提示 词（Prompt），模型可以 <em>生成文本补全句子</em> 。</p>
+<p><img src="https://s2.loli.net/2025/02/26/W8wXGeNgiq5uad9.png" srcset="/img/loading.gif" lazyload alt="image-20250226145843606"></p>
+<h2 id="4-4-阶段二-有监督微调-指令微调"><a href="#4-4-阶段二-有监督微调-指令微调" class="headerlink" title="4.4 阶段二 有监督微调&#x2F;指令微调"></a>4.4 阶段二 有监督微调&#x2F;指令微调</h2><p>有监督微调&#x2F;指令微调。英文全称Supervised Fine-tuning &#x2F; Instruction Tuning。</p>
+<hr>
+<p>有监督微调（Supervised Fine-tuning，SFT）也称为指令微调（Instruction Tuning），在阶段一的模型上继续训练。 训练数据为高质量数据集合，包含用户输入的提示词（Prompt）和对应的理想输出结果。 用户输入包括问题、闲聊对话、任务指令等多种形式和任务。</p>
+<p><img src="https://s2.loli.net/2025/02/26/d6hUSRkp57N4Mgl.png" srcset="/img/loading.gif" lazyload alt="image-20250226104450061"></p>
+<hr>
+<p>提示词（Prompt）：复旦大学有几个校区？ </p>
+<p>理想输出：复旦大学现有4个校区，分别是邯郸校区、新江湾校区、枫林校区和张江校区。其中邯郸校区是复旦大学的主校区，邯郸校区与新江湾校区都位于杨浦区，枫林校区位于徐汇区，张江校区位于浦东新区。</p>
+<p><img src="https://s2.loli.net/2025/02/26/W8wXGeNgiq5uad9.png" srcset="/img/loading.gif" lazyload alt="image-20250226145843606"></p>
+<hr>
+<p>经过微调后的有监督微调（SFT）模型具备了初步的指令和上下文理解能力，能够完成开放领域问题、阅读理解、 翻译、生成代码等能力，也具备了一定的对未知任务的泛化能力。</p>
+<h2 id="4-5-阶段三-奖励建模"><a href="#4-5-阶段三-奖励建模" class="headerlink" title="4.5 阶段三 奖励建模"></a>4.5 阶段三 奖励建模</h2><p>奖励建模，英文全称”Reward Modeling“。</p>
+<hr>
+<p>奖励建模（Reward Modeling）阶段的目标是构建一个文本质量评估模型。</p>
+<p>奖励建模（Reward Modeling）用来对SFT模型的输出文本进行质量评估。</p>
+<p>为训练得到奖励模型，须人工标注百万量级的样本库，奖励模型的训练过程独立于GPT模型。</p>
+<hr>
+<p>奖励建模（Reward Modeling）阶段的目标是构建一个<strong>文本质量评估模型</strong>。</p>
+<p>把同一个提示词多次传入SFT模型，会得到多个不同输出结果，奖励模型可以对这些结果的质量进行排序。</p>
+<p><img src="https://s2.loli.net/2025/02/26/f7GXjwoECgRqvxn.png" srcset="/img/loading.gif" lazyload alt="image-20250226151237593"></p>
+<h2 id="4-6-阶段四-强化学习"><a href="#4-6-阶段四-强化学习" class="headerlink" title="4.6 阶段四 强化学习"></a>4.6 阶段四 强化学习</h2><p>强化学习。英文全称是”Reinforcement Learning“。</p>
+<hr>
+<p>强化学习（Reinforcement Learning）阶段是对指令微调（SFT）模型的进一步训练。</p>
+<p>根据数十万用户给出的提示词，SFT模型生成相应输出，然后再利用奖励模型（RM）对这些输出进行质量评估。 结合评估结果再对SFT模型 <em>进一步调整</em> ，最终得到ChatGPT。</p>
+<p><img src="https://s2.loli.net/2025/02/26/W8wXGeNgiq5uad9.png" srcset="/img/loading.gif" lazyload alt="image-20250226145843606"></p>
+<h2 id="4-7-ChatGPT构建流程回顾"><a href="#4-7-ChatGPT构建流程回顾" class="headerlink" title="4.7 ChatGPT构建流程回顾"></a>4.7 ChatGPT构建流程回顾</h2><p><img src="https://s2.loli.net/2025/02/25/GgVRSJF5PAIoWMj.png" srcset="/img/loading.gif" lazyload alt="image-20250225231419832"></p>
+<h2 id="4-8-token是什么"><a href="#4-8-token是什么" class="headerlink" title="4.8 token是什么"></a>4.8 token是什么</h2><p>在模型中被处理的数据单元并不是单词&#x2F;词语，而是token。</p>
+<hr>
+<p>token是文本处理过程中的基本单元，通常是指一个单词、标点符号或者是由空格分隔的文本片段。 </p>
+<p>token是大模型世界中的“单词”，所有文本都可以由token组合而来。</p>
+<p><img src="https://s2.loli.net/2025/02/26/MagVuHTK3L1nZWS.png" srcset="/img/loading.gif" lazyload alt="image-20250226153311380"></p>
+<hr>
+<p>英文语料中1个token约有4个英文字母，100个token约等于75个单词的长度（平均起来大概5.3个英文字母对应一个英文单词）。 </p>
+<p>中文里1个token绝大部分情况对应1~2个字，1个字居多。</p>
+<p>大模型的token字典一般跨语种，字典中token数量为十万量级。</p>
+<hr>
+<p>token从海量语料中统计而来，有不同的统计方法，其一般由高频词和低频词的子词组成。 </p>
+<p>token要保留原始文本中单词间的语义关系。 </p>
+<p>尽可能避免出现未登录词（即不在训练数据中的词。英文全称Out-Of-Vocabulary，简称OOV），但字典又不能太大。</p>
+<h1 id="五、AIGC简介"><a href="#五、AIGC简介" class="headerlink" title="五、AIGC简介"></a>五、AIGC简介</h1><h2 id="5-1-AIGC是什么"><a href="#5-1-AIGC是什么" class="headerlink" title="5.1 AIGC是什么"></a>5.1 AIGC是什么</h2><p>AIGC（Artificial Intelligence Generated Content）是指利用人工智能技术来生成<strong>全新的</strong>、<strong>逼真的</strong>、<strong>有用的</strong>数据，如 文本、图像、音频和视频等，可以在一定程度上模仿人类的创造力和写作风格。 </p>
+<p>在此之前的内容生成方式主要为： </p>
+<ol>
+<li>PGC（Professional Generated Content），专家生产内容，如图书、报纸、期刊等。 </li>
+<li>UGC（User Generated Content），用户生产内容，如微博、公众号、自媒体等。</li>
+</ol>
+<h2 id="5-2-AIGC作品展示"><a href="#5-2-AIGC作品展示" class="headerlink" title="5.2 AIGC作品展示"></a>5.2 AIGC作品展示</h2><p><img src="https://s2.loli.net/2025/02/26/BdS52EkqgOvDYno.png" srcset="/img/loading.gif" lazyload alt="image-20250226154138094"></p>
+<p><img src="https://s2.loli.net/2025/02/26/GxhFHbdUPAV6p34.png" srcset="/img/loading.gif" lazyload alt="image-20250226154301432"></p>
+<p>Sora文生视频： <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1m4421F7Yc/?spm_id_from=333.337.search-card.all.click&vd_source=0b5fe5d5aa31f64bf7462d1d094b70a2">https://www.bilibili.com/video/BV1m4421F7Yc/?spm_id_from=333.337.search-card.all.click&amp;vd_source=0b5fe5d5aa31f64bf7462d1d094b70a2</a></p>
+<h2 id="5-3-AIGC与大模型的关系"><a href="#5-3-AIGC与大模型的关系" class="headerlink" title="5.3 AIGC与大模型的关系"></a>5.3 AIGC与大模型的关系</h2><p><img src="https://s2.loli.net/2025/02/26/YEwbFnqWCkGMhUV.png" srcset="/img/loading.gif" lazyload alt="image-20250226154709925"></p>
+<ol>
+<li>大模型为AIGC提供了强大的生成能力：由于大模型具有强大的学习能力和理解能力，因此可以生成更加<strong>丰富</strong>、 <strong>多样</strong>和<strong>高质量</strong>的内容，从而推动AIGC的发展。 </li>
+<li>AIGC为大模型提供了丰富的应用场景：大模型在AIGC领域的应用非常广泛，包括<strong>文本生成</strong>、<strong>图像生成</strong>、<strong>音乐创作</strong>等。这些应用场景不仅展示了大模型的强大能力，也为大模型的研究和发展提供了实际的需求和动力。 </li>
+<li>AIGC与大模型协同进化：随着AIGC应用的不断深入，对大模型的需求也在不断提高，这将推动大模型不断进行技术优化和创新。同时，大模型的进步也将进一步推动AIGC的发展，两者形成了一种协同进化的关系。</li>
+</ol>
+<h2 id="5-4-AIGC技术特点"><a href="#5-4-AIGC技术特点" class="headerlink" title="5.4 AIGC技术特点"></a>5.4 AIGC技术特点</h2><ol>
+<li>高效自动化。AIGC具有出色的自动化处理能力，能够迅速分析和处理大量数据，并自动生成所需内容，极大地提升了工作效率，减少了人工干预的需求，使得内容生成过程更加快速、准确。 </li>
+<li>个性化定制。AIGC具备深度学习和分析用户行为的能力，能够根据用户的个性化需求和偏好，生成定制化的内容，能够更好地满足用户的期望，提升用户体验。 </li>
+<li>多媒体形态。与传统的人工智能生成内容主要以文本形式为主不同，AIGC能够生成包括图像、音频、视频等多种形式的多媒体内容，使得AIGC在内容创作上更加灵活多样，能够更好地适应不同的传播渠道和用户需求。 </li>
+<li>准确性高。在处理和分析数据时，AIGC展现出了极高的准确性，它能够精确提取关键信息，生成可靠的结论或建议，使得AIGC在决策支持、数据分析等领域具有广泛的应用价值。 </li>
+<li>存在误导性。误导性与准确并行，AIGC基于算法和模型进行工作，底层大多是生成式的概率模型，其内容生成具有随机性，并不完全依赖于客观事实，故可能会产生误解、误判或生成不准确的内容。</li>
+</ol>
+<h2 id="5-5-中国AIGC产业图谱"><a href="#5-5-中国AIGC产业图谱" class="headerlink" title="5.5 中国AIGC产业图谱"></a>5.5 中国AIGC产业图谱</h2><p>“2023年中国AIGC产业图谱”即下图，由艾瑞咨询整理，发布于2023年8月。</p>
+<p><img src="https://s2.loli.net/2025/02/26/BoDrb3Eu6Wtp2dj.png" srcset="/img/loading.gif" lazyload alt="image-20250226164956303"></p>
+<hr>
+<p>“2024年中国AIGC产业图谱V4.1”即下图，由非凡产研整理，发布于2024年6月4日</p>
+<p><img src="https://s2.loli.net/2025/02/26/FoLf4GXNTAJO3xR.png" srcset="/img/loading.gif" lazyload alt="image-20250226164358224"></p>
+<h2 id="5-6-小结"><a href="#5-6-小结" class="headerlink" title="5.6 小结"></a>5.6 小结</h2><ol>
+<li>AIGC是指利用人工智能技术来生成全新的、逼真的、有用的数据。 </li>
+<li>大模型为AIGC提供了强大的生成能力，AIGC为大模型提供了丰富的应用场景。 </li>
+<li>AIGC技术具有高效自动化、个性化定制、多媒体形态、准确性高、创新性强、可扩展性好等特点，但并不是 万能的，也可能生成具有误导性的内容。 </li>
+<li>AIGC技术的前景广阔，随着技术的突破与跨界融合的深入，未来将广泛应用于各行各业。</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%8EAIGC%E6%A6%82%E8%BF%B0/" class="print-no-link">#大模型与AIGC概述</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>大模型与AIGC概述</div>
+      <div>https://jiangsanyin.github.io/2025/03/01/大模型与AIGC概述/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/03/01/PyTorch%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E5%AE%9E%E8%B7%B5/" title="PyTorch框架基础实践">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">PyTorch框架基础实践</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/28/torch1-13-0-cpu%E4%B8%ADtensor%E7%9A%84%E5%B8%B8%E7%94%A8%E5%B1%9E%E6%80%A7%E4%B8%8E%E6%96%B9%E6%B3%95/" title="torch1.13.0+cpu中tensor的常用属性与方法">
+                        <span class="hidden-mobile">torch1.13.0+cpu中tensor的常用属性与方法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

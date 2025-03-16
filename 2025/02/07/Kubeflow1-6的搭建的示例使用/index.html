@@ -1,0 +1,853 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 官方文档根据kubeflow1.6官网发行记录，与k8s 1.22适配的kubeflow版本是kubeflow-1.6。当前最新版本是Kubeflow1.9，官方推荐使用的k8s版本是1.29。 部署步骤参考：部署kubeflow1.6的官方文档 以下操作来自笔者刚开始接触k8s时所做的操作，使用kubekey部署了k8s+ksp，一些操作也都依赖于图形化界面。经过一两个月的鼓捣研究最终跑通。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubeflow1.6的搭建的示例使用">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/02/07/Kubeflow1-6%E7%9A%84%E6%90%AD%E5%BB%BA%E7%9A%84%E7%A4%BA%E4%BE%8B%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="1 官方文档根据kubeflow1.6官网发行记录，与k8s 1.22适配的kubeflow版本是kubeflow-1.6。当前最新版本是Kubeflow1.9，官方推荐使用的k8s版本是1.29。 部署步骤参考：部署kubeflow1.6的官方文档 以下操作来自笔者刚开始接触k8s时所做的操作，使用kubekey部署了k8s+ksp，一些操作也都依赖于图形化界面。经过一两个月的鼓捣研究最终跑通。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/yJGX8uKLNHPOz7e.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/Orah4MtfAdDN5mo.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/oXmdZe3fTwIuWYz.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/4GwkivJnb9V8LR1.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/xomaGyYlOtJvZRI.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/ZQ7jhXO3kxsiKUS.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/dY9HtIRSDkwQhK5.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/yjJGQx2pe5nhRgL.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/dHhM4QWfxA2gRbq.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/Tn2j6hN8JGO14g9.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/IYeZFm6qxAcHrw3.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/IyMDaCif3G9YpBN.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/2EUwRQBXPytIkMq.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/IPbfARqBhZp2DGU.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/J7tF5WyOPouAjvz.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/bftCycL6s5Wl49j.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/2thxQNaKeydBmDA.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/y5vS4OwTGPkUnil.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/QS4W8xrFGHEPVYe.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/st7gof8pPFa1j4E.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/xuND8gEJb74TkXr.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/YJtEz7kx4Vwpb9y.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/z4C67QO9cRBLdKa.png">
+<meta property="og:image" content="https://s2.loli.net/2025/02/07/zLdywbTcKUhREPG.png">
+<meta property="article:published_time" content="2025-02-07T01:27:39.000Z">
+<meta property="article:modified_time" content="2025-02-07T07:21:24.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="kubeflow k8s">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/02/07/yJGX8uKLNHPOz7e.png">
+  
+  
+  
+  <title>Kubeflow1.6的搭建的示例使用 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kubeflow1.6的搭建的示例使用</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-07 09:27" pubdate>
+          2025年2月7日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          13 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Kubeflow1.6的搭建的示例使用</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-官方文档"><a href="#1-官方文档" class="headerlink" title="1 官方文档"></a>1 官方文档</h1><p>根据<a target="_blank" rel="noopener" href="https://www.kubeflow.org/docs/releases/kubeflow-1.6/">kubeflow1.6官网发行记录</a>，与k8s 1.22适配的kubeflow版本是kubeflow-1.6。当前最新版本是Kubeflow1.9，官方推荐使用的k8s版本是1.29。</p>
+<p>部署步骤参考：<a target="_blank" rel="noopener" href="https://github.com/kubeflow/manifests/tree/v1.6-branch">部署kubeflow1.6的官方文档</a></p>
+<p>以下操作来自笔者刚开始接触k8s时所做的操作，使用kubekey部署了k8s+ksp，一些操作也都依赖于图形化界面。经过一两个月的鼓捣研究最终跑通。</p>
+<h1 id="2-环境信息规划"><a href="#2-环境信息规划" class="headerlink" title="2 环境信息规划"></a>2 环境信息规划</h1><p>本次基于k8s 1.22.10搭建kubeflow-1.6环境。k8s 1.22.10搭建在如下3台虚拟机上。</p>
+<table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>服务（用途）</th>
+<th>IP</th>
+<th>root用户密码</th>
+<th>规格</th>
+<th>系统盘</th>
+<th>OS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>master-1</td>
+<td>master</td>
+<td>10.13.31.60</td>
+<td>cloud@2020</td>
+<td>8c16g</td>
+<td>300G</td>
+<td>Centos7.9</td>
+</tr>
+<tr>
+<td>worker-1</td>
+<td>worker</td>
+<td>10.13.31.61</td>
+<td>cloud@2020</td>
+<td>8c16g</td>
+<td>300G</td>
+<td>Centos7.9</td>
+</tr>
+<tr>
+<td>worker-2</td>
+<td>worker</td>
+<td>10.13.31.62</td>
+<td>cloud@2020</td>
+<td>8c16g</td>
+<td>300G</td>
+<td>Centos7.9</td>
+</tr>
+</tbody></table>
+<h1 id="3-部署kubeflow-1-6环境"><a href="#3-部署kubeflow-1-6环境" class="headerlink" title="3 部署kubeflow 1.6环境"></a>3 部署kubeflow 1.6环境</h1><h2 id="3-1-下载kubeflow-manifests1-6-1"><a href="#3-1-下载kubeflow-manifests1-6-1" class="headerlink" title="3.1 下载kubeflow-manifests1.6.1"></a>3.1 下载kubeflow-manifests1.6.1</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@master01 ~]# mkdir /opt/installPkgs/install-kubeflow1.6<br>[root@master01 ~]# cd /opt/installPkgs/install-kubeflow1.6<br><br>[root@master01 install-kubeflow1.6]# wget https://github.com/kubeflow/manifests/archive/refs/tags/v1.6.1.tar.gz <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">解压</span><br>[root@master01 install-kubeflow1.6]# tar -zxf v1.6.1.tar.gz<br>[root@master01 install-kubeflow1.6]# ll manifests-1.6.1/<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-2-下载kustomize3-2-0"><a href="#3-2-下载kustomize3-2-0" class="headerlink" title="3.2 下载kustomize3.2.0"></a>3.2 下载kustomize3.2.0</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@master01 manifests-1.6.1]# cd /opt/installPkgs/install-kubeflow1.6/<br>[root@master01 install-kubeflow1.6]# wget https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.0.3/kustomize_v5.0.3_linux_amd64.tar.gz<br>[root@master01 install-kubeflow1.6]# tar -zxf kustomize_v5.0.3_linux_amd64.tar.gz<br><br>[root@master01 install-kubeflow1.6]# chmod +x ./kustomize<br>[root@master01 install-kubeflow1.6]# cp -p kustomize /usr/local/bin<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-3-将gcr-io镜像替换成国内代理镜像"><a href="#3-3-将gcr-io镜像替换成国内代理镜像" class="headerlink" title="3.3 将gcr.io镜像替换成国内代理镜像"></a>3.3 将gcr.io镜像替换成国内代理镜像</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@master01 manifests-1.6.1]# cd /opt/installPkgs/install-kubeflow1.6/manifests-1.6.1/<br><span class="hljs-meta prompt_">#</span><span class="language-bash">【很重要】gcr.io是谷歌官方的docker镜像仓储，访问需要翻墙。替换成其对应代理镜像</span><br>[root@master01 manifests-1.6.1]# sed -i &quot;s/gcr.io/gcr.dockerproxy.com/g&quot; `grep gcr.io -rl /opt/installPkgs/install-kubeflow1.6/manifests-1.6.1`<br><span class="hljs-meta prompt_">#</span><span class="language-bash">以下分步安装，都是在以下目录执行命令：“/opt/installPkgs/install-kubeflow1.6/manifests-1.6.1/”</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-4-正式部署"><a href="#3-4-正式部署" class="headerlink" title="3.4 正式部署"></a>3.4 正式部署</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">一键式安装【官方组件 (apps下) 与所有公共服务 (common下)】</span><br>[root@master01 manifests-1.6.1]# while ! kustomize build example | kubectl apply -f -; do echo &quot;Retrying to apply resources&quot;; sleep 10; done<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##执行完成后，大概需要一个小时的时间（笔者的情况是这样）来拉取相关镜像并启动所有的pod</span></span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-5-开启https登录kubeflow-UI"><a href="#3-5-开启https登录kubeflow-UI" class="headerlink" title="3.5 开启https登录kubeflow UI"></a>3.5 开启https登录kubeflow UI</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">参考文章：https://github.com/kubeflow/kubeflow/issues/5803</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">mkdir</span> /opt/installPkgs/install-kubeflow/problem-cloud-not-found-CSRF-cookie</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> /opt/installPkgs/install-kubeflow/problem-cloud-not-found-CSRF-cookie</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">首选检查当前k8s集群中是否存在名为“kubeflow-self-signing-issuer”的clusterissuers。</span><br>kubectl get clusterissuers -A<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/yJGX8uKLNHPOz7e.png" srcset="/img/loading.gif" lazyload alt="image-20250207094358148"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">如果不存在的话，后面创建的certificate的类型将会是“Opaque”且名字后面会加一串随机字符串</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/Orah4MtfAdDN5mo.png" srcset="/img/loading.gif" lazyload alt="image-20250207094434773"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">如果不存在名为“kubeflow-self-signing-issuer”的clusterissuers，则执行以下命令创建（其中manifests-1.6.1即为kubeflow安装文件目录）</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">kubectl apply -f manifests-1.6.1/common/cert-manager/kubeflow-issuer/base/cluster-issuer.yaml</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/oXmdZe3fTwIuWYz.png" srcset="/img/loading.gif" lazyload alt="image-20250207094530311"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建两个文件gateways-issuer2.yaml、kf-istio-resources2.yaml</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cat</span> &gt; gateways-issuer2.yaml &lt;&lt;<span class="hljs-string">EOF</span></span><br>apiVersion: cert-manager.io/v1alpha2<br>kind: Certificate<br>metadata:<br>  name: kubeflow-ingressgateway-certs<br>  namespace: istio-system<br>spec:<br>  secretName: kubeflow-ingressgateway-certs<br>  issuerRef:<br>    kind: ClusterIssuer<br>    name: kubeflow-self-signing-issuer<br>  commonName: istio-ingressgateway.istio-system.svc<br>EOF<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-string">cat &gt; kf-istio-resources2.yaml &lt;&lt;EOF</span></span><br>apiVersion: networking.istio.io/v1alpha3<br>kind: Gateway<br>metadata:<br>  name: kubeflow-gateway<br>  namespace: kubeflow<br>spec:<br>  selector:<br>    istio: ingressgateway<br>  servers:<br>  - hosts:<br>    - &quot;*&quot;<br>    port:<br>      name: http<br>      number: 80<br>      protocol: HTTP<br>    # Upgrade HTTP to HTTPS<br>    # tls:<br>    #   httpsRedirect: true<br>  - hosts:<br>    - &quot;*&quot;<br>    port:<br>      name: https<br>      number: 443<br>      protocol: HTTPS<br>    tls:<br>      mode: SIMPLE<br>      credentialName: kubeflow-ingressgateway-certs<br>EOF<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">应用上述两个文件</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">kubectl apply -f gateways-issuer2.yaml</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">kubectl apply -f kf-istio-resources2.yaml</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-6-获取kubeflow-dashboard地址"><a href="#3-6-获取kubeflow-dashboard地址" class="headerlink" title="3.6 获取kubeflow dashboard地址"></a>3.6 获取kubeflow dashboard地址</h2><p>以下两种方法选取其一</p>
+<h3 id="3-6-1-从kubesphere中获取"><a href="#3-6-1-从kubesphere中获取" class="headerlink" title="3.6.1 从kubesphere中获取"></a>3.6.1 从kubesphere中获取</h3><p><img src="https://s2.loli.net/2025/02/07/4GwkivJnb9V8LR1.png" srcset="/img/loading.gif" lazyload alt="image-20250207094921952"></p>
+<p><img src="https://s2.loli.net/2025/02/07/xomaGyYlOtJvZRI.png" srcset="/img/loading.gif" lazyload alt="image-20250207094932005"></p>
+<p><img src="https://s2.loli.net/2025/02/07/ZQ7jhXO3kxsiKUS.png" srcset="/img/loading.gif" lazyload alt="image-20250207094949498"></p>
+<p><img src="https://s2.loli.net/2025/02/07/dY9HtIRSDkwQhK5.png" srcset="/img/loading.gif" lazyload alt="image-20250207095007191"></p>
+<h3 id="3-6-2-从命令行获取"><a href="#3-6-2-从命令行获取" class="headerlink" title="3.6.2 从命令行获取"></a>3.6.2 从命令行获取</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">kubectl -n istio-system get svc | grep istio-Ingressgateway<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-7-登录kubeflow-dashboard"><a href="#3-7-登录kubeflow-dashboard" class="headerlink" title="3.7 登录kubeflow dashboard"></a>3.7 登录kubeflow dashboard</h2><p>kubeflow1.6的web界面登录信息：</p>
+<ul>
+<li>默认用户名：<a href="mailto:&#x75;&#x73;&#x65;&#x72;&#64;&#101;&#x78;&#97;&#109;&#112;&#108;&#101;&#x2e;&#99;&#x6f;&#x6d;">user@example.com</a></li>
+<li>默认密码：12341234</li>
+</ul>
+<h2 id="3-8-minio-service配置"><a href="#3-8-minio-service配置" class="headerlink" title="3.8 minio-service配置"></a>3.8 minio-service配置</h2><p><img src="https://s2.loli.net/2025/02/07/yjJGQx2pe5nhRgL.png" srcset="/img/loading.gif" lazyload alt="image-20250207095305437"></p>
+<p><img src="https://s2.loli.net/2025/02/07/dHhM4QWfxA2gRbq.png" srcset="/img/loading.gif" lazyload alt="image-20250207095323082"></p>
+<p><img src="https://s2.loli.net/2025/02/07/Tn2j6hN8JGO14g9.png" srcset="/img/loading.gif" lazyload alt="image-20250207095336459"></p>
+<p>默认用户名与密码： </p>
+<ul>
+<li>accessKey: minio</li>
+<li>secretKey: minio123</li>
+</ul>
+<h1 id="4-Tensorflow示例"><a href="#4-Tensorflow示例" class="headerlink" title="4 Tensorflow示例"></a>4 Tensorflow示例</h1><p>kubeflow官方提供的、在kubeflow使用流水线执行tensorflow机器学习任务的例子：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/kubeflow/pipelines/blob/master/samples/contrib/kubeflow-e2e-mnist/kubeflow-e2e-mnist.ipynb">https://github.com/kubeflow/pipelines/blob/master/samples/contrib/kubeflow-e2e-mnist/kubeflow-e2e-mnist.ipynb</a></p>
+<h1 id="5-Pytorch示例"><a href="#5-Pytorch示例" class="headerlink" title="5 Pytorch示例"></a>5 Pytorch示例</h1><h2 id="5-1-示例1"><a href="#5-1-示例1" class="headerlink" title="5.1 示例1"></a>5.1 示例1</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">示例代码：</span><br>https://github.com/kubeflow/pipelines/tree/master/samples/contrib/pytorch-samples<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">全按官方文档操作会报错，执行此示例请按以下步骤操作：</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">（k8s集群内执行）Add Minio secret <span class="hljs-keyword">for</span> KServe</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">mkdir</span> -p /opt/installPkgs/install-kubeflow/Document_test/Components/Training_Operators/PyTorch-Training-PyTorchJob/pytorch-samples-from-kubeflow_pipeline</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">touch</span> minio-secret.yaml</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">minio-secret.yaml文件的内容如下</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cat</span> minio-secret.yaml</span><br>apiVersion: v1<br>kind: Secret<br>metadata:<br>  name: mysecret<br>  annotations:<br>     serving.kserve.io/s3-endpoint: minio-service.kubeflow:9000<br>     serving.kserve.io/s3-usehttps: &quot;0&quot;<br>     serving.kserve.io/s3-region: &quot;minio&quot;<br>     serving.kserve.io/s3-useanoncredential: &quot;false&quot;<br>     serving.kubeflow.org/s3-endpoint: minio-service.kubeflow:9000<br>     serving.kubeflow.org/s3-region: minio<br>     serving.kubeflow.org/s3-useanoncredential: &quot;false&quot;<br>     serving.kubeflow.org/s3-usehttps: &quot;0&quot;<br>type: Opaque<br>data:<br>  AWS_ACCESS_KEY_ID: bWluaW8=<br>  AWS_SECRET_ACCESS_KEY: bWluaW8xMjM=<br>---<br>apiVersion: v1<br>kind: ServiceAccount<br>metadata:<br>  name: sa<br>secrets:<br>  - name: mysecret<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">Run the following <span class="hljs-built_in">command</span> to <span class="hljs-built_in">set</span> the secrets</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">kubectl apply -f minio-secret.yaml -n kubeflow-user-example-com</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">Run the following <span class="hljs-built_in">command</span> to <span class="hljs-built_in">disable</span> sidecar injection $ kubectl label namespace kubeflow-user-example-com istio-injection=disabled --overwrite</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">通过kubeflow UI（以下kubeflow环境应该是另外一个，所以相关端口号不一致。当时记录学习笔记时没注意前后文一致）创建notebook，使用的镜像如下。然后connect</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/IYeZFm6qxAcHrw3.png" srcset="/img/loading.gif" lazyload alt="image-20250207095725081"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在打开的JupterLab窗口中，打开一个 Terminal会话窗口</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/IyMDaCif3G9YpBN.png" srcset="/img/loading.gif" lazyload alt="image-20250207095753536"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">下载示例所在的git代码库</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">git <span class="hljs-built_in">clone</span> https://github.com/kubeflow/pipelines.git</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/2EUwRQBXPytIkMq.png" srcset="/img/loading.gif" lazyload alt="image-20250207095924924"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在如下链接中下载“EditThisCookie” chrome插件的安装文件，并安装到google浏览器中</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">https://chrome.zzzmh.cn/info/fngmhnnpilhplaeedifhccceomclgfbg</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">将kubeflow-pipelines-v2/samples/contrib/pytorch-samples/Pipeline-Cifar10.ipynb文件复制一份，操作复制得到的文件</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/IPbfARqBhZp2DGU.png" srcset="/img/loading.gif" lazyload alt="image-20250207100006254"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">因为我复制了两次，我现在编辑并执行Pipeline-Cifar10-Copy2.ipynb</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装kfp==1.8.12这个python3库</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/J7tF5WyOPouAjvz.png" srcset="/img/loading.gif" lazyload alt="image-20250207100038272"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">使用“EditThisCookie” chrome插件获取https://172.24.0.31:30706/这个网站保存的cookie，获取其中的authservice_session这个key对应的value值，将value值保存到示例中的AUTH变量中：</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/bftCycL6s5Wl49j.png" srcset="/img/loading.gif" lazyload alt="image-20250207100136937"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">（kubesphere中操作）将容器内的minio服务端口暴露出来</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/2thxQNaKeydBmDA.png" srcset="/img/loading.gif" lazyload alt="image-20250207100309327"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">替换MINIO_ENDPOINT。TENSORBOARD_IMAGE也建议替换</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/y5vS4OwTGPkUnil.png" srcset="/img/loading.gif" lazyload alt="image-20250207100344529"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">~/kubeflow-pipelines-v2/samples/contrib/pytorch-samples/utils/generate_templates.py，需要修改这个文件如下两个变量，否则执行报错且不能实现既定功能</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/QS4W8xrFGHEPVYe.png" srcset="/img/loading.gif" lazyload alt="image-20250207100408891"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">使用ptl_args变量的值</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/st7gof8pPFa1j4E.png" srcset="/img/loading.gif" lazyload alt="image-20250207100441336"></p>
+<h2 id="5-2-示例2"><a href="#5-2-示例2" class="headerlink" title="5.2 示例2"></a>5.2 示例2</h2><p>此示例来自<a target="_blank" rel="noopener" href="https://github.com/kubeflow/pipelines/blob/master/samples/contrib/pytorch-samples/Pipeline-Bert.ipynb">kubeflow官方示例pytorch-samples</a></p>
+<p>bert机器学习基础知识：<a target="_blank" rel="noopener" href="https://helloai.blog.csdn.net/article/details/120211601">【理论篇】是时候彻底弄懂BERT模型了</a> 、 <a target="_blank" rel="noopener" href="https://blog.csdn.net/yjw123456/article/details/120232707">【实战篇】是时候彻底弄懂BERT模型了</a></p>
+<p>创建的流水线任务“pytorch-bert”在执行Training步骤时会报错失败：</p>
+<p><img src="https://s2.loli.net/2025/02/07/xuND8gEJb74TkXr.png" srcset="/img/loading.gif" lazyload alt="image-20250207151415759"></p>
+<h3 id="问题解决办法："><a href="#问题解决办法：" class="headerlink" title="问题解决办法："></a>问题解决办法：</h3><p>原因：因为需要去huggingface这个美国公司的网站下载外网的数据，但是相关外网在大陆无法正常访问。</p>
+<p>最后执行时，做如下修改</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">修改generate_templates.py（下图是修改后的样子）</span><br>vi ~/kubeflow-pipelines/samples/contrib/pytorch-samples/utils/<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/YJtEz7kx4Vwpb9y.png" srcset="/img/loading.gif" lazyload alt="image-20250207151607445"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">修改如下文件，使用自己的容器镜像（下图是修改后的样子）：</span><br>/home/jovyan/kubeflow-pipelines/samples/contrib/pytorch-samples/bert/template_mapping.json<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/z4C67QO9cRBLdKa.png" srcset="/img/loading.gif" lazyload alt="image-20250207151701958"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#执行Pipeline-Bert.ipynb时，如果k8s环境没有gpu就修改ptl_args变量的值，将gpu修改为cpu</span></span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/02/07/zLdywbTcKUhREPG.png" srcset="/img/loading.gif" lazyload alt="image-20250207151725871"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/kubeflow-k8s/" class="print-no-link">#kubeflow k8s</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubeflow1.6的搭建的示例使用</div>
+      <div>https://jiangsanyin.github.io/2025/02/07/Kubeflow1-6的搭建的示例使用/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月7日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/08/DeepSeek-R1-Distill-Llama-70B%E5%A4%A7%E6%A8%A1%E5%9E%8B4bit%E9%87%8F%E5%8C%96%E7%89%88%E9%83%A8%E7%BD%B2/" title="DeepSeek-R1-Distill-Llama-70B大模型4bit量化版部署">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">DeepSeek-R1-Distill-Llama-70B大模型4bit量化版部署</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/05/ollama%E9%83%A8%E7%BD%B2DeepSeek%E5%8F%8A%E5%9C%A8ragflow%E4%B8%AD%E4%BD%BF%E7%94%A8deepseek/" title="ollama部署DeepSeek及在ragflow中使用deepseek">
+                        <span class="hidden-mobile">ollama部署DeepSeek及在ragflow中使用deepseek</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

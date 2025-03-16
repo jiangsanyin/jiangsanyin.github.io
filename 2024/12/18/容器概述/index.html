@@ -1,0 +1,748 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 容器的定义​		容器是一种虚拟化技术，用于将应用程序及其所有依赖项打包在一起，以便在不同的计算环境中进行移植和运行。 ​		每个运行的容器都是可重复的，意味着无论在哪里运行它都会得到相同的行为。容器将应用程序从底层的主机设施中解耦。这使得在不同的云或OS环境中部署更加容易。 ​		容器提供了一种隔离的运行环境，使不同应用程序能够在独立的文件系统、网络和进程空间等独立运行环境中运行，提升了安全性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容器概述">
+<meta property="og:url" content="https://jiangsanyin.github.io/2024/12/18/%E5%AE%B9%E5%99%A8%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="1 容器的定义​		容器是一种虚拟化技术，用于将应用程序及其所有依赖项打包在一起，以便在不同的计算环境中进行移植和运行。 ​		每个运行的容器都是可重复的，意味着无论在哪里运行它都会得到相同的行为。容器将应用程序从底层的主机设施中解耦。这使得在不同的云或OS环境中部署更加容易。 ​		容器提供了一种隔离的运行环境，使不同应用程序能够在独立的文件系统、网络和进程空间等独立运行环境中运行，提升了安全性">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2024/12/18/XlrPybfMmukY3tL.png">
+<meta property="og:image" content="https://s2.loli.net/2024/12/18/KyaMD6qQFgxBGU2.png">
+<meta property="article:published_time" content="2024-12-18T15:38:37.000Z">
+<meta property="article:modified_time" content="2024-12-18T15:46:02.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="容器 虚拟化 算力调度 k8s">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2024/12/18/XlrPybfMmukY3tL.png">
+  
+  
+  
+  <title>容器概述 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">容器概述</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-18 23:38" pubdate>
+          2024年12月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          14 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">容器概述</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-容器的定义"><a href="#1-容器的定义" class="headerlink" title="1 容器的定义"></a>1 容器的定义</h1><p>​		容器是一种虚拟化技术，用于将应用程序及其所有依赖项打包在一起，以便在不同的计算环境中进行移植和运行。</p>
+<p>​		每个运行的容器都是可重复的，意味着无论在哪里运行它都会得到相同的行为。容器将应用程序从底层的主机设施中解耦。这使得在不同的云或OS环境中部署更加容易。</p>
+<p>​		容器提供了一种隔离的运行环境，使不同应用程序能够在独立的文件系统、网络和进程空间等独立运行环境中运行，提升了安全性和稳定性。通过利用容器技术，可以将应用及其整个运行时环境（包括需要的所有文件及信赖环境）一起进行打包和隔离。从而可以在不同环境（如开发、测试和生产等环境）之间轻松迁移应用，同时还可保留应用的全部功能。容器也是保障IT安全的一个重要组成部分。将安全防护内置于容器管道并为基础架构增添防护，可以保障容器的可靠性、可扩展性和信赖度。利用容器，还可以轻松地在具有一致行为和功能的公共、私有和混合云环境和数据中心（或本地环境）之间移动容器化应用。</p>
+<h1 id="2-容器与虚拟机的区别"><a href="#2-容器与虚拟机的区别" class="headerlink" title="2 容器与虚拟机的区别"></a>2 容器与虚拟机的区别</h1><p>​        容器和虚拟机之间的主要区别在于虚拟化层级、资源利用效率、启动速度和性能以及隔离性。</p>
+<p><img src="https://s2.loli.net/2024/12/18/XlrPybfMmukY3tL.png" srcset="/img/loading.gif" lazyload alt="image-20241218234125009"></p>
+<p>​		相比于传统的虚拟机技术，容器具有更快的启动和停止速度，更少的资源占用，更高的可伸缩性和更好的性能。容器还提供了更好的环境隔离和更高的应用程序密度，可以在相同的硬件资源上运行更多的应用程序实例。</p>
+<p>​		容器和传统的虚拟机技术有所不同。传统的虚拟机技术是通过在物理服务器上运行一个完整的操作系统实例来实现虚拟化，每个虚拟机都有自己的内核和操作系统。而容器是在宿主机的操作系统上运行，共享宿主机的内核和操作系统，每个容器只包含应用程序及其依赖项。</p>
+<h1 id="3-容器是如何工作的"><a href="#3-容器是如何工作的" class="headerlink" title="3 容器是如何工作的"></a>3 容器是如何工作的</h1><p>​		容器技术基于操作系统级的虚拟化技术，利用Linux内核的命名空间和控制组等特性，实现了容器的隔离和资源管理。容器使用了一种称为容器镜像的打包格式，包含了应用程序及其依赖项，以及运行时所需的文件系统、网络和进程空间等。容器镜像可以通过容器运行时创建和启动，形成一个独立的运行环境。</p>
+<p>​		在Linux内核中，容器不是一类对象。容器本质上由几个底层的内核原语组成：namespace（允许你跟谁交谈），cgroups（允许使用的资源量），和LSMs（Linux安全模块——允许你做的事情）。这些凑在一起能够为我们的进程设置安全、隔离和可计量的执行环境。</p>
+<p>​		有兴趣的或想进行更深入学习的“同学”，可以再进一步去学习Linux内核的命名空间、控制组等相关知识。Linux内核的命名空间一共包括mnt、uts、pid、net、ipc、user、cgroup这7种不同命名空间。</p>
+<p>​		Linux内核命名空间参考文章：</p>
+<ul>
+<li><p>Linux kernel内核官网：</p>
+<p><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/admin-guide/namespaces/index.html">https://www.kernel.org/doc/html/latest/admin-guide/namespaces/index.html</a></p>
+</li>
+<li><p>man7.org网站：<a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man7/namespaces.7.html">https://man7.org/linux/man-pages/man7/namespaces.7.html</a></p>
+</li>
+</ul>
+<h1 id="4-容器与虚拟机的构架对比"><a href="#4-容器与虚拟机的构架对比" class="headerlink" title="4 容器与虚拟机的构架对比"></a>4 容器与虚拟机的构架对比</h1><p><img src="https://s2.loli.net/2024/12/18/KyaMD6qQFgxBGU2.png" srcset="/img/loading.gif" lazyload alt="image-20241218234218202"></p>
+<h1 id="5-容器的优势"><a href="#5-容器的优势" class="headerlink" title="5 容器的优势"></a>5 容器的优势</h1><ul>
+<li><strong>可移植性</strong></li>
+</ul>
+<p>容器已经成为应用分发和交付的标准技术，将应用与底层运行环境进行解耦，使得应用程序可以在不同的计算环境中快速移植和运行。</p>
+<ul>
+<li><strong>高效性</strong></li>
+</ul>
+<p>相比于传统的虚拟机技术，容器更加轻量级，启动和停止速度更快，占用的资源更少。容器共享操作系统和硬件资源，提高了资源利用率，降低了运行成本。</p>
+<ul>
+<li><strong>环境隔离</strong></li>
+</ul>
+<p>容器提供了一种隔离的运行环境，每个容器都有自己的文件系统、网络和进程空间，保证了应用程序之间的相互隔离。这样可以提高应用程序的安全性和稳定性，避免了不同应用程序之间的冲突和干扰。</p>
+<ul>
+<li><strong>可伸缩性</strong></li>
+</ul>
+<p>容器可以根据需求进行水平和垂直扩展，快速实现应用程序的弹性伸缩。通过容器编排工具，可以自动管理和调度容器的部署和扩展，提高了应用程序的可伸缩性和可靠性。</p>
+<h1 id="6-容器有哪些实际应用"><a href="#6-容器有哪些实际应用" class="headerlink" title="6 容器有哪些实际应用"></a>6 容器有哪些实际应用</h1><p>​		容器在各种应用场景中有着广泛的应用，以下是其中几个主要应用场景：</p>
+<ul>
+<li><strong>应用程序开发和测试</strong></li>
+</ul>
+<p>容器提供了一个一致的运行环境，使得开发人员可以在开发和测试阶段快速构建和部署应用程序。容器可以将开发环境和生产环境保持一致，提高了开发效率和质量。</p>
+<ul>
+<li><strong>微服务架构</strong></li>
+</ul>
+<p>微服务架构将应用程序拆分为多个小型的、独立部署的服务。容器可以为每个服务提供一个独立的运行环境，使得微服务之间互相隔离，提高了整体系统的可维护性和可伸缩性。</p>
+<ul>
+<li><strong>持续集成和持续部署</strong></li>
+</ul>
+<p>容器可以与持续集成和持续部署工具集成，实现自动化的构建、测试和部署。容器可以快速启动和停止，提供了快速迭代和发布的能力，加快了软件交付的速度。</p>
+<h1 id="7-备注与引用"><a href="#7-备注与引用" class="headerlink" title="7 备注与引用"></a>7 备注与引用</h1><p>​		某些观点或阐述，笔者水平有限无法给出正式严谨的答案，唯有引用企业或单位的官网正式描述。本文某些内容来自以下文章：</p>
+<ul>
+<li>容器的定义与优势：来自阿里云官网“<a target="_blank" rel="noopener" href="https://www.aliyun.com/getting-started/what-is/what-is-container%E2%80%9D">https://www.aliyun.com/getting-started/what-is/what-is-container”</a></li>
+<li>容器技术的用途或作用：来自redhat官网“<a target="_blank" rel="noopener" href="https://www.redhat.com/zh/topics/containers%E2%80%9D">https://www.redhat.com/zh/topics/containers”</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AE%B9%E5%99%A8-%E8%99%9A%E6%8B%9F%E5%8C%96-%E7%AE%97%E5%8A%9B%E8%B0%83%E5%BA%A6-k8s/" class="print-no-link">#容器 虚拟化 算力调度 k8s</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>容器概述</div>
+      <div>https://jiangsanyin.github.io/2024/12/18/容器概述/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年12月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/23/%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6%E7%9A%84%E5%AE%9A%E4%B9%89%E3%80%81%E5%88%86%E7%B1%BB%E3%80%81%E5%8E%86%E5%8F%B2%E4%B8%8E%E7%AE%80%E4%BB%8B/" title="容器运行时的定义、分类、历史与简介">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">容器运行时的定义、分类、历史与简介</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/14/%E7%AE%97%E5%8A%9B%E8%B0%83%E5%BA%A6%E6%A6%82%E8%BF%B0/" title="算力调度概述">
+                        <span class="hidden-mobile">算力调度概述</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

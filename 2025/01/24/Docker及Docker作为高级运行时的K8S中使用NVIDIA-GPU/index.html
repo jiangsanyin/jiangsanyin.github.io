@@ -1,0 +1,739 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、写在前面本文章总结了在Docker环境使用“NVIDIA GPU”，它的效率与直接在物理服务器启动进程使用物理服务器上的NVIDIA GPU效率差不多，所以是一种高效与常用的NVIDIA GPU云原生场景下的使用方式。能够在Docker环境使用“NVIDIA GPU”后，只需要在Docker环境所在的服务器上再部署 Kubernetes 环境、安装nvidia-device-plugin 后即">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker及Docker作为高级运行时的K8S中使用NVIDIA GPU">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/01/24/Docker%E5%8F%8ADocker%E4%BD%9C%E4%B8%BA%E9%AB%98%E7%BA%A7%E8%BF%90%E8%A1%8C%E6%97%B6%E7%9A%84K8S%E4%B8%AD%E4%BD%BF%E7%94%A8NVIDIA-GPU/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、写在前面本文章总结了在Docker环境使用“NVIDIA GPU”，它的效率与直接在物理服务器启动进程使用物理服务器上的NVIDIA GPU效率差不多，所以是一种高效与常用的NVIDIA GPU云原生场景下的使用方式。能够在Docker环境使用“NVIDIA GPU”后，只需要在Docker环境所在的服务器上再部署 Kubernetes 环境、安装nvidia-device-plugin 后即">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/01/24/i6HBhGcNQzgCm7q.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/24/ObVELMWmphUcDly.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/24/XxIRLElK5gHhnBQ.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/24/hzQefDJkBIiX86l.png">
+<meta property="article:published_time" content="2025-01-24T07:52:15.000Z">
+<meta property="article:modified_time" content="2025-01-25T03:24:08.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/01/24/i6HBhGcNQzgCm7q.png">
+  
+  
+  
+  <title>Docker及Docker作为高级运行时的K8S中使用NVIDIA GPU - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Docker及Docker作为高级运行时的K8S中使用NVIDIA GPU</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-24 15:52" pubdate>
+          2025年1月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Docker及Docker作为高级运行时的K8S中使用NVIDIA GPU</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一、写在前面"><a href="#一、写在前面" class="headerlink" title="一、写在前面"></a>一、写在前面</h1><p>本文章总结了在Docker环境使用“NVIDIA GPU”，它的效率与直接在物理服务器启动进程使用物理服务器上的NVIDIA GPU效率差不多，所以是一种高效与常用的NVIDIA GPU云原生场景下的使用方式。能够在Docker环境使用“NVIDIA GPU”后，只需要在Docker环境所在的服务器上再部署 Kubernetes 环境、安装nvidia-device-plugin 后即可以在 Kubernetes 环境使用NVIDIA GPU。</p>
+<p>本文中涉及的Docker环境宿主机的操作系统有两种：Ubuntu20-amd64、Centos7.9-amd64。</p>
+<p><strong>其他说明</strong></p>
+<ul>
+<li>本文假设服务器安装有NVIDIA GPU，且操作系统上已经安装NVIDIA驱动</li>
+<li>本文假设服务器的操作系统上已经安装好 Docker 服务</li>
+<li>本文不对其中原理细节（如nvidia-docker2&#x2F;nvidia-container-toolkit的工作原理）进行阐述，此部分内容过多，将单独整理成文</li>
+</ul>
+<h1 id="二、Ubuntu20-22-24-amd64"><a href="#二、Ubuntu20-22-24-amd64" class="headerlink" title="二、Ubuntu20&#x2F;22&#x2F;24-amd64"></a>二、Ubuntu20&#x2F;22&#x2F;24-amd64</h1><p>此章节在Ubuntu20-amd64中验证成功。Ubuntu22&#x2F;24-amd64操作系统上，安装配置Docker环境及相关配置步骤应该跟Ubuntu20-amd64中一样（个人猜测，还没验证）</p>
+<h2 id="2-1-设置-repository-和-GPG-key"><a href="#2-1-设置-repository-和-GPG-key" class="headerlink" title="2.1 设置 repository 和 GPG key"></a>2.1 设置 repository 和 GPG key</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">distribution=$(. /etc/os-release;echo $ID$VERSION_ID)<br>curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -<br>curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-2-安装-nvidia-docker2"><a href="#2-2-安装-nvidia-docker2" class="headerlink" title="2.2 安装 nvidia-docker2"></a>2.2 安装 nvidia-docker2</h2><p>参考文档：<a target="_blank" rel="noopener" href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html">Installing the NVIDIA Container Toolkit</a>、<a target="_blank" rel="noopener" href="https://github.com/NVIDIA/nvidia-container-toolkit">nvidia-container-toolkit的github仓库</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">nvidia-docker2 软件包包括一个自定义的 daemon.json 文件，用于将 NVIDIA 运行时注册为 Docker 的默认运行时，以及一个向后兼容 NVIDIA -Docker 1.0 的脚本。</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果安装了 NVIDIA -docker 1.0 ，则需要在安装 NVIDIA 运行时之前删除它和任何现有的 GPU 容器。</span><br>apt-get update<br>apt-get install -y nvidia-docker2<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/24/i6HBhGcNQzgCm7q.png" srcset="/img/loading.gif" lazyload alt="image-20250124161020395"></p>
+<h2 id="2-3-配置-Docker-守护进程文件"><a href="#2-3-配置-Docker-守护进程文件" class="headerlink" title="2.3 配置 Docker 守护进程文件"></a>2.3 配置 Docker 守护进程文件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#配置 Docker 守护进程以使用 NVIDIA 容器运行时： 将默认运行时设置为 nvidia。如果该文件不存在则创建它。存在时就酌情修改/etc/docker/daemon.json</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">增加如下内容</span><br>root@controller01:~# cat /etc/docker/daemon.json<br>&#123;<br>  &quot;default-runtime&quot;: &quot;nvidia&quot;,<br>  &quot;runtimes&quot;: &#123;<br>    &quot;nvidia&quot;: &#123;<br>      &quot;path&quot;: &quot;/usr/bin/nvidia-container-runtime&quot;,<br>      &quot;runtimeArgs&quot;: []<br>    &#125;<br>  &#125;<br><span class="hljs-meta prompt_">  #</span><span class="language-bash">其他的自定义配置</span><br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">最终得到的daemon.json文件内容可能如下：</span><br>root@controller01:~# cat /etc/docker/daemon.json<br>&#123;<br>  &quot;default-runtime&quot;: &quot;nvidia&quot;,<br>  &quot;runtimes&quot;: &#123;<br>    &quot;nvidia&quot;: &#123;<br>      &quot;path&quot;: &quot;/usr/bin/nvidia-container-runtime&quot;,<br>      &quot;runtimeArgs&quot;: []<br>    &#125;<br>  &#125;,<br><span class="hljs-meta prompt_">  #</span><span class="language-bash">其他的自定义配置</span><br>  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],<br>  &quot;dns&quot;: [<br>    &quot;223.5.5.5&quot;,<br>    &quot;223.6.6.6&quot;,<br>    &quot;202.103.0.68&quot;,<br>    &quot;8.8.8.8&quot;<br>  ],<br>  &quot;insecure-registries&quot;: [<br>    &quot;172.20.0.21:4000&quot;, #自己的harbor仓库<br>    &quot;172.24.0.31:443&quot;<br>  ],<br>  &quot;log-opts&quot;: &#123;<br>    &quot;max-file&quot;: &quot;5&quot;,<br>    &quot;max-size&quot;: &quot;50m&quot;<br>  &#125;,<br>  &quot;registry-mirrors&quot;: [<br>    &quot;https://registry.aliyuncs.com&quot;,<br>    &quot;https://registry.docker-cn.com&quot;,<br>    &quot;https://docker.chenby.cn&quot;,<br>    &quot;https://docker.registry.cyou&quot;,<br>    &quot;https://docker-cf.registry.cyou&quot;,<br>    &quot;https://dockercf.jsdelivr.fyi&quot;,<br>    &quot;https://docker.jsdelivr.fyi&quot;,<br>    &quot;https://dockertest.jsdelivr.fyi&quot;,<br>    &quot;https://dockerproxy.com&quot;,<br>    &quot;https://docker.m.daocloud.io&quot;,<br>    &quot;https://docker.nju.edu.cn&quot;,<br>    &quot;https://docker.mirrors.sjtug.sjtu.edu.cn&quot;,<br>    &quot;https://docker.mirrors.ustc.edu.cn&quot;,<br>    &quot;https://mirror.iscas.ac.cn&quot;,<br>    &quot;https://docker.rainbond.cc&quot;<br>  ]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-4-重启docker进程"><a href="#2-4-重启docker进程" class="headerlink" title="2.4 重启docker进程"></a>2.4 重启docker进程</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">重启docker进程</span><br>systemctl daemon-reload <br>systemctl restart docker<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-5-至此已可在Docker容器中使用NVIDIA-GPU"><a href="#2-5-至此已可在Docker容器中使用NVIDIA-GPU" class="headerlink" title="2.5 至此已可在Docker容器中使用NVIDIA GPU"></a>2.5 至此已可在Docker容器中使用NVIDIA GPU</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">使用一张卡：--gpus=<span class="hljs-string">&#x27;&quot;device=0&quot;&#x27;</span>；使用第0,1张卡：--gpus=<span class="hljs-string">&#x27;&quot;device=0,1&quot;&#x27;</span>；使用全部GPU：--gpus all</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">通过序号指定GPU（此时不要加“--privileged”参数，否则仍然可以看到所有GPU）</span><br>docker run -idt \<br>  --name ubuntu2204 \<br>  --gpus=&#x27;&quot;device=0,1&quot;&#x27; \<br>  ubuntu:22.04<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">指定所有GPU</span><br>docker run -idt \<br>  --name ubuntu2204 \<br>  --gpus all \<br>  ubuntu:22.04<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-6-安装nvidia-device-plugin"><a href="#2-6-安装nvidia-device-plugin" class="headerlink" title="2.6 安装nvidia-device-plugin"></a>2.6 安装nvidia-device-plugin</h2><p>此步骤及后续步骤需要先安装好K8S环境，且要求K8S环境使用高级容器运行时是Docker。</p>
+<p>部署使用高级容器运行时是Docker的K8S环境文档，可参见前面发布的博客文章</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">下载并应用nvidia-device-plugin（最新的文件见https://github.com/NVIDIA/k8s-device-plugin）</span><br>wget https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.14.1/nvidia-device-plugin.yml<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">应用此yaml文件</span><br>kubectl create -f nvidia-device-plugin.yml <br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装成功后，可以在kube-system空间下看到一个运行正常的 ds/nvidia-device-plugin-daemonset （笔者k8s环境只有一个节点，此节点上有NVIDIA GPU）</span><br>root@controller01:~# kubectl -n kube-system get daemonsets.apps <br>NAME                             DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE<br>...<br>nvidia-device-plugin-daemonset   1         1         1       1            1           &lt;none&gt;                   2m20s<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-7-验证k8s中GPU是否可用"><a href="#2-7-验证k8s中GPU是否可用" class="headerlink" title="2.7 验证k8s中GPU是否可用"></a>2.7 验证k8s中GPU是否可用</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">1 验证NVIDIA GPU是否已经注册到k8s节点</span><br>kubectl describe node controller01   #假设controller01上面有NVIDIA GPU<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/24/ObVELMWmphUcDly.png" srcset="/img/loading.gif" lazyload alt="image-20250124163002248"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">2 验证k8s中能否正常使用NVIDIA GPU</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建一个pod以试用GPU，此pod定义文件如下</span><br>root@controller01:~# touch RunningGPUJobs.yaml<br>apiVersion: v1<br>kind: Pod<br>metadata:<br>  name: gpu-pod<br>spec:<br>  restartPolicy: Never<br>  containers:<br>    - name: cuda-container<br>      image: nvcr.io/nvidia/k8s/cuda-sample:vectoradd-cuda10.2<br>      resources:<br>        limits:<br>          nvidia.com/gpu: 1 # requesting 1 GPU<br>  tolerations:<br>  - key: nvidia.com/gpu<br>    operator: Exists<br>effect: NoSchedule<br><br>root@controller01:~# kubectl apply -f RunningGPUJobs.yaml<br><span class="hljs-meta prompt_">#</span><span class="language-bash">上述命令将在默认命名空间下创建一个pod/gpu-pod，它处于Running状态后，其中程序很快就会运行完成从面pod变成Completed状态</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看pod/gpu-pod的日志</span><br>root@controller01:~# kubectl logs gpu-pod<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/24/XxIRLElK5gHhnBQ.png" srcset="/img/loading.gif" lazyload alt="image-20250124163229713"></p>
+<h1 id="三、Centos7-9-amd64"><a href="#三、Centos7-9-amd64" class="headerlink" title="三、Centos7.9-amd64"></a>三、Centos7.9-amd64</h1><h2 id="3-1-配置Repository"><a href="#3-1-配置Repository" class="headerlink" title="3.1 配置Repository"></a>3.1 配置Repository</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">distribution=$(. /etc/os-release;echo $ID$VERSION_ID)<br><br>curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.repo | tee /etc/yum.repos.d/nvidia-container-runtime.repo<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-2-安装-nvidia-docker2"><a href="#3-2-安装-nvidia-docker2" class="headerlink" title="3.2 安装 nvidia-docker2"></a>3.2 安装 nvidia-docker2</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs css">yum makecache -<span class="hljs-attribute">y</span><br>yum install nvidia-docker2 -<span class="hljs-attribute">y</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/24/hzQefDJkBIiX86l.png" srcset="/img/loading.gif" lazyload alt="image-20250124163714236"></p>
+<p>后续步骤跟“Ubuntu20&#x2F;22&#x2F;24-amd64”上时一样</p>
+<h1 id="四、几个容器镜像同步网站"><a href="#四、几个容器镜像同步网站" class="headerlink" title="四、几个容器镜像同步网站"></a>四、几个容器镜像同步网站</h1><p>docker proxy：<a target="_blank" rel="noopener" href="https://dockerproxy.net/">docker proxy</a></p>
+<p>public-image-mirror：<a target="_blank" rel="noopener" href="https://github.com/DaoCloud/public-image-mirror">public-image-mirror</a></p>
+<p>渡渡鸟镜像同步站：<a target="_blank" rel="noopener" href="https://docker.aityp.com/">https://docker.aityp.com/</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Docker/" class="print-no-link">#Docker</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Docker及Docker作为高级运行时的K8S中使用NVIDIA GPU</div>
+      <div>https://jiangsanyin.github.io/2025/01/24/Docker及Docker作为高级运行时的K8S中使用NVIDIA-GPU/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年1月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/01/25/kubeflow1-6-1%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%9F%BA%E7%A1%80%E7%A4%BA%E4%BE%8B%E4%BD%BF%E7%94%A8/" title="kubeflow1.6.1的搭建与基础示例使用">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">kubeflow1.6.1的搭建与基础示例使用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/01/23/HAMi%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86/" title="HAMi使用过程中问题处理">
+                        <span class="hidden-mobile">HAMi使用过程中问题处理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

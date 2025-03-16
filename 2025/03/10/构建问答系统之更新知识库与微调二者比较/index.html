@@ -1,0 +1,812 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、参考文章（1）RAG &amp; 微调，我们应该如何选择？ 二、什么时候需要使用RAG，什么时候使用微调   要求&#x2F;使用对象 RAG 微调    （1）要构建一个需要访问外部数据源的 LLM 应用程序 Y    （2）应用程序需要专门的写作与回答风格（如客服）或与特定领域的语言和惯例深度一致  Y   （3）抑制幻觉 Y    （4）数据集有限时，微调效果有限，但RAG仍能保持一定知">
+<meta property="og:type" content="article">
+<meta property="og:title" content="构建问答系统之更新知识库与微调二者比较">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/03/10/%E6%9E%84%E5%BB%BA%E9%97%AE%E7%AD%94%E7%B3%BB%E7%BB%9F%E4%B9%8B%E6%9B%B4%E6%96%B0%E7%9F%A5%E8%AF%86%E5%BA%93%E4%B8%8E%E5%BE%AE%E8%B0%83%E4%BA%8C%E8%80%85%E6%AF%94%E8%BE%83/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、参考文章（1）RAG &amp; 微调，我们应该如何选择？ 二、什么时候需要使用RAG，什么时候使用微调   要求&#x2F;使用对象 RAG 微调    （1）要构建一个需要访问外部数据源的 LLM 应用程序 Y    （2）应用程序需要专门的写作与回答风格（如客服）或与特定领域的语言和惯例深度一致  Y   （3）抑制幻觉 Y    （4）数据集有限时，微调效果有限，但RAG仍能保持一定知">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/03/11/JqMdIaOznpjgTFm.png">
+<meta property="article:published_time" content="2025-03-10T01:30:00.000Z">
+<meta property="article:modified_time" content="2025-03-11T09:02:54.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="更新知识库 微调">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/03/11/JqMdIaOznpjgTFm.png">
+  
+  
+  
+  <title>构建问答系统之更新知识库与微调二者比较 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">构建问答系统之更新知识库与微调二者比较</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-10 09:30" pubdate>
+          2025年3月10日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          29 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">构建问答系统之更新知识库与微调二者比较</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一、参考文章"><a href="#一、参考文章" class="headerlink" title="一、参考文章"></a>一、参考文章</h1><p>（1）<a target="_blank" rel="noopener" href="https://www.53ai.com/news/qianyanjishu/201.html">RAG &amp; 微调，我们应该如何选择？</a></p>
+<h1 id="二、什么时候需要使用RAG，什么时候使用微调"><a href="#二、什么时候需要使用RAG，什么时候使用微调" class="headerlink" title="二、什么时候需要使用RAG，什么时候使用微调"></a>二、什么时候需要使用RAG，什么时候使用微调</h1><table>
+<thead>
+<tr>
+<th>要求&#x2F;使用对象</th>
+<th>RAG</th>
+<th>微调</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>（1）要构建一个需要访问外部数据源的 LLM 应用程序</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>（2）应用程序需要专门的<strong>写作与回答风格（如客服）<strong>或</strong>与特定领域的语言和惯例深度一致</strong></td>
+<td></td>
+<td>Y</td>
+</tr>
+<tr>
+<td>（3）抑制幻觉</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>（4）数据集有限时，微调效果有限，但RAG仍能保持一定知情度与准确度</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>（5）如果我们正在应对快速发展的数据环境，RAG 提供的敏捷性是传统微调难以比拟的。</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>（6）LLM 应用程序需要透明&#x2F;可解释，RAG 可以增强用户对其输出的信任和理解。</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>（7）快速集成领域知识如法律、数学与特定公司产品等，提高专业问答能力、成为当前领域内的专家</td>
+<td></td>
+<td>Y</td>
+</tr>
+<tr>
+<td>（8）可扩展性（不断给增加数据源知识量）</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>（9）延迟和实时要求（RAG 涉及在生成响应之前检索数据，可能会引入更多延迟）</td>
+<td></td>
+<td>Y</td>
+</tr>
+<tr>
+<td>（10）维护与支持（RAG需要维护知识库与检索机制，而微调需要反复的再训练流程）</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>（11）成本（微调需要反复微调动作，需要持续投入；RAG则主要在初期需要一定成本，用来集成相关应用等，但还需要考虑定期维护外部知识库，成本相对较低）</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>（12）复杂度</td>
+<td>Y</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>RAG英文全称是“Retrieval-Augmented Generation”，中文翻译为“检索增强生成”，它将检索（或搜索）的能力集成到 LLM 的文本生成中。它结合了一个检索系统和一个 LLM，前者从大型语料库中获取与用户查询最相关的文档，后者使用这些被检索到的文档中的信息生成答案。本质上，RAG 帮助模型“查找”外部信息以改进其响应。</p>
+<p>Model Fine-tuning，中文翻译为“模型微调”，是在较小的特定数据集上进一步训练预训练过的 LLM，以使其适应特定任务或提高其性能。通过微调，我们根据数据调整模型的权重，使其更适合我们应用程序的独特需求。</p>
+<p>那么到底什么时候应该使用RAG，什么时候应该使用模型微调呢？下面从多个角度来进行分析说明。</p>
+<hr>
+<p>（1）<strong>是否需要访问外部数据源？</strong></p>
+<p>LLM本身的知识储备是有一个自身缺陷或限制的，主要来自两个方面：第一，LLM被训练时所使用的训练数据集是有一个收集时间界线的，在这个时间界线之后的产生的新知识是LLM无法知晓的。第二，收集训练数据集时无法收集到那么不公开的数据，这样的数据也是LLM无法知晓的。</p>
+<p>如果我们要构建一个需要访问外部数据源的 LLM 应用程序，那么我们就应该选择 RAG。因为 RAG 会通过在 LLM 生成响应之前从外部数据源中检索与当前用户查询最相关的信息来增强 LLM 的能力。 相比之下，虽然我们可以对LLM进行微调以学习一些外部知识，但这样做需要目标领域内的大量带标签的问答数据集，且该数据集必须随着基础数据的变化不断变化更新，这在基础数据频繁更新时是不切实际的。微调过程也没有明确地对查询外部知识所涉及的检索和推理步骤进行建模，这使得开发人员与用户对这两个步骤的执行存在较大不确定性。</p>
+<p>因此总而言之，如果我们的应用程序需要使用外部数据源，那么使用 RAG 系统可能比尝试仅通过微调“融入”所需的知识更有效且可扩展。</p>
+<p>（2）<strong>是否需要修改模型的行为、写作风格或特定领域的知识？</strong></p>
+<p>微调的优势在于能够使 LLM 的行为适应特定领域的语气或术语。比如我们希望模型的回答更像一个法律专家，那么对法律领域的数据集进行微调可以达到这个目的。</p>
+<p>而与之相对地，RAG虽然能够检索外部数据源并提供给LLM进行利用与整合，但其侧重点仍在于信息检索，并不会根据检索到的文件与信息修改LLM的语气与措词风格。</p>
+<p>因此，如果我们的应用程序需要专门的回复风格或与特定领域的语言惯例和气质保持一致，那么就需要使用微调。</p>
+<p>（3）<strong>抑制幻觉</strong></p>
+<p>LLM的一个明显的缺点就是容易产生幻觉，即对于未掌握的知识或不熟悉的知识，LLM也会尝试编造没有现实依据或现成数据的事情与细节，生成回复。人类看到之后，可能感觉“有理有据，头头是道”，但其实可能是LLM在“一本正经地胡说八道”。如果用户遵照这类回复进行操作，可能造成不可确认的结果甚至重大破坏性问题。</p>
+<p>如果在特定领域的训练数据上对LLM进行微调，可以在一定程度上减少LLM出现幻觉的可能性。但只是一定程度上减少这种可能性，即当LLM面对不熟悉的问题时，LLM仍可能会“一本正经地胡说八道”，导致LLM幻觉现象的出现。</p>
+<p>相对地，如果使用RAG则不太容易产生幻觉，因为它的每个响应都基于从指定数据源中检索到的信息。在LLM输出答案之前，检索器从外部数据源（我们当然应该尽量保证此外部数据源中数据的准确严谨性）中检索到相关文件与信息，这个过程其实就是相当于是对LLM的大致回复内容进行了事实检查操作，极大地减少了LLM“一本正经地胡说八道”的可能性。LLM 也被限制根据检索到的上下文信息合成响应。</p>
+<p>（4）<strong>可用的已标记训练数据量大小是一个重要因素</strong></p>
+<p>可用已标记数据的质量与数量是决定采用模型微调还是RAG的一个重要因素。即如果可用已标记数据量大且质量都不错，那么这些训练数据可以帮助模型深入理解特定领域的细微差别、复杂性与独特模式，从而生成准确的、与上下文相关的回复；反过来，如果我们的训练数据数据与质量无法达到上述标准，事实上微调能够带来的改进效果是非常有限的，如果训练数据集不足还有可能导致出现过拟合现象。</p>
+<p>相比之下，即使没有大量的可用已标记数据，RAG独立于训练数据，仍能够从提供的外部知识源中检索用户提问的相关信息，然后由LLM通过访问与整合来自外部数据源的信息生成最终回复。检索和生成的结合确保系统即使在特定领域的训练数据稀疏的情况下也能保持知情。</p>
+<p>所以说，如果我们拥有大量的可用标记数据以覆盖当前领域内问题的复杂性与广度，模型微调可以提供定制化的、准确完善的模型行为。反之，我们则应该采用RAG文案，确保应用程序通过其检索功能保持数据知情与上下文感知。</p>
+<p>（5）<strong>数据动静态程度如何</strong></p>
+<p>在特定数据集上微调LLM意味着LLM本身的知识储备就是微调时所用数据集的一个静态快照。很显然，如果模型所需要使用的数据集频繁更新，为了使用LLM本身的知识储备能够跟这些更新保持同步，就需要对模型频繁进行微调，这不仅需要频繁地准备数据集与格式化它们，还需要频繁地执行微调指令，这门将是一个耗时又占用资源的过程。与此同时，为了确保更新后的模型在不同场景下能够使用更新后的知识做出准确恰当的回答，还需要对其进行测试与仔细监控。</p>
+<p>而RAG在类似的场景下则拥有与身俱来的优势。它们本来就是使用检索机制在外部知识源查询与用户提问最相关的文档与信息，更新了外部知识源其实对它来说几乎是透明的，它们仍能从更新后的外部知识源检索并提取最新的知识。</p>
+<p>总之，如果我们数据环境是快速迭代更新的，RAG为我们提供的敏捷性、便捷性、高效性是传统微调难以比拟的。</p>
+<p>（6）<strong>LLM 应用程序需要有多透明&#x2F;可解释？</strong></p>
+<p>经过微调后的LLM虽然很强大，但其背后的运作与推理逻辑对人类来说就是一个黑盒子，不透明且不可感知其中某个关键细节过程。对于某些用户或某些需要验证LLM输出结果准确性的应用程序来说，确定LLM输出的内容并知晓其背后的原因与参考内容也是很重要的。遗憾的是，微调并不能实现此功能。</p>
+<p>相反，RAG却可以轻松地实现此功能。由于RAG的两步性质即”检索与生成“，且能将中间的检索结果中与生成内容相关的内容最终以参考文档的形式呈现给使用者，这为使用者溯源输出内容提供了切实的证据与参考线索。</p>
+<p>所以，如果使用者要求对LLM输出的内容进行溯源，以找到切实的证据与参考线索，那么RAG将是首选。</p>
+<p>（12）<strong>复杂度</strong></p>
+<p>虽然许多提供商现在提供一键式微调，我们只需要提供训练数据，但跟踪模型版本并确保新模型仍然全面运行是一项挑战。另一方面，RAG 也可能很快变得复杂。有多个组件的设置，确保数据库保持最新，并确保各个部分（例如检索和生成）正确地组合在一起。</p>
+<hr>
+<h1 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h1><p>显然，我们在决定选择微调还是RAG前，需要先对LLM的独特需要、优先事项与自身条件进行综合评估。</p>
+<p>没有一种万能的解决方案 ，成功在于使优化方法与任务的具体要求保持一致。通过评估关键标准（外部数据的需求、调整模型行为、训练数据可用性、数据动态、结果透明度等），我们就可以用最佳前进路径做出明智的决策。在某些情况下，同时利用 RAG 和微调的混合方法可能是最佳选择。</p>
+<p><img src="https://s2.loli.net/2025/03/11/JqMdIaOznpjgTFm.png" srcset="/img/loading.gif" lazyload alt="image-20250311162729369"></p>
+<p>（1）如果要使用微调，目前在我看来将存在以下缺点或待解决问题：</p>
+<ul>
+<li>微调需要将我们公司现有各种文档如使用手册、产品说明书、白皮书等，转换成可用于微调的数据集。而这些文档的格式可能是多种多样的如pdf、pptx、docx等，需要继续研究这种转换工作可用方法与成本。</li>
+<li>后期基础数据关键内容更新一次可能就需要进行一次微调，将增加成本。且微调一次其实会生成一个新模型，需要重新部署，将临时中断模型对外提供服务（目前这对于我们公司来说，可能不是最关键的缺点）</li>
+</ul>
+<p>（2）如果使用RAG（这里直接以“fastGPT这类知识库问答系统”来搭建客服系统为例），则存在以下缺点：</p>
+<ul>
+<li>客服的回复语气与风格，可能不够委婉。但能实现会话且保证回复的答案能够溯源且相对准确</li>
+<li>不管微调还是RAG，如果需要联网搜索，就需要配置联网搜索引擎（有收费搜索引擎，但增加了成本；也有免费的，但服务可能不够稳定、效果不如收费版本好）</li>
+</ul>
+<hr>
+<p><strong>最后，我给出自己的建议供参考</strong>：</p>
+<p>如果需要马上搭建出这样的客服系统，可以先使用fastGPT来搭建RAG应用程序，完成知识库与相关功能配置，先体验下效果。</p>
+<p>如果后续有需要且技术完善、时间充裕，可以将公司相关资料文档转换成可用标记数据集，进行微调。最好能将“微调与RAG结合起来使用”、”单独使用微调“进行比较评估，并确定后续动作。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%9B%B4%E6%96%B0%E7%9F%A5%E8%AF%86%E5%BA%93-%E5%BE%AE%E8%B0%83/" class="print-no-link">#更新知识库 微调</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>构建问答系统之更新知识库与微调二者比较</div>
+      <div>https://jiangsanyin.github.io/2025/03/10/构建问答系统之更新知识库与微调二者比较/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/03/11/Datawhale%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AF%BE%E7%A8%8B%E5%88%86%E7%BB%84%E5%AD%A6%E4%B9%A0/" title="Datawhale大语言模型课程分组学习">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Datawhale大语言模型课程分组学习</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/03/08/DeepSeek%E7%9A%84%E7%94%A8%E6%B3%95%E6%95%B4%E7%90%86-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/" title="DeepSeek的用法整理(持续更新)">
+                        <span class="hidden-mobile">DeepSeek的用法整理(持续更新)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

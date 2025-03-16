@@ -1,0 +1,766 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="​		本文70%左右内容来自对英文文章 “https:&#x2F;&#x2F;www.capitalone.com&#x2F;tech&#x2F;cloud&#x2F;container-runtime&#x2F;” 的翻译。笔者首先看到文章 “https:&#x2F;&#x2F;www.zhangjiee.com&#x2F;blog&#x2F;2021&#x2F;container-runtime.html” ，发现此文是对上述文章的完全翻译，因为笔者个人觉得此中文文章一些地方翻译得不够准确与不够可读，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容器运行时的定义、分类、历史与简介">
+<meta property="og:url" content="https://jiangsanyin.github.io/2024/12/23/%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6%E7%9A%84%E5%AE%9A%E4%B9%89%E3%80%81%E5%88%86%E7%B1%BB%E3%80%81%E5%8E%86%E5%8F%B2%E4%B8%8E%E7%AE%80%E4%BB%8B/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="​		本文70%左右内容来自对英文文章 “https:&#x2F;&#x2F;www.capitalone.com&#x2F;tech&#x2F;cloud&#x2F;container-runtime&#x2F;” 的翻译。笔者首先看到文章 “https:&#x2F;&#x2F;www.zhangjiee.com&#x2F;blog&#x2F;2021&#x2F;container-runtime.html” ，发现此文是对上述文章的完全翻译，因为笔者个人觉得此中文文章一些地方翻译得不够准确与不够可读，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2024/12/23/qo9kmvG7t1JLrny.png">
+<meta property="og:image" content="https://s2.loli.net/2024/12/23/atpU5XfLC9Zucbl.png">
+<meta property="og:image" content="https://s2.loli.net/2024/12/23/24HoaA6m1t7TX9z.png">
+<meta property="og:image" content="https://s2.loli.net/2024/12/23/aQewkdiogORbfnP.png">
+<meta property="og:image" content="https://s2.loli.net/2024/12/23/ATYLiecyoh6m7nt.png">
+<meta property="article:published_time" content="2024-12-23T12:46:41.000Z">
+<meta property="article:modified_time" content="2024-12-23T13:04:20.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="容器 运行时 kubernetes k8s">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2024/12/23/qo9kmvG7t1JLrny.png">
+  
+  
+  
+  <title>容器运行时的定义、分类、历史与简介 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">容器运行时的定义、分类、历史与简介</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-23 20:46" pubdate>
+          2024年12月23日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">容器运行时的定义、分类、历史与简介</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>​		本文70%左右内容来自对英文文章 “<a target="_blank" rel="noopener" href="https://www.capitalone.com/tech/cloud/container-runtime/%E2%80%9D">https://www.capitalone.com/tech/cloud/container-runtime/”</a> 的翻译。笔者首先看到文章 “<a target="_blank" rel="noopener" href="https://www.zhangjiee.com/blog/2021/container-runtime.html%E2%80%9D">https://www.zhangjiee.com/blog/2021/container-runtime.html”</a> ，发现此文是对上述文章的完全翻译，因为笔者个人觉得此中文文章一些地方翻译得不够准确与不够可读，所以笔者个人尝试对上述英文文章进行了再次翻译，同时在其中某些段落插入了一些自己编辑的图文，以更好地理解相关概念，在此做下记录以备后续回忆与学习。</p>
+<h1 id="1-容器运行时的定义"><a href="#1-容器运行时的定义" class="headerlink" title="1 容器运行时的定义"></a>1 容器运行时的定义</h1><p>​		容器本质上是由几个底层的内核原语相关组件捆绑在一起组成，每次创建隔离进程时，都不需要手动隔离、自定义命名空间等，把这些组件捆绑在一起，我们称之为容器。容器运行时就是一个工具，这个工具将这些组件以一起有序高效地方式组合起来，从而构建、管理与销毁一个隔离的、安全的执行环境（即容器），让用户不再需要手动隔离、自定义命名空间等，同时能够以一种简洁方便的方式去对容器的整个周期进行管理。</p>
+<p>​		随着技术的发展和迭代，它们的运行时也在随着变化。</p>
+<h1 id="2-容器运行时的早期历史"><a href="#2-容器运行时的早期历史" class="headerlink" title="2 容器运行时的早期历史"></a>2 容器运行时的早期历史</h1><p>​		随着技术的发展和迭代，它们的运行时也在随着变化。</p>
+<p>​		自从2007年cgroup被加入Linux内核后，讯速出现了几个利用包括cgroup命名空间在内的7个Linux命名空间的项目，这些项目都是的目的都是为了创建容器化进程。这些项目主要如下几个：</p>
+<ul>
+<li>LXC（<a target="_blank" rel="noopener" href="https://linuxcontainers.org/lxc/%EF%BC%89">https://linuxcontainers.org/lxc/）</a></li>
+<li>LMCTFY（<a target="_blank" rel="noopener" href="https://github.com/google/lmctfy%EF%BC%89">https://github.com/google/lmctfy）</a></li>
+<li>systemd-nspawn（<a target="_blank" rel="noopener" href="https://www.freedesktop.org/software/systemd/man/systemd-nspawn.html%EF%BC%89">https://www.freedesktop.org/software/systemd/man/systemd-nspawn.html）</a></li>
+<li>rkt（<a target="_blank" rel="noopener" href="https://github.com/rkt/rkt%EF%BC%89">https://github.com/rkt/rkt）</a></li>
+</ul>
+<h2 id="LXC即Linux-Containers"><a href="#LXC即Linux-Containers" class="headerlink" title="LXC即Linux Containers"></a>LXC即Linux Containers</h2><p>​		LXC是在crgoup被引入Linux内核后立即被创建的项目，它被设计用于”full-system” 容器，是用来创建Linux容器的，此时的Linux容器跟我们现在常用的Linux上Docker容器或containerd容器是有区别的，最显著的区别在于它们使用不是容器运行时不同。同时Systemd也获得了类似的容器支持，systemd-nspawn可以运行命名空间进程，systemd本身可以控制cgroup。尽管lxc与systemd-nspawn也在其他项目中被利用到了，但它们还是没有能够吸引足够多的终端用户。直到现在也是一个不流行的开源容器化项目。</p>
+<h2 id="dotCloud即后来的Docker）"><a href="#dotCloud即后来的Docker）" class="headerlink" title="dotCloud即后来的Docker）"></a>dotCloud即后来的Docker）</h2><p>​		dotCloud（它就是现在的Docker公司的前身）开始围绕LXC开发各种工具以使容器对开发人员与用户体验更友好。但不久后，dotCloud抛弃了LXC，创建了 开放容器倡议（OCI， <a target="_blank" rel="noopener" href="https://github.com/opencontainers/runtime-spec">https://github.com/opencontainers/runtime-spec</a> ）来建立业内容器标准，并将一些容器组件开源为 libcontainer（地址： <a target="_blank" rel="noopener" href="https://github.com/docker-archive/libcontainer">https://github.com/docker-archive/libcontainer</a> ） 项目。</p>
+<h2 id="LMCTFY"><a href="#LMCTFY" class="headerlink" title="LMCTFY"></a>LMCTFY</h2><p>​		Google开源也其内部容器技术栈的开源版本：LMCTFY（ <a target="_blank" rel="noopener" href="https://github.com/google/lmctfy">https://github.com/google/lmctfy</a> ）。但随着dotCloud（后来改名为Docker）变得流行起来，LMCTFY 项目最终被抛弃，LMCTFY 项目中的绝大部分功能也被其开发人员复制融入到了Docker的开源项目libcontainer 中。</p>
+<h2 id="rkt与appc"><a href="#rkt与appc" class="headerlink" title="rkt与appc"></a>rkt与appc</h2><p>​		CoreOS起初在其Containerd Linux产品中只使用Docker技术栈，一段时间后也发行了一个名为rkt 项目（ <a target="_blank" rel="noopener" href="https://github.com/rkt/rkt">https://github.com/rkt/rkt</a> ）作为Docker的替代品。在当时，rkt提前具备了区别于Docker与其他 早期容器运行时的特性。它不需要以root用户运行、没有守护进程、是CLI驱动的，同时它也具有一些独到特性如加密验证和完全的 Docker 镜像兼容。  令人惋惜地是，在Docker 创建 开放容器倡议（OCI， <a target="_blank" rel="noopener" href="https://github.com/opencontainers/runtime-spec">https://github.com/opencontainers/runtime-spec</a> ）之前，CoreOS发布了一个叫做 appc 的容器标准。但抗不住后起这秀 OCI 在全球范围内的流行，CoreOS最终放弃了appc 转而支持 OCI，并将appc的部分特性功能也提交给 OCI 。至此，rkt与appc最终都被抛弃。</p>
+<p>​		直至Kubernetes1.24之前，OCI 成为并一直是业界最流行的容器标准。</p>
+<h1 id="3-容器运行时的汇总"><a href="#3-容器运行时的汇总" class="headerlink" title="3 容器运行时的汇总"></a>3 容器运行时的汇总</h1><p>​		当前容器运行时有多种类型，但它们可以被分两大类：OCI 运行时和 CRI（容器运行接口）。</p>
+<p><img src="https://s2.loli.net/2024/12/23/qo9kmvG7t1JLrny.png" srcset="/img/loading.gif" lazyload alt="image-20241223205205598"></p>
+<h1 id="4-开放容器规范（OCI）"><a href="#4-开放容器规范（OCI）" class="headerlink" title="4 开放容器规范（OCI）"></a>4 开放容器规范（OCI）</h1><p>​		有时称为低级别运行时，实现 OCI 运行时规范专注于管理容器的生命周期，并且无需其它操作。 低级别运行时创建和运行容器。</p>
+<p>​		随着技术的发展和迭代，它们的运行时也在随着变化。</p>
+<h2 id="本地运行时"><a href="#本地运行时" class="headerlink" title="本地运行时"></a>本地运行时</h2><p>​		本地容器运行时在同一个主机内核上运行容器化进程。早期出现的有较大影响力的本地容器运行时有如下，它们当中的其中某些仍然在被广泛使用。</p>
+<p>​		runC是Docker在开源项目libcontainer与开放容器规范OCI所有工作的结晶。它是事实上的标准低级运行时，由Go语言实现并由Docker下的开源项目moby维护。</p>
+<p>​		Railcar是一个由Oracle创建的OCI运行时实现。它是用Rust语言实现的，对于与内核执行低级的交互操作的容器运行时组件来说，与runC的Go语言代码相比之下，Rust是一门更加优秀的语言。但不幸地是Railcar 已经被抛弃了。</p>
+<p>​		crun是一个由Redhat引领的OCI运行时实现。它是containers project（ <a target="_blank" rel="noopener" href="https://github.com/containers">https://github.com/containers</a> ） 的一部分，是libpod的姊妹项目。是由C语言实现的，具有性能好、轻量级等特点，是第一批支持 cgroups v2（ <a target="_blank" rel="noopener" href="https://medium.com/nttlabs/cgroup-v2-596d035be4d7">https://medium.com/nttlabs/cgroup-v2-596d035be4d7</a> ） 的容器运行时之一。</p>
+<p>​		rkt不是一个OCI运行时实现，但是它是一个类低级容器运行时。除了支持appc软件集外，它还支持运行Docker与OCI镜像，但它不能与使用OCI运行时的更高级组件进行交互。</p>
+<p>​		从现有容器运行时来看，低级容器运行时只有在容器创建与删除阶段才显得尤为重要，一旦相关进程处于运行状态，低级容器运行时就不再被重要关注了即将容器处于运行状态中时低级容器运行时显得不那么重要了。</p>
+<h2 id="沙箱和虚拟化运行时"><a href="#沙箱和虚拟化运行时" class="headerlink" title="沙箱和虚拟化运行时"></a>沙箱和虚拟化运行时</h2><p>​		对于开放容器规范OCI，它不仅有本地运行时实现方案，还有虚拟化方向实现方案，早期出现的虚拟化实现方案有如下，其中某些当前仍被使用中。</p>
+<p>​		gVisor（ <a target="_blank" rel="noopener" href="https://gvisor.dev/">https://gvisor.dev/</a> ） 与Nabla（ <a target="_blank" rel="noopener" href="https://nabla-containers.github.io/">https://nabla-containers.github.io/</a> ）都是沙箱运行时实现方案，它们在宿主机与容器进程间提供了更进一步的隔离。不像本地容器运行时那样与宿主机共享内核，此时容器化进程运行在“unikernel or kernel proxy”层，容器化进程与这个层进行交互通信，然后再由这个层代表容器与宿主机内核进行交互。因为增加了隔离，这两个沙箱运行时降低了攻击面，使得容器化进程对宿主机实施破坏或不得影响的功能性更低了。</p>
+<p>​		runV（ <a target="_blank" rel="noopener" href="https://github.com/hyperhq/runv">https://github.com/hyperhq/runv</a> ），Clear ( <a target="_blank" rel="noopener" href="https://github.com/clearcontainers">https://github.com/clearcontainers</a> ）与Kata（ <a target="_blank" rel="noopener" href="https://github.com/kata-containers">https://github.com/kata-containers</a> ）都是虚拟化运行时。它们都是OCI运行时实现方案，底层由虚拟机接口而不是宿主机内核提供支持。前两者当前已经被废弃且它们特性已经被Kata所吸收。它（们）能够使用标准的OCI容器镜像，但在使用过程中在容器与宿主机之间提供了强有力的隔离，它（们）使用一个标准的Linux内核镜像来启动一个轻量级虚拟机，然后在这个虚拟机中运行容器化进程。   </p>
+<p>​		与本地化运行时相比，沙箱运行时与虚拟化运行时在容器的整个生命周期中增加了更多性能上的负面影响。在沙箱运行时容器中，存在一个额外的抽象层即容器进程运行在沙箱unikernel&#x2F;proxy 层，由这个层来传递容器指令给宿主机内核。 而在虚拟化运行时容器中，存在一个额外的虚拟化层即整个容器进程都是运行在虚拟机上的，由虚拟机再与宿主机内核进行交互，这比本地运行时直接与内核进行交互更慢；幸运地是，专注于虚拟化运行时下容器性能的 AWS Firecracker （ <a target="_blank" rel="noopener" href="https://github.com/kata-containers">https://github.com/kata-containers</a> ）在这方面做出了努力，提供的这种底层虚拟机能够尽可能地将性能影响降到最小。</p>
+<p>​		以下是对本地运行时沙箱、虚拟化运行时代表性实现方案的对比。</p>
+<p><img src="https://s2.loli.net/2024/12/23/atpU5XfLC9Zucbl.png" srcset="/img/loading.gif" lazyload alt="image-20241223205527496"></p>
+<h1 id="5-容器运行时接口（CRI）"><a href="#5-容器运行时接口（CRI）" class="headerlink" title="5 容器运行时接口（CRI）"></a>5 容器运行时接口（CRI）</h1><p>​		当Kubernetes（2014年9月第一个正式版本v0.2，2015年7月v1.0版本正式发布并可在生产环境中使用）这一容器编排工具出现时，Docker已经在业界大为流行，是业界标准的高级容器运行时，所以当时Kubernetes当时只能迁就Docker，将Docker这一高级运行时硬编码到Kubernetes的守护进程kubelet中。之后，随着Kubernetes在业界的大火，社区与企业办都产生了创建一个替代Docker这一高级运行时的要求。</p>
+<p>​		关于Kubernetes弃用docker的原因，内容较多，笔者打算另做学习总结然后做记录。</p>
+<p>​		rkt是一个尝试这一要求的支持者，通过定制化kubelet的代码产生了rktlet。但是，这种按运行时定制的构建过程无法扩展，此时也正好暴露出了Kubernetes中对抽象运行时模型的需求。为了解决这个痛点，Hyper、CoreOS、Google和Kubernetes的其他赞助商一起协商合作，站在容器编排角度推出了一个容器运行时的一个高级规范即高级容器运行规范，这个规范就是容器运行时接口（英文原名是Container Runtime Interface，简称CRI， <a target="_blank" rel="noopener" href="https://kubernetes.io/blog/2016/12/container-runtime-interface-cri-in-kubernetes/">https://kubernetes.io/blog/2016/12/container-runtime-interface-cri-in-kubernetes/</a> ）。通过与CRI集成而不是与特定的低级运行时耦合，kubelet不需要针对每种低级运行时进行硬编码与重编译，就可以灵活地支持多个容器运行时。这不仅符合软件设计的解耦设计规范，也为满足了业界中想要Kubernetes 灵活地支持多个容器运行时的要求。</p>
+<p>​		CRI同时也对OCI运行时的镜像管理与分发，也对容器存储、快照、网络等其他容器与镜像生命周期中用到的事物也给予了应有关注。不像OCI运行时主要紧密关注于在宿主上创建与运行容器，CRI具备在动态云环境中充分利用容器所需的功能。更有甚者，CRI通常也是委托一个低级的OCI运行时作为其实际上的底层运行时。通过引入CRI，Kubernetes以一种高度可扩展的方式高效地达到将kubelet与底层容器运行时进行解耦这一目的。</p>
+<p>​		CRI的第一个实现是dockershim，它在Docker容器引擎的上面提供了一个抽象层（这也是Kubernetes在Docker在业界仍然占据主导地位时的一个折中选择）。随着containerd与runc从Docker技术栈的核心中被分离出来，dockershim实际的地位终于被撼动，containerd当前提供了CRI的完整实现并逐渐成为（或说正在成为）主流。</p>
+<p><img src="https://s2.loli.net/2024/12/23/24HoaA6m1t7TX9z.png" srcset="/img/loading.gif" lazyload alt="image-20241223205703497"></p>
+<p>​		也有一个虚拟化方向的CRI实现，它就是frakti(v1)，它也是第一个非docker式的CRI实现方案（参考：Unified Kubernetes CRI runtimes based on Kata Containers， <a target="_blank" rel="noopener" href="https://object-storage-ca-ymq-1.vexxhost.net/swift/v1/6e4619c416ff4bd19e1c087f27a43eea/www-assets-prod/presentation-media/hyper-kata-frakti-cri2.pdf">https://object-storage-ca-ymq-1.vexxhost.net/swift/v1/6e4619c416ff4bd19e1c087f27a43eea/www-assets-prod/presentation-media/hyper-kata-frakti-cri2.pdf</a> ）。它本来是为runV而开发的，同时也被设计与runV协同工作的。虽然是虚拟化方向的，但它提供的功能跟基于本地OCI底层支持的CRI实现是一样的。因为runV被废弃了同时Clear Containers 与runV的特性也被 kata 所吸收，现在frakti已经不再流行。“frakti加runV组合”也被当前的“containerd加kata组合”被取代，换句话说“containerd加kata组合”就是当前“frakti加runV组合”方案实现。</p>
+<p>​		当前，CRI领域内有两个主要活跃项目，它们分别是containerd与cri-o。以下是对它们的简单介绍。</p>
+<h2 id="containerd"><a href="#containerd" class="headerlink" title="containerd"></a>containerd</h2><p>​		containerd是从Docker中孕育出来的高级运行时，是开源项目Moby在管理与研发出来的。默认情况下，containerd也是使用runc作为其低级运行时。跟其他源自Docker的容器工具一样，containerd当前是事实上的标准高级运行时。它实现与提供了CRI的全部核心功能，且增加了一些额外功能。containerd中有一个插件设计即 cri-containerd （ <a target="_blank" rel="noopener" href="https://github.com/containerd/cri">https://github.com/containerd/cri</a> ），它实现了CRI，并且存在多种垫片设计与实现以将containerd与各种低级运行时如kata、runc等进行集成。</p>
+<p>   上面提到的这些CRI实现能够与所有的OCI运行时（不仅包括本地运行时，还包含沙箱运行时与虚拟化运行时）进行交互，交互的方式可能是本地交互也可能是通过在中间插入一个插件或垫片。</p>
+<h2 id="cri-o"><a href="#cri-o" class="headerlink" title="cri-o"></a>cri-o</h2><p>​		cri-o是一个由Redhat领导的精简CRI实现方案，专为Kubernetes而设计。它意在充当为CRI与各种底层低级OCI运行时之间轻量级桥梁。与containd相比，它的外围功能更少，并委托来自libpod和“Container Tools”项目的组件进行镜像管理和存储。默认情况下，cri-o也是使用runc作为其底层低级运行时，但在RedHat Fedora installations (with cgroups v2) 项目中，它使用了crun这一低级运行时。因为cri-o能够对OCI实现完全兼容， cri-o 与低级别的运行时比如 kata开箱即用，不需要其它的组件，只需要很少的配置即可。</p>
+<h1 id="6-容器引擎"><a href="#6-容器引擎" class="headerlink" title="6 容器引擎"></a>6 容器引擎</h1><h2 id="docker容器引擎"><a href="#docker容器引擎" class="headerlink" title="docker容器引擎"></a>docker容器引擎</h2><p>​		Docker并不是一个纯粹的CRI实现或OCI实现，但是它包含了CRI的一个实现即containerd，也包含一个OCI的实现。事实上，它具有 CRI 或者 OCI 范围之外的其他功能，比如镜像构建与签名。那么到底该如何定义Docker？根据我对此文与其他技术文档的学习，最后可以得出如下大致总结：</p>
+<p>​		第一，Docker现在全称应该叫Docker 容器引擎，并且通常将这些完整的容器工具套件称之为容器引擎。而且一般来说，我们在Linux服务器（比如Ubuntu20.04 LTS）上通过执行“apt-get install docker-ce docker-ce-cli containerd.io”命令安装所谓Docker其实就是安装整个Docker容器引擎套件。除了Docker，没有其他单一可执行文件能提供这样一个完整功能，如果一定需要找到一个替换解决方案的话，我们可以从container tools项目中拼凑出一个类似的工具套件。Container Tools 项目遵循了 UNIX 小型工具哲学，每个工具只做好一件事情：</p>
+<ul>
+<li>podman - 运行镜像</li>
+<li>buildah - 构建镜像</li>
+<li>skopeo - 分发镜像</li>
+<li>其他的</li>
+</ul>
+<p>​		第二，Docker是一个大而完备的高级运行时，其用户端核心叫做Docker Engine（ <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/">https://docs.docker.com/engine/</a> ），由 3 部分构成：Docker Server (docker daemon, 简称 dockerd)、REST API 和Docker cli。借助 Docker Engine 既能便捷地运行容器进程进行集成开发、也能快速构建分发镜像。下图来自文章 “<a target="_blank" rel="noopener" href="https://www.zeng.dev/post/2020-container-runtimes/%E2%80%9D">https://www.zeng.dev/post/2020-container-runtimes/”</a> 。</p>
+<p><img src="https://s2.loli.net/2024/12/23/aQewkdiogORbfnP.png" srcset="/img/loading.gif" lazyload alt="image-20241223205843274"></p>
+<h2 id="containerd容器引擎"><a href="#containerd容器引擎" class="headerlink" title="containerd容器引擎"></a>containerd容器引擎</h2><p>​		containerd其实就是Docker从自身中剥离出来并捐赠给CNCF。从Docker中剥离出来后，containerd现在也是一个独立的容器引擎，下图（来自containerd官网）展示了整个容器技术架构及containerd在其中的位置。</p>
+<p><img src="https://s2.loli.net/2024/12/23/ATYLiecyoh6m7nt.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>​		关于containerd还不够了解，更多内容有待进一步探索与补充。</p>
+<h1 id="8-备注与参考文章"><a href="#8-备注与参考文章" class="headerlink" title="8 备注与参考文章"></a>8 备注与参考文章</h1><p>​		订阅号文章不方便更新，如后续有修改或完善，将更新到个人博客，博客地址参考文首。技术操作类文章推荐直接访问个人博客查阅，阅读效果更佳。</p>
+<p>​		某些观点或阐述，笔者水平有限无法给出正式严谨的答案，唯有引用或参考企业单位的官网与其他前辈的描述。本文某些内容来自以下文章：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.capitalone.com/tech/cloud/container-runtime/">https://www.capitalone.com/tech/cloud/container-runtime/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhangjiee.com/blog/2021/container-runtime.html#org4b14f92">https://www.zhangjiee.com/blog/2021/container-runtime.html#org4b14f92</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zeng.dev/post/2020-container-runtimes/">https://www.zeng.dev/post/2020-container-runtimes/</a></li>
+<li><a target="_blank" rel="noopener" href="https://help.aliyun.com/zh/ack/ack-managed-and-ack-dedicated/user-guide/comparison-of-docker-containerd-and-sandboxed-container">https://help.aliyun.com/zh/ack/ack-managed-and-ack-dedicated/user-guide/comparison-of-docker-containerd-and-sandboxed-container</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/qEKyEseD370xWI-2yIyUzg">https://mp.weixin.qq.com/s/qEKyEseD370xWI-2yIyUzg</a></li>
+<li><a target="_blank" rel="noopener" href="https://containerd.io/">https://containerd.io/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ricklz/p/17032914.html">https://www.cnblogs.com/ricklz/p/17032914.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/projim_tao/article/details/129534626">https://blog.csdn.net/projim_tao/article/details/129534626</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AE%B9%E5%99%A8-%E8%BF%90%E8%A1%8C%E6%97%B6-kubernetes-k8s/" class="print-no-link">#容器 运行时 kubernetes k8s</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>容器运行时的定义、分类、历史与简介</div>
+      <div>https://jiangsanyin.github.io/2024/12/23/容器运行时的定义、分类、历史与简介/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年12月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/27/%E8%87%AA%E5%B7%B1%E6%8F%90%E4%BA%A4%E7%9A%84PR%E8%A2%AB%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AEHAMi%E5%90%88%E5%85%A5%E4%B8%BB%E7%BA%BF%E5%88%86%E6%94%AF%E4%BA%86/" title="自己提交的PR被开源项目HAMi合入主线分支了">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">自己提交的PR被开源项目HAMi合入主线分支了</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/18/%E5%AE%B9%E5%99%A8%E6%A6%82%E8%BF%B0/" title="容器概述">
+                        <span class="hidden-mobile">容器概述</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,772 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 安装方法列举   以下以在Ubuntu 20.04.3 LTS-amd64 宿主机（arm64宿主机只需要转换对应文件或命令名称即可）上部署containerd 容器引擎服务为例。  apt形式安装 apt install containerd.io  二进制形式安装 访问 https:&#x2F;&#x2F;github.com&#x2F;containerd&#x2F; 下载对应构架与操作系统的二进制安装文件，解压到自定义目录并">
+<meta property="og:type" content="article">
+<meta property="og:title" content="containerd容器引擎服务的安装与使用">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/01/05/containerd%E5%AE%B9%E5%99%A8%E5%BC%95%E6%93%8E%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="1 安装方法列举   以下以在Ubuntu 20.04.3 LTS-amd64 宿主机（arm64宿主机只需要转换对应文件或命令名称即可）上部署containerd 容器引擎服务为例。  apt形式安装 apt install containerd.io  二进制形式安装 访问 https:&#x2F;&#x2F;github.com&#x2F;containerd&#x2F; 下载对应构架与操作系统的二进制安装文件，解压到自定义目录并">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/01/05/ybK5m2Mdauvile6.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/07/p63FibfTskaxRqD.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/05/e2Lqb9IXJ7pEMrj.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/05/lKXzAImqbPa5foJ.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/05/sTpCgMyOjDuzWBi.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/05/uHoxfd8JVj2GyzY.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/05/qUG7LjgvbKS1k4J.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/05/3jPE29pgeHMRKOk.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/05/rApazmoXFYftiLv.png">
+<meta property="og:image" content="https://s2.loli.net/2025/01/09/UTmBDE5FGKcRlLn.png">
+<meta property="article:published_time" content="2025-01-05T15:36:34.000Z">
+<meta property="article:modified_time" content="2025-01-09T13:22:50.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="containerd 安装 nerdctl ctr crictl">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/01/05/ybK5m2Mdauvile6.png">
+  
+  
+  
+  <title>containerd容器引擎服务的安装与使用 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">containerd容器引擎服务的安装与使用</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-05 23:36" pubdate>
+          2025年1月5日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">containerd容器引擎服务的安装与使用</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-安装方法列举"><a href="#1-安装方法列举" class="headerlink" title="1 安装方法列举"></a>1 安装方法列举</h1><p>   以下以在Ubuntu 20.04.3 LTS-amd64 宿主机（arm64宿主机只需要转换对应文件或命令名称即可）上部署containerd 容器引擎服务为例。</p>
+<ul>
+<li><p>apt形式安装</p>
+<p>apt install containerd.io</p>
+</li>
+<li><p>二进制形式安装</p>
+<p>访问 <a target="_blank" rel="noopener" href="https://github.com/containerd/">https://github.com/containerd/</a> 下载对应构架与操作系统的二进制安装文件，解压到自定义目录并进行手动配置</p>
+</li>
+<li><p>通过源码编译安装</p>
+</li>
+</ul>
+<h1 id="2-apt形式安装"><a href="#2-apt形式安装" class="headerlink" title="2 apt形式安装"></a>2 apt形式安装</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">安装containerd.io组件</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">apt install containerd.io</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">安装好containerd服务后，/etc/containerd/config.toml文件默认不存在</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">生成配置文件</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">containerd config default &gt; /etc/containerd/config.toml</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改配置文件后需要重启containerd服务</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">systemctl daemon-reload &amp;&amp; systemctl restart containerd</span><br><span class="hljs-meta prompt_"> </span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">卸载方法（注意：会将docker服务端同时卸载）</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">apt remove containerd.io</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="3-二进制方式"><a href="#3-二进制方式" class="headerlink" title="3 二进制方式"></a>3 二进制方式</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">1.安装containerd本身</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">下载 containerd-1.7.24-linux-amd64.tar.gz 二进制压缩文件</span> <br>root@ubuntu20:/opt/installPkgs# wget https://github.com/containerd/containerd/releases/download/v1.7.24/containerd-1.7.24-linux-amd64.tar.gz<br><span class="hljs-meta prompt_">#</span><span class="language-bash">只查看不解压 归档压缩文件中的内容</span><br>root@ubuntu20:/opt/installPkgs# tar -tvf containerd-1.7.24-linux-amd64.tar.gz<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">解压到/usr/ 目录下</span> <br>root@ubuntu20:/opt/installPkgs# tar -zxf containerd-1.7.24-linux-amd64.tar.gz -C /usr/<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">封装containerd.service，以使用 systemd对containerd.service 进行管理</span> <br>root@ubuntu20:/opt/installPkgs# cat &gt; /lib/systemd/system/containerd.service &lt;&lt;EOF<br>[Unit]<br>Description=containerd container runtime<br>Documentation=https://containerd.io<br>After=network.target local-fs.target<br> <br>[Service]<br><span class="hljs-meta prompt_">#</span><span class="language-bash">uncomment to <span class="hljs-built_in">enable</span> the experimental</span><br>sbservice (sandboxed) version of containerd/cri integration<br><span class="hljs-meta prompt_">#</span><span class="language-bash">Environment=<span class="hljs-string">&quot;ENABLE_CRI_SANDBOXES=sandboxed&quot;</span></span><br>ExecStartPre=-/sbin/modprobe overlay<br>ExecStart=/usr/bin/containerd<br> <br>Type=notify<br>Delegate=yes<br>KillMode=process<br>Restart=always<br>RestartSec=5<br><span class="hljs-meta prompt_"># </span><span class="language-bash">Having non-zero Limit*s causes</span><br>performance problems due to accounting overhead<br><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-keyword">in</span> the kernel. We recommend using cgroups</span><br>to do container-local accounting.<br>LimitNPROC=infinity<br>LimitCORE=infinity<br>LimitNOFILE=infinity<br><span class="hljs-meta prompt_"># </span><span class="language-bash">Comment TasksMax <span class="hljs-keyword">if</span> your systemd version</span><br>does not supports it.<br><span class="hljs-meta prompt_"># </span><span class="language-bash">Only systemd 226 and above support this</span><br>version.<br>TasksMax=infinity<br>OOMScoreAdjust=-999<br> <br>[Install]<br>WantedBy=multi-user.target<br>EOF<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启containerd服务</span> <br>root@ubuntu20:/opt/installPkgs# systemctl daemon-reload<br>root@ubuntu20:/opt/installPkgs# systemctl unmask containerd<br>root@ubuntu20:/opt/installPkgs# systemctl start containerd<br> <br>root@ubuntu20:/opt/installPkgs# systemctl enable containerd <br>root@ubuntu20:/opt/installPkgs# systemctl status containerd<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">2.安装runc</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">另外，需要手动下载安装runc（后面创建容器时需要用到）</span><br>root@ubuntu20:/opt/installPkgs# wget https://github.com/opencontainers/runc/releases/download/v1.1.13/runc.amd64<br>root@ubuntu20:/opt/installPkgs# chmod a+x runc.amd64 <br>root@ubuntu20:/opt/installPkgs# cp -p runc.amd64 /usr/bin/runc<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">3.安装cni插件</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">从https://github.com/containernetworking/plugins/releases 下载合适版本、操作系统、构架对应的压缩文件</span><br>root@ubuntu20:/opt/installPkgs# wget https://github.com/containernetworking/plugins/releases/download/v1.6.0/cni-plugins-linux-amd64-v1.6.0.tgz<br>root@ubuntu20:/opt/installPkgs# tar -zxf cni-plugins-linux-amd64-v1.6.0.tgz -C /opt/cni/bin/<br></code></pre></td></tr></table></figure>
+
+<h1 id="4-源码编译安装"><a href="#4-源码编译安装" class="headerlink" title="4 源码编译安装"></a>4 源码编译安装</h1><p>   暂略，后续有需要更新补充到个人博客同步文章。</p>
+<h1 id="5-安装与使用containerd服务CLI"><a href="#5-安装与使用containerd服务CLI" class="headerlink" title="5 安装与使用containerd服务CLI"></a>5 安装与使用containerd服务CLI</h1><p>​      一共有3种与containerd服务进行交互的命令行工具：nerdctl、ctr、crictl。</p>
+<h2 id="安装与使用nerdctl"><a href="#安装与使用nerdctl" class="headerlink" title="安装与使用nerdctl"></a>安装与使用nerdctl</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装nerdctl</span><br>root@ubuntu20:~# cd /opt/installPkgs/ <br>root@ubuntu20:~# wget https://github.com/containerd/nerdctl/releases/download/v2.0.1/nerdctl-2.0.1-linux-amd64.tar.gz<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">解压（保证/usr/local/bin 目录在操作系统PATH路径内）</span><br>root@ubuntu20:/opt/installPkgs# tar Cxzvvf /usr/local/bin nerdctl-2.0.1-linux-amd64.tar.gz<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装buildkit（buildkit 是一个将 <span class="hljs-built_in">source</span> code 转换为 build artifacts 的开源工具，buildctl 客户端可用于 Linux、macOS 和 Windows，但 buildkitd 守护进程目前仅适用于 Linux。buildkit暂时没用到，不强制安装，但如果不安装执行nerdctl 相关命令时会告警）</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">下载buildkit-v0.11.5安装包</span><br>root@ubuntu20:~# wget https://github.com/moby/buildkit/releases/download/v0.11.5/buildkit-v0.11.5.linux-amd64.tar.gz<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">解压 buildkit-v0.11.5安装包</span><br>root@ubuntu20:~# tar -zxvf buildkit-v0.11.5.linux-amd64.tar.gz -C /usr/local<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">验证nerdctl 命令、查看containerd版本</span><br>root@ubuntu20:~# nerdctl version<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/05/ybK5m2Mdauvile6.png" srcset="/img/loading.gif" lazyload alt="image-20250105234139252"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">使用nerdctl管理镜像</span><br>root@ubuntu20:~# nerdctl pull registry.cn-hangzhou.aliyuncs.com/quectel/ubuntu:secboot_v2<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看镜像</span><br>root@ubuntu20:~# nerdctl images 或 nerdctl image ls<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看nerdctl帮助</span><br>root@ubuntu20:~# nerdctl --help<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建容器并进入容器内</span><br>root@ubuntu20:~# nerdctl run -it registry.cn-hangzhou.aliyuncs.com/quectel/ubuntu:secboot_v2 /bin/bash<br><span class="hljs-meta prompt_">#</span><span class="language-bash">从容器退出回到宿主机上（尽量使用组合键：ctrl+p+q。在使用Docker容器引擎时，使用<span class="hljs-built_in">exit</span>退出容器会直接将容器停掉，使用nerdctl时虽未发现此情况，但建议还是养成上述好习惯较好）</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置nerdctl命令自动补全</span><br>root@ubuntu20:~# echo &quot;source &lt;(nerdctl completion bash)&quot; &gt;&gt; /root/.bashrc<br>root@ubuntu20:~# source /root/.bashrc<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="安装与使用ctr"><a href="#安装与使用ctr" class="headerlink" title="安装与使用ctr"></a>安装与使用ctr</h2><p>​      ctr命令行工具是跟随containerd服务一共被安装部署好的，此时可直接使用。</p>
+<h3 id="镜像操作"><a href="#镜像操作" class="headerlink" title="镜像操作"></a>镜像操作</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">containerd中新引入命名空间的概念，所有镜像与容器都属于某个特定的命名空间</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">也只在特定的命名空间内可见。如果没有指定命名空间，则所有操作在default命名空间内执行</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">containerd默认已经创建如下3个命名空间</span><br>root@ubuntu20:~# ctr ns ls<br>NAME    LABELS <br>default        <br>k8s.io         <br>moby<br><span class="hljs-meta prompt_">#</span><span class="language-bash">拉取镜像（如下命名相当于省略了<span class="hljs-string">&quot;-n default&quot;</span>）</span><br>root@ubuntu20:~# ctr image pull registry.cn-hangzhou.aliyuncs.com/quectel/ubuntu:secboot_v2<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看镜像（如下image可被i替换，list可被<span class="hljs-built_in">ls</span>替换，即<span class="hljs-string">&quot;ctr i ls&quot;</span>，甚至混合着使用也行）</span><br>root@ubuntu20:~# ctr -n default image list<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/07/p63FibfTskaxRqD.png" srcset="/img/loading.gif" lazyload alt="image-20250107224942505"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">镜像标记tag</span><br>ctr -n default i tag registry.cn-hangzhou.aliyuncs.com/quectel/ubuntu:secboot_v2 175.6.40.93:8196/base/ubuntu:secboot_v2<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果新镜像 reference 已存在, 则需要先删除新reference, 或者加上<span class="hljs-string">&quot;--force&quot;</span>强制替换</span><br>ctr -n default i tag --force registry.cn-hangzhou.aliyuncs.com/quectel/ubuntu:secboot_v2 175.6.40.93:8196/base/ubuntu:secboot_v2<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">推送镜像</span><br>ctr -n default i push -k 175.6.40.93:8196/base/ubuntu:secboot_v2<br><span class="hljs-meta prompt_">#</span><span class="language-bash">拉取镜像</span><br>ctr -n default i pull -k 175.6.40.93:8196/base/ubuntu:secboot_v2<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">删除镜像</span><br>ctr -n default i rm 175.6.40.93:8196/base/ubuntu:secboot_v2<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">导出镜像</span><br>ctr -n default i export ubuntu-secboot_v2.tar 175.6.40.93:8196/base/ubuntu:secboot_v2<br><span class="hljs-meta prompt_">#</span><span class="language-bash">导入镜像</span><br>ctr -n default i import ubuntu-secboot_v2.tar<br></code></pre></td></tr></table></figure>
+
+<h3 id="容器操作"><a href="#容器操作" class="headerlink" title="容器操作"></a>容器操作</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">创建容器（会自动进入容器内。此方式创建的默认是静态的容器，静态容器与动态容器是ctr中的概念）</span><br>root@ubuntu20:~# ctr run -t registry.cn-hangzhou.aliyuncs.com/quectel/ubuntu:secboot_v2 test01<br><span class="hljs-meta prompt_">#</span><span class="language-bash">退出容器使用<span class="hljs-built_in">exit</span>命令或组合键“ctrl+d”</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看容器</span><br>root@ubuntu20:~# ctr c ls<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/05/e2Lqb9IXJ7pEMrj.png" srcset="/img/loading.gif" lazyload alt="image-20250105234351116"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">查看容器详细信息</span><br>ctr container info test01<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">静态容器启动为动态容器</span><br>复制containerd连接runC垫片工具至系统即保证/usr/bin/目录有一个containerd-shim-runc-v2执行文件<br><span class="hljs-meta prompt_">#</span><span class="language-bash">启动task，即表示在容器中运行了进程，即为动态容器（-d表示daemon或者后台的意思）</span><br>ctr task start -d test01<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看task也是查看容器所在宿主机进程（它其实是一个宿主机进程，即165225上一个宿主机进程<span class="hljs-built_in">id</span>）</span><br>ctr task ls<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/05/lKXzAImqbPa5foJ.png" srcset="/img/loading.gif" lazyload alt="image-20250105234414968"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">查看容器的进程(都是宿主机的进程)</span><br>ctr task ps test01<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/05/sTpCgMyOjDuzWBi.png" srcset="/img/loading.gif" lazyload alt="image-20250105234439449"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">宿主机查看到相应的进程</span><br>ps -ef | grep 165225<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/05/uHoxfd8JVj2GyzY.png" srcset="/img/loading.gif" lazyload alt="image-20250105234512202"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">查看正在运行中的容器</span><br>ctr task ls<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重新进入动态容器内</span><br>root@ubuntu20:~# ctr -n default task exec --exec-id $RANDOM -t test01 bash<br><span class="hljs-meta prompt_">#</span><span class="language-bash">退出动态容器，使用<span class="hljs-built_in">exit</span>或组合键<span class="hljs-string">&quot;ctrl+d&quot;</span>。此后此动态容器仍然是处于Running状态</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/05/qUG7LjgvbKS1k4J.png" srcset="/img/loading.gif" lazyload alt="image-20250105234549550"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">直接创建一个动态的容器然后进入容器内，其中--net-host 代表容器的IP就是宿主机的IP(相当于docker里的host类型网络)，</span><br>ctr run -d --net-host registry.cn-hangzhou.aliyuncs.com/quectel/ubuntu:secboot_v2 test02<br>ctr task ls<br>ctr -n default task exec --exec-id $RANDOM -t test02 bash<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/05/3jPE29pgeHMRKOk.png" srcset="/img/loading.gif" lazyload alt="image-20250105234638744"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">删除容器</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">首先要将动态容器对应的task杀死、删除</span><br>root@ubuntu20:~# ctr task kill test01<br>root@ubuntu20:~# ctr task delete test01<br><span class="hljs-meta prompt_">#</span><span class="language-bash">此时test01容器是处于Created状态（如果安装了nerdctl，可以使用“nerdctl ps -a”查看）</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">此时才能删除test01容器</span><br>root@ubuntu20:~# ctr c delete test01<br></code></pre></td></tr></table></figure>
+
+<p>笔者认为ctr命令行工具的执行习惯不像nerdctl、crictl，平时用起来不太方便。但如果是用来调试，还是可以的</p>
+<h2 id="安装与使用crictl"><a href="#安装与使用crictl" class="headerlink" title="安装与使用crictl"></a>安装与使用crictl</h2><p>​      crictl与Kubernetes的紧密集成，它无法直接查看或调试非Kubernetes创建的容器。所以无法在非kubernetes环境直接操作容器。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">下载安装</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">此处使用v1.30.0版本，所有及最新版本可在此查看：https://github.com/kubernetes-sigs/cri-tools/releases</span><br>cd /opt/installPkgs<br>VERSION=&quot;v1.30.0&quot;   <br>wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz<br><span class="hljs-meta prompt_">#</span><span class="language-bash">解压</span><br>tar zxvf crictl-$VERSION-linux-amd64.tar.gz -C /usr/local/bin<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/05/rApazmoXFYftiLv.png" srcset="/img/loading.gif" lazyload alt="image-20250105234828836"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">该 WARN 消息(图未截全)表明，crictl 或其他相关工具在尝试连接容器运行时（如 containerd）时，正在使用默认的设置中的端点列表。但默认的设置已经被弃用，而又未明确设置crictl的runtime-endpoint。解决上述警告的方法</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置容器运行时和镜像服务的端点</span><br>cat &gt; /etc/crictl.yaml &lt;&lt;EOF<br>runtime-endpoint: unix:///run/containerd/containerd.sock<br><span class="hljs-meta prompt_">#</span><span class="language-bash">image-endpoint: unix:///run/containerd/containerd.sock</span><br>timeout: 10<br>debug: false<br>EOF<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">拉取镜像</span><br>root@ubuntu20:~# crictl pull registry.cn-hangzhou.aliyuncs.com/quectel/ubuntu:secboot<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">其他用法参考下图</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/01/09/UTmBDE5FGKcRlLn.png" srcset="/img/loading.gif" lazyload alt="image-20250109211000203"></p>
+<h1 id="6-参考资源"><a href="#6-参考资源" class="headerlink" title="6 参考资源"></a>6 参考资源</h1><ul>
+<li>关于buildkit的介绍可参考：<a target="_blank" rel="noopener" href="https://github.com/moby/buildkit">https://github.com/moby/buildkit</a></li>
+<li>containerd入门：<a target="_blank" rel="noopener" href="https://github.com/containerd/containerd/blob/main/docs/getting-started.md">https://github.com/containerd/containerd/blob/main/docs/getting-started.md</a></li>
+<li>ctr用法：直接执行“ctr –help”、<a target="_blank" rel="noopener" href="https://github.com/projectatomic/containerd/blob/master/docs/cli.md%E3%80%81https://www.akiraka.net/kubernetes/1139.html%E3%80%81https://www.cnblogs.com/lldhsds/p/18262839">https://github.com/projectatomic/containerd/blob/master/docs/cli.md、https://www.akiraka.net/kubernetes/1139.html、https://www.cnblogs.com/lldhsds/p/18262839</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/containerd-%E5%AE%89%E8%A3%85-nerdctl-ctr-crictl/" class="print-no-link">#containerd 安装 nerdctl ctr crictl</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>containerd容器引擎服务的安装与使用</div>
+      <div>https://jiangsanyin.github.io/2025/01/05/containerd容器引擎服务的安装与使用/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年1月5日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/01/13/HAMi%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2%E6%97%B6%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86%E5%BD%92%E7%BA%B3/" title="HAMi安装部署时报错处理归纳">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">HAMi安装部署时报错处理归纳</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/27/LXC%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%97%B6/" title="LXC容器运行时">
+                        <span class="hidden-mobile">LXC容器运行时</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
