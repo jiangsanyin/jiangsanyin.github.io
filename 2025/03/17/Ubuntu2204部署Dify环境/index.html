@@ -1,0 +1,755 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、参考文档https:&#x2F;&#x2F;github.com&#x2F;langgenius&#x2F;dify&#x2F;tree&#x2F;0.15.3 二、环境与规划   主机名 用途 IP root用户密码 规格 系统盘 OS 备注    dify dify、ai-to-pptx-backend 10.12.62.32 cloud@2020 8c16g 500G Ubuntu 22.04.3 LTS-amd64 联网   此文档使用dock">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu2204部署Dify环境">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/03/17/Ubuntu2204%E9%83%A8%E7%BD%B2Dify%E7%8E%AF%E5%A2%83/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、参考文档https:&#x2F;&#x2F;github.com&#x2F;langgenius&#x2F;dify&#x2F;tree&#x2F;0.15.3 二、环境与规划   主机名 用途 IP root用户密码 规格 系统盘 OS 备注    dify dify、ai-to-pptx-backend 10.12.62.32 cloud@2020 8c16g 500G Ubuntu 22.04.3 LTS-amd64 联网   此文档使用dock">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/03/17/ynf2WoQtP9xT5hZ.png">
+<meta property="og:image" content="https://s2.loli.net/2025/03/17/XG8AHsOl1kUZizp.png">
+<meta property="article:published_time" content="2025-03-17T07:36:38.000Z">
+<meta property="article:modified_time" content="2025-03-17T12:11:14.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="大模型">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/03/17/ynf2WoQtP9xT5hZ.png">
+  
+  
+  
+  <title>Ubuntu2204部署Dify环境 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Ubuntu2204部署Dify环境</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-17 15:36" pubdate>
+          2025年3月17日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Ubuntu2204部署Dify环境</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一、参考文档"><a href="#一、参考文档" class="headerlink" title="一、参考文档"></a>一、参考文档</h1><p><a target="_blank" rel="noopener" href="https://github.com/langgenius/dify/tree/0.15.3">https://github.com/langgenius/dify/tree/0.15.3</a></p>
+<h1 id="二、环境与规划"><a href="#二、环境与规划" class="headerlink" title="二、环境与规划"></a>二、环境与规划</h1><table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>用途</th>
+<th>IP</th>
+<th>root用户密码</th>
+<th>规格</th>
+<th>系统盘</th>
+<th>OS</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>dify</td>
+<td>dify、ai-to-pptx-backend</td>
+<td>10.12.62.32</td>
+<td>cloud@2020</td>
+<td>8c16g</td>
+<td>500G</td>
+<td>Ubuntu 22.04.3 LTS-amd64</td>
+<td>联网</td>
+</tr>
+</tbody></table>
+<p>此文档使用docker-compose的方式来部署dify</p>
+<h1 id="三、部署步骤"><a href="#三、部署步骤" class="headerlink" title="三、部署步骤"></a>三、部署步骤</h1><h2 id="3-1-下载安装源码"><a href="#3-1-下载安装源码" class="headerlink" title="3.1 下载安装源码"></a>3.1 下载安装源码</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@dify:~# mkdir /opt/code_repos<br>root@dify:~# cd /opt/code_repos/<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果太慢或一直拉取失败就先导入到gitee中再拉取(git <span class="hljs-built_in">clone</span> -b 0.15.3 https://gitee.com/sy-jiang/dify.git)</span><br>root@dify:/opt/code_repos# git clone -b 0.15.3 https://github.com/langgenius/dify.git<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-2-安装Docker"><a href="#3-2-安装Docker" class="headerlink" title="3.2 安装Docker"></a>3.2 安装Docker</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装依赖组件</span><br>root@dify:~# apt install apt-transport-https ca-certificates curl gnupg lsb-release<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">从阿里云镜像站下载 Docker CE 的 GPG 密钥，并将其添加到系统的 APT 密钥链中</span><br>root@dify:~# curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -<br><span class="hljs-meta prompt_">#</span><span class="language-bash">添加阿里云的docker-ce安装源，比默认使用的官方安装源要快些</span><br>root@dify:~# add-apt-repository &quot;deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable&quot;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">执行安装docker-ce</span><br>root@dify:~# apt-get install docker-ce docker-ce-cli containerd.io<br>root@dify:~# vi /etc/docker/daemon.json <br>&#123;<br>    &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],<br>    &quot;dns&quot;: [<br>        &quot;223.5.5.5&quot;,<br>        &quot;223.6.6.6&quot;,<br>        &quot;202.103.0.68&quot;,<br>        &quot;8.8.8.8&quot;<br>    ],<br>    &quot;log-opts&quot;: &#123;<br>        &quot;max-file&quot;: &quot;5&quot;,<br>        &quot;max-size&quot;: &quot;50m&quot;<br>    &#125;,<br>    &quot;registry-mirrors&quot;: [<br>        &quot;https://hub.rat.dev&quot;,<br>        &quot;https://registry.aliyuncs.com&quot;,<br>        &quot;https://registry.docker-cn.com&quot;,<br>        &quot;https://docker.chenby.cn&quot;,<br>        &quot;https://docker.registry.cyou&quot;,<br>        &quot;https://docker-cf.registry.cyou&quot;,<br>        &quot;https://dockercf.jsdelivr.fyi&quot;,<br>        &quot;https://docker.jsdelivr.fyi&quot;,<br>        &quot;https://dockertest.jsdelivr.fyi&quot;,<br>        &quot;https://dockerproxy.com&quot;,<br>        &quot;https://docker.m.daocloud.io&quot;,<br>        &quot;https://docker.nju.edu.cn&quot;,<br>        &quot;https://docker.mirrors.sjtug.sjtu.edu.cn&quot;,<br>        &quot;https://docker.mirrors.ustc.edu.cn&quot;,<br>        &quot;https://mirror.iscas.ac.cn&quot;,<br>        &quot;https://docker.rainbond.cc&quot;<br>    ]<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启docker</span><br>root@dify:~# systemctl daemon-reload<br>root@dify:~# systemctl restart docker<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-3-安装docker-compose"><a href="#3-3-安装docker-compose" class="headerlink" title="3.3 安装docker-compose"></a>3.3 安装docker-compose</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@dify:/opt# mkdir /opt/instakkPkgs<br>root@dify:/opt# cd /opt/instakkPkgs/<br><span class="hljs-meta prompt_">#</span><span class="language-bash">直接下载二进制可执行文件</span><br>root@dify:/opt/instakkPkgs# curl -L &quot;https://github.com/docker/compose/releases/download/v2.34.0/docker-compose-linux-$(uname -m)&quot; -o /usr/local/bin/docker-compose<br><span class="hljs-meta prompt_">#</span><span class="language-bash">赋予可执行权限</span><br>root@dify:/opt/instakkPkgs# chmod +x /usr/local/bin/docker-compose<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-4-执行部署相关命令"><a href="#3-4-执行部署相关命令" class="headerlink" title="3.4 执行部署相关命令"></a>3.4 执行部署相关命令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@dify:/opt/code_repos/dify/docker# cp .env.example .env<br>root@dify:/opt/code_repos/dify/docker# cp docker-compose.yaml docker-compose.yaml.bak<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@dify:/opt/code_repos/dify/docker# cat sed-images.sh <br><span class="hljs-meta prompt_">#</span><span class="language-bash">!/bin/bash</span><br><br>sed -i &quot;s#langgenius/dify-api:0.15.3#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/langgenius/dify-api:0.15.3#g&quot; docker-compose.yaml<br>sed -i &quot;s#langgenius/dify-web:0.15.3#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/langgenius/dify-web:0.15.3#g&quot; docker-compose.yaml<br>sed -i &quot;s#postgres:15-alpine#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/postgres:15-alpine#g&quot; docker-compose.yaml<br>sed -i &quot;s#redis:6-alpine#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/redis:6-alpine#g&quot; docker-compose.yaml<br>sed -i &quot;s#langgenius/dify-sandbox:0.2.10#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/langgenius/dify-sandbox:0.2.10#g&quot; docker-compose.yaml<br>sed -i &quot;s#ubuntu/squid:latest#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/ubuntu/squid:latest#g&quot; docker-compose.yaml<br>sed -i &quot;s#certbot/certbot#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/certbot/certbot:v3.2.0#g&quot; docker-compose.yaml<br>sed -i &quot;s#nginx:latest#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/nginx:latest#g&quot; docker-compose.yaml<br>sed -i &quot;s#pingcap/tidb:v8.4.0#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/pingcap/tidb:v8.4.0#g&quot; docker-compose.yaml<br>sed -i &quot;s#semitechnologies/weaviate:1.19.0#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/semitechnologies/weaviate:1.19.0#g&quot; docker-compose.yaml<br>sed -i &quot;s#langgenius/qdrant:v1.7.3#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/langgenius/qdrant:v1.7.3#g&quot; docker-compose.yaml<br>sed -i &quot;s#pgvector/pgvector:pg16#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/pgvector/pgvector:pg16#g&quot; docker-compose.yaml<br>sed -i &quot;s#tensorchord/pgvecto-rs:pg16-v0.3.0#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/tensorchord/pgvecto-rs:pg16-v0.3.0#g&quot; docker-compose.yaml<br>sed -i &quot;s#ghcr.io/chroma-core/chroma:0.5.20#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/ghcr.io/chroma-core/chroma:0.5.20#g&quot; docker-compose.yaml<br>sed -i &quot;s#quay.io/oceanbase/oceanbase-ce:4.3.3.0-100000142024101215#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/quay.io/oceanbase/oceanbase-ce:4.3.3.0-100000142024101215#g&quot; docker-compose.yaml<br>sed -i &quot;s#container-registry.oracle.com/database/free:latest#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/container-registry.oracle.com/database/free:latest#g&quot; docker-compose.yaml<br>sed -i &quot;s#quay.io/coreos/etcd:v3.5.5#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/quay.io/coreos/etcd:v3.5.5#g&quot; docker-compose.yaml<br>sed -i &quot;s#minio/minio:RELEASE.2023-03-20T20-16-18Z#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/minio/minio:RELEASE.2023-03-20T20-16-18Z#g&quot; docker-compose.yaml<br>sed -i &quot;s#milvusdb/milvus:v2.5.0-beta#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/milvusdb/milvus:v2.5.0-beta#g&quot; docker-compose.yaml<br>sed -i &quot;s#opensearchproject/opensearch:latest#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/opensearchproject/opensearch:latest#g&quot; docker-compose.yaml<br>sed -i &quot;s#opensearchproject/opensearch-dashboards:latest#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/opensearchproject/opensearch-dashboards:latest#g&quot; docker-compose.yaml<br>sed -i &quot;s#myscale/myscaledb:1.6.4#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/myscale/myscaledb:1.6.4#g&quot; docker-compose.yaml<br>sed -i &quot;s#docker.elastic.co/elasticsearch/elasticsearch:8.14.3#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.elastic.co/elasticsearch/elasticsearch:8.14.3#g&quot; docker-compose.yaml<br>sed -i &quot;s#docker.elastic.co/kibana/kibana:8.14.3#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.elastic.co/kibana/kibana:8.14.3#g&quot; docker-compose.yaml<br>sed -i &quot;s#downloads.unstructured.io/unstructured-io/unstructured-api:latest#swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/downloads.unstructured.io/unstructured-io/unstructured-api:latest#g&quot; docker-compose.yaml<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@dify:/opt/code_repos/dify/docker# bash sed-images.sh<br>root@dify:/opt/code_repos/dify/docker# docker compose up -d<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/03/17/ynf2WoQtP9xT5hZ.png" srcset="/img/loading.gif" lazyload alt="image-20250317165600013"></p>
+<h2 id="登录web界面继续部署"><a href="#登录web界面继续部署" class="headerlink" title="登录web界面继续部署"></a>登录web界面继续部署</h2><p>浏览器访问：<a target="_blank" rel="noopener" href="http://10.12.62.32/install">http://10.12.62.32/install</a></p>
+<p>输入必填的相关信息后，点击设置</p>
+<p><img src="https://s2.loli.net/2025/03/17/XG8AHsOl1kUZizp.png" srcset="/img/loading.gif" lazyload alt="image-20250317171057195"></p>
+<h1 id="四、部署ai-to-pptx-backend"><a href="#四、部署ai-to-pptx-backend" class="headerlink" title="四、部署ai-to-pptx-backend"></a>四、部署ai-to-pptx-backend</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@dify:/opt/code_repos# git clone https://gitee.com/sy-jiang/ai-to-pptx-backend.git<br>root@dify:/opt/code_repos# cd ai-to-pptx-backend/<br><br>1 下载镜像: docker pull chatbookai/ai-to-pptx:0.2<br>2 启动镜像: docker run -p 8080:80 chatbookai/ai-to-pptx:0.2<br>3 开始使用: 在浏览器里面输入: http://localhost:8080<br>4 列出镜像: docker ps -a<br>5 进入镜像: docker exec -it &lt;container_name_or_id&gt; /bin/bash<br></code></pre></td></tr></table></figure>
+
+<h1 id="五、部署ai-to-pptx"><a href="#五、部署ai-to-pptx" class="headerlink" title="五、部署ai-to-pptx"></a>五、部署ai-to-pptx</h1><p>容器时已经部署前端</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" class="category-chain-item">大模型</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" class="print-no-link">#大模型</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Ubuntu2204部署Dify环境</div>
+      <div>https://jiangsanyin.github.io/2025/03/17/Ubuntu2204部署Dify环境/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/03/16/Centos8-x86-64%E4%B8%8A%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8nvidia-docker/" title="Centos8-x86_64上安装使用nvidia-docker">
+                        <span class="hidden-mobile">Centos8-x86_64上安装使用nvidia-docker</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
