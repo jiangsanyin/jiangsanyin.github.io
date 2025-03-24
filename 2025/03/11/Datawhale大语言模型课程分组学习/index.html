@@ -70,14 +70,11 @@
 <meta property="og:image" content="https://s2.loli.net/2025/03/17/zBbRT96l5ODKCsw.png">
 <meta property="og:image" content="https://s2.loli.net/2025/03/17/nZxCSqPoLFRQGHs.png">
 <meta property="og:image" content="https://s2.loli.net/2025/03/23/SjeqPf6HpwsX4lz.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/23/DPhgZS6bCadLjpB.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/23/kF1Y46hsR7bqMft.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/23/lBJ149APjVnzTYo.png">
 <meta property="og:image" content="https://s2.loli.net/2025/03/23/oCw9SGvu31LZ5Dr.png">
 <meta property="og:image" content="https://s2.loli.net/2025/03/20/LVtlwJcjiYOnryF.png">
 <meta property="og:image" content="https://s2.loli.net/2025/03/20/nj5ifV2aZNpuORz.png">
 <meta property="article:published_time" content="2025-03-11T15:01:56.000Z">
-<meta property="article:modified_time" content="2025-03-24T14:09:46.000Z">
+<meta property="article:modified_time" content="2025-03-24T14:14:54.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="大语言模型课程">
 <meta name="twitter:card" content="summary_large_image">
@@ -728,7 +725,7 @@
 <h3 id="输入编码层">输入编码层</h3>
 <p>在Transformer模型中，输入的词元序列 <span class="math display">\[
 𝒖 = [𝑢_1, 𝑢_2, . . . , 𝑢_𝑇]
-\]</span> （词元（词元与词向量的概念，参考 <a href="https://jiangsanyin.github.io/2025/03/22/Transformer%E6%9E%84%E6%9E%B6%E4%B8%AD%E4%B8%93%E4%B8%9A%E5%90%8D%E8%AF%8D/">Transformer构架中专业名词</a> ）序列，即由多个词元组成的序列。）经过一个输入嵌入模块（input embedding module）转化为向量序列。为了建模词汇本身的语义信息，每个词元在输入嵌入模块中被映射为一个可用于计算与学习的词向量<img src="https://s2.loli.net/2025/03/23/DPhgZS6bCadLjpB.png" srcset="/img/loading.gif" lazyload alt="image-20250323123817681" style="zoom:67%;" />。另外，为了表示建模序列中元素的位置信息，Transformer引入了位置编码（position emdedding，PE)。给定一个词元<img src="https://s2.loli.net/2025/03/23/kF1Y46hsR7bqMft.png" srcset="/img/loading.gif" lazyload alt="image-20250323123850345" />，位置编码根据其在输入中的绝对位置分配一个对应的位置向量<img src="https://s2.loli.net/2025/03/23/lBJ149APjVnzTYo.png" srcset="/img/loading.gif" lazyload alt="image-20250323123938931" style="zoom:67%;" />，将词向量与对应的位置向量直接相加，就可以得到一个输入嵌入表示序列： <span class="math display">\[
+\]</span> （词元（词元与词向量的概念，参考 <a href="https://jiangsanyin.github.io/2025/03/22/Transformer%E6%9E%84%E6%9E%B6%E4%B8%AD%E4%B8%93%E4%B8%9A%E5%90%8D%E8%AF%8D/">Transformer构架中专业名词</a> ）序列，即由多个词元组成的序列。）经过一个输入嵌入模块（input embedding module）转化为向量序列。为了建模词汇本身的语义信息，每个词元在输入嵌入模块中被映射为一个可用于计算与学习的词向量v<sub>t</sub>。另外，为了表示建模序列中元素的位置信息，Transformer引入了位置编码（position emdedding，PE)。给定一个词元u<sub>t</sub>，位置编码根据其在输入中的绝对位置分配一个对应的位置向量p<sub>t</sub>，将词向量与对应的位置向量直接相加，就可以得到一个输入嵌入表示序列： <span class="math display">\[
 𝑿 = [𝒙_1, . . . , 𝒙_𝑇]，其中 𝒙_𝑡 = 𝒗_𝑡 + 𝒑_𝑡
 \]</span> 这样，就将一个自然语言输入序列（如“I love NLP.”）示成一个输入嵌入表示序列<strong><img src="https://s2.loli.net/2025/03/23/oCw9SGvu31LZ5Dr.png" srcset="/img/loading.gif" lazyload alt="image-20250323124415128" /></strong>。</p>
 <p>Transformer框架可以使用位置编码Pt建模不同词元的位置 信息。因为这种位置编码仅由词元对应的位置决定，因此也被称为绝对位置编码，绝对位置编码方法限制了Transformer模型处理其长文本的能力。</p>
