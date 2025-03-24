@@ -19,22 +19,24 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、安装配置maven访问maven官网：https:&#x2F;&#x2F;archive.apache.org&#x2F;dist&#x2F;maven&#x2F;maven-3&#x2F; 1234567#下载root@dify:&#x2F;opt&#x2F;instakkPkgs# wget https:&#x2F;&#x2F;archive.apache.org&#x2F;dist&#x2F;maven&#x2F;maven-3&#x2F;3.8.3&#x2F;binaries&#x2F;apache-maven-3.8.3-bin.tar.g">
+    <meta name="description" content="一、安装LLaMAFactory环境以下是在ubuntu20.04 LTS环境上进行操作。 安装python虚拟环境1conda create -n llamafactory python&#x3D;3.12  CUDA安装假设NVIDIA驱动已经安装好。接下来下载合适版本的CUDA安装文件：https:&#x2F;&#x2F;developer.nvidia.com&#x2F;cuda-toolkit-archive 笔者NVIDIA">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ubuntu2004安装maven制作容器镜像">
-<meta property="og:url" content="https://jiangsanyin.github.io/2025/03/21/Ubuntu2004%E5%AE%89%E8%A3%85maven%E5%88%B6%E4%BD%9C%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F/index.html">
+<meta property="og:title" content="LlamaFactory中进行模型微调">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/03/24/LlamaFactory%E4%B8%AD%E8%BF%9B%E8%A1%8C%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、安装配置maven访问maven官网：https:&#x2F;&#x2F;archive.apache.org&#x2F;dist&#x2F;maven&#x2F;maven-3&#x2F; 1234567#下载root@dify:&#x2F;opt&#x2F;instakkPkgs# wget https:&#x2F;&#x2F;archive.apache.org&#x2F;dist&#x2F;maven&#x2F;maven-3&#x2F;3.8.3&#x2F;binaries&#x2F;apache-maven-3.8.3-bin.tar.g">
+<meta property="og:description" content="一、安装LLaMAFactory环境以下是在ubuntu20.04 LTS环境上进行操作。 安装python虚拟环境1conda create -n llamafactory python&#x3D;3.12  CUDA安装假设NVIDIA驱动已经安装好。接下来下载合适版本的CUDA安装文件：https:&#x2F;&#x2F;developer.nvidia.com&#x2F;cuda-toolkit-archive 笔者NVIDIA">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-03-21T08:26:21.000Z">
-<meta property="article:modified_time" content="2025-03-21T09:57:28.000Z">
+<meta property="og:image" content="https://s2.loli.net/2025/03/24/ZDW4v9IrygLCPpn.png">
+<meta property="article:published_time" content="2025-03-24T03:53:42.000Z">
+<meta property="article:modified_time" content="2025-03-24T08:52:22.000Z">
 <meta property="article:author" content="sanyinjiang">
-<meta property="article:tag" content="k8s云原生">
+<meta property="article:tag" content="大模型">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/03/24/ZDW4v9IrygLCPpn.png">
   
   
   
-  <title>Ubuntu2004安装maven制作容器镜像 - sanyinjiang</title>
+  <title>LlamaFactory中进行模型微调 - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +215,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Ubuntu2004安装maven制作容器镜像</span>
+            <span id="subtitle">LlamaFactory中进行模型微调</span>
           
         </div>
 
@@ -224,8 +226,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-21 16:26" pubdate>
-          2025年3月21日 下午
+        <time datetime="2025-03-24 11:53" pubdate>
+          2025年3月24日 中午
         </time>
       </span>
     
@@ -236,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          372 字
+          332 字
         
       </span>
     
@@ -247,7 +249,7 @@
         
         
         
-          4 分钟
+          3 分钟
         
       </span>
     
@@ -293,21 +295,29 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Ubuntu2004安装maven制作容器镜像</h1>
+            <h1 id="seo-header">LlamaFactory中进行模型微调</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一、安装配置maven"><a href="#一、安装配置maven" class="headerlink" title="一、安装配置maven"></a>一、安装配置maven</h1><p>访问maven官网：<a target="_blank" rel="noopener" href="https://archive.apache.org/dist/maven/maven-3/">https://archive.apache.org/dist/maven/maven-3/</a></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">下载</span><br>root@dify:/opt/instakkPkgs# wget https://archive.apache.org/dist/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.tar.gz<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">解压</span><br>root@dify:/opt/instakkPkgs# mkdir /opt/maven  <br>root@dify:/opt/instakkPkgs# tar xzvf apache-maven-3.8.1-bin.tar.gz -C /opt/maven<br>root@dify:/opt/instakkPkgs# cd /opt/maven/apache-maven-3.8.1/<br></code></pre></td></tr></table></figure>
+                <h1 id="一、安装LLaMAFactory环境"><a href="#一、安装LLaMAFactory环境" class="headerlink" title="一、安装LLaMAFactory环境"></a>一、安装LLaMAFactory环境</h1><p>以下是在ubuntu20.04 LTS环境上进行操作。</p>
+<h2 id="安装python虚拟环境"><a href="#安装python虚拟环境" class="headerlink" title="安装python虚拟环境"></a>安装python虚拟环境</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">conda create -n llamafactory python=3.12<br></code></pre></td></tr></table></figure>
 
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">配置阿里镜像</span><br>root@dify:/opt/maven/apache-maven-3.8.1# vi conf/settings.xml<br>...<br>146   &lt;mirrors&gt;<br>147     &lt;!-- mirror<br>148      | Specifies a repository mirror site to use instead of a given repository. The repository that<br>149      | this mirror serves has an ID that matches the mirrorOf element of this mirror. IDs are used<br>150      | for inheritance and direct lookup purposes, and must be unique across the set of mirrors.<br>151      |<br>152     &lt;mirror&gt;<br>153       &lt;id&gt;mirrorId&lt;/id&gt;<br>154       &lt;mirrorOf&gt;repositoryId&lt;/mirrorOf&gt;<br>155       &lt;name&gt;Human Readable Name for this Mirror.&lt;/name&gt;<br>156       &lt;url&gt;http://my.repository.com/repo/path&lt;/url&gt;<br>157     &lt;/mirror&gt;<br>158      --&gt;<br>159     &lt;mirror&gt;<br>160       &lt;id&gt;aliyunmaven&lt;/id&gt;<br>161       &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;<br>162       &lt;name&gt;aliyun maven&lt;/name&gt;<br>163       &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;<br>164     &lt;/mirror&gt;<br>165 &lt;!--    &lt;mirror&gt;<br>166       &lt;id&gt;maven-default-http-blocker&lt;/id&gt;<br>167       &lt;mirrorOf&gt;external:http:*&lt;/mirrorOf&gt;<br>168       &lt;name&gt;Pseudo repository to mirror external repositories initially using HTTP.&lt;/name&gt;<br>169       &lt;url&gt;http://0.0.0.0/&lt;/url&gt;<br>170       &lt;blocked&gt;true&lt;/blocked&gt;<br>171     &lt;/mirror&gt;<br>172 --&gt;<br>173   &lt;/mirrors&gt;<br>...<br></code></pre></td></tr></table></figure>
+<h2 id="CUDA安装"><a href="#CUDA安装" class="headerlink" title="CUDA安装"></a>CUDA安装</h2><p>假设NVIDIA驱动已经安装好。接下来下载合适版本的CUDA安装文件：<a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-toolkit-archive">https://developer.nvidia.com/cuda-toolkit-archive</a></p>
+<p>笔者NVIDIA驱动版本是，已经安装CUDA12.4</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">(llamafactory) root@ksp-registry:/opt/code_repos/LLaMA-Factory# nvcc -V<br>nvcc: NVIDIA (R) Cuda compiler driver<br>Copyright (c) 2005-2024 NVIDIA Corporation<br>Built on Thu_Mar_28_02:18:24_PDT_2024<br>Cuda compilation tools, release 12.4, V12.4.131<br>Build cuda_12.4.r12.4/compiler.34097967_0<br></code></pre></td></tr></table></figure>
 
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">将maven bin目录加入系统PATH</span><br>root@dify:/opt/maven/apache-maven-3.8.1# vi /root/.bashrc <br>export M2_HOME=/opt/maven/apache-maven-3.8.1<br>export PATH=$PATH:$M2_HOME/bin<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">加载设置的变量</span><br>root@dify:/opt/maven/apache-maven-3.8.1# source /root/.bashrc <br></code></pre></td></tr></table></figure>
+<h2 id="LLaMAFactory安装"><a href="#LLaMAFactory安装" class="headerlink" title="LLaMAFactory安装"></a>LLaMAFactory安装</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">(llamafactory) root@ksp-registry:/opt/code_repos# git clone --depth 1 https://github.com/hiyouga/LLaMA-Factory.git<br>(llamafactory) root@ksp-registry:/opt/code_repos# cd LLaMA-Factory<br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装 LLaMA-Factory 及其依赖</span><br>(llamafactory) root@ksp-registry:/opt/code_repos/LLaMA-Factory# pip install -e &quot;.[torch,metrics]&quot;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">其中重要的python库版本</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">2.6.0==2.6.0 transformers==4.50.0</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">上述命令执行后，并没有成功安装metrics这一python库，执行如下命令再次安装</span><br>(llamafactory) root@ksp-registry:/opt/code_repos/LLaMA-Factory# pip install metrics<br>(llamafactory) root@ksp-registry:/opt/code_repos/LLaMA-Factory# pip show metrics<br><span class="hljs-meta prompt_">#</span><span class="language-bash">metrics==0.0.2</span><br></code></pre></td></tr></table></figure>
 
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">验证</span><br>Apache Maven 3.8.1 (05c21c65bdfed0f71a2f2ada8b84da59348c4c5d)<br>Maven home: /opt/maven/apache-maven-3.8.1<br>Java version: 11.0.25, vendor: Oracle Corporation, runtime: /usr/local/jdk-11.0.25<br>Default locale: en, platform encoding: UTF-8<br>OS name: &quot;linux&quot;, version: &quot;5.15.0-102-generic&quot;, arch: &quot;amd64&quot;, family: &quot;unix&quot;<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#运行以下代码检查 PyTorch 是否编译了 CUDA 支持</span><br><span class="hljs-keyword">import</span> torch<br><span class="hljs-built_in">print</span>(torch.__version__)  <span class="hljs-comment"># 查看 PyTorch 版本</span><br><span class="hljs-comment">#2.6.0+cu124</span><br><br><span class="hljs-built_in">print</span>(torch.cuda.is_available())  <span class="hljs-comment"># 检查是否支持 CUDA</span><br><span class="hljs-comment">#True</span><br><br><span class="hljs-built_in">print</span>(torch.version.cuda)  <span class="hljs-comment"># 查看编译时的 CUDA 版本</span><br><span class="hljs-comment">#12.4</span><br></code></pre></td></tr></table></figure>
 
-<h1 id="二、制作容器镜像"><a href="#二、制作容器镜像" class="headerlink" title="二、制作容器镜像"></a>二、制作容器镜像</h1>
+<h2 id="LLaMA-Factory校验"><a href="#LLaMA-Factory校验" class="headerlink" title="LLaMA-Factory校验"></a>LLaMA-Factory校验</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">校验安装是否成功</span><br>(llamafactory) root@ksp-registry:/opt/code_repos/LLaMA-Factory# llamafactory-cli version  <br>----------------------------------------------------------<br>| Welcome to LLaMA Factory, version 0.9.3.dev0           |<br>|                                                        |<br>| Project page: https://github.com/hiyouga/LLaMA-Factory |<br>----------------------------------------------------------<br></code></pre></td></tr></table></figure>
+
+<h1 id="二、WebUI使用"><a href="#二、WebUI使用" class="headerlink" title="二、WebUI使用"></a>二、WebUI使用</h1><p>参考：<a target="_blank" rel="noopener" href="https://llamafactory.readthedocs.io/zh-cn/latest/getting_started/webui.html">https://llamafactory.readthedocs.io/zh-cn/latest/getting_started/webui.html</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">使用以下命令启动webui</span><br>(llamafactory) root@ksp-registry:~# llamafactory-cli webui<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://s2.loli.net/2025/03/24/ZDW4v9IrygLCPpn.png" srcset="/img/loading.gif" lazyload alt="image-20250324165207061"></p>
+
                 
               </div>
             
@@ -325,7 +335,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/k8s%E4%BA%91%E5%8E%9F%E7%94%9F/" class="category-chain-item">k8s云原生</a>
+  <a href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" class="category-chain-item">大模型</a>
   
   
 
@@ -340,7 +350,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/k8s%E4%BA%91%E5%8E%9F%E7%94%9F/" class="print-no-link">#k8s云原生</a>
+        <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" class="print-no-link">#大模型</a>
       
     </div>
   
@@ -352,8 +362,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Ubuntu2004安装maven制作容器镜像</div>
-      <div>https://jiangsanyin.github.io/2025/03/21/Ubuntu2004安装maven制作容器镜像/</div>
+      <div>LlamaFactory中进行模型微调</div>
+      <div>https://jiangsanyin.github.io/2025/03/24/LlamaFactory中进行模型微调/</div>
     </div>
     <div class="license-meta">
       
@@ -365,7 +375,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月21日</div>
+          <div>2025年3月24日</div>
         </div>
       
       
@@ -397,18 +407,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/03/22/Transformer%E6%A8%A1%E5%9E%8B%E4%B8%AD%E4%B8%93%E4%B8%9A%E5%90%8D%E8%AF%8D/" title="Transformer模型中专业名词">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Transformer模型中专业名词</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/03/20/nvidia-smi%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%97%B6%E8%BE%93%E5%87%BA%E5%86%85%E5%AE%B9/" title="nvidia-smi相关命令执行时输出内容">
-                        <span class="hidden-mobile">nvidia-smi相关命令执行时输出内容</span>
+                      <a href="/2025/03/22/Transformer%E6%A8%A1%E5%9E%8B%E4%B8%AD%E4%B8%93%E4%B8%9A%E5%90%8D%E8%AF%8D/" title="Transformer模型中专业名词">
+                        <span class="hidden-mobile">Transformer模型中专业名词</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
