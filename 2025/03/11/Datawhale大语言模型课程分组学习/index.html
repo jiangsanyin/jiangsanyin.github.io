@@ -73,9 +73,8 @@
 <meta property="og:image" content="https://s2.loli.net/2025/03/23/oCw9SGvu31LZ5Dr.png">
 <meta property="og:image" content="https://s2.loli.net/2025/03/20/LVtlwJcjiYOnryF.png">
 <meta property="og:image" content="https://s2.loli.net/2025/03/20/nj5ifV2aZNpuORz.png">
-<meta property="og:image" content="https://s2.loli.net/2025/03/24/cl4PBGpfNu8Dnk9.png">
 <meta property="article:published_time" content="2025-03-11T15:01:56.000Z">
-<meta property="article:modified_time" content="2025-03-26T14:24:54.000Z">
+<meta property="article:modified_time" content="2025-03-26T15:34:52.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="大语言模型课程">
 <meta name="twitter:card" content="summary_large_image">
@@ -285,7 +284,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3k 字
+          3.7k 字
         
       </span>
     
@@ -296,7 +295,7 @@
         
         
         
-          26 分钟
+          31 分钟
         
       </span>
     
@@ -758,10 +757,36 @@ head_n=Attention(\mathbf{Q,K,V})=Attention(XW^Q_n,XW^K_n,XW^V_n)\quad\quad\quad\
 <p>该函数的形式通常按下面的式子给出： <span class="math display">\[
 {\displaystyle \sigma (\mathbf {z} )_{j}={\frac {e^{z_{j}}}{\sum _{k=1}^{K}e^{z_{k}}}}}    for j = 1, …, K.
 \]</span></p>
-<figure>
-<img src="https://s2.loli.net/2025/03/24/cl4PBGpfNu8Dnk9.png" srcset="/img/loading.gif" lazyload alt="image-20250324230932017" /><figcaption aria-hidden="true">image-20250324230932017</figcaption>
-</figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#下面是使用Python进行函数计算的示例代码：</span><br><span class="hljs-keyword">import</span> math<br>z = [<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>, <span class="hljs-number">4.0</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>]<br>z_exp = [math.exp(i) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> z]  <br><span class="hljs-built_in">print</span>(z_exp)  <span class="hljs-comment"># Result: [2.72, 7.39, 20.09, 54.6, 2.72, 7.39, 20.09] </span><br>sum_z_exp = <span class="hljs-built_in">sum</span>(z_exp)  <br><span class="hljs-built_in">print</span>(sum_z_exp)  <span class="hljs-comment"># Result: 114.98 </span><br>softmax = [<span class="hljs-built_in">round</span>(i / sum_z_exp, <span class="hljs-number">3</span>) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> z_exp]<br><span class="hljs-built_in">print</span>(softmax)  <span class="hljs-comment"># Result: [0.024, 0.064, 0.175, 0.475, 0.024, 0.064, 0.175]</span><br><br><span class="hljs-comment">#Python使用numpy计算的示例代码:</span><br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br>z = np.array([<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>, <span class="hljs-number">4.0</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>])<br><span class="hljs-built_in">print</span>(np.exp(z)/<span class="hljs-built_in">sum</span>(np.exp(z)))<br></code></pre></td></tr></table></figure>
 <h3 id="前馈网络层">前馈网络层</h3>
+<p>为了学习复杂的函数映射关系，Transformer引入了前馈网络层（feed forward network，FFN），对嵌入序列（就是输入编码层得到的嵌入表示序列）进行非线性变换。详细地说，给定输入<strong>X</strong>，Transformer模型中的前馈神经层由两个线性变换和一个非线性变换函数 组成： <span class="math display">\[
+\begin{aligned}
+FFN(\mathbf{X})=σ(\mathbf{XW^U} + \mathbf{b_1})\mathbf{W^D} + \mathbf{b_2}\qquad\qquad\qquad(5.8)\\
+其中W^U∈R^{H×H^′} 和 W^D∈R^{H^′×H} 分别是第一层和第二层的线性变换权重矩阵，b_1∈R^{H^′}和b_2∈R^{H} 是偏置项，σ是激活函数
+\end{aligned}
+\]</span> 在原始的Transformer模型中，采用了ReLU作为激活函数。前馈网络层通过激活函数引入了非线性变换，提升了模型的表达能力，从而能够更好地建模复杂的交互关系。</p>
+<hr />
+<p><strong>为什么通过引入非线性变换，能够模型的表达能力？</strong></p>
+<hr />
+<p><strong>线性变换与非线性变换：</strong></p>
+<p>可参考：https://blog.csdn.net/qq_35468747/article/details/122005322、https://www.zhihu.com/question/298320067 <span class="math display">\[
+\begin{aligned}
+如果一个变换满足以下条件，则为线性变换：\\
+T是某函数，它使得映射V → W 成立，并且满足以下条件：\\
+T(x+y) =T(x)+T(y)\\
+T(ax) =aT(x)\\
+其中x , y ∈ V ，a ∈ R
+\end{aligned}
+\]</span> 识别给定函数f ( x ) f(x)f(x)是否为线性变换非常简单，只需要查看f ( x )中的每一项是否都是x与一个数的乘积，如果是，f 则是线性变换。</p>
+<p><strong>f</strong>(x,y,z)=(3x−y,3z,0,z−2x) 此函数是一个线性变换（可以写成矩阵相乘的形式进行查看）</p>
+<p><strong>g</strong>(x,y,z)=(3x−y,3z+2,0,z−2x) ，此函数则不是一个线性变换。因为在函数g 中，第二个分量为3 z + 2，2 是一个常数，并不包含输入向量( x , y , z )中的任何分量</p>
+<ul>
+<li><p>在几何直观上，线性变换有如下性质：</p>
+<ul>
+<li><p>变换前是直线，变换后仍是直线</p></li>
+<li><p>原点保持固定不动</p></li>
+</ul></li>
+</ul>
 <h3 id="编码器">编码器</h3>
 <h3 id="解码器">解码器</h3>
 
