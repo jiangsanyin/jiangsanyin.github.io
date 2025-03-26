@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、背景与环境说明本文主要对如何在本地部署FastGPT进行记录与说明，因为笔者暂时不是专门从事AI与大模型研究工作且目前理解不够，所以还不能对其中配置细节与原理阐述清楚，有待后续发掘。    主机名 IP 操作系统 规格 GPU情况 备注    t1-gpu 10.12.62.25 Ubuntu 20.04.3 LTS -amd64 8c16g+400G NVIDIA A10*1 部署m3e向量">
+    <meta name="description" content="一、背景与环境说明 本文主要对如何在本地部署FastGPT进行记录与说明，因为笔者暂时不是专门从事AI与大模型研究工作且目前理解不够，所以还不能对其中配置细节与原理阐述清楚，有待后续发掘。     主机名 IP 操作系统 规格 GPU情况 备注     t1-gpu 10.12.62.25 Ubuntu 20.04.3 LTS -amd64 8c16g+400">
 <meta property="og:type" content="article">
 <meta property="og:title" content="docker-compose本地部署FastGPT与简单使用">
 <meta property="og:url" content="https://jiangsanyin.github.io/2024/12/07/docker-compose%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2FastGPT%E4%B8%8E%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、背景与环境说明本文主要对如何在本地部署FastGPT进行记录与说明，因为笔者暂时不是专门从事AI与大模型研究工作且目前理解不够，所以还不能对其中配置细节与原理阐述清楚，有待后续发掘。    主机名 IP 操作系统 规格 GPU情况 备注    t1-gpu 10.12.62.25 Ubuntu 20.04.3 LTS -amd64 8c16g+400G NVIDIA A10*1 部署m3e向量">
+<meta property="og:description" content="一、背景与环境说明 本文主要对如何在本地部署FastGPT进行记录与说明，因为笔者暂时不是专门从事AI与大模型研究工作且目前理解不够，所以还不能对其中配置细节与原理阐述清楚，有待后续发掘。     主机名 IP 操作系统 规格 GPU情况 备注     t1-gpu 10.12.62.25 Ubuntu 20.04.3 LTS -amd64 8c16g+400">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2024/12/07/eiaMLGkXj56rHRF.png">
 <meta property="og:image" content="https://s2.loli.net/2024/12/07/IVGKa9ANP5FpC2f.png">
@@ -60,9 +60,9 @@
 <meta property="og:image" content="https://s2.loli.net/2025/01/23/nfNAKcoMDOEeVZJ.png">
 <meta property="og:image" content="https://s2.loli.net/2024/12/08/4QeDjE9WngOTHUS.png">
 <meta property="article:published_time" content="2024-12-07T14:52:18.000Z">
-<meta property="article:modified_time" content="2025-02-10T09:49:32.000Z">
+<meta property="article:modified_time" content="2025-03-26T08:55:28.000Z">
 <meta property="article:author" content="sanyinjiang">
-<meta property="article:tag" content="docker-compose FastGPT deepseek-coder:1.3b">
+<meta property="article:tag" content="FastGPT">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://s2.loli.net/2024/12/07/eiaMLGkXj56rHRF.png">
   
@@ -270,7 +270,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.5k 字
+          3.6k 字
         
       </span>
     
@@ -332,10 +332,12 @@
             
               <div class="markdown-body">
                 
-                <h1 id="一、背景与环境说明"><a href="#一、背景与环境说明" class="headerlink" title="一、背景与环境说明"></a>一、背景与环境说明</h1><p>本文主要对如何在本地部署FastGPT进行记录与说明，因为笔者暂时不是专门从事AI与大模型研究工作且目前理解不够，所以还不能对其中配置细节与原理阐述清楚，有待后续发掘。</p>
+                <h1 id="一背景与环境说明">一、背景与环境说明</h1>
+<p>本文主要对如何在本地部署FastGPT进行记录与说明，因为笔者暂时不是专门从事AI与大模型研究工作且目前理解不够，所以还不能对其中配置细节与原理阐述清楚，有待后续发掘。</p>
 <table>
+
 <thead>
-<tr>
+<tr class="header">
 <th>主机名</th>
 <th>IP</th>
 <th>操作系统</th>
@@ -344,7 +346,8 @@
 <th>备注</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr class="odd">
 <td>t1-gpu</td>
 <td>10.12.62.25</td>
 <td>Ubuntu 20.04.3 LTS -amd64</td>
@@ -352,7 +355,7 @@
 <td>NVIDIA A10*1</td>
 <td>部署m3e向量模型</td>
 </tr>
-<tr>
+<tr class="even">
 <td>controller01</td>
 <td>172.20.0.21</td>
 <td>Ubuntu 20.04.3 LTS -amd64</td>
@@ -360,122 +363,210 @@
 <td>无</td>
 <td>部署其他所有服务或进程</td>
 </tr>
-</tbody></table>
-<h1 id="二、ollama安装与使用"><a href="#二、ollama安装与使用" class="headerlink" title="二、ollama安装与使用"></a>二、ollama安装与使用</h1><p>ollama官网：<a target="_blank" rel="noopener" href="http://www.ollama.com/">www.ollama.com</a></p>
-<p>ollama的github仓库地址：<a target="_blank" rel="noopener" href="https://github.com/ollama/ollama">https://github.com/ollama/ollama</a></p>
-<p>通过ollma下载模型：ollama pull 模型链接，  模型链接查看地址：<a target="_blank" rel="noopener" href="https://www.ollama.com/library">https://www.ollama.com/library</a></p>
+</tbody>
+</table>
+<h1 id="二ollama安装与使用">二、ollama安装与使用</h1>
+<p>ollama官网：www.ollama.com</p>
+<p>ollama的github仓库地址：https://github.com/ollama/ollama</p>
+<p>通过ollma下载模型：ollama pull 模型链接， 模型链接查看地址：https://www.ollama.com/library</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">以下操作在172.20.0.21上操作，操作系统是Ubuntu 20.04.3 LTS -amd64</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">相关操作在一个名为self-llm的conda环境执行：</span><br>conda activate /root/miniconda3/envs/self-llm<br></code></pre></td></tr></table></figure>
-
 <p>修改ollama的systemd service配置文件</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">修改ollama的systemd service配置文件</span><br>(self-llm) root@controller01:~# vi /etc/systemd/system/ollama.service<br>[Unit]<br>Description=Ollama Service<br>After=network-online.target<br>[Service]<br>ExecStart=/usr/local/bin/ollama serve<br>User=ollama<br>Group=ollama<br>Restart=always<br>RestartSec=3<br>Environment=&quot;PATH=/root/anaconda3/envs/graphrag-test/bin:...&quot;<br>Environment=&quot;OLLAMA_HOST=0.0.0.0&quot;   #添加此行内容（否则后面docker容器化部署的open-webui不能读取到此服务器上的模型）<br>[Install]<br>WantedBy=default.target<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启ollama服务</span><br>(self-llm) root@controller01:~# systemctl daemon-reload<br>(self-llm) root@controller01:~# systemctl restart ollama<br></code></pre></td></tr></table></figure>
-
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">查看ollama管理的模型</span><br>(self-llm) root@controller01:~# ollama list<br>NAME                                    ID              SIZE    MODIFIED     <br>qwen:0.5b                               b5dc5e784f2a    394 MB  5 hours ago <br>deepseek-coder:1.3b                     3ddd2d3fc8d2    776 MB  6 hours ago <br>quentinz/bge-large-zh-v1.5:latest       bc8ca0995fcd    651 MB  3 months ago<br>gemma2:9b                               ff02c3702f32    5.4 GB  3 months ago<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看ollama命令的用法</span><br>(self-llm) root@controller01:~# ollama <br>Usage:<br>  ollama [flags]<br>  ollama [command]<br><br>Available Commands:<br>  serve       Start ollama<br>  create      Create a model from a Modelfile<br>  show        Show information for a model<br>  run         Run a model<br>  pull        Pull a model from a registry<br>  push        Push a model to a registry<br>  list        List models<br>  ps          List running models<br>  cp          Copy a model<br>  rm          Remove a model<br>  help        Help about any command<br><br>Flags:<br>  -h, --help      help for ollama<br>  -v, --version   Show version information<br><br>Use &quot;ollama [command] --help&quot; for more information about a command.<br></code></pre></td></tr></table></figure>
-
-
-
 <p>从ollama官网的模型列表中查看某个具体模型的信息：</p>
-<p><img src="https://s2.loli.net/2024/12/07/eiaMLGkXj56rHRF.png" srcset="/img/loading.gif" lazyload alt="image-20241111100916875"></p>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/eiaMLGkXj56rHRF.png" srcset="/img/loading.gif" lazyload alt="image-20241111100916875" /><figcaption aria-hidden="true">image-20241111100916875</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">通过ollama运行上述模型，如果模型文件本身不存在，ollama会先去下载模型文件本身到本地</span><br>(self-llm) root@controller01:~# ollama run deepseek-coder:1.3b<br>pulling manifest <br>pulling d040cc185215... 100% ▕█████████████████████████████████████████████████████████████████████████████████▏ 776 MB <br>pulling a3a0e9449cb6... 100% ▕█████████████████████████████████████████████████████████████████████████████████▏ 13 KB         <br>pulling 8893e08fa9f9... 100% ▕█████████████████████████████████████████████████████████████████████████████████▏ 59 B           <br>pulling 8972a96b8ff1... 100% ▕█████████████████████████████████████████████████████████████████████████████████▏ 297 B         <br>pulling d55c9eb1669a... 100% ▕█████████████████████████████████████████████████████████████████████████████████▏ 483 B         <br>verifying sha256 digest <br>writing manifest <br>removing any unused layers <br>success <br><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; 你是谁？                      <span class="hljs-comment">#此处就可以输入问题进行提问。如果要结束运行就输入“ctrl+d”</span></span><br></code></pre></td></tr></table></figure>
-
-<h2 id="2-1-docker部署open-webui"><a href="#2-1-docker部署open-webui" class="headerlink" title="2.1 docker部署open webui"></a>2.1 docker部署open webui</h2><p>官网地址：<a target="_blank" rel="noopener" href="https://github.com/open-webui/open-webui">https://github.com/open-webui/open-webui</a></p>
+<h2 id="docker部署open-webui">2.1 docker部署open webui</h2>
+<p>官网地址：https://github.com/open-webui/open-webui</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">通过容器方式启动与运行</span><br>(self-llm) root@controller01:~# docker run -d -p 18080:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main<br></code></pre></td></tr></table></figure>
-
-<p>然后可以通过服务器IP+18080端口，即 <a target="_blank" rel="noopener" href="http://172.20.0.21:18080/">http://172.20.0.21:18080</a> 访问 open webui的web界面。</p>
-<p><img src="https://s2.loli.net/2024/12/07/IVGKa9ANP5FpC2f.png" srcset="/img/loading.gif" lazyload alt="image-20241111150810100"></p>
+<p>然后可以通过服务器IP+18080端口，即 http://172.20.0.21:18080 访问 open webui的web界面。</p>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/IVGKa9ANP5FpC2f.png" srcset="/img/loading.gif" lazyload alt="image-20241111150810100" /><figcaption aria-hidden="true">image-20241111150810100</figcaption>
+</figure>
 <p>第一次登录需要注册一个用户，然后使用此用户登录与使用。</p>
 <p>选择一个ollama管理的模型，然后可以进行对话：</p>
-<p><img src="https://s2.loli.net/2024/12/07/TaDLvesCHEWP1qr.png" srcset="/img/loading.gif" lazyload alt="image-20241111162231984"></p>
-<p><img src="https://s2.loli.net/2024/12/07/IogtvyiHPr917Ff.png" srcset="/img/loading.gif" lazyload alt="image-20241111172408647"></p>
-<h1 id="三、Docker-compose快速部署fastgpt"><a href="#三、Docker-compose快速部署fastgpt" class="headerlink" title="三、Docker compose快速部署fastgpt"></a>三、Docker compose快速部署fastgpt</h1><h2 id="3-1-FastGPT介绍"><a href="#3-1-FastGPT介绍" class="headerlink" title="3.1 FastGPT介绍"></a>3.1 FastGPT介绍</h2><p>FastGPT 是一个基于 LLM 大语言模型的知识库问答系统，提供开箱即用的数据处理、模型调用等能力。同时可以通过 Flow 可视化进行工作流编排，从而实现复杂的问答场景！FastGPT 是开源项目，遵循附加条件 Apache License 2.0 开源协议，可以 <a target="_blank" rel="noopener" href="https://github.com/labring/FastGPT/fork">Fork</a> 之后进行二次开发和发布。FastGPT 社区版将保留核心功能，商业版仅在社区版基础上使用 API 的形式进行扩展，不影响学习使用。</p>
-<h3 id="3-1-1-FastGPT-能力"><a href="#3-1-1-FastGPT-能力" class="headerlink" title="3.1.1 FastGPT 能力"></a>3.1.1 FastGPT 能力</h3><h4 id="3-1-1-1-专属-AI-客服"><a href="#3-1-1-1-专属-AI-客服" class="headerlink" title="3.1.1.1 专属 AI 客服"></a>3.1.1.1 专属 AI 客服</h4><p>通过导入文档或已有问答对进行训练，让 AI 模型能根据你的文档以交互式对话方式回答问题。</p>
-<h4 id="3-1-1-2-简单易用的可视化界面"><a href="#3-1-1-2-简单易用的可视化界面" class="headerlink" title="3.1.1.2 简单易用的可视化界面"></a>3.1.1.2 简单易用的可视化界面</h4><p>FastGPT 采用直观的可视化界面设计，为各种应用场景提供了丰富实用的功能。通过简洁易懂的操作步骤，可以轻松完成 AI 客服的创建和训练流程。</p>
-<h4 id="3-1-1-3-自动数据预处理"><a href="#3-1-1-3-自动数据预处理" class="headerlink" title="3.1.1.3 自动数据预处理"></a>3.1.1.3 自动数据预处理</h4><p>提供手动输入、直接分段、LLM 自动处理和 CSV 等多种数据导入途径，其中“直接分段”支持通过 PDF、WORD、Markdown 和 CSV 文档内容作为上下文。FastGPT 会自动对文本数据进行预处理、向量化和 QA 分割，节省手动训练时间，提升效能。</p>
-<h4 id="3-1-1-4-工作流编排"><a href="#3-1-1-4-工作流编排" class="headerlink" title="3.1.1.4 工作流编排"></a>3.1.1.4 工作流编排</h4><p>基于 Flow 模块的工作流编排，可以帮助你设计更加复杂的问答流程。例如查询数据库、查询库存、预约实验室等。</p>
-<h4 id="3-1-1-5-强大的-API-集成"><a href="#3-1-1-5-强大的-API-集成" class="headerlink" title="3.1.1.5 强大的 API 集成"></a>3.1.1.5 强大的 API 集成</h4><p>FastGPT 对外的 API 接口对齐了 OpenAI 官方接口，可以直接接入现有的 GPT 应用，也可以轻松集成到企业微信、公众号、飞书等平台。</p>
-<h3 id="3-1-2-其他说明"><a href="#3-1-2-其他说明" class="headerlink" title="3.1.2 其他说明"></a>3.1.2 其他说明</h3><p>参考：<a target="_blank" rel="noopener" href="https://doc.tryfastgpt.ai/docs/development/docker/">https://doc.tryfastgpt.ai/docs/development/docker/</a></p>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/TaDLvesCHEWP1qr.png" srcset="/img/loading.gif" lazyload alt="image-20241111162231984" /><figcaption aria-hidden="true">image-20241111162231984</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/IogtvyiHPr917Ff.png" srcset="/img/loading.gif" lazyload alt="image-20241111172408647" /><figcaption aria-hidden="true">image-20241111172408647</figcaption>
+</figure>
+<h1 id="三docker-compose快速部署fastgpt">三、Docker compose快速部署fastgpt</h1>
+<h2 id="fastgpt介绍">3.1 FastGPT介绍</h2>
+<p>FastGPT 是一个基于 LLM 大语言模型的知识库问答系统，提供开箱即用的数据处理、模型调用等能力。同时可以通过 Flow 可视化进行工作流编排，从而实现复杂的问答场景！FastGPT 是开源项目，遵循附加条件 Apache License 2.0 开源协议，可以 <a target="_blank" rel="noopener" href="https://github.com/labring/FastGPT/fork">Fork</a> 之后进行二次开发和发布。FastGPT 社区版将保留核心功能，商业版仅在社区版基础上使用 API 的形式进行扩展，不影响学习使用。</p>
+<h3 id="fastgpt-能力">3.1.1 FastGPT 能力</h3>
+<h4 id="专属-ai-客服">3.1.1.1 专属 AI 客服</h4>
+<p>通过导入文档或已有问答对进行训练，让 AI 模型能根据你的文档以交互式对话方式回答问题。</p>
+<h4 id="简单易用的可视化界面">3.1.1.2 简单易用的可视化界面</h4>
+<p>FastGPT 采用直观的可视化界面设计，为各种应用场景提供了丰富实用的功能。通过简洁易懂的操作步骤，可以轻松完成 AI 客服的创建和训练流程。</p>
+<h4 id="自动数据预处理">3.1.1.3 自动数据预处理</h4>
+<p>提供手动输入、直接分段、LLM 自动处理和 CSV 等多种数据导入途径，其中“直接分段”支持通过 PDF、WORD、Markdown 和 CSV 文档内容作为上下文。FastGPT 会自动对文本数据进行预处理、向量化和 QA 分割，节省手动训练时间，提升效能。</p>
+<h4 id="工作流编排">3.1.1.4 工作流编排</h4>
+<p>基于 Flow 模块的工作流编排，可以帮助你设计更加复杂的问答流程。例如查询数据库、查询库存、预约实验室等。</p>
+<h4 id="强大的-api-集成">3.1.1.5 强大的 API 集成</h4>
+<p>FastGPT 对外的 API 接口对齐了 OpenAI 官方接口，可以直接接入现有的 GPT 应用，也可以轻松集成到企业微信、公众号、飞书等平台。</p>
+<h3 id="其他说明">3.1.2 其他说明</h3>
+<p>参考：https://doc.tryfastgpt.ai/docs/development/docker/</p>
 <ul>
 <li>MongoDB：用于存储除了向量外的各类数据</li>
-<li>PostgreSQL&#x2F;Milvus：存储向量数据</li>
+<li>PostgreSQL/Milvus：存储向量数据</li>
 <li>OneAPI: 聚合各类 AI API，支持多模型调用 （任何模型问题，先自行通过 OneAPI 测试校验）</li>
 </ul>
-<h2 id="3-2-安装docker-和-docker-compose"><a href="#3-2-安装docker-和-docker-compose" class="headerlink" title="3.2 安装docker 和 docker-compose"></a>3.2 安装docker 和 docker-compose</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">安装 Docker</span><br>curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun<br>systemctl enable --now docker<br><span class="hljs-meta prompt_"># </span><span class="language-bash">安装 docker-compose</span><br>curl -L https://github.com/docker/compose/releases/download/v2.20.3/docker-compose-`uname -s`-`uname -m` -o /usr/bin/docker-compose<br>chmod +x /usr/bin/docker-compose<br><span class="hljs-meta prompt_"># </span><span class="language-bash">验证安装</span><br>docker -v<br>docker-compose -v<br></code></pre></td></tr></table></figure>
-
-<h2 id="3-3-下载docker-compose-yml"><a href="#3-3-下载docker-compose-yml" class="headerlink" title="3.3 下载docker-compose.yml"></a>3.3 下载docker-compose.yml</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:~# conda activate /root/miniconda3/envs/self-llm<br>root@controller01:~# cd /root/miniconda3/envs/self-llm<br>(self-llm) root@controller01:~/miniconda3/envs/self-llm# mkdir fastgpt<br>(self-llm) root@controller01:~/miniconda3/envs/self-llm# cd fastgpt<br>(self-llm) root@controller01:~/miniconda3/envs/self-llm# wget https://raw.githubusercontent.com/labring/FastGPT/refs/heads/main/projects/app/data/config.json<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">pgvector 版本(测试推荐，简单快捷)</span><br>(self-llm) root@controller01:~/miniconda3/envs/self-llm# curl -o docker-compose.yml https://raw.githubusercontent.com/labring/FastGPT/main/files/docker/docker-compose-pgvector.yml<br><br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# cp -p docker-compose-pgvector.yml docker-compose.yml <br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# ll<br>total 32<br>drwxr-xr-x  2 root root 4096 Nov  7 16:26 ./<br>drwxr-xr-x 14 root root 4096 Nov  7 16:35 ../<br>-rw-r--r--  1 root root 6771 Nov  7 16:25 config.json<br>-rw-r--r--  1 root root 5644 Nov  7 16:26 docker-compose-pgvector.yml<br>-rw-r--r--  1 root root 5644 Nov  7 16:26 docker-compose.yml<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">1）编辑docker-compose.yml，使用阿里云镜像</span><br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# vi docker-compose.yml<br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# grep &quot;image:&quot; docker-compose.yml <br>    #image: pgvector/pgvector:0.7.0-pg15 # docker hub<br>    image: registry.cn-hangzhou.aliyuncs.com/fastgpt/pgvector:v0.7.0 # 阿里云<br>    #image: mongo:5.0.18 # dockerhub<br>    image: registry.cn-hangzhou.aliyuncs.com/fastgpt/mongo:5.0.18 # 阿里云<br>    # image: mongo:4.4.29 # cpu不支持AVX时候使用<br>    #image: ghcr.io/labring/fastgpt-sandbox:v4.8.11 # git<br>    image: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt-sandbox:v4.8.11 # 阿里云<br>    #image: ghcr.io/labring/fastgpt:v4.8.11 # git<br>    image: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt:v4.8.11 # 阿里云<br>    image: registry.cn-hangzhou.aliyuncs.com/fastgpt/mysql:8.0.36 # 阿里云<br>    #image: mysql:8.0.36<br>    #image: ghcr.io/songquanpeng/one-api:v0.6.7<br>    image: registry.cn-hangzhou.aliyuncs.com/fastgpt/one-api:v0.6.6 # 阿里云<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">2）修改mysql容器在宿主机上的映射端口为3307（我宿主机上3307端口已经被其他服务占用了）</span><br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# vi docker-compose.yml<br><span class="hljs-meta prompt_">   # </span><span class="language-bash">oneapi</span><br>   mysql:<br>     image: registry.cn-hangzhou.aliyuncs.com/fastgpt/mysql:8.0.36 # 阿里云<br>     #image: mysql:8.0.36<br>     container_name: mysql<br>     restart: always<br>     ports:<br>       - 3307:3306           #此修改此处<br>     networks:<br>       - fastgpt<br>     command: --default-authentication-plugin=mysql_native_password<br>     environment:<br>       # 默认root密码，仅首次运行有效<br>       MYSQL_ROOT_PASSWORD: oneapimmysql<br>       MYSQL_DATABASE: oneapi<br>     volumes:<br>       - ./mysql:/var/lib/mysql<br>   oneapi:<br>     container_name: oneapi<br>     #image: ghcr.io/songquanpeng/one-api:v0.6.7<br>     image: registry.cn-hangzhou.aliyuncs.com/fastgpt/one-api:v0.6.6 # 阿里云<br>     ports:<br>       - 3001:3000<br>     depends_on:<br>       - mysql<br>     networks:<br>       - fastgpt<br>     restart: always<br>     environment:<br>       # mysql 连接参数<br>       - SQL_DSN=root:oneapimmysql@tcp(mysql:3306)/oneapi<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">3）修改OPENAI_BASE_URL的值，CHAT_API_KEY的值暂时不变后续再改</span><br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# vi docker-compose.yml<br><span class="hljs-meta prompt_"># </span><span class="language-bash">AI模型的API地址哦。务必加 /v1。这里默认填写了OneApi的访问地址。</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##- OPENAI_BASE_URL=http://oneapi:3000/v1</span></span><br>- OPENAI_BASE_URL=http://172.20.0.21:3001/v1<br><span class="hljs-meta prompt_"># </span><span class="language-bash">AI模型的API Key。（这里默认填写了OneAPI的快速默认key，测试通后，务必及时修改）</span><br>- CHAT_API_KEY=sk-fastgpt<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">4）在oneapi容器后，再添加一个m3e容器</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# vi docker-compose.yml</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"> m3e:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">   image: registry.cn-hangzhou.aliyuncs.com/fastgpt_docker/m3e-large-api:latest</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">   container_name: m3e</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">   restart: always</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">   ports:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">     - 6008:6008</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">   networks:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">     - fastgpt</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">   deploy:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">     resources:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">       reservations:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">         devices:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">           - driver: nvidia</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">             count: 1</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">             capabilities: [gpu]</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">相关容器说明：</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">pgvector：向量数据库</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">mongdb：存储用户信息、文件文档信息</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">fastgpt：主程序，其中用到了config.json文件</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">mysql：</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">oneapi：接口统一</span><br><br></code></pre></td></tr></table></figure>
-
-<h2 id="3-4-启动m3e向量模型"><a href="#3-4-启动m3e向量模型" class="headerlink" title="3.4 启动m3e向量模型"></a>3.4 启动m3e向量模型</h2><p>启动m3e向量模型(如果在docker-compose.ym中没配置)</p>
+<h2 id="安装docker-和-docker-compose">3.2 安装docker 和 docker-compose</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">安装 Docker</span><br>curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun<br>systemctl enable --now docker<br><span class="hljs-meta prompt_"># </span><span class="language-bash">安装 docker-compose</span><br>curl -L https://github.com/docker/compose/releases/download/v2.20.3/docker-compose-`uname -s`-`uname -m` -o /usr/bin/docker-compose<br>chmod +x /usr/bin/docker-compose<br><span class="hljs-meta prompt_"># </span><span class="language-bash">验证安装</span><br>docker -v<br>docker-compose -v<br></code></pre></td></tr></table></figure>
+<h2 id="下载docker-compose.yml">3.3 下载docker-compose.yml</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:~# conda activate /root/miniconda3/envs/self-llm<br>root@controller01:~# cd /root/miniconda3/envs/self-llm<br>(self-llm) root@controller01:~/miniconda3/envs/self-llm# mkdir fastgpt<br>(self-llm) root@controller01:~/miniconda3/envs/self-llm# cd fastgpt<br>(self-llm) root@controller01:~/miniconda3/envs/self-llm# wget https://raw.githubusercontent.com/labring/FastGPT/refs/heads/main/projects/app/data/config.json<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">pgvector 版本(测试推荐，简单快捷)</span><br>(self-llm) root@controller01:~/miniconda3/envs/self-llm# curl -o docker-compose.yml https://raw.githubusercontent.com/labring/FastGPT/main/files/docker/docker-compose-pgvector.yml<br><br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# cp -p docker-compose-pgvector.yml docker-compose.yml <br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# ll<br>total 32<br>drwxr-xr-x  2 root root 4096 Nov  7 16:26 ./<br>drwxr-xr-x 14 root root 4096 Nov  7 16:35 ../<br>-rw-r--r--  1 root root 6771 Nov  7 16:25 config.json<br>-rw-r--r--  1 root root 5644 Nov  7 16:26 docker-compose-pgvector.yml<br>-rw-r--r--  1 root root 5644 Nov  7 16:26 docker-compose.yml<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">1）编辑docker-compose.yml，使用阿里云镜像</span><br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# vi docker-compose.yml<br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# grep &quot;image:&quot; docker-compose.yml <br>    #image: pgvector/pgvector:0.7.0-pg15 # docker hub<br>    image: registry.cn-hangzhou.aliyuncs.com/fastgpt/pgvector:v0.7.0 # 阿里云<br>    #image: mongo:5.0.18 # dockerhub<br>    image: registry.cn-hangzhou.aliyuncs.com/fastgpt/mongo:5.0.18 # 阿里云<br>    # image: mongo:4.4.29 # cpu不支持AVX时候使用<br>    #image: ghcr.io/labring/fastgpt-sandbox:v4.8.11 # git<br>    image: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt-sandbox:v4.8.11 # 阿里云<br>    #image: ghcr.io/labring/fastgpt:v4.8.11 # git<br>    image: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt:v4.8.11 # 阿里云<br>    image: registry.cn-hangzhou.aliyuncs.com/fastgpt/mysql:8.0.36 # 阿里云<br>    #image: mysql:8.0.36<br>    #image: ghcr.io/songquanpeng/one-api:v0.6.7<br>    image: registry.cn-hangzhou.aliyuncs.com/fastgpt/one-api:v0.6.6 # 阿里云<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">2）修改mysql容器在宿主机上的映射端口为3307（我宿主机上3307端口已经被其他服务占用了）</span><br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# vi docker-compose.yml<br><span class="hljs-meta prompt_">   # </span><span class="language-bash">oneapi</span><br>   mysql:<br>     image: registry.cn-hangzhou.aliyuncs.com/fastgpt/mysql:8.0.36 # 阿里云<br>     #image: mysql:8.0.36<br>     container_name: mysql<br>     restart: always<br>     ports:<br>       - 3307:3306           #此修改此处<br>     networks:<br>       - fastgpt<br>     command: --default-authentication-plugin=mysql_native_password<br>     environment:<br>       # 默认root密码，仅首次运行有效<br>       MYSQL_ROOT_PASSWORD: oneapimmysql<br>       MYSQL_DATABASE: oneapi<br>     volumes:<br>       - ./mysql:/var/lib/mysql<br>   oneapi:<br>     container_name: oneapi<br>     #image: ghcr.io/songquanpeng/one-api:v0.6.7<br>     image: registry.cn-hangzhou.aliyuncs.com/fastgpt/one-api:v0.6.6 # 阿里云<br>     ports:<br>       - 3001:3000<br>     depends_on:<br>       - mysql<br>     networks:<br>       - fastgpt<br>     restart: always<br>     environment:<br>       # mysql 连接参数<br>       - SQL_DSN=root:oneapimmysql@tcp(mysql:3306)/oneapi<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">3）修改OPENAI_BASE_URL的值，CHAT_API_KEY的值暂时不变后续再改</span><br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# vi docker-compose.yml<br><span class="hljs-meta prompt_"># </span><span class="language-bash">AI模型的API地址哦。务必加 /v1。这里默认填写了OneApi的访问地址。</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##- OPENAI_BASE_URL=http://oneapi:3000/v1</span></span><br>- OPENAI_BASE_URL=http://172.20.0.21:3001/v1<br><span class="hljs-meta prompt_"># </span><span class="language-bash">AI模型的API Key。（这里默认填写了OneAPI的快速默认key，测试通后，务必及时修改）</span><br>- CHAT_API_KEY=sk-fastgpt<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">4）在oneapi容器后，再添加一个m3e容器</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# vi docker-compose.yml</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash"> m3e:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">   image: registry.cn-hangzhou.aliyuncs.com/fastgpt_docker/m3e-large-api:latest</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">   container_name: m3e</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">   restart: always</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">   ports:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">     - 6008:6008</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">   networks:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">     - fastgpt</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">   deploy:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">     resources:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">       reservations:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">         devices:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">           - driver: nvidia</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">             count: 1</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">             capabilities: [gpu]</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">相关容器说明：</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">pgvector：向量数据库</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">mongdb：存储用户信息、文件文档信息</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">fastgpt：主程序，其中用到了config.json文件</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">mysql：</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">oneapi：接口统一</span><br><br></code></pre></td></tr></table></figure>
+<h2 id="启动m3e向量模型">3.4 启动m3e向量模型</h2>
+<p>启动m3e向量模型(如果在docker-compose.ym中没配置)</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">启动m3e向量模型在上述说明的安装有一个NVIDIA A10 GPU的服务器t1-gpu（ip：10.12.62.25）上操作</span><br>docker pull registry.cn-hangzhou.aliyuncs.com/fastgpt_docker/m3e-large-api:latest<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">GPU模式启动， 并把m3e加载到fastgpt同一个网络（使用一张卡：--gpus=<span class="hljs-string">&#x27;&quot;device=0&quot;&#x27;</span>；使用第0,1张卡：--gpus=<span class="hljs-string">&#x27;&quot;device=0,1&quot;&#x27;</span>；使用全部GPU：--gpus all）。以下默认会将容器的6008端口映射到宿主机的6008端口</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">指定所有GPU</span><br>docker run -dt \<br>  --name m3e-large-api \<br>  --gpus all \<br>  --privileged \<br>  --net=host \<br>  --ipc=host \<br>  --ulimit memlock=-1 \<br>  --ulimit stack=67108864 \<br>  registry.cn-hangzhou.aliyuncs.com/fastgpt_docker/m3e-large-api:latest<br><span class="hljs-meta prompt_">#</span><span class="language-bash">通过序号指定GPU（此时不要加“--privileged”参数，否则仍然可以看到所有GPU）</span><br>docker run -dt \<br>  --name m3e-large-api \<br>  --gpus=&#x27;&quot;device=0&quot;&#x27; \<br>  --net=host \<br>  --ipc=host \<br>  --ulimit memlock=-1 \<br>  --ulimit stack=67108864 \<br>  registry.cn-hangzhou.aliyuncs.com/fastgpt_docker/m3e-large-api:latest<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">###CPU模式启动， 并把m3e加载到fastgpt同一个网络（不必要是使用fastgpt网络）</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##docker run -d -p 6008:6008 --name m3e --network fastgpt_fastgpt registry.cn-hangzhou.aliyuncs.com/fastgpt_docker/m3e-large-api:latest</span></span><br></code></pre></td></tr></table></figure>
-
-<h2 id="3-5-修改-config-json-文件"><a href="#3-5-修改-config-json-文件" class="headerlink" title="3.5 修改 config.json 文件"></a>3.5 修改 config.json 文件</h2><p>FastGPT 模型配置说明：<a target="_blank" rel="noopener" href="https://doc.tryfastgpt.ai/docs/development/modelconfig/intro/">https://doc.tryfastgpt.ai/docs/development/modelconfig/intro/</a></p>
-<p>关于config.json文件的说明：<a target="_blank" rel="noopener" href="https://github.com/labring/FastGPT/blob/main/projects/app/data/model.json">https://github.com/labring/FastGPT/blob/main/projects/app/data/model.json</a></p>
+<h2 id="修改-config.json-文件">3.5 修改 config.json 文件</h2>
+<p>FastGPT 模型配置说明：https://doc.tryfastgpt.ai/docs/development/modelconfig/intro/</p>
+<p>关于config.json文件的说明：https://github.com/labring/FastGPT/blob/main/projects/app/data/model.json</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在llmModels部分添加如下模型配置</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">其中 deepseek-coder:1.3b 是先前通过ollama已经拉取下来的模型</span><br>    &#123;<br>      &quot;model&quot;: &quot;deepseek-coder:1.3b&quot;,<br>      &quot;name&quot;: &quot;deepseek-coder:1.3b&quot;,<br>      &quot;avatar&quot;: &quot;/imgs/model/openai.svg&quot;,<br>      &quot;maxContext&quot;: 128000,<br>      &quot;maxResponse&quot;: 4000,<br>      &quot;quoteMaxToken&quot;: 100000,<br>      &quot;maxTemperature&quot;: 1.2,<br>      &quot;charsPointsPrice&quot;: 0,<br>      &quot;censor&quot;: false,<br>      &quot;vision&quot;: false,<br>      &quot;datasetProcess&quot;: true,<br>      &quot;usedInClassify&quot;: true,<br>      &quot;usedInExtractFields&quot;: true,<br>      &quot;usedInToolCall&quot;: true,<br>      &quot;usedInQueryExtension&quot;: true,<br>      &quot;toolChoice&quot;: false,<br>      &quot;functionCall&quot;: false,<br>      &quot;customCQPrompt&quot;: &quot;&quot;,<br>      &quot;customExtractPrompt&quot;: &quot;&quot;,<br>      &quot;defaultSystemChatPrompt&quot;: &quot;&quot;,<br>      &quot;defaultConfig&quot;: &#123;<br>        &quot;temperature&quot;: 1,<br>        &quot;stream&quot;: false<br>      &#125;,<br>      &quot;fieldMap&quot;: &#123;<br>        &quot;max_tokens&quot;: &quot;max_completion_tokens&quot;<br>      &#125;<br>    &#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">在 vectorModels 部分添加如下模型配置。</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">其中这个m3e模型就是先前在docker-compose.ym文件中手动新添加的向量模型</span><br>    &#123;<br>      &quot;model&quot;: &quot;m3e&quot;,<br>      &quot;name&quot;: &quot;M3E&quot;,<br>      &quot;price&quot;: 0,<br>      &quot;defaultToken&quot;: 500,<br>      &quot;maxToken&quot;: 1800<br>    &#125;<br></code></pre></td></tr></table></figure>
-
-<h2 id="3-6-启动容器"><a href="#3-6-启动容器" class="headerlink" title="3.6 启动容器"></a>3.6 启动容器</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# docker-compose up -d<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">启动完成后，查看容器列表</span><br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# docker-compose ps<br>NAME                IMAGE                                                               COMMAND                  SERVICE             CREATED             STATUS              PORTS<br>fastgpt             registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt:v4.8.11           &quot;sh -c &#x27;node --max-o…&quot;   fastgpt             39 seconds ago      Up 37 seconds       0.0.0.0:3000-&gt;3000/tcp, :::3000-&gt;3000/tcp<br>mongo               registry.cn-hangzhou.aliyuncs.com/fastgpt/mongo:5.0.18              &quot;bash -c &#x27;openssl ra…&quot;   mongo               39 seconds ago      Up 37 seconds       0.0.0.0:27017-&gt;27017/tcp, :::27017-&gt;27017/tcp<br>mysql               registry.cn-hangzhou.aliyuncs.com/fastgpt/mysql:8.0.36              &quot;docker-entrypoint.s…&quot;   mysql               39 seconds ago      Up 37 seconds       33060/tcp, 0.0.0.0:3307-&gt;3306/tcp, :::3307-&gt;3306/tcp<br>oneapi              registry.cn-hangzhou.aliyuncs.com/fastgpt/one-api:v0.6.6            &quot;/one-api&quot;               oneapi              39 seconds ago      Up 35 seconds       0.0.0.0:3001-&gt;3000/tcp, :::3001-&gt;3000/tcp<br>pg                  registry.cn-hangzhou.aliyuncs.com/fastgpt/pgvector:v0.7.0           &quot;docker-entrypoint.s…&quot;   pg                  39 seconds ago      Up 37 seconds       0.0.0.0:5432-&gt;5432/tcp, :::5432-&gt;5432/tcp<br>sandbox             registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt-sandbox:v4.8.11   &quot;docker-entrypoint.s…&quot;   sandbox             39 seconds ago      Up 37 seconds       <br></code></pre></td></tr></table></figure>
-
-<h2 id="3-7-打开-OneAPI-添加模型"><a href="#3-7-打开-OneAPI-添加模型" class="headerlink" title="3.7 打开 OneAPI 添加模型"></a>3.7 打开 OneAPI 添加模型</h2><p>可以通过<code>ip:3001</code>访问OneAPI，默认账号为<code>root</code>密码为<code>123456</code>。</p>
+<h2 id="启动容器">3.6 启动容器</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# docker-compose up -d<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">启动完成后，查看容器列表</span><br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# docker-compose ps<br>NAME                IMAGE                                                               COMMAND                  SERVICE             CREATED             STATUS              PORTS<br>fastgpt             registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt:v4.8.11           &quot;sh -c &#x27;node --max-o…&quot;   fastgpt             39 seconds ago      Up 37 seconds       0.0.0.0:3000-&gt;3000/tcp, :::3000-&gt;3000/tcp<br>mongo               registry.cn-hangzhou.aliyuncs.com/fastgpt/mongo:5.0.18              &quot;bash -c &#x27;openssl ra…&quot;   mongo               39 seconds ago      Up 37 seconds       0.0.0.0:27017-&gt;27017/tcp, :::27017-&gt;27017/tcp<br>mysql               registry.cn-hangzhou.aliyuncs.com/fastgpt/mysql:8.0.36              &quot;docker-entrypoint.s…&quot;   mysql               39 seconds ago      Up 37 seconds       33060/tcp, 0.0.0.0:3307-&gt;3306/tcp, :::3307-&gt;3306/tcp<br>oneapi              registry.cn-hangzhou.aliyuncs.com/fastgpt/one-api:v0.6.6            &quot;/one-api&quot;               oneapi              39 seconds ago      Up 35 seconds       0.0.0.0:3001-&gt;3000/tcp, :::3001-&gt;3000/tcp<br>pg                  registry.cn-hangzhou.aliyuncs.com/fastgpt/pgvector:v0.7.0           &quot;docker-entrypoint.s…&quot;   pg                  39 seconds ago      Up 37 seconds       0.0.0.0:5432-&gt;5432/tcp, :::5432-&gt;5432/tcp<br>sandbox             registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt-sandbox:v4.8.11   &quot;docker-entrypoint.s…&quot;   sandbox             39 seconds ago      Up 37 seconds       <br></code></pre></td></tr></table></figure>
+<h2 id="打开-oneapi-添加模型">3.7 打开 OneAPI 添加模型</h2>
+<p>可以通过<code>ip:3001</code>访问OneAPI，默认账号为<code>root</code>密码为<code>123456</code>。</p>
 <p>在OneApi中添加合适的AI模型渠道。<a target="_blank" rel="noopener" href="https://doc.tryfastgpt.ai/docs/development/one-api/">点击查看相关教程</a></p>
-<h3 id="3-7-1-登录OneApi"><a href="#3-7-1-登录OneApi" class="headerlink" title="3.7.1 登录OneApi"></a>3.7.1 登录OneApi</h3><p><img src="https://s2.loli.net/2024/11/07/DjFvZTXokm7AKuR.png" srcset="/img/loading.gif" lazyload alt="image-20241107171404284"></p>
-<h3 id="3-7-2-创建令牌和渠道"><a href="#3-7-2-创建令牌和渠道" class="headerlink" title="3.7.2 创建令牌和渠道"></a>3.7.2 创建令牌和渠道</h3><h4 id="3-7-2-1-创建令牌"><a href="#3-7-2-1-创建令牌" class="headerlink" title="3.7.2.1 创建令牌"></a>3.7.2.1 创建令牌</h4><p><img src="https://s2.loli.net/2024/12/07/hRwvzuoDTW15SpF.png" srcset="/img/loading.gif" lazyload alt="image-20241113183540805"></p>
-<h4 id="3-7-2-2-创建渠道"><a href="#3-7-2-2-创建渠道" class="headerlink" title="3.7.2.2 创建渠道"></a>3.7.2.2 创建渠道</h4><p><img src="https://s2.loli.net/2024/11/07/E5r8mgfh9Bcz1Dw.png" srcset="/img/loading.gif" lazyload alt="image-20241107172511431"></p>
-<p><img src="https://s2.loli.net/2024/11/07/rdZ5Q2mSYkUiP4H.png" srcset="/img/loading.gif" lazyload alt="image-20241107172632721"></p>
-<h5 id="3-7-2-1-1-创建ollama渠道"><a href="#3-7-2-1-1-创建ollama渠道" class="headerlink" title="3.7.2.1.1 创建ollama渠道"></a>3.7.2.1.1 创建ollama渠道</h5><p><img src="https://s2.loli.net/2024/12/07/BZh3bckW8KrVjRs.png" srcset="/img/loading.gif" lazyload alt="image-20241113184117696"></p>
+<h3 id="登录oneapi">3.7.1 登录OneApi</h3>
+<figure>
+<img src="https://s2.loli.net/2024/11/07/DjFvZTXokm7AKuR.png" srcset="/img/loading.gif" lazyload alt="image-20241107171404284" /><figcaption aria-hidden="true">image-20241107171404284</figcaption>
+</figure>
+<h3 id="创建令牌和渠道">3.7.2 创建令牌和渠道</h3>
+<h4 id="创建令牌">3.7.2.1 创建令牌</h4>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/hRwvzuoDTW15SpF.png" srcset="/img/loading.gif" lazyload alt="image-20241113183540805" /><figcaption aria-hidden="true">image-20241113183540805</figcaption>
+</figure>
+<h4 id="创建渠道">3.7.2.2 创建渠道</h4>
+<figure>
+<img src="https://s2.loli.net/2024/11/07/E5r8mgfh9Bcz1Dw.png" srcset="/img/loading.gif" lazyload alt="image-20241107172511431" /><figcaption aria-hidden="true">image-20241107172511431</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2024/11/07/rdZ5Q2mSYkUiP4H.png" srcset="/img/loading.gif" lazyload alt="image-20241107172632721" /><figcaption aria-hidden="true">image-20241107172632721</figcaption>
+</figure>
+<h5 id="创建ollama渠道">3.7.2.1.1 创建ollama渠道</h5>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/BZh3bckW8KrVjRs.png" srcset="/img/loading.gif" lazyload alt="image-20241113184117696" /><figcaption aria-hidden="true">image-20241113184117696</figcaption>
+</figure>
 <ul>
 <li><strong>上图中Base URL样中，更建议将host.docker.internal 换成对应的ip地址。</strong></li>
 <li>上图中创建ollama渠道时，模型栏可以将ollama中已经拉取到所有模型都填写进去。</li>
 </ul>
-<p>提交后，可以点击”测试”按钮进行测试：</p>
-<p><img src="https://s2.loli.net/2024/12/07/9PGFvrMk4AHBVqo.png" srcset="/img/loading.gif" lazyload alt="image-20241113184505093"></p>
-<h5 id="3-7-2-1-2-创建m3e渠道"><a href="#3-7-2-1-2-创建m3e渠道" class="headerlink" title="3.7.2.1.2 创建m3e渠道"></a>3.7.2.1.2 创建m3e渠道</h5><p><img src="https://s2.loli.net/2024/12/07/AV516fy9PmYjrIs.png" srcset="/img/loading.gif" lazyload alt="image-20241113185816938"></p>
-<p><img src="https://s2.loli.net/2024/12/07/CS4NhUMVYX5vRor.png" srcset="/img/loading.gif" lazyload alt="image-20241113190216645"></p>
+<p>提交后，可以点击"测试"按钮进行测试：</p>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/9PGFvrMk4AHBVqo.png" srcset="/img/loading.gif" lazyload alt="image-20241113184505093" /><figcaption aria-hidden="true">image-20241113184505093</figcaption>
+</figure>
+<h5 id="创建m3e渠道">3.7.2.1.2 创建m3e渠道</h5>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/AV516fy9PmYjrIs.png" srcset="/img/loading.gif" lazyload alt="image-20241113185816938" /><figcaption aria-hidden="true">image-20241113185816938</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/CS4NhUMVYX5vRor.png" srcset="/img/loading.gif" lazyload alt="image-20241113190216645" /><figcaption aria-hidden="true">image-20241113190216645</figcaption>
+</figure>
 <p>此处 m3e 渠道测试时报404，暂时不理会。</p>
-<h2 id="3-8-重启fastgpt相关容器"><a href="#3-8-重启fastgpt相关容器" class="headerlink" title="3.8 重启fastgpt相关容器"></a>3.8 重启fastgpt相关容器</h2><p><strong>复制 ollama 令牌的密钥：</strong></p>
-<p><img src="https://s2.loli.net/2024/12/07/Tx34lGbOifz5vdc.png" srcset="/img/loading.gif" lazyload alt="image-20241113190828105"></p>
+<h2 id="重启fastgpt相关容器">3.8 重启fastgpt相关容器</h2>
+<p><strong>复制 ollama 令牌的密钥：</strong></p>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/Tx34lGbOifz5vdc.png" srcset="/img/loading.gif" lazyload alt="image-20241113190828105" /><figcaption aria-hidden="true">image-20241113190828105</figcaption>
+</figure>
 <p>sk-ZJ0I49yR2NYUG9mu326cF283380b46159d2b347eB00eD8E3</p>
 <p><strong>修改docker.compose.yml文件：</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs shell">(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# vi docker-compose.yml<br>...<br>  fastgpt:<br>    container_name: fastgpt<br>    #image: ghcr.io/labring/fastgpt:v4.8.11 # git<br>    image: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt:v4.8.11 # 阿里云<br>    ports:<br>      - 3000:3000<br>    networks:<br>      - fastgpt<br>    depends_on:<br>      - mongo<br>      - pg<br>      - sandbox<br>      - oneapi<br>    restart: always<br>    environment:<br>      # root 密码，用户名为: root。如果需要修改 root 密码，直接修改这个环境变量，并重启即可。<br>      - DEFAULT_ROOT_PSW=1234<br>      # AI模型的API地址哦。务必加 /v1。这里默认填写了OneApi的访问地址。<br>      ###- OPENAI_BASE_URL=http://oneapi:3000/v1<br>      - OPENAI_BASE_URL=http://172.20.0.21:3001/v1<br>      # AI模型的API Key。（这里默认填写了OneAPI的快速默认key，测试通后，务必及时修改）<br>      #- CHAT_API_KEY=sk-fastgpt<br>      - CHAT_API_KEY=sk-ZJ0I49yR2NYUG9mu326cF283380b46159d2b347eB00eD8E3              #####修改这里<br>...<br></code></pre></td></tr></table></figure>
-
 <p><strong>执行重启容器：</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# docker-compose restart<br><br>(self-llm) root@controller01:~/miniconda3/envs/self-llm/fastgpt# docker-compose ps  <br>NAME                IMAGE                                                               COMMAND                  SERVICE             CREATED             STATUS              PORTS<br>fastgpt             registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt:v4.8.11           &quot;sh -c &#x27;node --max-o…&quot;   fastgpt             8 seconds ago       Up 5 seconds        0.0.0.0:3000-&gt;3000/tcp, :::3000-&gt;3000/tcp<br>mongo               registry.cn-hangzhou.aliyuncs.com/fastgpt/mongo:5.0.18              &quot;bash -c &#x27;openssl ra…&quot;   mongo               8 seconds ago       Up 6 seconds        0.0.0.0:27017-&gt;27017/tcp, :::27017-&gt;27017/tcp<br>mysql               registry.cn-hangzhou.aliyuncs.com/fastgpt/mysql:8.0.36              &quot;docker-entrypoint.s…&quot;   mysql               8 seconds ago       Up 6 seconds        33060/tcp, 0.0.0.0:3307-&gt;3306/tcp, :::3307-&gt;3306/tcp<br>oneapi              registry.cn-hangzhou.aliyuncs.com/fastgpt/one-api:v0.6.6            &quot;/one-api&quot;               oneapi              8 seconds ago       Up 5 seconds        0.0.0.0:3001-&gt;3000/tcp, :::3001-&gt;3000/tcp<br>pg                  registry.cn-hangzhou.aliyuncs.com/fastgpt/pgvector:v0.7.0           &quot;docker-entrypoint.s…&quot;   pg                  8 seconds ago       Up 6 seconds        0.0.0.0:5432-&gt;5432/tcp, :::5432-&gt;5432/tcp<br>sandbox             registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt-sandbox:v4.8.11   &quot;docker-entrypoint.s…&quot;   sandbox             8 seconds ago       Up 7 seconds        <br></code></pre></td></tr></table></figure>
-
-
-
-<h1 id="四、FastGPT中配置知识库与应用"><a href="#四、FastGPT中配置知识库与应用" class="headerlink" title="四、FastGPT中配置知识库与应用"></a>四、FastGPT中配置知识库与应用</h1><p>目前可以通过 <code>ip:3000</code> 直接访问(注意防火墙)。登录用户名为 <code>root</code>，密码为<code>docker-compose.yml</code>环境变量里设置的 <code>DEFAULT_ROOT_PSW</code>。</p>
+<h1 id="四fastgpt中配置知识库与应用">四、FastGPT中配置知识库与应用</h1>
+<p>目前可以通过 <code>ip:3000</code> 直接访问(注意防火墙)。登录用户名为 <code>root</code>，密码为<code>docker-compose.yml</code>环境变量里设置的 <code>DEFAULT_ROOT_PSW</code>。</p>
 <p>如果需要域名访问，请自行安装并配置 Nginx。</p>
 <p>首次运行，会自动初始化 root 用户，密码为 <code>1234</code>（与环境变量中的<code>DEFAULT_ROOT_PSW</code>一致），日志里会提示一次<code>MongoServerError: Unable to read from a snapshot due to pending collection catalog changes;</code>可忽略。</p>
-<p><img src="https://s2.loli.net/2024/11/07/B2VQsCWbHkgwP6E.png" srcset="/img/loading.gif" lazyload alt="image-20241107174345779"></p>
+<figure>
+<img src="https://s2.loli.net/2024/11/07/B2VQsCWbHkgwP6E.png" srcset="/img/loading.gif" lazyload alt="image-20241107174345779" /><figcaption aria-hidden="true">image-20241107174345779</figcaption>
+</figure>
 <p>登录后，默认是没有可用的应用的。</p>
-<h2 id="4-1-创建通用知识库"><a href="#4-1-创建通用知识库" class="headerlink" title="4.1 创建通用知识库"></a>4.1 创建通用知识库</h2><p><img src="https://s2.loli.net/2024/12/07/8wMdQznlHbxKZOy.png" srcset="/img/loading.gif" lazyload alt="image-20241113192714415"></p>
-<h2 id="4-2-知识库导入数据集"><a href="#4-2-知识库导入数据集" class="headerlink" title="4.2 知识库导入数据集"></a>4.2 知识库导入数据集</h2><p><img src="https://s2.loli.net/2024/12/07/v75reJxjiG9gqn4.png" srcset="/img/loading.gif" lazyload alt="image-20241113192910065"></p>
-<p><img src="https://s2.loli.net/2024/12/07/ThOAMz6vWDQwHYI.png" srcset="/img/loading.gif" lazyload alt="image-20241113192954019"></p>
+<h2 id="创建通用知识库">4.1 创建通用知识库</h2>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/8wMdQznlHbxKZOy.png" srcset="/img/loading.gif" lazyload alt="image-20241113192714415" /><figcaption aria-hidden="true">image-20241113192714415</figcaption>
+</figure>
+<h2 id="知识库导入数据集">4.2 知识库导入数据集</h2>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/v75reJxjiG9gqn4.png" srcset="/img/loading.gif" lazyload alt="image-20241113192910065" /><figcaption aria-hidden="true">image-20241113192910065</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/ThOAMz6vWDQwHYI.png" srcset="/img/loading.gif" lazyload alt="image-20241113192954019" /><figcaption aria-hidden="true">image-20241113192954019</figcaption>
+</figure>
 <p>此处选择本地一个doc 文件，然后下一步：</p>
-<p><img src="https://s2.loli.net/2024/12/07/jEtFWpG1SJKbaAm.png" srcset="/img/loading.gif" lazyload alt="image-20241113193141780"></p>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/jEtFWpG1SJKbaAm.png" srcset="/img/loading.gif" lazyload alt="image-20241113193141780" /><figcaption aria-hidden="true">image-20241113193141780</figcaption>
+</figure>
 <p>选择问答拆分，然后下一步：</p>
-<p><img src="https://s2.loli.net/2024/12/07/vFn4KZJ7wzhPdtk.png" srcset="/img/loading.gif" lazyload alt="image-20241113193227525"></p>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/vFn4KZJ7wzhPdtk.png" srcset="/img/loading.gif" lazyload alt="image-20241113193227525" /><figcaption aria-hidden="true">image-20241113193227525</figcaption>
+</figure>
 <p>开始上传：</p>
-<p><img src="https://s2.loli.net/2024/12/07/xyszi7J8TLfPetV.png" srcset="/img/loading.gif" lazyload alt="image-20241113193305696"></p>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/xyszi7J8TLfPetV.png" srcset="/img/loading.gif" lazyload alt="image-20241113193305696" /><figcaption aria-hidden="true">image-20241113193305696</figcaption>
+</figure>
 <p>上传完成后：</p>
-<p><img src="https://s2.loli.net/2024/12/07/Ood5EkGS72TBnD4.png" srcset="/img/loading.gif" lazyload alt="image-20241113193357782"></p>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/Ood5EkGS72TBnD4.png" srcset="/img/loading.gif" lazyload alt="image-20241113193357782" /><figcaption aria-hidden="true">image-20241113193357782</figcaption>
+</figure>
 <p><strong>请等待知识库文件条目的状态变更为“已就绪”</strong></p>
-<h2 id="4-3-创建应用"><a href="#4-3-创建应用" class="headerlink" title="4.3 创建应用"></a>4.3 创建应用</h2><p><img src="https://s2.loli.net/2024/12/07/a8A3yPgYBjsUCMu.png" srcset="/img/loading.gif" lazyload alt="image-20241113193630915"></p>
+<h2 id="创建应用">4.3 创建应用</h2>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/a8A3yPgYBjsUCMu.png" srcset="/img/loading.gif" lazyload alt="image-20241113193630915" /><figcaption aria-hidden="true">image-20241113193630915</figcaption>
+</figure>
 <p><strong>选择“知识库+对话引导”：</strong></p>
-<p><img src="https://s2.loli.net/2024/12/07/cFd4DCh8g12rJlo.png" srcset="/img/loading.gif" lazyload alt="image-20241113193709870"></p>
-<h2 id="4-4-配置应用"><a href="#4-4-配置应用" class="headerlink" title="4.4 配置应用"></a>4.4 配置应用</h2><p><img src="https://s2.loli.net/2024/12/07/MPEqAaIFS3Be2uK.png" srcset="/img/loading.gif" lazyload alt="image-20241113193846005"></p>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/cFd4DCh8g12rJlo.png" srcset="/img/loading.gif" lazyload alt="image-20241113193709870" /><figcaption aria-hidden="true">image-20241113193709870</figcaption>
+</figure>
+<h2 id="配置应用">4.4 配置应用</h2>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/MPEqAaIFS3Be2uK.png" srcset="/img/loading.gif" lazyload alt="image-20241113193846005" /><figcaption aria-hidden="true">image-20241113193846005</figcaption>
+</figure>
 <p><strong>选择deepseek-coder:1.3b：</strong></p>
-<p><img src="https://s2.loli.net/2024/12/07/sdHmcM9w1FuyYOC.png" srcset="/img/loading.gif" lazyload alt="image-20241113193942936"></p>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/sdHmcM9w1FuyYOC.png" srcset="/img/loading.gif" lazyload alt="image-20241113193942936" /><figcaption aria-hidden="true">image-20241113193942936</figcaption>
+</figure>
 <p><strong>关联知识库：</strong></p>
-<p><img src="https://s2.loli.net/2024/12/07/GL1ATKN5gCXv4qc.png" srcset="/img/loading.gif" lazyload alt="image-20241113200034815"></p>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/GL1ATKN5gCXv4qc.png" srcset="/img/loading.gif" lazyload alt="image-20241113200034815" /><figcaption aria-hidden="true">image-20241113200034815</figcaption>
+</figure>
 <p><strong>选择先前创建的知识库：</strong></p>
-<p><img src="https://s2.loli.net/2024/12/07/xnSr6IUYf8T4uX7.png" srcset="/img/loading.gif" lazyload alt="image-20241113200112918"></p>
+<figure>
+<img src="https://s2.loli.net/2024/12/07/xnSr6IUYf8T4uX7.png" srcset="/img/loading.gif" lazyload alt="image-20241113200112918" /><figcaption aria-hidden="true">image-20241113200112918</figcaption>
+</figure>
 <p>然后，右上角，点击“保存并发布”。</p>
-<p><img src="https://s2.loli.net/2025/01/23/9Pgco5fByaDNt1Z.png" srcset="/img/loading.gif" lazyload alt="image-20250123150725679"></p>
-<h2 id="4-5-查看应用与使用"><a href="#4-5-查看应用与使用" class="headerlink" title="4.5 查看应用与使用"></a>4.5 查看应用与使用</h2><h3 id="4-5-1-在工作台中使用"><a href="#4-5-1-在工作台中使用" class="headerlink" title="4.5.1 在工作台中使用"></a>4.5.1 在工作台中使用</h3><p><img src="https://s2.loli.net/2025/01/23/ZBflSOd2r8sHRwq.png" srcset="/img/loading.gif" lazyload alt="image-20250123150751085"></p>
-<p><img src="https://s2.loli.net/2025/01/23/va7EnfJ5hObQk43.png" srcset="/img/loading.gif" lazyload alt="image-20250123150948199"></p>
-<h3 id="4-5-2-在聊天中直接使用"><a href="#4-5-2-在聊天中直接使用" class="headerlink" title="4.5.2 在聊天中直接使用"></a>4.5.2 在聊天中直接使用</h3><p><img src="https://s2.loli.net/2025/01/23/ntHVWKXOGog9bZQ.png" srcset="/img/loading.gif" lazyload alt="image-20250123151056398"></p>
-<p><img src="https://s2.loli.net/2025/01/23/nfNAKcoMDOEeVZJ.png" srcset="/img/loading.gif" lazyload alt="image-20250123151156093"></p>
-<h1 id="五、备注"><a href="#五、备注" class="headerlink" title="五、备注"></a>五、备注</h1><h2 id="5-1-现有问题"><a href="#5-1-现有问题" class="headerlink" title="5.1 现有问题"></a>5.1 现有问题</h2><h3 id="5-1-1-每次使用问答功能时，fastgpt容器日志中会有如下错误"><a href="#5-1-1-每次使用问答功能时，fastgpt容器日志中会有如下错误" class="headerlink" title="5.1.1 每次使用问答功能时，fastgpt容器日志中会有如下错误"></a>5.1.1 每次使用问答功能时，fastgpt容器日志中会有如下错误</h3><p><img src="https://s2.loli.net/2024/12/08/4QeDjE9WngOTHUS.png" srcset="/img/loading.gif" lazyload alt="image-20241208094204434"></p>
+<figure>
+<img src="https://s2.loli.net/2025/01/23/9Pgco5fByaDNt1Z.png" srcset="/img/loading.gif" lazyload alt="image-20250123150725679" /><figcaption aria-hidden="true">image-20250123150725679</figcaption>
+</figure>
+<h2 id="查看应用与使用">4.5 查看应用与使用</h2>
+<h3 id="在工作台中使用">4.5.1 在工作台中使用</h3>
+<figure>
+<img src="https://s2.loli.net/2025/01/23/ZBflSOd2r8sHRwq.png" srcset="/img/loading.gif" lazyload alt="image-20250123150751085" /><figcaption aria-hidden="true">image-20250123150751085</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/01/23/va7EnfJ5hObQk43.png" srcset="/img/loading.gif" lazyload alt="image-20250123150948199" /><figcaption aria-hidden="true">image-20250123150948199</figcaption>
+</figure>
+<h3 id="在聊天中直接使用">4.5.2 在聊天中直接使用</h3>
+<figure>
+<img src="https://s2.loli.net/2025/01/23/ntHVWKXOGog9bZQ.png" srcset="/img/loading.gif" lazyload alt="image-20250123151056398" /><figcaption aria-hidden="true">image-20250123151056398</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/01/23/nfNAKcoMDOEeVZJ.png" srcset="/img/loading.gif" lazyload alt="image-20250123151156093" /><figcaption aria-hidden="true">image-20250123151156093</figcaption>
+</figure>
+<h1 id="五备注">五、备注</h1>
+<h2 id="现有问题">5.1 现有问题</h2>
+<h3 id="每次使用问答功能时fastgpt容器日志中会有如下错误">5.1.1 每次使用问答功能时，fastgpt容器日志中会有如下错误</h3>
+<figure>
+<img src="https://s2.loli.net/2024/12/08/4QeDjE9WngOTHUS.png" srcset="/img/loading.gif" lazyload alt="image-20241208094204434" /><figcaption aria-hidden="true">image-20241208094204434</figcaption>
+</figure>
 <p>解决办法：</p>
 <p>暂未解决。从网上查看的资料来看，极可能是config.json文件中关于模型的某个参数配置不正确或不恰当所致，但不知是哪个具体是哪个地方的配置不当所致。此报错暂时不影响整体功能</p>
-<h2 id="5-2-参考视频"><a href="#5-2-参考视频" class="headerlink" title="5.2 参考视频"></a>5.2 参考视频</h2><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1xMyGYwEdk/?spm_id_from=333.337.search-card.all.click&vd_source=0b5fe5d5aa31f64bf7462d1d094b70a2">https://www.bilibili.com/video/BV1xMyGYwEdk/?spm_id_from=333.337.search-card.all.click&amp;vd_source=0b5fe5d5aa31f64bf7462d1d094b70a2</a></p>
-<h2 id="5-3-后续更新"><a href="#5-3-后续更新" class="headerlink" title="5.3 后续更新"></a>5.3 后续更新</h2><p>笔者个人博客“<a href="https://jiangsanyin.github.io/archives/%E2%80%9D2024%E5%B9%B412%E6%9C%887%E6%97%A5%E7%9A%84%E6%96%87%E7%AB%A0">https://jiangsanyin.github.io/archives/”2024年12月7日的文章</a></p>
+<h2 id="参考视频">5.2 参考视频</h2>
+<p>https://www.bilibili.com/video/BV1xMyGYwEdk/?spm_id_from=333.337.search-card.all.click&amp;vd_source=0b5fe5d5aa31f64bf7462d1d094b70a2</p>
+<h2 id="后续更新">5.3 后续更新</h2>
+<p>笔者个人博客“https://jiangsanyin.github.io/archives/”2024年12月7日的文章</p>
 
                 
               </div>
@@ -484,11 +575,32 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" class="category-chain-item">大模型</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/docker-compose-FastGPT-deepseek-coder-1-3b/" class="print-no-link">#docker-compose FastGPT deepseek-coder:1.3b</a>
+        <a href="/tags/FastGPT/" class="print-no-link">#FastGPT</a>
       
     </div>
   
