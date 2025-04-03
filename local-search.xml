@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>nvbandwidth测速GPU间带宽</title>
+    <link href="/2025/04/02/nvbandwidth%E6%B5%8B%E9%80%9FGPU%E9%97%B4%E5%B8%A6%E5%AE%BD/"/>
+    <url>/2025/04/02/nvbandwidth%E6%B5%8B%E9%80%9FGPU%E9%97%B4%E5%B8%A6%E5%AE%BD/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一环境信息">一、环境信息</h1><p>4台Ubuntu22.04.4 LTS服务器，每台服务器上有8个NVIDIA A800-SXM4-80GB</p><h1 id="二安装nvbandwidth">二、安装nvbandwidth</h1><p>参考：https://github.com/NVIDIA/nvbandwidth</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@deepseek2:/opt/code_repos# git clone https://github.com/NVIDIA/nvbandwidth.git<br>root@deepseek2:/opt/code_repos# cd nvbandwidth<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装依赖</span><br>root@deepseek2:/opt/code_repos/nvbandwidth# ./debian_install.sh<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装nvidia-imex（Imex服务是NVIDIA Internode内存交换服务）</span><br>root@deepseek2:/opt/code_repos/nvbandwidth# apt install nvidia-imex<br>root@deepseek2:/opt/code_repos/nvbandwidth# systemctl enable nvidia-imex<br>root@deepseek2:/opt/code_repos/nvbandwidth# systemctl start nvidia-imex.service <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装 NUMA 开发库：libnuma-dev</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# apt install libnuma-dev<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装MPI（https://www.mpich.org/static/downloads/4.2.3/）</span><br>root@deepseek2:/opt/installPkgs# wget https://www.mpich.org/static/downloads/4.2.3/mpich-4.2.3.tar.gz<br><span class="hljs-meta prompt_">#</span><span class="language-bash">检测系统环境并生成适合当前系统的构建配置，此操作将生成Makefile</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# ./configure --prefix=/usr/local/mpich-4.2.3<br><span class="hljs-meta prompt_">#</span><span class="language-bash">编译</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# make -j$(nproc)<br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# make install<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">将mpirun可执行文件路径添加到PATH中</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# vi /root/.bashrc<br><span class="hljs-meta prompt_">#</span><span class="language-bash">在文件最后添加如下内容</span><br>export PATH=/usr/local/mpich-4.2.3/bin:$PATH<br><span class="hljs-meta prompt_">#</span><span class="language-bash">重新加载上述文件</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# source /root/.bashrc<br><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# cd examples/<br><span class="hljs-meta prompt_">#</span><span class="language-bash">mpi接口对hellow.c进行编译</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3/examples# mpicc  hellow.c -o hellow<br><span class="hljs-meta prompt_">#</span><span class="language-bash">运行hellow文件“mpirun -np N ./hellow”，将其中的N换成自定义进程数比如3</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3/examples# mpirun -np 3 ./hellow<br>Hello world from process 0 of 3<br>Hello world from process 1 of 3<br>Hello world from process 2 of 3<br><br></code></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@deepseek2:/opt/code_repos/nvbandwidth# cmake -DMULTINODE=1 .<br>root@deepseek2:/opt/code_repos/nvbandwidth# make<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>NVIDIA生态</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>nvidia</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>AI生成短视频</title>
     <link href="/2025/04/01/AI%E7%94%9F%E6%88%90%E7%9F%AD%E8%A7%86%E9%A2%91/"/>
     <url>/2025/04/01/AI%E7%94%9F%E6%88%90%E7%9F%AD%E8%A7%86%E9%A2%91/</url>
