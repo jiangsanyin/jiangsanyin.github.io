@@ -44,7 +44,7 @@
 <meta property="og:image" content="https://s2.loli.net/2025/03/19/RV5CGyF3UTxajkH.png">
 <meta property="og:image" content="https://s2.loli.net/2025/03/19/NpZwmkMroBP2WLt.png">
 <meta property="article:published_time" content="2025-03-12T03:33:43.000Z">
-<meta property="article:modified_time" content="2025-04-05T12:02:56.000Z">
+<meta property="article:modified_time" content="2025-04-05T14:25:10.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="KTransformers">
 <meta name="twitter:card" content="summary_large_image">
@@ -364,7 +364,7 @@
 <img src="https://s2.loli.net/2025/03/16/eKdXrGVz1RD48th.png" srcset="/img/loading.gif" lazyload alt="image-20250316091400204" /><figcaption aria-hidden="true">image-20250316091400204</figcaption>
 </figure>
 <p>对于g++版本相关报错，可以考虑升级gcc与g++版本，然后再执行<code>sh install.sh</code>，再查看是否仍有报销</p>
-<h1 id="三uubuntu20.04-lts上安装部署">三、Uubuntu20.04 LTS上安装部署</h1>
+<h1 id="三ubuntu20.04-上部署">三、Ubuntu20.04 上部署</h1>
 <h2 id="升级cmake">3.0 升级cmake</h2>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">升级cmake版本（从3.16.3到3.23.0）</span><br>root@ksp-registry:/opt/installPkgs# wget https://cmake.org/files/v3.23/cmake-3.23.0.tar.gz<br>root@ksp-registry:/opt/installPkgs# tar -zxvf cmake-3.23.0.tar.gz<br>root@ksp-registry:/opt/installPkgs# cp -rp cmake-3.23.0 /usr/share/cmake-3.23.0<br>root@ksp-registry:/opt/installPkgs# ln -sf /usr/share/cmake-3.23.0/bin/cmake /usr/bin/cmake  <br>root@ksp-registry:/opt/installPkgs# cmake --version<br>cmake version 3.23.0<br><br>CMake suite maintained and supported by Kitware (kitware.com/cmake).<br></code></pre></td></tr></table></figure>
 <h2 id="下载deepseek-r1-q4_k_m">3.1 下载DeepSeek-R1-Q4_K_M</h2>
