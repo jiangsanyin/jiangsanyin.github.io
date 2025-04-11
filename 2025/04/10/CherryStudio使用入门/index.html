@@ -19,22 +19,28 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、环境信息 4台Ubuntu22.04.4 LTS服务器，每台服务器上有8个NVIDIA A800-SXM4-80GB 二、安装nvbandwidth 参考：https:&#x2F;&#x2F;github.com&#x2F;NVIDIA&#x2F;nvbandwidth 123456789101112131415161718192021222324252627282930313233343536373839root@deep">
+    <meta name="description" content="一、安装文件下载 参考其github仓库上的下载地址：https:&#x2F;&#x2F;github.com&#x2F;CherryHQ&#x2F;cherry-studio&#x2F;releases 或官网：https:&#x2F;&#x2F;cherry-ai.com&#x2F;download 以管理员身份安装，并且为所有用户安装。安装完成后，打开时界面如下图（v1.2.1）：  image-20250410200715250   官方参考文档：ht">
 <meta property="og:type" content="article">
-<meta property="og:title" content="nvbandwidth测速GPU间带宽">
-<meta property="og:url" content="https://jiangsanyin.github.io/2025/04/02/nvbandwidth%E6%B5%8B%E9%80%9FGPU%E9%97%B4%E5%B8%A6%E5%AE%BD/index.html">
+<meta property="og:title" content="CherryStudio使用入门">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/04/10/CherryStudio%E4%BD%BF%E7%94%A8%E5%85%A5%E9%97%A8/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、环境信息 4台Ubuntu22.04.4 LTS服务器，每台服务器上有8个NVIDIA A800-SXM4-80GB 二、安装nvbandwidth 参考：https:&#x2F;&#x2F;github.com&#x2F;NVIDIA&#x2F;nvbandwidth 123456789101112131415161718192021222324252627282930313233343536373839root@deep">
+<meta property="og:description" content="一、安装文件下载 参考其github仓库上的下载地址：https:&#x2F;&#x2F;github.com&#x2F;CherryHQ&#x2F;cherry-studio&#x2F;releases 或官网：https:&#x2F;&#x2F;cherry-ai.com&#x2F;download 以管理员身份安装，并且为所有用户安装。安装完成后，打开时界面如下图（v1.2.1）：  image-20250410200715250   官方参考文档：ht">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-04-02T06:41:38.000Z">
-<meta property="article:modified_time" content="2025-04-03T01:55:52.000Z">
+<meta property="og:image" content="https://s2.loli.net/2025/04/10/1qTEzUdOm8lSveL.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/10/pHNFV3IAJCW4Uqc.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/10/1USnqPpWQcuBzIY.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/10/EXsDGbkOHNp1y7Z.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/10/5tdc69hxNgBGyq1.png">
+<meta property="article:published_time" content="2025-04-10T12:02:17.000Z">
+<meta property="article:modified_time" content="2025-04-11T01:20:00.000Z">
 <meta property="article:author" content="sanyinjiang">
-<meta property="article:tag" content="nvidia">
+<meta property="article:tag" content="大模型">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/04/10/1qTEzUdOm8lSveL.png">
   
   
   
-  <title>nvbandwidth测速GPU间带宽 - sanyinjiang</title>
+  <title>CherryStudio使用入门 - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +219,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">nvbandwidth测速GPU间带宽</span>
+            <span id="subtitle">CherryStudio使用入门</span>
           
         </div>
 
@@ -224,8 +230,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-04-02 14:41" pubdate>
-          2025年4月2日 下午
+        <time datetime="2025-04-10 20:02" pubdate>
+          2025年4月10日 晚上
         </time>
       </span>
     
@@ -236,7 +242,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          343 字
+          156 字
         
       </span>
     
@@ -247,7 +253,7 @@
         
         
         
-          3 分钟
+          2 分钟
         
       </span>
     
@@ -293,17 +299,37 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">nvbandwidth测速GPU间带宽</h1>
+            <h1 id="seo-header">CherryStudio使用入门</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一环境信息">一、环境信息</h1>
-<p>4台Ubuntu22.04.4 LTS服务器，每台服务器上有8个NVIDIA A800-SXM4-80GB</p>
-<h1 id="二安装nvbandwidth">二、安装nvbandwidth</h1>
-<p>参考：https://github.com/NVIDIA/nvbandwidth</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@deepseek2:/opt/code_repos# git clone https://github.com/NVIDIA/nvbandwidth.git<br>root@deepseek2:/opt/code_repos# cd nvbandwidth<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装依赖</span><br>root@deepseek2:/opt/code_repos/nvbandwidth# ./debian_install.sh<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装nvidia-imex（Imex服务是NVIDIA Internode内存交换服务）</span><br>root@deepseek2:/opt/code_repos/nvbandwidth# apt install nvidia-imex<br>root@deepseek2:/opt/code_repos/nvbandwidth# systemctl enable nvidia-imex<br>root@deepseek2:/opt/code_repos/nvbandwidth# systemctl start nvidia-imex.service <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装 NUMA 开发库：libnuma-dev</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# apt install libnuma-dev<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装MPI（https://www.mpich.org/static/downloads/4.2.3/）</span><br>root@deepseek2:/opt/installPkgs# wget https://www.mpich.org/static/downloads/4.2.3/mpich-4.2.3.tar.gz<br><span class="hljs-meta prompt_">#</span><span class="language-bash">检测系统环境并生成适合当前系统的构建配置，此操作将生成Makefile</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# ./configure --prefix=/usr/local/mpich-4.2.3<br><span class="hljs-meta prompt_">#</span><span class="language-bash">编译</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# make -j$(nproc)<br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# make install<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">将mpirun可执行文件路径添加到PATH中</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# vi /root/.bashrc<br><span class="hljs-meta prompt_">#</span><span class="language-bash">在文件最后添加如下内容</span><br>export PATH=/usr/local/mpich-4.2.3/bin:$PATH<br><span class="hljs-meta prompt_">#</span><span class="language-bash">重新加载上述文件</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# source /root/.bashrc<br><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3# cd examples/<br><span class="hljs-meta prompt_">#</span><span class="language-bash">mpi接口对hellow.c进行编译</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3/examples# mpicc  hellow.c -o hellow<br><span class="hljs-meta prompt_">#</span><span class="language-bash">运行hellow文件“mpirun -np N ./hellow”，将其中的N换成自定义进程数比如3</span><br>root@deepseek2:/opt/installPkgs/mpich-4.2.3/examples# mpirun -np 3 ./hellow<br>Hello world from process 0 of 3<br>Hello world from process 1 of 3<br>Hello world from process 2 of 3<br><br></code></pre></td></tr></table></figure>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@deepseek2:/opt/code_repos/nvbandwidth# cmake -DMULTINODE=1 .<br>root@deepseek2:/opt/code_repos/nvbandwidth# make<br></code></pre></td></tr></table></figure>
+                <h1 id="一安装文件下载">一、安装文件下载</h1>
+<p>参考其github仓库上的下载地址：https://github.com/CherryHQ/cherry-studio/releases</p>
+<p>或官网：https://cherry-ai.com/download</p>
+<p>以管理员身份安装，并且为所有用户安装。安装完成后，打开时界面如下图（v1.2.1）：</p>
+<figure>
+<img src="https://s2.loli.net/2025/04/10/1qTEzUdOm8lSveL.png" srcset="/img/loading.gif" lazyload alt="image-20250410200715250" /><figcaption aria-hidden="true">image-20250410200715250</figcaption>
+</figure>
+<hr />
+<p>官方参考文档：https://docs.cherry-ai.com/</p>
+<h1 id="二模型服务中的设置">二、模型服务中的设置</h1>
+<figure>
+<img src="https://s2.loli.net/2025/04/10/pHNFV3IAJCW4Uqc.png" srcset="/img/loading.gif" lazyload alt="image-20250410201829599" /><figcaption aria-hidden="true">image-20250410201829599</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/04/10/1USnqPpWQcuBzIY.png" srcset="/img/loading.gif" lazyload alt="image-20250410202032637" /><figcaption aria-hidden="true">image-20250410202032637</figcaption>
+</figure>
+<h1 id="三mcp配置与使用">三、MCP配置与使用</h1>
+<p><strong>MCP(Model Context Protocol)</strong> 是一种开源协议，旨在以标准化的方式向大语言模型（LLM）提供上下文信息。参考：https://docs.cherry-ai.com/advanced-basic/mcp/install</p>
+<h2 id="mcp环境安装">MCP环境安装</h2>
+<p>安装uv、bun</p>
+<p><img src="https://s2.loli.net/2025/04/10/EXsDGbkOHNp1y7Z.png" srcset="/img/loading.gif" lazyload alt="image-20250410211853071" style="zoom: 50%;" /></p>
+<figure>
+<img src="https://s2.loli.net/2025/04/10/5tdc69hxNgBGyq1.png" srcset="/img/loading.gif" lazyload alt="image-20250410212010445" /><figcaption aria-hidden="true">image-20250410212010445</figcaption>
+</figure>
+<h2 id="配置与使用mcp">配置与使用MCP</h2>
+<p>https://mcp.so/</p>
 
                 
               </div>
@@ -322,7 +348,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/NVIDIA%E7%94%9F%E6%80%81/" class="category-chain-item">NVIDIA生态</a>
+  <a href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" class="category-chain-item">大模型</a>
   
   
 
@@ -337,7 +363,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/nvidia/" class="print-no-link">#nvidia</a>
+        <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" class="print-no-link">#大模型</a>
       
     </div>
   
@@ -349,8 +375,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>nvbandwidth测速GPU间带宽</div>
-      <div>https://jiangsanyin.github.io/2025/04/02/nvbandwidth测速GPU间带宽/</div>
+      <div>CherryStudio使用入门</div>
+      <div>https://jiangsanyin.github.io/2025/04/10/CherryStudio使用入门/</div>
     </div>
     <div class="license-meta">
       
@@ -362,7 +388,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年4月2日</div>
+          <div>2025年4月10日</div>
         </div>
       
       
@@ -394,18 +420,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/04/09/5%E5%88%86%E9%92%9F%E5%86%85%E7%94%A8AI%E5%81%9A60%E5%88%86PPT/" title="5分钟内用AI做60分PPT">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">5分钟内用AI做60分PPT</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/04/01/AI%E7%94%9F%E6%88%90%E7%9F%AD%E8%A7%86%E9%A2%91/" title="AI生成短视频">
-                        <span class="hidden-mobile">AI生成短视频</span>
+                      <a href="/2025/04/09/5%E5%88%86%E9%92%9F%E5%86%85%E7%94%A8AI%E5%81%9A60%E5%88%86PPT/" title="5分钟内用AI做60分PPT">
+                        <span class="hidden-mobile">5分钟内用AI做60分PPT</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
