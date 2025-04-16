@@ -19,33 +19,34 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、创建空白应用 参考：https:&#x2F;&#x2F;docs.dify.ai&#x2F;zh-hans&#x2F;workshop&#x2F;basic&#x2F;travel-assistant 工作室-创建空白应用-Agent  image-20250415164828514  二、配置与确认工具 2.1 配置SerpAPI 进入页面 SerpAPI - API Key ，我这里使用github账号进行注册登录的。创建一个api">
+    <meta name="description" content="相关说明： （1）本文通过创建一个知识库，其中有3个文件：PyTorch学习教程.pdf、2019年各厂商手机出货量.docx、各种类型案件数.docx。后两个文件各有一张图片，第一个文件中有图有文字描述。 （2）创建一个智能体应用，使用了“通义千问VL-Max-Latest”模型。如果不开启知识库“多模态回复增强”功能，则图表解析可能不能正常工作。开启后，增加了正常工作的功能性，但仍可能出现">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dify中Agent类型应用-个人在线旅游助手">
-<meta property="og:url" content="https://jiangsanyin.github.io/2025/04/15/dify%E4%B8%ADAgent%E7%B1%BB%E5%9E%8B%E5%BA%94%E7%94%A8-%E4%B8%AA%E4%BA%BA%E5%9C%A8%E7%BA%BF%E6%97%85%E6%B8%B8%E5%8A%A9%E6%89%8B/index.html">
+<meta property="og:title" content="百炼平台-智能多模态识别应用">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/04/16/%E7%99%BE%E7%82%BC%E5%B9%B3%E5%8F%B0-%E6%99%BA%E8%83%BD%E5%A4%9A%E6%A8%A1%E6%80%81%E8%AF%86%E5%88%AB%E5%BA%94%E7%94%A8/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、创建空白应用 参考：https:&#x2F;&#x2F;docs.dify.ai&#x2F;zh-hans&#x2F;workshop&#x2F;basic&#x2F;travel-assistant 工作室-创建空白应用-Agent  image-20250415164828514  二、配置与确认工具 2.1 配置SerpAPI 进入页面 SerpAPI - API Key ，我这里使用github账号进行注册登录的。创建一个api">
+<meta property="og:description" content="相关说明： （1）本文通过创建一个知识库，其中有3个文件：PyTorch学习教程.pdf、2019年各厂商手机出货量.docx、各种类型案件数.docx。后两个文件各有一张图片，第一个文件中有图有文字描述。 （2）创建一个智能体应用，使用了“通义千问VL-Max-Latest”模型。如果不开启知识库“多模态回复增强”功能，则图表解析可能不能正常工作。开启后，增加了正常工作的功能性，但仍可能出现">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2025/04/15/HxqyO71Yf2bEgjT.png">
-<meta property="og:image" content="https://s2.loli.net/2025/04/15/H1vhfqi8UQcMNz2.png">
-<meta property="og:image" content="https://s2.loli.net/2025/04/15/4MHWXKVugZaby3N.png">
-<meta property="og:image" content="https://s2.loli.net/2025/04/15/uCVcPdDE2lb7TMW.png">
-<meta property="og:image" content="https://s2.loli.net/2025/04/15/EWInwL7ehXTsK1C.png">
-<meta property="og:image" content="https://s2.loli.net/2025/04/15/HDf4b6B2OpSzsKJ.png">
-<meta property="og:image" content="https://s2.loli.net/2025/04/15/R3hDug61JSsOTVU.png">
-<meta property="og:image" content="https://s2.loli.net/2025/04/15/HWBOtvu57dlf6er.png">
-<meta property="og:image" content="https://s2.loli.net/2025/04/15/fSn5oJVzedyPKZR.png">
-<meta property="og:image" content="https://s2.loli.net/2025/04/15/CtNIFueQH7y3UiJ.png">
-<meta property="article:published_time" content="2025-04-15T08:47:53.000Z">
-<meta property="article:modified_time" content="2025-04-15T09:13:20.000Z">
+<meta property="og:image" content="https://s2.loli.net/2025/04/16/lr79wX6YBo1Depd.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/16/3KkWwhBTqyYH4Um.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/16/FB8AZKiL76yebRY.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/16/I9aRtYJfjd1PKq6.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/16/riYlHF1tcoaxwyJ.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/16/rXC2YuWVctbyRiq.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/16/l4BCN9Rbte2ay6X.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/16/cHpY3oXeEzfax9i.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/16/vrZkECjLSNUOHIg.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/16/o1iAwWjmbd3felI.png">
+<meta property="og:image" content="https://s2.loli.net/2025/04/16/YKJwPXGqM8CNQi6.png">
+<meta property="article:published_time" content="2025-04-16T15:24:16.000Z">
+<meta property="article:modified_time" content="2025-04-16T15:24:42.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="大模型">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2025/04/15/HxqyO71Yf2bEgjT.png">
+<meta name="twitter:image" content="https://s2.loli.net/2025/04/16/lr79wX6YBo1Depd.png">
   
   
   
-  <title>dify中Agent类型应用-个人在线旅游助手 - sanyinjiang</title>
+  <title>百炼平台-智能多模态识别应用 - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -224,7 +225,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">dify中Agent类型应用-个人在线旅游助手</span>
+            <span id="subtitle">百炼平台-智能多模态识别应用</span>
           
         </div>
 
@@ -235,8 +236,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-04-15 16:47" pubdate>
-          2025年4月15日 下午
+        <time datetime="2025-04-16 23:24" pubdate>
+          2025年4月16日 晚上
         </time>
       </span>
     
@@ -247,7 +248,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          360 字
         
       </span>
     
@@ -258,7 +259,7 @@
         
         
         
-          10 分钟
+          4 分钟
         
       </span>
     
@@ -304,71 +305,58 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">dify中Agent类型应用-个人在线旅游助手</h1>
+            <h1 id="seo-header">百炼平台-智能多模态识别应用</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一创建空白应用">一、创建空白应用</h1>
-<p>参考：https://docs.dify.ai/zh-hans/workshop/basic/travel-assistant</p>
-<p>工作室-创建空白应用-Agent</p>
+                <p>相关说明：</p>
+<p>（1）本文通过创建一个知识库，其中有3个文件：PyTorch学习教程.pdf、2019年各厂商手机出货量.docx、各种类型案件数.docx。后两个文件各有一张图片，第一个文件中有图有文字描述。</p>
+<p>（2）创建一个智能体应用，使用了“通义千问VL-Max-Latest”模型。如果不开启知识库“多模态回复增强”功能，则图表解析可能不能正常工作。开启后，增加了正常工作的功能性，但仍可能出现问题如解析不准确。</p>
+<p>具体过程如下。</p>
+<h1 id="一创建知识库">一、创建知识库</h1>
 <figure>
-<img src="https://s2.loli.net/2025/04/15/HxqyO71Yf2bEgjT.png" srcset="/img/loading.gif" lazyload alt="image-20250415164828514" /><figcaption aria-hidden="true">image-20250415164828514</figcaption>
+<img src="https://s2.loli.net/2025/04/16/lr79wX6YBo1Depd.png" srcset="/img/loading.gif" lazyload alt="image-20250416223516232" /><figcaption aria-hidden="true">image-20250416223516232</figcaption>
 </figure>
-<h1 id="二配置与确认工具">二、配置与确认工具</h1>
-<h2 id="配置serpapi">2.1 配置SerpAPI</h2>
-<p>进入页面 <a target="_blank" rel="noopener" href="https://serpapi.com/manage-api-key">SerpAPI - API Key</a> ，我这里使用github账号进行注册登录的。创建一个api kye，SerpAPI提供一个月100次的免费调用次数。</p>
 <figure>
-<img src="https://s2.loli.net/2025/04/15/H1vhfqi8UQcMNz2.png" srcset="/img/loading.gif" lazyload alt="image-20250415165406012" /><figcaption aria-hidden="true">image-20250415165406012</figcaption>
+<img src="https://s2.loli.net/2025/04/16/3KkWwhBTqyYH4Um.png" srcset="/img/loading.gif" lazyload alt="image-20250416223612762" /><figcaption aria-hidden="true">image-20250416223612762</figcaption>
 </figure>
-<p>Dify中操作：</p>
+<p>其余默认。</p>
 <figure>
-<img src="https://s2.loli.net/2025/04/15/4MHWXKVugZaby3N.png" srcset="/img/loading.gif" lazyload alt="image-20250415165641152" /><figcaption aria-hidden="true">image-20250415165641152</figcaption>
+<img src="https://s2.loli.net/2025/04/16/FB8AZKiL76yebRY.png" srcset="/img/loading.gif" lazyload alt="image-20250416223655986" /><figcaption aria-hidden="true">image-20250416223655986</figcaption>
 </figure>
-<h2 id="确认webscraper">2.2 确认webscraper</h2>
-<p>它是一个爬虫工具，从指定的网页中抓取内容，Dify 已提供内置工具，无需额外配置。</p>
-<p>此工具无须进行配置，比如配置api key，直接使用即可。</p>
 <figure>
-<img src="https://s2.loli.net/2025/04/15/uCVcPdDE2lb7TMW.png" srcset="/img/loading.gif" lazyload alt="image-20250415165714419" /><figcaption aria-hidden="true">image-20250415165714419</figcaption>
+<img src="https://s2.loli.net/2025/04/16/I9aRtYJfjd1PKq6.png" srcset="/img/loading.gif" lazyload alt="image-20250416230947835" /><figcaption aria-hidden="true">image-20250416230947835</figcaption>
 </figure>
-<h2 id="确认wikipedia">2.3 确认Wikipedia</h2>
-<p>要让Agent 能够准确介绍目的地知识，Wikipedia 是一个比较好知识来源，Dify 也内置了该工具，无需额外配置。</p>
-<p>此工具也无须进行配置，比如配置api key，直接使用即可。</p>
+<h1 id="二创建智能体应用">二、创建智能体应用</h1>
 <figure>
-<img src="https://s2.loli.net/2025/04/15/EWInwL7ehXTsK1C.png" srcset="/img/loading.gif" lazyload alt="image-20250415165827316" /><figcaption aria-hidden="true">image-20250415165827316</figcaption>
+<img src="https://s2.loli.net/2025/04/16/riYlHF1tcoaxwyJ.png" srcset="/img/loading.gif" lazyload alt="image-20250416223739268" /><figcaption aria-hidden="true">image-20250416223739268</figcaption>
 </figure>
-<h1 id="三配置agent应用">三、配置Agent应用</h1>
-<h2 id="变量">变量</h2>
 <figure>
-<img src="https://s2.loli.net/2025/04/15/HDf4b6B2OpSzsKJ.png" srcset="/img/loading.gif" lazyload alt="image-20250415170159086" /><figcaption aria-hidden="true">image-20250415170159086</figcaption>
+<img src="https://s2.loli.net/2025/04/16/rXC2YuWVctbyRiq.png" srcset="/img/loading.gif" lazyload alt="image-20250416231040349" /><figcaption aria-hidden="true">image-20250416231040349</figcaption>
 </figure>
-<h2 id="工具">工具</h2>
+<h1 id="三确证效果">三、确证效果</h1>
+<h2 id="如果未开启多模态视觉增强rag未能做出回答">如果未开启“多模态视觉增强”，RAG未能做出回答</h2>
 <figure>
-<img src="https://s2.loli.net/2025/04/15/R3hDug61JSsOTVU.png" srcset="/img/loading.gif" lazyload alt="image-20250415170119159" /><figcaption aria-hidden="true">image-20250415170119159</figcaption>
+<img src="https://s2.loli.net/2025/04/16/l4BCN9Rbte2ay6X.png" srcset="/img/loading.gif" lazyload alt="image-20250416231221485" /><figcaption aria-hidden="true">image-20250416231221485</figcaption>
 </figure>
-<h2 id="系统提示词">系统提示词</h2>
-<p>示例输出的目的是为了给 Agent 一个书写格式的参考，以确保 Agent 的输出更接近我们的期望。</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs markdown">你是一个在线旅行助手，请根据如下信息给出一个详细的旅行计划，目的地是&#123;&#123;destination&#125;&#125;，旅行天数是&#123;&#123;day&#125;&#125;，旅行预算是&#123;&#123;budget&#125;&#125; 。如下是一个旅行计划示例<br><br><br><span class="hljs-section">## 示例</span><br><span class="hljs-section">### 详细旅行计划</span><br><br><span class="hljs-strong">**酒店推荐**</span><br><span class="hljs-bullet">1.</span> 肯辛顿酒店 (了解更多：www.doylecollection.com/hotels/the-kensington-hotel)<br><span class="hljs-bullet">-</span> 评分：4.6⭐<br><span class="hljs-bullet">-</span> 价格：每晚约350美元<br><span class="hljs-bullet">-</span> 简介：坐落在一座摄政时期的联排别墅中，这家优雅的酒店距离南肯辛顿地铁站5分钟步行路程，距离维多利亚和阿尔伯特博物馆10分钟步行路程。<br><br><span class="hljs-bullet">2.</span> 伦勃朗酒店 (了解更多：www.sarova-rembrandthotel.com)<br><span class="hljs-bullet">-</span> 评分：4.3⭐<br><span class="hljs-bullet">-</span> 价格：每晚约130美元<br><span class="hljs-bullet">-</span> 简介：建于1911年，最初是哈罗德百货公司（距离0.4英里）的公寓，这家现代化酒店坐落在维多利亚和阿尔伯特博物馆对面，距离南肯辛顿地铁站（直达希思罗机场）5分钟步行路程。<br><br><span class="hljs-strong">**第1天 - 抵达和安顿**</span><br><span class="hljs-bullet">-</span> <span class="hljs-strong">**上午**</span>：抵达机场。欢迎来到你的冒险之旅！我们的代表将在机场迎接你，确保你顺利入住。<br><span class="hljs-bullet">-</span> <span class="hljs-strong">**下午**</span>：入住酒店，稍作休息，恢复精力。<br><span class="hljs-bullet">-</span> <span class="hljs-strong">**晚上**</span>：在住宿周边进行轻松的步行游览，熟悉当地环境。发现附近的用餐选择，享受愉快的第一顿晚餐。<br><br><span class="hljs-strong">**第2天 - 文化与自然之旅**</span><br><span class="hljs-bullet">-</span> <span class="hljs-strong">**上午**</span>：从帝国理工学院开始你的一天，这是世界顶尖的学府之一。享受一次校园导览。<br><span class="hljs-bullet">-</span> <span class="hljs-strong">**下午**</span>：选择参观自然历史博物馆（以其引人入胜的展览而闻名）或维多利亚和阿尔伯特博物馆（庆祝艺术和设计）。之后，在宁静的海德公园放松，也许还可以在蛇形湖上乘船游览。<br><span class="hljs-bullet">-</span> <span class="hljs-strong">**晚上**</span>：探索当地美食。我们推荐你在传统的英国酒吧享用晚餐。<br><br><span class="hljs-strong">**附加服务：**</span><br><span class="hljs-bullet">-</span> <span class="hljs-strong">**礼宾服务**</span>：在你停留期间，我们的礼宾服务随时可以协助预订餐厅、购买门票、安排交通，以及满足任何特殊要求，以提升你的体验。<br><span class="hljs-bullet">-</span> <span class="hljs-strong">**24/7支持**</span>：我们提供全天候支持，以解决你在旅行中可能遇到的任何问题或需求。<br><br>祝你旅途愉快，满载丰富经历和美好回忆！<br></code></pre></td></tr></table></figure>
-<p>上述内容填写在如下“提示词”输入框内：</p>
+<h2 id="开启多模态视觉增强rag回答正确">开启“多模态视觉增强”，RAG回答正确</h2>
 <figure>
-<img src="https://s2.loli.net/2025/04/15/HWBOtvu57dlf6er.png" srcset="/img/loading.gif" lazyload alt="image-20250415170429931" /><figcaption aria-hidden="true">image-20250415170429931</figcaption>
+<img src="https://s2.loli.net/2025/04/16/cHpY3oXeEzfax9i.png" srcset="/img/loading.gif" lazyload alt="image-20250416231256270" /><figcaption aria-hidden="true">image-20250416231256270</figcaption>
 </figure>
-<h2 id="其他调整设置">其他调整设置</h2>
-<p>Agent设置-&gt;最大迭代次数，设置为1即可：</p>
+<p>其中，图1的内容如下：</p>
 <figure>
-<img src="https://s2.loli.net/2025/04/15/fSn5oJVzedyPKZR.png" srcset="/img/loading.gif" lazyload alt="image-20250415170539433" /><figcaption aria-hidden="true">image-20250415170539433</figcaption>
+<img src="https://s2.loli.net/2025/04/16/vrZkECjLSNUOHIg.png" srcset="/img/loading.gif" lazyload alt="image-20250416231322652" /><figcaption aria-hidden="true">image-20250416231322652</figcaption>
 </figure>
 <hr />
-<p>选择模型，可以自己想要使用的模型，前提是已经配置模型提供商，我已经配置好了通义千问与DeepSeek，此处使用了通义千问的“qwen-vl-max-0809”模型，此模型是一个多模态模型（准确地说是视觉语言模型vision language model），其实此处使用普通的大语言模型即可比如"qwen-max-latest"</p>
-<h2 id="试用效果">试用效果</h2>
-<ul>
-<li><p>目的地、旅行天数、旅行预算，输入适当内容</p></li>
-<li><p>输入用户提示词</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">我旅行时喜欢古代建筑与自然风光，住宿费要求在500元/晚 以下，晚餐在当地中等水平即可。请给出一个为期7天的旅行计划<br></code></pre></td></tr></table></figure></li>
-<li><p>模型回答如下</p></li>
-</ul>
+<h2 id="再次检验">再次检验</h2>
+<p>但此智能体应用并不能百分百正确解析与回复图表相关问题，比如回复关于“2019年全球各品牌手机出货量，哪个品牌的手机出货量最多”问题时，未能正确解析相关图表内容（虽然最终回复结果是正确的，但解析有错）。解析效果如下：</p>
 <figure>
-<img src="https://s2.loli.net/2025/04/15/CtNIFueQH7y3UiJ.png" srcset="/img/loading.gif" lazyload alt="image-20250415170247520" /><figcaption aria-hidden="true">image-20250415170247520</figcaption>
+<img src="https://s2.loli.net/2025/04/16/o1iAwWjmbd3felI.png" srcset="/img/loading.gif" lazyload alt="image-20250416231618064" /><figcaption aria-hidden="true">image-20250416231618064</figcaption>
+</figure>
+<p>其实，2019年全球各品牌手机出货量相关统计数据如下：</p>
+<figure>
+<img src="https://s2.loli.net/2025/04/16/YKJwPXGqM8CNQi6.png" srcset="/img/loading.gif" lazyload alt="image-20250416231458612" /><figcaption aria-hidden="true">image-20250416231458612</figcaption>
 </figure>
 
                 
@@ -415,8 +403,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>dify中Agent类型应用-个人在线旅游助手</div>
-      <div>https://jiangsanyin.github.io/2025/04/15/dify中Agent类型应用-个人在线旅游助手/</div>
+      <div>百炼平台-智能多模态识别应用</div>
+      <div>https://jiangsanyin.github.io/2025/04/16/百炼平台-智能多模态识别应用/</div>
     </div>
     <div class="license-meta">
       
@@ -428,7 +416,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年4月15日</div>
+          <div>2025年4月16日</div>
         </div>
       
       
@@ -460,18 +448,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/04/16/%E7%99%BE%E7%82%BC%E5%B9%B3%E5%8F%B0-%E6%99%BA%E8%83%BD%E5%A4%9A%E6%A8%A1%E6%80%81%E8%AF%86%E5%88%AB%E5%BA%94%E7%94%A8/" title="百炼平台-智能多模态识别应用">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">百炼平台-智能多模态识别应用</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/04/14/2025%E5%B9%B44%E6%9C%8814%E6%97%A5%E5%90%AC%E8%AF%BE/" title="企业级RAG行业应用落地分享">
-                        <span class="hidden-mobile">企业级RAG行业应用落地分享</span>
+                      <a href="/2025/04/15/dify%E4%B8%ADAgent%E7%B1%BB%E5%9E%8B%E5%BA%94%E7%94%A8-%E4%B8%AA%E4%BA%BA%E5%9C%A8%E7%BA%BF%E6%97%85%E6%B8%B8%E5%8A%A9%E6%89%8B/" title="dify中Agent类型应用-个人在线旅游助手">
+                        <span class="hidden-mobile">dify中Agent类型应用-个人在线旅游助手</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
