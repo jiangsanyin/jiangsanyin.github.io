@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>markdown文件转成pdf文件</title>
+    <link href="/2025/05/23/markdown%E6%96%87%E4%BB%B6%E8%BD%AC%E6%88%90pdf%E6%96%87%E4%BB%B6/"/>
+    <url>/2025/05/23/markdown%E6%96%87%E4%BB%B6%E8%BD%AC%E6%88%90pdf%E6%96%87%E4%BB%B6/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一方法一借助vscode插件与浏览器">一、方法一&quot;借助vscode插件与浏览器&quot;</h1><h2 id="vscode安装插件">1.1 vscode安装插件</h2><p>安装插件：Markdown Preview Enhanced</p><figure><img src="https://s2.loli.net/2025/05/23/VESg2QucfkCM6Uz.png" alt="image-20250523165809819" /><figcaption>image-20250523165809819</figcaption></figure><h2 id="打开md文件及预览">1.2 打开md文件及预览</h2><figure><img src="https://s2.loli.net/2025/05/23/Guy7VXMIHdC6RpQ.png" alt="image-20250523170311961" /><figcaption>image-20250523170311961</figcaption></figure><h2 id="预览视图中再从浏览器中打开">1.3 预览视图中再从浏览器中打开</h2><figure><img src="https://s2.loli.net/2025/05/23/IWhFK1uBxeZi4Nb.png" alt="image-20250523170413227" /><figcaption>image-20250523170413227</figcaption></figure><h2 id="浏览器中查看效果">1.4 浏览器中查看效果</h2><p>此时可以在默认浏览器中看到markdown文件被解析后的效果，跟vscode中看到的预览视图效果一样</p><figure><img src="https://s2.loli.net/2025/05/23/ZqwpUFvxPEd1uJ8.png" alt="image-20250523170500900" /><figcaption>image-20250523170500900</figcaption></figure><h2 id="以pdf格式打印">1.5 以pdf格式打印</h2>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>大语言模型MCP学习03-MCP实现对MySQL数据库的操作</title>
     <link href="/2025/05/22/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BMCP%E5%AD%A6%E4%B9%A003-MCP%E5%AE%9E%E7%8E%B0%E5%AF%B9MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%93%8D%E4%BD%9C/"/>
     <url>/2025/05/22/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BMCP%E5%AD%A6%E4%B9%A003-MCP%E5%AE%9E%E7%8E%B0%E5%AF%B9MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%93%8D%E4%BD%9C/</url>
