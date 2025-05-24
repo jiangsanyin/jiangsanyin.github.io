@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://s2.loli.net/2025/05/23/fIPFQDcoC2xRWUl.png">
 <meta property="og:image" content="https://s2.loli.net/2025/05/23/TMZNAqc2oQry5CO.png">
 <meta property="article:published_time" content="2025-05-22T14:21:16.000Z">
-<meta property="article:modified_time" content="2025-05-22T16:16:40.000Z">
+<meta property="article:modified_time" content="2025-05-24T07:23:24.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="大模型">
 <meta name="twitter:card" content="summary_large_image">
@@ -338,7 +338,7 @@
 <p>将前面生成的main.py与requirements.txt 文件放到manipulate_mysql 目录下。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装依赖</span><br>(manipulate_mysql) E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\try01\manipulate_mysql&gt;uv pip install -r requirements.txt<br></code></pre></td></tr></table></figure>
 <h2 id="调试">3.2 调试</h2>
-<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-comment">#安装调试相关工具</span><br><span class="hljs-params">(manipulate_mysql)</span> E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\<span class="hljs-keyword">try</span>01\manipulate_mysql&gt;uv add <span class="hljs-string">&quot;mcp[cli]&quot;</span> httpx<br><br><span class="hljs-comment">#启动调试</span><br><span class="hljs-params">(manipulate_mysql)</span> E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\<span class="hljs-keyword">try</span>01\manipulate_mysql&gt;mcp dev main.py<br></code></pre></td></tr></table></figure>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-comment">#安装MCP Python SDK</span><br><span class="hljs-params">(manipulate_mysql)</span> E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\<span class="hljs-keyword">try</span>01\manipulate_mysql&gt;uv add <span class="hljs-string">&quot;mcp[cli]&quot;</span> httpx<br><br><span class="hljs-comment">#启动调试</span><br><span class="hljs-params">(manipulate_mysql)</span> E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\<span class="hljs-keyword">try</span>01\manipulate_mysql&gt;mcp dev main.py<br></code></pre></td></tr></table></figure>
 <figure>
 <img src="https://s2.loli.net/2025/05/22/SKCx8WXI2grjOdf.png" srcset="/img/loading.gif" lazyload alt="image-20250522235037047" /><figcaption>image-20250522235037047</figcaption>
 </figure>
