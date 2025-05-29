@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、安装LLaMAFactory环境 以下是在ubuntu20.04 LTS环境上进行操作。 安装python虚拟环境 1root@ksp-registry:~# conda create -n llamafactory python&#x3D;3.12 CUDA安装 假设NVIDIA驱动已经安装好。接下来下载合适版本的CUDA安装文件：https:&#x2F;&#x2F;developer.nvidia.com&#x2F;c">
+    <meta name="description" content="一、安装LLaMAFactory环境 以下是在ubuntu20.04 LTS环境上进行操作。 安装python虚拟环境 1234567891011121314root@ksp-registry:~# wget --user-agent&#x3D;&quot;Mozilla&quot; https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;archive&#x2F;Anaco">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LLaMAFactory中进行模型微调">
 <meta property="og:url" content="https://jiangsanyin.github.io/2025/03/24/LlamaFactory%E4%B8%AD%E8%BF%9B%E8%A1%8C%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、安装LLaMAFactory环境 以下是在ubuntu20.04 LTS环境上进行操作。 安装python虚拟环境 1root@ksp-registry:~# conda create -n llamafactory python&#x3D;3.12 CUDA安装 假设NVIDIA驱动已经安装好。接下来下载合适版本的CUDA安装文件：https:&#x2F;&#x2F;developer.nvidia.com&#x2F;c">
+<meta property="og:description" content="一、安装LLaMAFactory环境 以下是在ubuntu20.04 LTS环境上进行操作。 安装python虚拟环境 1234567891011121314root@ksp-registry:~# wget --user-agent&#x3D;&quot;Mozilla&quot; https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;archive&#x2F;Anaco">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2025/03/31/76Xi5vWVkSQqhBF.png">
 <meta property="og:image" content="https://s2.loli.net/2025/03/24/ZDW4v9IrygLCPpn.png">
@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://s2.loli.net/2025/04/01/sD6I5p24YfVAURO.png">
 <meta property="og:image" content="https://s2.loli.net/2025/04/01/qDmslY6WQuUHiaR.png">
 <meta property="article:published_time" content="2025-03-24T03:53:42.000Z">
-<meta property="article:modified_time" content="2025-04-02T01:57:10.000Z">
+<meta property="article:modified_time" content="2025-05-29T08:58:42.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="大模型">
 <meta name="twitter:card" content="summary_large_image">
@@ -256,7 +256,7 @@
         
         
         
-          9 分钟
+          10 分钟
         
       </span>
     
@@ -310,7 +310,7 @@
                 <h1 id="一安装llamafactory环境">一、安装LLaMAFactory环境</h1>
 <p>以下是在ubuntu20.04 LTS环境上进行操作。</p>
 <h2 id="安装python虚拟环境">安装python虚拟环境</h2>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@ksp-registry:~# conda create -n llamafactory python=3.12<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@ksp-registry:~# wget --user-agent=&quot;Mozilla&quot; https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2024.06-1-Linux-x86_64.sh<br>root@ksp-registry:~# bash Anaconda3-2024.06-1-Linux-x86_64.sh<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##anaconda的安装目录是/root/anaconda3</span></span><br>...<br>You can undo this by running `conda init --reverse $SHELL`? [yes|no]<br>[no] &gt;&gt;&gt; yes<br>...<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">加载~/.bashrc</span><br>root@ksp-registry:~# source ~/.bashrc<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看现有的conda管理的所有虚拟python环境</span><br>root@ksp-registry:~# conda env list<br><br>root@ksp-registry:~# conda create -n llamafactory python=3.12<br></code></pre></td></tr></table></figure>
 <h2 id="cuda安装">CUDA安装</h2>
 <p>假设NVIDIA驱动已经安装好。接下来下载合适版本的CUDA安装文件：https://developer.nvidia.com/cuda-toolkit-archive</p>
 <p>笔者NVIDIA驱动版本是，已经安装CUDA12.4</p>
@@ -324,39 +324,39 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装modelscope python库</span><br>(llamafactory) root@ksp-registry:/opt/code_repos/LLaMA-Factory# pip install modelscope&gt;=1.11.0<br><span class="hljs-meta prompt_">#</span><span class="language-bash">使用魔搭社区下载模型文件与数据集</span><br>(llamafactory) root@ksp-registry:/opt/code_repos/LLaMA-Factory# export USE_MODELSCOPE_HUB=1<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">文件备份</span><br>(llamafactory) root@ksp-registry:/opt/code_repos/LLaMA-Factory# cp examples/train_lora/llama3_lora_sft.yaml examples/train_lora/llama3_lora_sft.yaml.bak<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改examples/train_lora/llama3_lora_sft.yaml，默认的model名或路径是hf中，在modelscope中不一定存在</span><br>(llamafactory) root@ksp-registry:/opt/code_repos/LLaMA-Factory# vi examples/train_lora/llama3_lora_sft.yaml <br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#model_name_or_path: meta-llama/Meta-Llama-3-8B-Instruct</span></span><br>model_name_or_path: modelscope/Meta-Llama-3-8B-Instruct<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">启动微调（以下展示了微调过程中输出内容的最后几行）</span><br>(llamafactory) root@ksp-registry:/opt/code_repos/LLaMA-Factory# llamafactory-cli train examples/train_lora/llama3_lora_sft.yaml<br>...<br>[INFO|tokenization_utils_base.py:2510] 2025-03-31 16:20:20,622 &gt;&gt; tokenizer config file saved in saves/llama3-8b/lora/sft/tokenizer_config.json<br>[INFO|tokenization_utils_base.py:2519] 2025-03-31 16:20:20,622 &gt;&gt; Special tokens file saved in saves/llama3-8b/lora/sft/special_tokens_map.json<br>***** train metrics *****<br>  epoch                    =     2.9826<br>  total_flos               = 22730138GF<br>  train_loss               =     0.9173<br>  train_runtime            = 0:34:54.13<br>  train_samples_per_second =      1.563<br>  train_steps_per_second   =      0.195<br>Figure saved at: saves/llama3-8b/lora/sft/training_loss.png<br>[WARNING|2025-03-31 16:20:21] llamafactory.extras.ploting:148 &gt;&gt; No metric eval_loss to plot.<br>[WARNING|2025-03-31 16:20:21] llamafactory.extras.ploting:148 &gt;&gt; No metric eval_accuracy to plot.<br>[INFO|modelcard.py:449] 2025-03-31 16:20:21,163 &gt;&gt; Dropping the following result as it does not have all the necessary fields:<br>&#123;&#x27;task&#x27;: &#123;&#x27;name&#x27;: &#x27;Causal Language Modeling&#x27;, &#x27;type&#x27;: &#x27;text-generation&#x27;&#125;&#125;<br></code></pre></td></tr></table></figure>
 <p>如上生成的文件”saves/llama3-8b/lora/sft/training_loss.png“的内容如下：</p>
 <figure>
-<img src="https://s2.loli.net/2025/03/31/76Xi5vWVkSQqhBF.png" srcset="/img/loading.gif" lazyload alt="image-20250331162458504" /><figcaption aria-hidden="true">image-20250331162458504</figcaption>
+<img src="https://s2.loli.net/2025/03/31/76Xi5vWVkSQqhBF.png" srcset="/img/loading.gif" lazyload alt="image-20250331162458504" /><figcaption>image-20250331162458504</figcaption>
 </figure>
 <h1 id="三webui使用">三、WebUI使用</h1>
 <h2 id="启动与使用">3.1 启动与使用</h2>
 <p>参考：https://llamafactory.readthedocs.io/zh-cn/latest/getting_started/webui.html、https://github.com/hiyouga/LLaMA-Factory/blob/main/examples/README_zh.md</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">使用以下命令启动webui</span><br>(llamafactory) root@ksp-registry:~# llamafactory-cli webui<br><span class="hljs-meta prompt_">#</span><span class="language-bash">可以在“llamafactory-cli webui”命令前添加一些变量比如CUDA_VISIBLE_DEVICES=0,1,2。此时在web界面设备数量就是3，当然如果不指定此变量，默认也是全部可用加速卡设备的数量3</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">(llamafactory) root@ksp-registry:~# CUDA_VISIBLE_DEVICES=0,1,2 llamafactory-cli webuillamafactory-cli webui</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">假如启动此进程的服务器IP是：172.20.0.22，此时在笔记本电脑浏览器地址栏中输入“http://172.20.0.22:7860/” 将看到如下界面与内容</span><br></code></pre></td></tr></table></figure>
 <figure>
-<img src="https://s2.loli.net/2025/03/24/ZDW4v9IrygLCPpn.png" srcset="/img/loading.gif" lazyload alt="image-20250324165207061" /><figcaption aria-hidden="true">image-20250324165207061</figcaption>
+<img src="https://s2.loli.net/2025/03/24/ZDW4v9IrygLCPpn.png" srcset="/img/loading.gif" lazyload alt="image-20250324165207061" /><figcaption>image-20250324165207061</figcaption>
 </figure>
 <hr />
 <p>进行微调配置（下图中“检查点路径”无须配置任何值，未注明或显式修改配置项，保持默认即可）：</p>
 <figure>
-<img src="https://s2.loli.net/2025/03/31/ISd847lUOMLDrTg.png" srcset="/img/loading.gif" lazyload alt="image-20250331165053689" /><figcaption aria-hidden="true">image-20250331165053689</figcaption>
+<img src="https://s2.loli.net/2025/03/31/ISd847lUOMLDrTg.png" srcset="/img/loading.gif" lazyload alt="image-20250331165053689" /><figcaption>image-20250331165053689</figcaption>
 </figure>
 <figure>
-<img src="https://s2.loli.net/2025/03/31/NygEOVhbctZGdUf.png" srcset="/img/loading.gif" lazyload alt="image-20250331163655420" /><figcaption aria-hidden="true">image-20250331163655420</figcaption>
+<img src="https://s2.loli.net/2025/03/31/NygEOVhbctZGdUf.png" srcset="/img/loading.gif" lazyload alt="image-20250331163655420" /><figcaption>image-20250331163655420</figcaption>
 </figure>
 <p>正式开始执行微调后，在当前页面的最底部，将看到日志不断滚动输出，如下：</p>
 <figure>
-<img src="https://s2.loli.net/2025/03/31/xB3cP4GwvirYQXu.png" srcset="/img/loading.gif" lazyload alt="image-20250331163915582" /><figcaption aria-hidden="true">image-20250331163915582</figcaption>
+<img src="https://s2.loli.net/2025/03/31/xB3cP4GwvirYQXu.png" srcset="/img/loading.gif" lazyload alt="image-20250331163915582" /><figcaption>image-20250331163915582</figcaption>
 </figure>
 <p>微调过程中默认能使用所有能用的GPU卡（参考https://github.com/hiyouga/LLaMA-Factory/blob/main/examples/README_zh.md），如下可以看到微调过程上，笔者的服务器上仅有一个GPU被使用中。</p>
 <figure>
-<img src="https://s2.loli.net/2025/03/31/XawVNkZ4U3BKcFs.png" srcset="/img/loading.gif" lazyload alt="image-20250331172933559" /><figcaption aria-hidden="true">image-20250331172933559</figcaption>
+<img src="https://s2.loli.net/2025/03/31/XawVNkZ4U3BKcFs.png" srcset="/img/loading.gif" lazyload alt="image-20250331172933559" /><figcaption>image-20250331172933559</figcaption>
 </figure>
 <p>在当前目录的“./saves/Llama-3-8B-Instruct/lora/train_2025-03-31-16-27-21”子目录中可以看到相关输出配置信息与微调日志信息。</p>
 <h2 id="报错处理">3.2 报错处理</h2>
 <h3 id="微调unslothqwen2.5-7b-instruct-bnb-4bit模型时报错no-package-metadata-was-found-for-bitsandbytes">3.2.1 微调“unsloth/Qwen2.5-7B-Instruct-bnb-4bit”模型时报错“No package metadata was found for bitsandbytes”</h3>
 <figure>
-<img src="https://s2.loli.net/2025/04/01/sD6I5p24YfVAURO.png" srcset="/img/loading.gif" lazyload alt="image-20250401105307875" /><figcaption aria-hidden="true">image-20250401105307875</figcaption>
+<img src="https://s2.loli.net/2025/04/01/sD6I5p24YfVAURO.png" srcset="/img/loading.gif" lazyload alt="image-20250401105307875" /><figcaption>image-20250401105307875</figcaption>
 </figure>
 <figure>
-<img src="https://s2.loli.net/2025/04/01/qDmslY6WQuUHiaR.png" srcset="/img/loading.gif" lazyload alt="image-20250401105126808" /><figcaption aria-hidden="true">image-20250401105126808</figcaption>
+<img src="https://s2.loli.net/2025/04/01/qDmslY6WQuUHiaR.png" srcset="/img/loading.gif" lazyload alt="image-20250401105126808" /><figcaption>image-20250401105126808</figcaption>
 </figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">pip install bitsandbytes bitsandbytes-cuda117==0.26.0.post2<br><span class="hljs-meta prompt_">#</span><span class="language-bash">下面这行命令，笔者未执行成功（暂时忽略，不执行也可）</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">pip install transformers[audio,deepspeed,ftfy,onnx,sentencepiece,timm,tokenizers,video,vision]==4.50.0</span><br></code></pre></td></tr></table></figure>
 <h1 id="四可参考资料">四、可参考资料</h1>
