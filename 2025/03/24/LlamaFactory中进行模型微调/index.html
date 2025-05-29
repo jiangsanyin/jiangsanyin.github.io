@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、安装LLaMAFactory环境 以下是在ubuntu20.04 LTS环境上进行操作。 安装python虚拟环境 1234567891011121314root@ksp-registry:~# wget --user-agent&#x3D;&quot;Mozilla&quot; https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;archive&#x2F;Anaco">
+    <meta name="description" content="一、安装LLaMAFactory环境 以下是在ubuntu20.04 LTS环境上进行操作。 安装python虚拟环境 1234567891011121314151617root@ksp-registry:~# wget --user-agent&#x3D;&quot;Mozilla&quot; https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;archive">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LLaMAFactory中进行模型微调">
 <meta property="og:url" content="https://jiangsanyin.github.io/2025/03/24/LlamaFactory%E4%B8%AD%E8%BF%9B%E8%A1%8C%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、安装LLaMAFactory环境 以下是在ubuntu20.04 LTS环境上进行操作。 安装python虚拟环境 1234567891011121314root@ksp-registry:~# wget --user-agent&#x3D;&quot;Mozilla&quot; https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;archive&#x2F;Anaco">
+<meta property="og:description" content="一、安装LLaMAFactory环境 以下是在ubuntu20.04 LTS环境上进行操作。 安装python虚拟环境 1234567891011121314151617root@ksp-registry:~# wget --user-agent&#x3D;&quot;Mozilla&quot; https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;archive">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2025/03/31/76Xi5vWVkSQqhBF.png">
 <meta property="og:image" content="https://s2.loli.net/2025/03/24/ZDW4v9IrygLCPpn.png">
@@ -35,7 +35,7 @@
 <meta property="og:image" content="https://s2.loli.net/2025/04/01/sD6I5p24YfVAURO.png">
 <meta property="og:image" content="https://s2.loli.net/2025/04/01/qDmslY6WQuUHiaR.png">
 <meta property="article:published_time" content="2025-03-24T03:53:42.000Z">
-<meta property="article:modified_time" content="2025-05-29T08:58:42.000Z">
+<meta property="article:modified_time" content="2025-05-29T09:00:02.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="大模型">
 <meta name="twitter:card" content="summary_large_image">
@@ -245,7 +245,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          1.2k 字
         
       </span>
     
@@ -310,7 +310,7 @@
                 <h1 id="一安装llamafactory环境">一、安装LLaMAFactory环境</h1>
 <p>以下是在ubuntu20.04 LTS环境上进行操作。</p>
 <h2 id="安装python虚拟环境">安装python虚拟环境</h2>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@ksp-registry:~# wget --user-agent=&quot;Mozilla&quot; https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2024.06-1-Linux-x86_64.sh<br>root@ksp-registry:~# bash Anaconda3-2024.06-1-Linux-x86_64.sh<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##anaconda的安装目录是/root/anaconda3</span></span><br>...<br>You can undo this by running `conda init --reverse $SHELL`? [yes|no]<br>[no] &gt;&gt;&gt; yes<br>...<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">加载~/.bashrc</span><br>root@ksp-registry:~# source ~/.bashrc<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看现有的conda管理的所有虚拟python环境</span><br>root@ksp-registry:~# conda env list<br><br>root@ksp-registry:~# conda create -n llamafactory python=3.12<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@ksp-registry:~# wget --user-agent=&quot;Mozilla&quot; https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2024.06-1-Linux-x86_64.sh<br>root@ksp-registry:~# bash Anaconda3-2024.06-1-Linux-x86_64.sh<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##anaconda的安装目录是/root/anaconda3</span></span><br>...<br>You can undo this by running `conda init --reverse $SHELL`? [yes|no]<br>[no] &gt;&gt;&gt; yes<br>...<br>You can undo this by running `conda init --reverse $SHELL`? [yes|no]<br>[no] &gt;&gt;&gt; yes<br>...<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">加载~/.bashrc</span><br>root@ksp-registry:~# source ~/.bashrc<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看现有的conda管理的所有虚拟python环境</span><br>root@ksp-registry:~# conda env list<br><br>root@ksp-registry:~# conda create -n llamafactory python=3.12<br></code></pre></td></tr></table></figure>
 <h2 id="cuda安装">CUDA安装</h2>
 <p>假设NVIDIA驱动已经安装好。接下来下载合适版本的CUDA安装文件：https://developer.nvidia.com/cuda-toolkit-archive</p>
 <p>笔者NVIDIA驱动版本是，已经安装CUDA12.4</p>
