@@ -86,6 +86,18 @@
     <content type="html"><![CDATA[<h1 id="一方法一借助vscode插件与浏览器">一、方法一&quot;借助vscode插件与浏览器&quot;</h1><h2 id="vscode安装插件">1.1 vscode安装插件</h2><p>安装插件：Markdown Preview Enhanced</p><figure><img src="https://s2.loli.net/2025/05/23/VESg2QucfkCM6Uz.png" alt="image-20250523165809819" /><figcaption>image-20250523165809819</figcaption></figure><h2 id="打开md文件及预览">1.2 打开md文件及预览</h2><figure><img src="https://s2.loli.net/2025/05/23/Guy7VXMIHdC6RpQ.png" alt="image-20250523170311961" /><figcaption>image-20250523170311961</figcaption></figure><h2 id="预览视图中再从浏览器中打开">1.3 预览视图中再从浏览器中打开</h2><figure><img src="https://s2.loli.net/2025/05/23/IWhFK1uBxeZi4Nb.png" alt="image-20250523170413227" /><figcaption>image-20250523170413227</figcaption></figure><h2 id="浏览器中查看效果">1.4 浏览器中查看效果</h2><p>此时可以在默认浏览器中看到markdown文件被解析后的效果，跟vscode中看到的预览视图效果一样</p><figure><img src="https://s2.loli.net/2025/05/23/ZqwpUFvxPEd1uJ8.png" alt="image-20250523170500900" /><figcaption>image-20250523170500900</figcaption></figure><h2 id="以pdf格式打印">1.5 以pdf格式打印</h2><p>在上述浏览器页面中，鼠标右键-&gt;打印，打开如下视图：</p><figure><img src="https://s2.loli.net/2025/05/23/JY7sSPVMKxIdoHv.png" alt="image-20250523170832319" /><figcaption>image-20250523170832319</figcaption></figure><p>选择另存为pdf，所有页面，布局根据自己的情况选择（一般是纵向），保存。就可以得到一个 pdf文件</p><figure><img src="https://s2.loli.net/2025/05/23/n9DvMWiPAzKuxqN.png" alt="image-20250523171033946" /><figcaption>image-20250523171033946</figcaption></figure>]]></content>
     
     
+    <categories>
+      
+      <category>工具与奇技淫巧</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>工具与奇技淫巧</tag>
+      
+    </tags>
     
   </entry>
   
