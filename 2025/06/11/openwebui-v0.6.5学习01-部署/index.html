@@ -19,22 +19,25 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、常用功能对比表    Fastgpt与Dify功能对比一览表       软件 Fastgpt Dify   开源 是 开源   商用 3万 免费   支持的LLMS OpenAI 大部分   知识库 支持 支持   知识库文档批量上传 支持 不支持   RGA引擎 支持 支持   本地部署 支持">
+    <meta name="description" content="一、文档与服务器信息 1.1 参考文档 github地址： https:&#x2F;&#x2F;github.com&#x2F;open-webui&#x2F;open-webui 环境变量解析：https:&#x2F;&#x2F;docs.openwebui.com&#x2F;getting-started&#x2F;env-configuration 监控open-webui：https:&#x2F;&#x2F;docs.openwebui.com&#x2F;getting-started&#x2F;a">
 <meta property="og:type" content="article">
-<meta property="og:title" content="FastGPT与Dify功能对比">
-<meta property="og:url" content="https://jiangsanyin.github.io/2025/06/05/FastGPT%E4%B8%8EDify%E5%8A%9F%E8%83%BD%E5%AF%B9%E6%AF%94/index.html">
+<meta property="og:title" content="openwebui-v0.6.5学习01-部署">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/06/11/openwebui-v0.6.5%E5%AD%A6%E4%B9%A001-%E9%83%A8%E7%BD%B2/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、常用功能对比表    Fastgpt与Dify功能对比一览表       软件 Fastgpt Dify   开源 是 开源   商用 3万 免费   支持的LLMS OpenAI 大部分   知识库 支持 支持   知识库文档批量上传 支持 不支持   RGA引擎 支持 支持   本地部署 支持">
+<meta property="og:description" content="一、文档与服务器信息 1.1 参考文档 github地址： https:&#x2F;&#x2F;github.com&#x2F;open-webui&#x2F;open-webui 环境变量解析：https:&#x2F;&#x2F;docs.openwebui.com&#x2F;getting-started&#x2F;env-configuration 监控open-webui：https:&#x2F;&#x2F;docs.openwebui.com&#x2F;getting-started&#x2F;a">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-06-05T01:21:46.000Z">
-<meta property="article:modified_time" content="2025-06-05T01:24:28.000Z">
+<meta property="og:image" content="https://s2.loli.net/2025/06/11/HZaEofc4psnDzeY.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/11/lv5EwzYXs2rF7uJ.png">
+<meta property="article:published_time" content="2025-06-11T03:22:50.000Z">
+<meta property="article:modified_time" content="2025-06-11T09:24:00.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="AIGC">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/06/11/HZaEofc4psnDzeY.png">
   
   
   
-  <title>FastGPT与Dify功能对比 - sanyinjiang</title>
+  <title>openwebui-v0.6.5学习01-部署 - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +216,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">FastGPT与Dify功能对比</span>
+            <span id="subtitle">openwebui-v0.6.5学习01-部署</span>
           
         </div>
 
@@ -224,8 +227,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-06-05 09:21" pubdate>
-          2025年6月5日 上午
+        <time datetime="2025-06-11 11:22" pubdate>
+          2025年6月11日 上午
         </time>
       </span>
     
@@ -236,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          93 字
+          887 字
         
       </span>
     
@@ -247,7 +250,7 @@
         
         
         
-          1 分钟
+          8 分钟
         
       </span>
     
@@ -293,78 +296,73 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">FastGPT与Dify功能对比</h1>
+            <h1 id="seo-header">openwebui-v0.6.5学习01-部署</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一常用功能对比表">一、常用功能对比表</h1>
+                <h1 id="一文档与服务器信息">一、文档与服务器信息</h1>
+<h2 id="参考文档">1.1 参考文档</h2>
+<p>github地址： https://github.com/open-webui/open-webui</p>
+<p>环境变量解析：https://docs.openwebui.com/getting-started/env-configuration</p>
+<p>监控open-webui：https://docs.openwebui.com/getting-started/advanced-topics/monitoring</p>
+<h2 id="服务器信息">1.2 服务器信息</h2>
 <table>
+
 <thead>
 <tr>
-<th>Fastgpt与Dify功能对比一览表</th>
-<th></th>
-<th></th>
+<th>主机名</th>
+<th>IP</th>
+<th>操作系统</th>
+<th>规格</th>
+<th>GPU情况</th>
+<th>备注</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>软件</td>
-<td>Fastgpt</td>
-<td>Dify</td>
-</tr>
-<tr>
-<td>开源</td>
-<td>是</td>
-<td>开源</td>
-</tr>
-<tr>
-<td>商用</td>
-<td>3万</td>
-<td>免费</td>
-</tr>
-<tr>
-<td>支持的LLMS</td>
-<td>OpenAI</td>
-<td>大部分</td>
-</tr>
-<tr>
-<td>知识库</td>
-<td>支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>知识库文档批量上传</td>
-<td>支持</td>
-<td>不支持</td>
-</tr>
-<tr>
-<td>RGA引擎</td>
-<td>支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>本地部署</td>
-<td>支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>团队权限设置</td>
-<td>支持</td>
-<td>不支持</td>
-</tr>
-<tr>
-<td>插件</td>
-<td>支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>插件库</td>
-<td>空</td>
-<td>丰富</td>
+<td>g406011748489384920</td>
+<td>10.11.15.190(vpc)<br/>10.251.19.46(浮动ip)</td>
+<td>Ubuntu 22.04.5 LTS -amd64</td>
+<td>12c20g+100G</td>
+<td>GeForce RTX 4060 *1</td>
+<td>OpenStack虚拟机</td>
 </tr>
 </tbody>
 </table>
+<h1 id="二容器化部署">二、容器化部署</h1>
+<p>我的环境有点特殊，OpenStack的vxlan网络mtu值是1450，然后虚拟机、容器桥接网络的mtu值都要相同。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker network create \<br>  --driver=bridge \<br>  --opt com.docker.network.driver.mtu=1450 \<br>  mynet<br></code></pre></td></tr></table></figure>
+<h2 id="以默认配置安装">2.1 以默认配置安装</h2>
+<h3 id="只使用cpu">2.1.1 只使用CPU</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">1）如果ollma服务运行在本机</span><br>docker run -d \<br>    -p 18080:8080 \<br>    --network=mynet \<br>    --add-host=host.docker.internal:host-gateway \<br>    --volume=open-webui:/app/backend/data \<br>    --name open-webui \<br>    --restart always \<br>    swr.cn-north-4.myhuaweicloud.com/ddn-k8s/ghcr.io/open-webui/open-webui:v0.6.5<br><span class="hljs-meta prompt_">#</span><span class="language-bash">-d 是说容器以后台模式运行</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">--network=mynet 容器使用自定义docker network</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">--volume 是将openwebui容器中的数据存放目录“/app/backend/data”映射到宿主机上的名为open-webui这个docker volume，这样即使容器停止甚至删除，先前的数据还在，可以尽量保障数据安全性</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">--name open-webui 为容器指定名称。否则会得到一个随机字符串名称</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">--restart always 容器在宿主机重启或docker服务重启后，总是会自动重启（如果是手动stop它，就不会重启了）</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">上述命令假设ollama服务就部署在本机上，openwebui服务默认认为ollama服务的监听地址是host.docker.internal:11434</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">2）如果ollma服务运行在它机</span><br>docker run -d \<br>    -p 18080:8080 \<br>    --network=mynet \<br>    --add-host=host.docker.internal:host-gateway \<br>    --volume=open-webui:/app/backend/data \<br>    --name open-webui \<br>    --restart always \<br>    -e OLLAMA_BASE_URL=http://它机IP:11434 \<br>    swr.cn-north-4.myhuaweicloud.com/ddn-k8s/ghcr.io/open-webui/open-webui:v0.6.5<br></code></pre></td></tr></table></figure>
+<p>运行上述命令后，可以使用如下命令查看open-webui容器的状态（每隔两秒刷新一次），如果其状态变更为healthy（可能需要等待几分钟），就可以访问其web界面了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">watch docker ps -a --filter &quot;name=open-webui&quot;<br><br>(llamafactory) root@g406011748489384920:/opt/code_repos/dify# docker ps -a --filter &quot;name=open-webui&quot;<br>CONTAINER ID   IMAGE                                                                           COMMAND           CREATED          STATUS                    PORTS                                           NAMES<br>e38be1309275   swr.cn-north-4.myhuaweicloud.com/ddn-k8s/ghcr.io/open-webui/open-webui:v0.6.5   &quot;bash start.sh&quot;   34 minutes ago   Up 31 minutes (healthy)   0.0.0.0:18080-&gt;8080/tcp, [::]:18080-&gt;8080/tcp   open-webui<br></code></pre></td></tr></table></figure>
+<p>访问<code>10.251.19.46:18080</code>，注册后，看到如下界面信息：</p>
+<figure>
+<img
+src="C:/Users/jiangsanyin/AppData/Roaming/Typora/typora-user-images/image-20250611113651134.png" srcset="/img/loading.gif" lazyload
+alt="image-20250611113651134" />
+<figcaption aria-hidden="true">image-20250611113651134</figcaption>
+</figure>
+<p>在open-webui中与ollama中管理的模型进行对话：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/11/HZaEofc4psnDzeY.png" srcset="/img/loading.gif" lazyload
+alt="image-20250611153012775" />
+<figcaption aria-hidden="true">image-20250611153012775</figcaption>
+</figure>
+<h3 id="使用gpu">2.1.2 使用GPU</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker run -d \<br>    -p 18080:8080 \<br>    --gpus=all \<br>    --network=mynet \<br>    --add-host=host.docker.internal:host-gateway \<br>    --volume=open-webui:/app/backend/data \<br>    --name open-webui \<br>    --restart always \<br>    swr.cn-north-4.myhuaweicloud.com/ddn-k8s/ghcr.io/open-webui/open-webui:v0.6.5<br></code></pre></td></tr></table></figure>
+<h2 id="安装后仅使用openai模型">2.2 安装后仅使用openai模型</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker run -d \<br>  -p 18080:8080 \<br>  -e OPENAI_API_KEY=自己的openai-api-key \<br>  -v open-webui:/app/backend/data \<br>  --name open-webui \<br>  --restart always \<br>  ghcr.io/open-webui/open-webui:main<br><span class="hljs-meta prompt_">#</span><span class="language-bash">OPENAI_API_KEY 就是自己在openai 官网申请的api key，用于访问openai的大模型</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">这种方式需要魔法，大陆应该基本上用不上</span><br></code></pre></td></tr></table></figure>
+<h1 id="三通过python-pip安装">三、通过python-pip安装</h1>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">使用conda创建python3.11 虚拟机环境</span><br>(base) root@ksp-registry:~# conda create -n py3.11 python=3.11<br>(base) root@ksp-registry:~# conda activate py3.11<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">安装Open WebUI</span><br>(py3.11) root@ksp-registry:~# pip install open-webui<br><span class="hljs-meta prompt_">#</span><span class="language-bash">设置模型文件下载需用到的镜像网站</span><br>(py3.11) root@ksp-registry:~# export HF_ENDPOINT=https://hf-mirror.com<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">相关环境变量跟容器中基本相同，比如OLLAMA_BASE_URL，更多环境变量参考https://docs.openwebui.com/getting-started/env-configuration</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">比如要设置OLLAMA_BASE_URL变量：</span><br>export OLLAMA_BASE_URL=http://localhost:11434<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">启动Open WebUI服务（如果要指定服务监听端口，使用“--port 8081”）</span><br>(py3.11) root@ksp-registry:~# open-webui serve<br><span class="hljs-meta prompt_">#</span><span class="language-bash">默认端口是8080。访问 http://localhost:8080</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">ksp-registry服务器（ip为172.20.0.22）上ollama管理的LLM</span><br>(py3.11) root@ksp-registry:~# ollama list<br>NAME                                   ID              SIZE      MODIFIED   <br>qwen2.5:32b                            9f13ba1299af    19 GB     2 days ago    <br>linux6200/bge-reranker-v2-m3:latest    abf5c6d8bc56    1.2 GB    2 days ago    <br>nomic-embed-text:v1.5                  0a109f422b47    274 MB    2 days ago    <br>qwen3:32b                              030ee887880f    20 GB     4 days ago    <br>qwen2.5-72b-it-Q4_K_M-LOT:latest       5b52a20c9d44    48 GB     5 days ago<br></code></pre></td></tr></table></figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/11/lv5EwzYXs2rF7uJ.png" srcset="/img/loading.gif" lazyload
+alt="image-20250611170821831" />
+<figcaption aria-hidden="true">image-20250611170821831</figcaption>
+</figure>
 
                 
               </div>
@@ -410,8 +408,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>FastGPT与Dify功能对比</div>
-      <div>https://jiangsanyin.github.io/2025/06/05/FastGPT与Dify功能对比/</div>
+      <div>openwebui-v0.6.5学习01-部署</div>
+      <div>https://jiangsanyin.github.io/2025/06/11/openwebui-v0.6.5学习01-部署/</div>
     </div>
     <div class="license-meta">
       
@@ -423,7 +421,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年6月5日</div>
+          <div>2025年6月11日</div>
         </div>
       
       
@@ -455,18 +453,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/06/11/openwebui-v0.6.5%E5%AD%A6%E4%B9%A001-%E9%83%A8%E7%BD%B2/" title="openwebui-v0.6.5学习01-部署">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">openwebui-v0.6.5学习01-部署</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/06/03/dify1.4.1%E5%AD%A6%E4%B9%A002-%E8%BF%9B%E8%A1%8C%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/" title="dify1.4.1学习02-进行基础配置">
-                        <span class="hidden-mobile">dify1.4.1学习02-进行基础配置</span>
+                      <a href="/2025/06/05/FastGPT%E4%B8%8EDify%E5%8A%9F%E8%83%BD%E5%AF%B9%E6%AF%94/" title="FastGPT与Dify功能对比">
+                        <span class="hidden-mobile">FastGPT与Dify功能对比</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
