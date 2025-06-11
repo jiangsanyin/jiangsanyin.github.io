@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>openwebui-v0.6.5学习02-查看或修改重要配置项</title>
+    <link href="/2025/06/11/openwebui-v0.6.5%E5%AD%A6%E4%B9%A002-%E6%9F%A5%E7%9C%8B%E6%88%96%E4%BF%AE%E6%94%B9%E9%87%8D%E8%A6%81%E9%85%8D%E7%BD%AE%E9%A1%B9/"/>
+    <url>/2025/06/11/openwebui-v0.6.5%E5%AD%A6%E4%B9%A002-%E6%9F%A5%E7%9C%8B%E6%88%96%E4%BF%AE%E6%94%B9%E9%87%8D%E8%A6%81%E9%85%8D%E7%BD%AE%E9%A1%B9/</url>
+    
+    <content type="html"><![CDATA[<figure><img src="https://s2.loli.net/2025/06/11/KkmdEgIhSFZc9Px.png"alt="image-20250611174745413" /><figcaption aria-hidden="true">image-20250611174745413</figcaption></figure><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs avrasm">(llamafactory) root@g406011748489384920:~<span class="hljs-meta"># ollama list</span><br>NAME              ID              SIZE      MODIFIED           <br><span class="hljs-symbol">phi3:</span>latest       <span class="hljs-number">4</span>f2222927938    <span class="hljs-number">2.2</span> GB    About a minute ago    <br><span class="hljs-symbol">qwen2.5:</span><span class="hljs-number">3</span>b        <span class="hljs-number">357</span>c53fb659c    <span class="hljs-number">1.9</span> GB    About an hour ago     <br>deepseek-<span class="hljs-built_in">r1</span>:<span class="hljs-number">7</span>b    <span class="hljs-number">755</span>ced02ce7b    <span class="hljs-number">4.7</span> GB    <span class="hljs-number">13</span> days ago <br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>AIGC</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>AIGC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>openwebui-v0.6.5学习01-部署</title>
     <link href="/2025/06/11/openwebui-v0.6.5%E5%AD%A6%E4%B9%A001-%E9%83%A8%E7%BD%B2/"/>
     <url>/2025/06/11/openwebui-v0.6.5%E5%AD%A6%E4%B9%A001-%E9%83%A8%E7%BD%B2/</url>
