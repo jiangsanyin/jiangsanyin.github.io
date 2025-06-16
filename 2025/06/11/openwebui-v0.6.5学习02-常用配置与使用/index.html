@@ -1,0 +1,983 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、管理员面板 以“管理员”权限组的用户比如超级管理员登录系统，才能看到与操作“管理员面板”。   image-20250612113108218  1.1 用户 1.1.1 概述中的用户管理 安装open-webui的最后步骤，自行注册的用户是超级管理员，无法被删除。可以修改其用户名与密码，邮箱无法修改。  添加用户  添加用户时，需要选择其权限组，有“待激活、用户、管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="openwebui-v0.6.5学习02-常用配置与使用">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/06/11/openwebui-v0.6.5%E5%AD%A6%E4%B9%A002-%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE%E4%B8%8E%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、管理员面板 以“管理员”权限组的用户比如超级管理员登录系统，才能看到与操作“管理员面板”。   image-20250612113108218  1.1 用户 1.1.1 概述中的用户管理 安装open-webui的最后步骤，自行注册的用户是超级管理员，无法被删除。可以修改其用户名与密码，邮箱无法修改。  添加用户  添加用户时，需要选择其权限组，有“待激活、用户、管理">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/06/12/eQlmuDP4NcgXijM.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/12/ufp1cFtnGEgzkOR.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/12/wNZ3yezCMBmsEa1.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/12/3eTjNkLHJKd84fS.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/12/Isc4GatnXE2jVid.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/12/BrAIzqQVxk5XeJH.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/12/2IOdjV7YfH3kRc6.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/12/217mHxEWBTUtNVL.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/12/Xd9LRYmUrDcCSsJ.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/12/wAoJqaN7OM4REBP.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/3L4ONmARU8iGFa5.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/N3xIpdgnqmOFbjo.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/11/KkmdEgIhSFZc9Px.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/12/y23suNlEgx9ndqM.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/k8fNaIP59E3MdxQ.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/pN14hEk3PU6FqyC.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/kC2xeW5EtbwXziM.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/9qwsALlPNSI6OEJ.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/qcgQLjR2uVDX5dS.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/Omdx2toXLF73yeI.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/qQFhILRWySuj3Pd.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/pZnwtM9OKTzj4r6.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/PFkl8gUy7wAjEqc.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/2OKAClnhoNzSdHZ.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/Drwvtbk6CZogpd2.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/b4nHZ5zBopSkWQG.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/7RfojHxetV1NOsr.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/uECXbAnKcqB94sg.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/WFUbwZXsLyCivM3.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/13/I2ZYLUmkWypP83e.png">
+<meta property="article:published_time" content="2025-06-11T09:46:52.000Z">
+<meta property="article:modified_time" content="2025-06-13T09:29:52.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="AIGC">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/06/12/eQlmuDP4NcgXijM.png">
+  
+  
+  
+  <title>openwebui-v0.6.5学习02-常用配置与使用 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">openwebui-v0.6.5学习02-常用配置与使用</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-11 17:46" pubdate>
+          2025年6月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          23 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">openwebui-v0.6.5学习02-常用配置与使用</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一管理员面板">一、管理员面板</h1>
+<p>以“管理员”权限组的用户比如超级管理员登录系统，才能看到与操作“管理员面板”。</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/12/eQlmuDP4NcgXijM.png" srcset="/img/loading.gif" lazyload
+alt="image-20250612113108218" />
+<figcaption aria-hidden="true">image-20250612113108218</figcaption>
+</figure>
+<h2 id="用户">1.1 用户</h2>
+<h3 id="概述中的用户管理">1.1.1 概述中的用户管理</h3>
+<p>安装open-webui的最后步骤，自行注册的用户是超级管理员，无法被删除。可以修改其用户名与密码，邮箱无法修改。</p>
+<ul>
+<li>添加用户
+<ul>
+<li>添加用户时，需要选择其权限组，有“待激活、用户、管理员”三个选项可选。拥有“待激活”权限的用户，登录后无法进行实际操作，需要联系管理员进行激活；拥有“用户”权限的用户，是普通用户，拥有较小的操作权限比如可以选择LLM进行对话，可以管理自己的信息，但无法修改系统配置信息与管理其他用户等；拥有“管理员”权限的用户，在前者的基础上，进行拥有修改系统配置信息与管理其他用户等的权限，此类型用户无法被删除，如果要删除先要将其修改为拥有“用户”权限的用户。</li>
+<li>添加用户时填写的邮箱不会进行真正的校验，如果是开发或自用，随便填写个邮箱账号即可。</li>
+</ul></li>
+</ul>
+<figure>
+<img src="https://s2.loli.net/2025/06/12/ufp1cFtnGEgzkOR.png" srcset="/img/loading.gif" lazyload
+alt="image-20250612122503748" />
+<figcaption aria-hidden="true">image-20250612122503748</figcaption>
+</figure>
+<ul>
+<li><p>编辑用户与删除用户</p>
+<p>此处用户可以被删除、编辑。此处用户的权限组只能是系统默认创建的“待激活、用户、管理员”的3个权限组中的一个。</p></li>
+</ul>
+<h3 id="权限组管理">1.1.2 权限组管理</h3>
+<p>此处为自定义权限组，跟系统默认存在的3个权限组（管理员、用户、待激活）是不同但又有联系的概念。自定义权限组可以添加系统中的用户，但只有系统默认的“用户或待激活”权限组下的用户才能添加进来。</p>
+<ul>
+<li>创建权限组：</li>
+</ul>
+<figure>
+<img src="https://s2.loli.net/2025/06/12/wNZ3yezCMBmsEa1.png" srcset="/img/loading.gif" lazyload
+alt="image-20250612143227393" />
+<figcaption aria-hidden="true">image-20250612143227393</figcaption>
+</figure>
+<ul>
+<li>编辑权限组：</li>
+</ul>
+<figure>
+<img src="https://s2.loli.net/2025/06/12/3eTjNkLHJKd84fS.png" srcset="/img/loading.gif" lazyload
+alt="image-20250612143554275" />
+<figcaption aria-hidden="true">image-20250612143554275</figcaption>
+</figure>
+<ul>
+<li>为权限组添加、删除用户：</li>
+</ul>
+<figure>
+<img src="https://s2.loli.net/2025/06/12/Isc4GatnXE2jVid.png" srcset="/img/loading.gif" lazyload
+alt="image-20250612150521690" />
+<figcaption aria-hidden="true">image-20250612150521690</figcaption>
+</figure>
+<ul>
+<li>默认权限：</li>
+</ul>
+<p>​
+系统默认的“用户”权限组的权限可以进行编辑。但如果此处权限与自定义权限组的权限不同或冲突时，谁的权限较大以谁为准（个人觉得应该以自定义权限组的权限为准）。</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/12/BrAIzqQVxk5XeJH.png" srcset="/img/loading.gif" lazyload
+alt="image-20250612145359065" />
+<figcaption aria-hidden="true">image-20250612145359065</figcaption>
+</figure>
+<h2 id="设置">1.2 设置</h2>
+<p>如果在页面做了修改，一定点击页面右下角的“保存”按钮保存所做修改，否则无效。</p>
+<h3 id="通用">1.2.1 通用</h3>
+<figure>
+<img src="https://s2.loli.net/2025/06/12/2IOdjV7YfH3kRc6.png" srcset="/img/loading.gif" lazyload
+alt="image-20250612155144746" />
+<figcaption aria-hidden="true">image-20250612155144746</figcaption>
+</figure>
+<h3 id="外部连接">1.2.2 外部连接</h3>
+<figure>
+<img src="https://s2.loli.net/2025/06/12/217mHxEWBTUtNVL.png" srcset="/img/loading.gif" lazyload
+alt="image-20250612155734260" />
+<figcaption aria-hidden="true">image-20250612155734260</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/12/Xd9LRYmUrDcCSsJ.png" srcset="/img/loading.gif" lazyload
+alt="image-20250612170001569" />
+<figcaption aria-hidden="true">image-20250612170001569</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/12/wAoJqaN7OM4REBP.png" srcset="/img/loading.gif" lazyload
+alt="image-20250612160252442" />
+<figcaption aria-hidden="true">image-20250612160252442</figcaption>
+</figure>
+<p>创建一个模型时，可以上述小窗口的json输入框中输入如下内容（qwen2.5:3b在本地ollama环境中是否存在都没关系，如果不存在的话，ollama就自动尝试去下载），然后点击右上角的上传图标，就会从qwen2.5:3b复制出一个模型my-modelfile:latest</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><span class="hljs-attr">&quot;model&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;my-modelfile&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;from&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;qwen2.5:3b&quot;</span><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+<h3 id="模型">1.2.3 模型</h3>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/3L4ONmARU8iGFa5.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613103947977" />
+<figcaption aria-hidden="true">image-20250613103947977</figcaption>
+</figure>
+<ul>
+<li><p>相关说明：</p>
+<ul>
+<li><p>（1）LLM被禁用后，就无法被看见与使用</p></li>
+<li><p>（2）LLM被隐藏后，只是无法被看见，有权限的用户如果知道某个LLM仍可直接使用</p></li>
+<li><p>（3）此页面看到的LLM都是基础模型，可以修改基础模型的的信息如名称、可见性、系统提示词、知识库、工具等</p></li>
+<li><p>​
+如果基础模型的可见性是私有并分配给某个（些）自定义权限组了，则其他自定义权限组中用户则无法看见与使用此基础模型（只有系统默认“用户、待激活”角色的用户才能添加到自定义权限组），系统默认“管理员”角色中的用户仍可继续看见与使用此基础模型。</p></li>
+<li><p>（4）如果基础模型的可见性是私有并分配给某个（些）自定义权限组g1了，但在工作空间中基于基础LLM创建一个自定义LLM，如果此自定义LLM是私有的并设置为自定义权限组g1可见，则其他自定义权限组不可看到与使用。</p></li>
+<li><p>​
+如果基础模型的可见性是私有并分配给某个（些）自定义权限组g1了，但在工作空间中基于基础LLM创建一个自定义LLM，如果此自定义LLM是私有的，可以被设置为自定义权限组g2可见，其他自定义权限组不可看到与使用。</p></li>
+<li><p>​
+就是说自定义权限组中的用户只能看到“工作空间”中分配给自己权限组的自定义LLM。</p></li>
+<li><p>（5）在工作空间中基于基础LLM创建一个自定义LLM，如果基础LLM被隐藏了，则在会话的下拉模型列表中基础LLM不可见，自定义LLM可以被看见与使用；如果基础LLM被禁用了，则在会话的下拉模型列表中基础LLM不可见，此自定义LLM可以被看见但有一个“external”标识，使用时会报错提示“404:
+Model not found”</p></li>
+<li><p>（6）以上关于隐藏的相关操作，对系统默认“管理员”角色中的用户都无影响。</p></li>
+</ul></li>
+</ul>
+<h3 id="数据库">1.2.4 数据库</h3>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/N3xIpdgnqmOFbjo.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613141651657" />
+<figcaption aria-hidden="true">image-20250613141651657</figcaption>
+</figure>
+<p>将系统的通用配置导出与导入</p>
+<p>将系统的底层数据库信息导出为.db文件，可以使用开源软件dbeaver打开，然后可以查看其中的数据表等信息</p>
+<p>导出所有用户的对话记录（默认每个用户最多保存 100
+个会话记录，超过的话就会删除最早的会话记录，且不主动过期）</p>
+<hr />
+<hr />
+<figure>
+<img src="https://s2.loli.net/2025/06/11/KkmdEgIhSFZc9Px.png" srcset="/img/loading.gif" lazyload
+alt="image-20250611174745413" />
+<figcaption aria-hidden="true">image-20250611174745413</figcaption>
+</figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">(llamafactory) root@g406011748489384920:~# ollama list<br><br></code></pre></td></tr></table></figure>
+<h1 id="二工作空间">二、工作空间</h1>
+<p>以“管理员”权限组的用户登录系统，才能看到与操作工作空间。</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/12/y23suNlEgx9ndqM.png" srcset="/img/loading.gif" lazyload
+alt="image-20250612125405289" />
+<figcaption aria-hidden="true">image-20250612125405289</figcaption>
+</figure>
+<h2 id="工具">2.1 工具</h2>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/k8fNaIP59E3MdxQ.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613150851408" />
+<figcaption aria-hidden="true">image-20250613150851408</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/pN14hEk3PU6FqyC.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613151519202" />
+<figcaption aria-hidden="true">image-20250613151519202</figcaption>
+</figure>
+<h2 id="提示词">2.2 提示词</h2>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/kC2xeW5EtbwXziM.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613153704366" />
+<figcaption aria-hidden="true">image-20250613153704366</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/9qwsALlPNSI6OEJ.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613154010417" />
+<figcaption aria-hidden="true">image-20250613154010417</figcaption>
+</figure>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs ini">\<span class="hljs-comment"># 角色</span><br><span class="hljs-comment">## 你是一个聊天助手，能够提取用户提问中的关键词，并给出精简准确的回答。</span><br><br><span class="hljs-comment"># 强烈要求</span><br><span class="hljs-comment">## 如果你不知道提问的答案或者说没有掌握提问相关知识，请直接回复“对不起，我还没有掌握此提问相关知识”，不要凭空捏造内容进行回复。</span><br></code></pre></td></tr></table></figure>
+<h2 id="知识库">2.3 知识库</h2>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/qcgQLjR2uVDX5dS.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613154046905" />
+<figcaption aria-hidden="true">image-20250613154046905</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/Omdx2toXLF73yeI.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613154222910" />
+<figcaption aria-hidden="true">image-20250613154222910</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/qQFhILRWySuj3Pd.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613154308566" />
+<figcaption aria-hidden="true">image-20250613154308566</figcaption>
+</figure>
+<p>上传文件到知识库中时，会使用嵌入模型将文件向量化，使用上述容器化方式部署open-webui
+0.6.5时，默认使用的嵌入模型是sentence-transformers/all-MiniLM-L6-v2，可以通过如下命令查看：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">宿主机上</span><br>(llamafactory) root@g406011748489384920:~/.cache/modelscope/hub/models# docker inspect open-webui | grep EMBEDDING<br>                &quot;USE_EMBEDDING_MODEL_DOCKER=sentence-transformers/all-MiniLM-L6-v2&quot;,<br>                &quot;RAG_EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2&quot;,<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">容器化</span><br>root@e38be1309275:/app/backend# env | grep EMBEDDING<br>USE_EMBEDDING_MODEL_DOCKER=sentence-transformers/all-MiniLM-L6-v2<br>RAG_EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2<br></code></pre></td></tr></table></figure>
+<p>在管理员面板-&gt;设置-&gt;文档
+页面，也可以看到嵌入模型及其相关向量化与召回配置：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/pZnwtM9OKTzj4r6.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613160635090" />
+<figcaption aria-hidden="true">image-20250613160635090</figcaption>
+</figure>
+<h2 id="模型-1">2.4 模型</h2>
+<p>模型配置：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/PFkl8gUy7wAjEqc.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613160720802" />
+<figcaption aria-hidden="true">image-20250613160720802</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/2OKAClnhoNzSdHZ.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613161637049" />
+<figcaption aria-hidden="true">image-20250613161637049</figcaption>
+</figure>
+<p>模型使用：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/Drwvtbk6CZogpd2.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613162150701" />
+<figcaption aria-hidden="true">image-20250613162150701</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/b4nHZ5zBopSkWQG.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613170340370" />
+<figcaption aria-hidden="true">image-20250613170340370</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/7RfojHxetV1NOsr.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613170517086" />
+<figcaption aria-hidden="true">image-20250613170517086</figcaption>
+</figure>
+<h1 id="三设置">三、设置</h1>
+<h2 id="通用-1">3.1 通用</h2>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/uECXbAnKcqB94sg.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613171150498" />
+<figcaption aria-hidden="true">image-20250613171150498</figcaption>
+</figure>
+<h2 id="对话">3.2 对话</h2>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/WFUbwZXsLyCivM3.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613171931810" />
+<figcaption aria-hidden="true">image-20250613171931810</figcaption>
+</figure>
+<h2 id="账号">3.3 账号</h2>
+<figure>
+<img src="https://s2.loli.net/2025/06/13/I2ZYLUmkWypP83e.png" srcset="/img/loading.gif" lazyload
+alt="image-20250613170815466" />
+<figcaption aria-hidden="true">image-20250613170815466</figcaption>
+</figure>
+<p>其实在 调用本地 Ollama 模型时，如果使用的是 OpenAI 兼容协议并通过
+openai Python SDK 接入时，不会校验 api_key
+，但必须有这个字段，所以可以随便填写一个值。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">查看所有LLM</span><br>(llamafactory) root@g406011748489384920:/opt/jiangsy# ollama list<br>NAME              ID              SIZE      MODIFIED     <br>qwen2.5:1.5b      65ec06548149    986 MB    25 hours ago    <br>phi3:latest       4f2222927938    2.2 GB    2 days ago      <br>qwen2.5:3b        357c53fb659c    1.9 GB    2 days ago      <br>deepseek-r1:7b    755ced02ce7b    4.7 GB    2 weeks ago<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#通过python sdk调用LLM示例</span><br><span class="hljs-keyword">from</span> openai <span class="hljs-keyword">import</span> OpenAI<br><br>client = OpenAI(<br>    <span class="hljs-comment">#api_key=&quot;sk-7800dc8fded44016b70814bf80f4c78f&quot;,</span><br>    api_key = <span class="hljs-string">&quot;aaa&quot;</span>,<br>    base_url=<span class="hljs-string">&quot;http://localhost:11434/v1&quot;</span><br>)<br>models = client.models.<span class="hljs-built_in">list</span>()<br><br>messages=[<br>        &#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;system&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;You are a helpful assistant.&quot;</span>&#125;,<br>        &#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;user&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;证明必达格拉斯定理&quot;</span>&#125;<br>    ]<br>params = &#123;<br>        <span class="hljs-string">&quot;model&quot;</span>: <span class="hljs-string">&quot;qwen2.5:1.5b&quot;</span>,<br>        <span class="hljs-string">&quot;messages&quot;</span>: messages,<br>        <span class="hljs-string">&quot;stream&quot;</span>: <span class="hljs-literal">True</span>,<br>        <span class="hljs-string">&quot;timeout&quot;</span>: <span class="hljs-number">600</span>,<br>        <span class="hljs-string">&quot;temperature&quot;</span>: <span class="hljs-number">0.0</span>,<br>    &#125;<br><br>stream = client.chat.completions.create(**params)<br><br><span class="hljs-keyword">for</span> chunk <span class="hljs-keyword">in</span> stream:<br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> chunk.choices <span class="hljs-keyword">or</span> chunk.choices[<span class="hljs-number">0</span>].delta.content <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>        <span class="hljs-keyword">continue</span><br><br>    <span class="hljs-built_in">print</span>(chunk.choices[<span class="hljs-number">0</span>].delta.content, end=<span class="hljs-string">&quot;&quot;</span>)<br><span class="hljs-built_in">print</span>()<br><br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">调用成功，但LLM的回复是不正确的，此时需要对其进行微调或联网</span><br>(llamafactory) root@g406011748489384920:/opt/jiangsy# python call-llm-by-python-sdk02.py <br>必达格拉斯定理（Perron-Frobenius Theorem）是线性代数和矩阵理论中的一个重要结果，它描述了非奇异的实对称矩阵的特征向量的一些性质。这个定理在许多领域都有应用，包括机器学习、信号处理和控制论等。<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">## 必达格拉斯定理的内容</span></span><br><br>必达格拉斯定理主要涉及的是一个实对称矩阵 \( A \) 的特征值和特征向量。对于非奇异的实对称矩阵 \( A \)，以下结论成立：<br><br>1. **最大特征值**：\( A \) 有一个最大的正实部特征值，称为 \( A \) 的 **谱半径**（spectral radius），记为 \( r(A) \)。<br>2. **特征向量的正性**：对于 \( A \) 的所有正实部特征值，对应的特征向量都是正向量。换句话说，如果 \( \lambda \) 是 \( A \) 的一个正实部特征值，则 \( x \) 是 \( A \) 对应的正向量。<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">## 证明</span></span><br><br>证明必达格拉斯定理通常涉及几个关键步骤：<br><br>1. **矩阵对称性**：首先，我们注意到 \( A \) 是一个实对称矩阵。这意味着 \( A = A^T \)，即 \( A \) 的转置等于它本身。<br>2. **特征值的性质**：由于 \( A \) 是实对称的，它的特征值是实数，并且可以被归一化为正实部的特征向量。<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">## 证明过程</span></span><br><br>1. **最大特征值的存在性**：<br>   - 首先，我们证明存在一个最大的正实部特征值。考虑 \( A \) 的所有特征值 \( \lambda_1, \lambda_2, \ldots, \lambda_n \)，其中 \( n = \text&#123;rank&#125;(A) \) 是矩阵的秩。<br>   - 由于 \( A \) 是实对称的，它的特征值是实数。因此，我们可以考虑这些特征值在复平面中的部分。<br><br>2. **正向量的存在性**：<br>   - 对于每个正实部的特征值 \( \lambda_i \)，我们可以通过归一化找到一个对应的正向量 \( x_i \)。<br>   - 由于 \( A \) 是非奇异的，它的秩等于其维度，即 \( n = \text&#123;rank&#125;(A) \)。这意味着存在一个正实部的特征值。<br><br>3. **最大特征值的存在性**：<br>   - 我们可以证明存在一个最大的正实部特征值。考虑所有正实部的特征值和它们对应的正向量。<br>   - 由于 \( A \) 是非奇异的，它的秩等于其维度，即 \( n = \text&#123;rank&#125;(A) \)。这意味着存在一个正实部的特征值。<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">## 结论</span></span><br><br>综上所述，必达格拉斯定理表明对于非奇异的实对称矩阵 \( A \)，它有一个最大的正实部特征值，并且对应于这个最大特征值的所有特征向量都是正向量。这在许多应用中是重要的，特别是在信号处理和控制理论中。<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">## 参考文献</span></span><br><br>- **参考文献**：《线性代数及其应用》（Linear Algebra and Its Applications），作者：Gilbert Strang<br>  - 这本书详细介绍了矩阵理论中的各种定理和证明方法。<br></code></pre></td></tr></table></figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/AIGC/" class="category-chain-item">AIGC</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/AIGC/" class="print-no-link">#AIGC</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>openwebui-v0.6.5学习02-常用配置与使用</div>
+      <div>https://jiangsanyin.github.io/2025/06/11/openwebui-v0.6.5学习02-常用配置与使用/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月11日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/06/14/%E9%95%BF%E6%B2%99%E5%9B%BD%E9%99%85%E4%BC%9A%E5%B1%95%E4%B8%AD%E5%BF%83%E8%A7%82%E5%B1%95%E7%AC%AC%E5%9B%9B%E5%B1%8A%E4%B8%AD%E9%9D%9E%E7%BB%8F%E8%B4%B8%E5%8D%9A%E8%A7%88%E4%BC%9A/" title="长沙国际会展中心观展第四届中非经贸博览会">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">长沙国际会展中心观展第四届中非经贸博览会</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/11/openwebui-v0.6.5%E5%AD%A6%E4%B9%A001-%E9%83%A8%E7%BD%B2/" title="openwebui-v0.6.5学习01-部署">
+                        <span class="hidden-mobile">openwebui-v0.6.5学习01-部署</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
