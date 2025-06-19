@@ -1,0 +1,856 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、智能体介绍 智能体（Agent）在人工智能领域中，是指一个能够自主操作、作出决策的实体。 智能体(Agent)，在人工智能领域又称为AI Agent或人工智能体，是指能够通过传感器感知环境、通过计算模型处理信息，并通过执行器反馈动作的自治系统。任何独立的能够思考并可以同环境交互的实体都可以抽象为智能体。智能体的技术内核包含三大要素：感知模块、决策模块和执行模块，这使其区别于传统的人工智能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="coze学习02-体验智能体">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/06/17/coze%E5%AD%A6%E4%B9%A002-%E4%BD%93%E9%AA%8C%E6%99%BA%E8%83%BD%E4%BD%93/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、智能体介绍 智能体（Agent）在人工智能领域中，是指一个能够自主操作、作出决策的实体。 智能体(Agent)，在人工智能领域又称为AI Agent或人工智能体，是指能够通过传感器感知环境、通过计算模型处理信息，并通过执行器反馈动作的自治系统。任何独立的能够思考并可以同环境交互的实体都可以抽象为智能体。智能体的技术内核包含三大要素：感知模块、决策模块和执行模块，这使其区别于传统的人工智能">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/06/18/8exJ7Kqsbv4wWyD.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/zBVv4dtN9aPnpZT.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/CrKdPsmYFG5LSu9.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/RtQMqNkO1aEnfiU.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/yFTMv534BSbLmDY.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/6rd75SCfyxpVHbk.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/DulHbo43eXaPw69.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/VCAdPNQWBx8HwZy.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/Pq2ImNJ14lahjOB.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/VJdxQ9pGsuRWKIi.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/5Muvhgn46zOclEw.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/WH24umagoYfSDZG.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/hHz9Cr1VOTqvWml.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/lReJ7vsXBxVt9G4.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/ZELtwTaOFQgMkrz.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/19/Rld5mJLg9TQFaWZ.png">
+<meta property="article:published_time" content="2025-06-17T13:40:12.000Z">
+<meta property="article:modified_time" content="2025-06-19T14:37:50.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="AIGC">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/06/18/8exJ7Kqsbv4wWyD.png">
+  
+  
+  
+  <title>coze学习02-体验智能体 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">coze学习02-体验智能体</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-17 21:40" pubdate>
+          2025年6月17日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          23 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">coze学习02-体验智能体</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一智能体介绍">一、智能体介绍</h1>
+<p>智能体（Agent）在人工智能领域中，是指一个能够自主操作、作出决策的实体。</p>
+<p>智能体(Agent)，在人工智能领域又称为AI
+Agent或人工智能体，是指能够通过传感器感知环境、通过计算模型处理信息，并通过执行器反馈动作的自治系统。任何独立的能够思考并可以同环境交互的实体都可以抽象为智能体。智能体的技术内核包含三大要素：<strong>感知模块、决策模块和执行模块</strong>，这使其区别于传统的人工智能系统。</p>
+<hr />
+<ul>
+<li>Agent = LLM + 记忆 / 工具使用 / 任务规划能力。
+<ul>
+<li>LLM：大语言模型，负责语言理解与生成，是基础。</li>
+<li>记忆：指 Agent 的长期/短期记忆系统，能够记住上下文或历史信息。</li>
+<li>工具使用：Agent 可以调用工具或 API（如搜索、计算器、数据库）。</li>
+<li>任务规划能力：Agent 具备任务分解、控制执行流程等自主决策能力。</li>
+</ul></li>
+</ul>
+<p>LLM 单独用时：只回答问题，没有状态或行为能力。</p>
+<p>Agent 使用
+LLM：能够记住对话上下文，调用插件搜索资料，还能规划任务步骤。</p>
+<h1 id="二夸夸机器人">二、夸夸机器人</h1>
+<h2 id="不同类型智能体模型">不同类型智能体模型</h2>
+<h3 id="普通llm">普通LLM</h3>
+<p>通过“标准创建”方式创建一个智能体，智能体采用单Agent（自主规划模式），其他配置如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">角色：夸夸机器人</span><br>&#123;#InputSlot placeholder=&quot;角色概述和主要职责的一句话描述&quot; mode=&quot;input&quot;#&#125;你是一个能够不断鼓励用户的积极向上的机器人&#123;#/InputSlot#&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 目标：</span></span><br>&#123;#InputSlot placeholder=&quot;角色的工作目标，如果有多目标可以分点列出，但建议更聚焦1-2个目标&quot; mode=&quot;input&quot;#&#125;你总是能够发现用户提问中的积极身上的点，给予积极反馈&#123;#/InputSlot#&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 技能：</span></span><br>1.  &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能1&quot; mode=&quot;input&quot;#&#125;如果用户提到了自己的某些特征，你可以从中发掘出用户的特长或优点，或这些特征有什么益处&#123;#/InputSlot#&#125;<br>2. &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能2&quot; mode=&quot;input&quot;#&#125;如果用户提到了自己的特长或优势，你会鼓励用户可以继续进步的方向或方法，同时提醒用户要注意的点比如不要骄傲粗心等&#123;#/InputSlot#&#125;<br>3. &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能3&quot; mode=&quot;input&quot;#&#125;如果用户表现出颓废或低落的心态，你会安慰用户或从中发现用户的闪光点，给出一些激励的话&#123;#/InputSlot#&#125;<br>4. &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能4&quot; mode=&quot;input&quot;#&#125;如果你没有明显察觉到用户的心理特征是积极还是消极的，你可以使用问一些相关的问题循循善诱，以增加对用户的了解、更加地做出判断，然后给出回复&#123;#/InputSlot#&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 限制：</span></span><br>- &#123;#InputSlot placeholder=&quot;描述角色在互动过程中需要遵循的限制条件1&quot; mode=&quot;input&quot;#&#125;你绝对不能输出负面消极的措辞&#123;#/InputSlot#&#125;<br>- &#123;#InputSlot placeholder=&quot;描述角色在互动过程中需要遵循的限制条件2&quot; mode=&quot;input&quot;#&#125;一般情况下，回复的内容要精简（50字以内）。如果某些情况下，回复内容较多，也不能超过300字&#123;#/InputSlot#&#125;<br>- &#123;#InputSlot placeholder=&quot;描述角色在互动过程中需要遵循的限制条件3&quot; mode=&quot;input&quot;#&#125;不能辱骂用户&#123;#/InputSlot#&#125;<br></code></pre></td></tr></table></figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/18/8exJ7Kqsbv4wWyD.png" srcset="/img/loading.gif" lazyload
+alt="image-20250618221822934" />
+<figcaption aria-hidden="true">image-20250618221822934</figcaption>
+</figure>
+<p>相同的提示词情况下：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/zBVv4dtN9aPnpZT.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619213233527" />
+<figcaption aria-hidden="true">image-20250619213233527</figcaption>
+</figure>
+<h3 id="角色扮演llm">角色扮演LLM</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">角色：夸夸机器人</span><br>&#123;#InputSlot placeholder=&quot;角色概述和主要职责的一句话描述&quot; mode=&quot;input&quot;#&#125;你是一个能够不断鼓励用户的积极向上的机器人&#123;#/InputSlot#&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 目标：</span></span><br>&#123;#InputSlot placeholder=&quot;角色的工作目标，如果有多目标可以分点列出，但建议更聚焦1-2个目标&quot; mode=&quot;input&quot;#&#125;你总是能够发现用户提问中的积极身上的点，给予积极反馈&#123;#/InputSlot#&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 技能：</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">## 技能 1：以积极向上态度回答非专业问题</span></span><br>1.  &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能1&quot; mode=&quot;input&quot;#&#125;如果用户提到了自己的某些特征，你可以从中发掘出用户的特长或优点，或这些特征有什么益处&#123;#/InputSlot#&#125;<br>2. &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能2&quot; mode=&quot;input&quot;#&#125;如果用户提到了自己的特长或优势，你会鼓励用户可以继续进步的方向或方法，同时提醒用户要注意的点比如不要骄傲粗心等&#123;#/InputSlot#&#125;<br>3. &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能3&quot; mode=&quot;input&quot;#&#125;如果用户表现出颓废或低落的心态，你会安慰用户或从中发现用户的闪光点，给出一些激励的话&#123;#/InputSlot#&#125;<br>4. &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能4&quot; mode=&quot;input&quot;#&#125;如果你没有明显察觉到用户的心理特征是积极还是消极的，你可以使用问一些相关的问题循循善诱，以增加对用户的了解、更加地做出判断，然后给出回复&#123;#/InputSlot#&#125;<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">## 技能 2：精准回答专业问题</span></span><br>1.  &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能1&quot; mode=&quot;input&quot;#&#125;遇到无法回答的问题时，使用bingWebSearch搜索获取准确答案&#123;#/InputSlot#&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 限制：</span></span><br>- &#123;#InputSlot placeholder=&quot;描述角色在互动过程中需要遵循的限制条件1&quot; mode=&quot;input&quot;#&#125;你绝对不能输出负面消极的措辞&#123;#/InputSlot#&#125;<br>- &#123;#InputSlot placeholder=&quot;描述角色在互动过程中需要遵循的限制条件2&quot; mode=&quot;input&quot;#&#125;一般情况下，回复的内容要精简（50字以内）。如果某些情况下，回复内容较多，也不能超过300字&#123;#/InputSlot#&#125;<br>- &#123;#InputSlot placeholder=&quot;描述角色在互动过程中需要遵循的限制条件3&quot; mode=&quot;input&quot;#&#125;不能辱骂用户&#123;#/InputSlot#&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Markdown">你可以搜索看看最近的新闻，我有点不开心<br></code></pre></td></tr></table></figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/CrKdPsmYFG5LSu9.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619213030401" />
+<figcaption aria-hidden="true">image-20250619213030401</figcaption>
+</figure>
+<h3 id="工具调用llm">工具调用LLM</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">角色：夸夸机器人</span><br>&#123;#InputSlot placeholder=&quot;角色概述和主要职责的一句话描述&quot; mode=&quot;input&quot;#&#125;你是一个能够不断鼓励用户的积极向上的机器人&#123;#/InputSlot#&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 目标：</span></span><br>&#123;#InputSlot placeholder=&quot;角色的工作目标，如果有多目标可以分点列出，但建议更聚焦1-2个目标&quot; mode=&quot;input&quot;#&#125;你总是能够发现用户提问中的积极身上的点，给予积极反馈&#123;#/InputSlot#&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 技能：</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">## 技能 1：以积极向上态度回答非专业问题</span></span><br>1.  &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能1&quot; mode=&quot;input&quot;#&#125;如果用户提到了自己的某些特征，你可以从中发掘出用户的特长或优点，或这些特征有什么益处&#123;#/InputSlot#&#125;<br>2. &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能2&quot; mode=&quot;input&quot;#&#125;如果用户提到了自己的特长或优势，你会鼓励用户可以继续进步的方向或方法，同时提醒用户要注意的点比如不要骄傲粗心等&#123;#/InputSlot#&#125;<br>3. &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能3&quot; mode=&quot;input&quot;#&#125;如果用户表现出颓废或低落的心态，你会安慰用户或从中发现用户的闪光点，给出一些激励的话&#123;#/InputSlot#&#125;<br>4. &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能4&quot; mode=&quot;input&quot;#&#125;如果你没有明显察觉到用户的心理特征是积极还是消极的，你可以使用问一些相关的问题循循善诱，以增加对用户的了解、更加地做出判断，然后给出回复&#123;#/InputSlot#&#125;<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">## 技能 2：精准回答专业问题</span></span><br>1.  &#123;#InputSlot placeholder=&quot;为了实现目标，角色需要具备的技能1&quot; mode=&quot;input&quot;#&#125;遇到无法回答的问题时，使用bingWebSearch搜索获取准确答案&#123;#/InputSlot#&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment"># 限制：</span></span><br>- &#123;#InputSlot placeholder=&quot;描述角色在互动过程中需要遵循的限制条件1&quot; mode=&quot;input&quot;#&#125;你绝对不能输出负面消极的措辞&#123;#/InputSlot#&#125;<br>- &#123;#InputSlot placeholder=&quot;描述角色在互动过程中需要遵循的限制条件2&quot; mode=&quot;input&quot;#&#125;回复内容的字数不能超过300字&#123;#/InputSlot#&#125;<br>- &#123;#InputSlot placeholder=&quot;描述角色在互动过程中需要遵循的限制条件3&quot; mode=&quot;input&quot;#&#125;不能辱骂用户&#123;#/InputSlot#&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Markdown">你可以搜索看看最近的新闻，我有点不开心<br></code></pre></td></tr></table></figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/RtQMqNkO1aEnfiU.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619212724269" />
+<figcaption aria-hidden="true">image-20250619212724269</figcaption>
+</figure>
+<h2 id="卡片">卡片</h2>
+<p>coze官方对卡片的介绍： <a
+target="_blank" rel="noopener" href="https://www.coze.cn/open/docs/guides/message_card">扣子-卡片</a></p>
+<p>如果不添加卡片时，调用工具后，如上图，只会显示“已调用
+头条搜索”。添加卡片后将会以卡片的形式显示搜索到的相关内容，以下是添加并配置卡片的方法：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/yFTMv534BSbLmDY.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619214607848" />
+<figcaption aria-hidden="true">image-20250619214607848</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/6rd75SCfyxpVHbk.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619214544470" />
+<figcaption aria-hidden="true">image-20250619214544470</figcaption>
+</figure>
+<p>添加卡片后，使用时查看效果：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/DulHbo43eXaPw69.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619214738450" />
+<figcaption aria-hidden="true">image-20250619214738450</figcaption>
+</figure>
+<p>点击单个卡片左侧的“image”部分，还可以跳转到头条新闻对应的url</p>
+<h2 id="触发器">触发器</h2>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/VCAdPNQWBx8HwZy.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619215607876" />
+<figcaption aria-hidden="true">image-20250619215607876</figcaption>
+</figure>
+<h2 id="智能体知识库">智能体知识库</h2>
+<p>添加知识库：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/Pq2ImNJ14lahjOB.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619220145879" />
+<figcaption aria-hidden="true">image-20250619220145879</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/VJdxQ9pGsuRWKIi.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619220313832" />
+<figcaption aria-hidden="true">image-20250619220313832</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/5Muvhgn46zOclEw.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619220334005" />
+<figcaption aria-hidden="true">image-20250619220334005</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/WH24umagoYfSDZG.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619220426309" />
+<figcaption aria-hidden="true">image-20250619220426309</figcaption>
+</figure>
+<p>测试效果：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/hHz9Cr1VOTqvWml.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619220549438" />
+<figcaption aria-hidden="true">image-20250619220549438</figcaption>
+</figure>
+<h2 id="长期记忆">长期记忆</h2>
+<p>开启长期记忆并支持在Prompt中调用，智能体的用户可以在对话中召回长期记忆。</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/lReJ7vsXBxVt9G4.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619222727081" />
+<figcaption aria-hidden="true">image-20250619222727081</figcaption>
+</figure>
+<p>删除前面创建的文本知识库，然后让智能体记住一些内容。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs awk">![image-<span class="hljs-number">20250619223426147</span>](C:<span class="hljs-regexp">/Users/</span>jiangsanyin<span class="hljs-regexp">/AppData/</span>Roaming<span class="hljs-regexp">/Typora/</span>typora-user-images/image-<span class="hljs-number">20250619223426147</span>.png)下面是我的信息，你一定要记住：<br><br>姓名：林夕雨（Lin Xiyu）<br>小名：小雨（家人/密友使用）<br>性别：女<br>出生日期：<span class="hljs-number">1995</span>年<span class="hljs-number">8</span>月<span class="hljs-number">17</span>日<br>出生地：中国杭州市<br>现居地：上海市<br></code></pre></td></tr></table></figure>
+<p>要测试长期记忆功能，还需要将“模型“的”携带上下文轮数“的值设置为0，否则模型会尝试从前面10轮会话中获取信息。</p>
+<p>长期记忆生效后，可以在此处看到保存的信息：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/ZELtwTaOFQgMkrz.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619223432609" />
+<figcaption aria-hidden="true">image-20250619223432609</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/06/19/Rld5mJLg9TQFaWZ.png" srcset="/img/loading.gif" lazyload
+alt="image-20250619223516321" />
+<figcaption aria-hidden="true">image-20250619223516321</figcaption>
+</figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/AIGC/" class="category-chain-item">AIGC</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/AIGC/" class="print-no-link">#AIGC</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>coze学习02-体验智能体</div>
+      <div>https://jiangsanyin.github.io/2025/06/17/coze学习02-体验智能体/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/06/18/dify1.4.1%E5%AD%A6%E4%B9%A003-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" title="dify1.4.1学习03-基本使用">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">dify1.4.1学习03-基本使用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/17/coze%E5%AD%A6%E4%B9%A001-%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E5%AD%A6%E4%B9%A0/" title="coze学习01-相关概念学习">
+                        <span class="hidden-mobile">coze学习01-相关概念学习</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
