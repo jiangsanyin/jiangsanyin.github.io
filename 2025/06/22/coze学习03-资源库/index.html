@@ -1,0 +1,801 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、插件 coze中的插件是一个工具集，一个插件内可以包含一个或多个工具（API）。   然后进入此插件内，再点击“在IDE中创建工具”，再“创建工具”：   image-20250622222810864  代码输入框内容如下： 12345678910111213141516171819202122232425262728293031323334353637383940414">
+<meta property="og:type" content="article">
+<meta property="og:title" content="coze学习03-资源库">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/06/22/coze%E5%AD%A6%E4%B9%A003-%E8%B5%84%E6%BA%90%E5%BA%93/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、插件 coze中的插件是一个工具集，一个插件内可以包含一个或多个工具（API）。   然后进入此插件内，再点击“在IDE中创建工具”，再“创建工具”：   image-20250622222810864  代码输入框内容如下： 12345678910111213141516171819202122232425262728293031323334353637383940414">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/06/22/DHn1SyM2BqP4rgs.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/22/eZB1Qk4pvJ3PEFq.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/22/e1Ss3IncrMLPl2t.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/22/WkigDtcflpu6AeB.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/22/jaUmrv4GzxOdT7n.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/22/pnOZEajVPSYNyRo.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/22/2VDnOeWhbqlMCNp.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/22/1VIhGelyafZgF8W.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/22/2wIfdl9zyFgT1Lu.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/22/ckumJNOtbgzUHnw.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/22/UhbZdny8HLcv2AJ.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/22/zAwdBlqRJY7SW94.png">
+<meta property="article:published_time" content="2025-06-22T14:06:00.000Z">
+<meta property="article:modified_time" content="2025-06-22T14:58:58.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="AIGC">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/06/22/DHn1SyM2BqP4rgs.png">
+  
+  
+  
+  <title>coze学习03-资源库 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">coze学习03-资源库</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-22 22:06" pubdate>
+          2025年6月22日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          14 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">coze学习03-资源库</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一插件">一、插件</h1>
+<p>coze中的插件是一个工具集，一个插件内可以包含一个或多个工具（API）。</p>
+<p><img src="https://s2.loli.net/2025/06/22/DHn1SyM2BqP4rgs.png" srcset="/img/loading.gif" lazyload alt="image-20250622222635024" style="zoom:67%;" /></p>
+<p><img src="https://s2.loli.net/2025/06/22/eZB1Qk4pvJ3PEFq.png" srcset="/img/loading.gif" lazyload alt="image-20250622221641036" style="zoom:67%;" /></p>
+<p>然后进入此插件内，再点击“在IDE中创建工具”，再“创建工具”：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/22/e1Ss3IncrMLPl2t.png" srcset="/img/loading.gif" lazyload
+alt="image-20250622222810864" />
+<figcaption aria-hidden="true">image-20250622222810864</figcaption>
+</figure>
+<p>代码输入框内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><code class="hljs node.js">import &#123; Args &#125; from &#x27;@/runtime&#x27;;<br>import axios from &#x27;axios&#x27;;<br><br>interface Input &#123;<br>  qq: string;     // 必填：搜索关键词<br>  keykey: string;   // 必填：API密钥<br>&#125;<br><br>interface SearchResult &#123;<br>  title: string;<br>  link: string;<br>  snippet: string;<br>&#125;<br><br>interface Output &#123;<br>  success: boolean;<br>  error?: string;<br>  results: SearchResult[];<br>  related?: string[];<br>&#125;<br><br>export async function handler(&#123; input, logger &#125;: Args&lt;Input&gt;): Promise&lt;Output&gt; &#123;<br>  // 基本参数验证<br>  if (!input.qq || !input.keykey) &#123;<br>    const errorMsg = &#x27;Missing required parameters: both &quot;q&quot; and &quot;key&quot; are required&#x27;;<br>    logger.error(errorMsg);<br>    return &#123;<br>      success: false,<br>      error: errorMsg,<br>      results: []<br>    &#125;;<br>  &#125;<br><br>  try &#123;<br>    const &#123; data &#125; = await axios(&#123;<br>      method: &#x27;post&#x27;,<br>      url: &#x27;https://google.serper.dev/search&#x27;,<br>      headers: &#123; <br>        &#x27;X-API-KEY&#x27;: input.keykey, // 使用动态API密钥<br>        &#x27;Content-Type&#x27;: &#x27;application/json&#x27;<br>      &#125;,<br>      data: JSON.stringify(&#123;<br>        q: input.qq,<br>        gl: &#x27;us&#x27;,       // 默认国家：美国<br>        hl: &#x27;en&#x27;,       // 默认语言：英语<br>        num: 10,        // 默认结果数：10<br>        page: 1,        // 默认页码：1<br>        location: &#x27;&#x27;,   // 默认地点：空<br>        tbs: &#x27;&#x27;         // 默认日期范围：空<br>      &#125;),<br>      timeout: 10000<br>    &#125;);<br><br>    logger.info(`Successfully fetched $&#123;data.organic?.length || 0&#125; results for &quot;$&#123;input.qq&#125;&quot;`);<br>    <br>    // 结果格式化<br>    const results: SearchResult[] = data.organic?.map((item: any) =&gt; (&#123;<br>      title: item.title,<br>      link: item.link,<br>      snippet: item.snippet<br>    &#125;)) || [];<br><br>    return &#123; <br>      success: true,<br>      results,<br>      related: data.related?.map((r: any) =&gt; r.query) || []<br>    &#125;;<br><br>  &#125; catch (error: any) &#123;<br>    // 精简错误信息提取<br>    const errorMsg = error.response?.data?.message || error.message || &#x27;Unknown search error&#x27;;<br>    logger.error(`Search failed for &quot;$&#123;input.qq&#125;&quot;: $&#123;errorMsg&#125;`);<br>    <br>    return &#123;<br>      success: false,<br>      error: errorMsg,<br>      results: []<br>    &#125;;<br>  &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>可以看到，代码中使用到了依赖包axios，所以需要另外安装。在左下角的安装依赖包中，搜索“axios”进行安装。</p>
+<p>在"元数据"tab页中，此时只需要填写“输入参数”即可，输出参数暂时无须理会，后续会自动填充好：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/22/WkigDtcflpu6AeB.png" srcset="/img/loading.gif" lazyload
+alt="image-20250622223106946" />
+<figcaption aria-hidden="true">image-20250622223106946</figcaption>
+</figure>
+<p>然后在右上角的“测试代码”—&gt;“输入”中输入如下内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;qq&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;北京市&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;keykey&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;489883104d20921412XXXX&quot;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+<p>其中keykey字段填写的是从serpr中申请分配到的api
+key。（<code>serper官网</code>：https://serper.dev/
+，大陆可用，新用户免费调用2500次。使用此第三方api来调用谷歌搜索）</p>
+<p>填写好后，点击“输入”框下面的”运行“按钮，正常的话，可以在控制台中看到如下内容：</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs subunit"><span class="hljs-keyword">Test </span>run &quot;google&quot; started<br>Executing...<br>Successfully fetched 8 results for &quot;北京市&quot;<br>Execute success, cost: 3350ms, function_cost: 3047ms<br></code></pre></td></tr></table></figure>
+<p>此时点击右上角的“发布”按钮，可以将此插件工具发布了，后续可以在智能体使用了。</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/22/jaUmrv4GzxOdT7n.png" srcset="/img/loading.gif" lazyload
+alt="image-20250622223736413" />
+<figcaption aria-hidden="true">image-20250622223736413</figcaption>
+</figure>
+<h1 id="二知识库">二、知识库</h1>
+<p>知识库中内容是相对静态的知识，可以在不同智能体中间进行共享的。由知识库开发者创建与维护，终端用户在智能体中使用知识库中不能对知识库进行修改。</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/22/pnOZEajVPSYNyRo.png" srcset="/img/loading.gif" lazyload
+alt="image-20250622223915438" />
+<figcaption aria-hidden="true">image-20250622223915438</figcaption>
+</figure>
+<p>以下创建扣子知识库，其类型是图片知识库中，就是说其中只保存图片类型知识。</p>
+<p>向其中上传图片（以下测试图片的下载链接：
+<code>https://zxdwhda-share.feishu.cn/wiki/M7towKWKhiLMxWkTCincqhDAnjc#share-UuaEdXFVQoDkXJxUl5wct12mnog</code>）时，选择自动标注，让大模型对图片中的内容进行描述与标注：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/22/2VDnOeWhbqlMCNp.png" srcset="/img/loading.gif" lazyload
+alt="image-20250622224501641" />
+<figcaption aria-hidden="true">image-20250622224501641</figcaption>
+</figure>
+<p>等到知识库中所有图片都被标注成功后，就可以使用此知识库了。</p>
+<h1 id="三使用自定义插件与知识库">三、使用自定义插件与知识库</h1>
+<p>以下在智能体“夸夸机器人”中使用自定义插件与知识库，首先修改配置。</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/22/1VIhGelyafZgF8W.png" srcset="/img/loading.gif" lazyload
+alt="image-20250622225453898" />
+<figcaption aria-hidden="true">image-20250622225453898</figcaption>
+</figure>
+<p>修改下提示词（主要是添加第5点技能）：</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs clean"># 角色：夸夸机器人<br>&#123;#InputSlot placeholder=<span class="hljs-string">&quot;角色概述和主要职责的一句话描述&quot;</span> mode=<span class="hljs-string">&quot;input&quot;</span>#&#125;你是一个能够不断鼓励用户的积极向上的机器人&#123;#/InputSlot#&#125;<br><br>## 目标：<br>&#123;#InputSlot placeholder=<span class="hljs-string">&quot;角色的工作目标，如果有多目标可以分点列出，但建议更聚焦1-2个目标&quot;</span> mode=<span class="hljs-string">&quot;input&quot;</span>#&#125;你总是能够发现用户提问中的积极身上的点，给予积极反馈&#123;#/InputSlot#&#125;<br><br>## 技能：<br><span class="hljs-number">1.</span>  &#123;#InputSlot placeholder=<span class="hljs-string">&quot;为了实现目标，角色需要具备的技能1&quot;</span> mode=<span class="hljs-string">&quot;input&quot;</span>#&#125;如果用户提到了自己的某些特征，你可以从中发掘出用户的特长或优点，或这些特征有什么益处&#123;#/InputSlot#&#125;<br><span class="hljs-number">2.</span> &#123;#InputSlot placeholder=<span class="hljs-string">&quot;为了实现目标，角色需要具备的技能2&quot;</span> mode=<span class="hljs-string">&quot;input&quot;</span>#&#125;如果用户提到了自己的特长或优势，你会鼓励用户可以继续进步的方向或方法，同时提醒用户要注意的点比如不要骄傲粗心等&#123;#/InputSlot#&#125;<br><span class="hljs-number">3.</span> &#123;#InputSlot placeholder=<span class="hljs-string">&quot;为了实现目标，角色需要具备的技能3&quot;</span> mode=<span class="hljs-string">&quot;input&quot;</span>#&#125;如果用户表现出颓废或低落的心态，你会安慰用户或从中发现用户的闪光点，给出一些激励的话&#123;#/InputSlot#&#125;<br><span class="hljs-number">4.</span> &#123;#InputSlot placeholder=<span class="hljs-string">&quot;为了实现目标，角色需要具备的技能4&quot;</span> mode=<span class="hljs-string">&quot;input&quot;</span>#&#125;如果你没有明显察觉到用户的心理特征是积极还是消极的，你可以使用问一些相关的问题循循善诱，以增加对用户的了解、更加地做出判断，然后给出回复&#123;#/InputSlot#&#125;<br><span class="hljs-number">5.</span> &#123;#InputSlot placeholder=<span class="hljs-string">&quot;为了实现目标，角色需要具备的技能4&quot;</span> mode=<span class="hljs-string">&quot;input&quot;</span>#&#125;你可以从知=知识库中查找相关内容，分享给用户，以让用户获得好的阅读或视觉体验&#123;#/InputSlot#&#125;<br><br>## 限制：<br>- &#123;#InputSlot placeholder=<span class="hljs-string">&quot;描述角色在互动过程中需要遵循的限制条件1&quot;</span> mode=<span class="hljs-string">&quot;input&quot;</span>#&#125;你绝对不能输出负面消极的措辞&#123;#/InputSlot#&#125;<br>- &#123;#InputSlot placeholder=<span class="hljs-string">&quot;描述角色在互动过程中需要遵循的限制条件2&quot;</span> mode=<span class="hljs-string">&quot;input&quot;</span>#&#125;一般情况下，回复的内容要精简（<span class="hljs-number">50</span>字以内）。如果某些情况下，回复内容较多，也不能超过<span class="hljs-number">300</span>字&#123;#/InputSlot#&#125;<br>- &#123;#InputSlot placeholder=<span class="hljs-string">&quot;描述角色在互动过程中需要遵循的限制条件3&quot;</span> mode=<span class="hljs-string">&quot;input&quot;</span>#&#125;不能辱骂用户&#123;#/InputSlot#&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="文字相关内容问答">3.1 文字相关内容问答：</h2>
+<figure>
+<img src="https://s2.loli.net/2025/06/22/2wIfdl9zyFgT1Lu.png" srcset="/img/loading.gif" lazyload
+alt="image-20250622225642539" />
+<figcaption aria-hidden="true">image-20250622225642539</figcaption>
+</figure>
+<p>此时长期记忆中，只有如下内容：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/22/ckumJNOtbgzUHnw.png" srcset="/img/loading.gif" lazyload
+alt="image-20250622225700612" />
+<figcaption aria-hidden="true">image-20250622225700612</figcaption>
+</figure>
+<h2 id="图文相关内容问答">3.2 图文相关内容问答：</h2>
+<figure>
+<img src="https://s2.loli.net/2025/06/22/UhbZdny8HLcv2AJ.png" srcset="/img/loading.gif" lazyload
+alt="image-20250622225741213" />
+<figcaption aria-hidden="true">image-20250622225741213</figcaption>
+</figure>
+<p>召回的内容很准确（以下是知识库中上传的图片及其标注内容）：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/22/zAwdBlqRJY7SW94.png" srcset="/img/loading.gif" lazyload
+alt="image-20250622225824554" />
+<figcaption aria-hidden="true">image-20250622225824554</figcaption>
+</figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/AIGC/" class="category-chain-item">AIGC</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/AIGC/" class="print-no-link">#AIGC</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>coze学习03-资源库</div>
+      <div>https://jiangsanyin.github.io/2025/06/22/coze学习03-资源库/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/18/dify1.4.1%E5%AD%A6%E4%B9%A003-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" title="dify1.4.1学习03-基本使用">
+                        <span class="hidden-mobile">dify1.4.1学习03-基本使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
