@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>coze学习04-工作流</title>
+    <link href="/2025/06/25/coze%E5%AD%A6%E4%B9%A004-%E5%B7%A5%E4%BD%9C%E6%B5%81/"/>
+    <url>/2025/06/25/coze%E5%AD%A6%E4%B9%A004-%E5%B7%A5%E4%BD%9C%E6%B5%81/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一coze工作流介绍">一、coze工作流介绍</h1><p>Coze 工作流是字节跳动推出的 AI 开发平台 <strong>Coze（扣子）</strong>中的核心功能之一，它通过 <strong>可视化、模块化</strong>的方式，帮助用户构建复杂的多步骤任务流程，实现自动化处理与智能化协作。</p><p>Coze 工作流是一系列可执行指令的集合，通过连接<strong>大模型、插件、工具等节点</strong>，形成自动化流水线，完成特定任务（如数据采集、分析、生成报告等）。类似于工厂流水线，每个节点代表一个“工位”，数据按顺序流动并加工。</p><h1 id="二工作流的使用">二、工作流的使用</h1><h2 id="工作流的创建">2.1 工作流的创建</h2><p>coze中的工作流使用跟阿里云百炼平台很像，这里创建一个智能旅游助手。只有3个节点：</p><figure><img src="https://s2.loli.net/2025/06/25/aY2DMbclIXtO76d.png"alt="image-20250625220907419" /><figcaption aria-hidden="true">image-20250625220907419</figcaption></figure><p>系统提示词如下：</p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-section">#角色: 你是一个智能旅游助手，能够为用户推荐旅游景点与安排行程</span><br><span class="hljs-section">#技能：</span><br><span class="hljs-bullet">-</span> 擅长3-7天的旅游规划<br><span class="hljs-section">#要求：</span><br><span class="hljs-bullet">-</span> 能够根据用户提供信息如城市名称、日期、偏好信息等，查询与推荐指定时间范围内指定的旅游景点<br><span class="hljs-bullet">-</span> 对查找到的多个旅游景点进行合理的行程安排<br><span class="hljs-bullet">-</span> 安排行程时需要考虑天气因素<br><span class="hljs-bullet">-</span> 能够为用户安排性价比高的酒店、餐厅或当地特色美食<br><span class="hljs-section">#约束：</span><br><span class="hljs-bullet">-</span> 查找旅游景点时不要考虑网红打卡点<br><span class="hljs-bullet">-</span> 尽量避开需要长时间排队的景点，如果景点确实值得一去，请尽量安排排队时间短的游玩时间<br></code></pre></td></tr></table></figure><p>用户提示词如下：</p><figure class="highlight handlebars"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs handlebars"><span class="language-xml">我在</span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">date_start</span>&#125;&#125;</span><span class="language-xml">到达</span><span class="hljs-template-variable">&#123;&#123;<span class="hljs-name">city</span>&#125;&#125;</span><span class="language-xml">的机场，我们一共有3个人，两大一小，还携带较多的行李，所以需要为我先安排性价比高的酒店。而且我们决定在长沙及周边50公里范围游玩5天，请为我们在查询实时天气的情况下推荐旅游景点并安排行程。</span><br></code></pre></td></tr></table></figure><p>最终的运行效果如下：</p><p><img src="https://s2.loli.net/2025/06/25/IbZwUx61DPECjBv.png" alt="image-20250625220818809" style="zoom:67%;" /></p><p>当试运行工作流成功后，就可以将其发布，然后后续可以智能体调用此工作流。</p><h2 id="其他操作">其他操作</h2><p>如删除工作流、添加节点、编辑节点等，玩过百炼平台的话还是很容易上手的。不再累述</p><h1 id="三聊天机器人案例上">三、聊天机器人案例（上）</h1><figure><img src="https://s2.loli.net/2025/06/25/Mpyj8fEGtQFKC9D.png"alt="image-20250625231506326" /><figcaption aria-hidden="true">image-20250625231506326</figcaption></figure><figure><img src="https://s2.loli.net/2025/06/25/Rp1ocvQqIr4Uk6d.png"alt="image-20250625231519913" /><figcaption aria-hidden="true">image-20250625231519913</figcaption></figure><p>比较内容多，还没有学习完成，暂时到“循环节点”处，明天继续</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>AIGC</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>AIGC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>coze学习03-资源库</title>
     <link href="/2025/06/22/coze%E5%AD%A6%E4%B9%A003-%E8%B5%84%E6%BA%90%E5%BA%93/"/>
     <url>/2025/06/22/coze%E5%AD%A6%E4%B9%A003-%E8%B5%84%E6%BA%90%E5%BA%93/</url>
