@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、参考文档与信息说明 KTransformers 是由清华大学发起的一个项目，它利用 DeepSeek 模型的 MoE 架构特性，将专家模型的权重加载到内存上，并分配 CPU 完成相关计算，同时将 ML&#x2F;KV Cache 加载到 GPU 上，从而实现 CPU+GPU 混合推理。这种方法能够在最大化降低显存占用的同时，保持一定的推理速度。KTransformers 项目旨在解决大模型本地部署难题">
+    <meta name="description" content="一、参考文档与信息说明 KTransformers 是由清华大学发起的一个项目，它利用 DeepSeek 模型的 MoE 架构特性，将专家模型的权重加载到内存上，并分配 CPU 完成相关计算，同时将 ML&#x2F;KV Cache 加载到 GPU 上，从而实现 CPU+GPU 混合推理。这种方法能够在最大化降低显存占用的同时，保持一定的推理速度。KTransformers 项目旨在解决大模型本地">
 <meta property="og:type" content="article">
 <meta property="og:title" content="KTransformers部署DeepSeek-R1-Q4_K_M">
 <meta property="og:url" content="https://jiangsanyin.github.io/2025/03/12/KTransformers%E9%83%A8%E7%BD%B2DeepSeek-R1-Q4-K-M/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、参考文档与信息说明 KTransformers 是由清华大学发起的一个项目，它利用 DeepSeek 模型的 MoE 架构特性，将专家模型的权重加载到内存上，并分配 CPU 完成相关计算，同时将 ML&#x2F;KV Cache 加载到 GPU 上，从而实现 CPU+GPU 混合推理。这种方法能够在最大化降低显存占用的同时，保持一定的推理速度。KTransformers 项目旨在解决大模型本地部署难题">
+<meta property="og:description" content="一、参考文档与信息说明 KTransformers 是由清华大学发起的一个项目，它利用 DeepSeek 模型的 MoE 架构特性，将专家模型的权重加载到内存上，并分配 CPU 完成相关计算，同时将 ML&#x2F;KV Cache 加载到 GPU 上，从而实现 CPU+GPU 混合推理。这种方法能够在最大化降低显存占用的同时，保持一定的推理速度。KTransformers 项目旨在解决大模型本地">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2025/03/15/mMQ7nO9Uj8fohJI.png">
 <meta property="og:image" content="https://s2.loli.net/2025/03/15/CaKZwxAcIYXeU5O.png">
@@ -317,7 +317,11 @@
               <div class="markdown-body">
                 
                 <h1 id="一参考文档与信息说明">一、参考文档与信息说明</h1>
-<p>KTransformers 是由清华大学发起的一个项目，它利用 DeepSeek 模型的 MoE 架构特性，将专家模型的权重加载到内存上，并分配 CPU 完成相关计算，同时将 ML/KV Cache 加载到 GPU 上，从而实现 CPU+GPU 混合推理。这种方法能够在最大化降低显存占用的同时，保持一定的推理速度。KTransformers 项目旨在解决大模型本地部署难题，实现资源有限情况下大模型的高效本地部署，让更多人能够在自己的设备上运行曾经遥不可及的大型模型。</p>
+<p>KTransformers 是由清华大学发起的一个项目，它利用 DeepSeek 模型的 MoE
+架构特性，将专家模型的权重加载到内存上，并分配 CPU 完成相关计算，同时将
+ML/KV Cache 加载到 GPU 上，从而实现 CPU+GPU
+混合推理。这种方法能够在最大化降低显存占用的同时，保持一定的推理速度。KTransformers
+项目旨在解决大模型本地部署难题，实现资源有限情况下大模型的高效本地部署，让更多人能够在自己的设备上运行曾经遥不可及的大型模型。</p>
 <h2 id="参考文档">1.1 参考文档</h2>
 <ul>
 <li><p>参考文章：</p>
@@ -340,11 +344,17 @@
 <p>只下载DeepSeek-R1-Q4_K_M这个量化版本：https://www.modelscope.cn/models/unsloth/DeepSeek-R1-GGUF/feedback/issueDetail/23220</p>
 <h2 id="信息说明">1.2 信息说明</h2>
 <p>第1次此次部署是在Centos8-x86_64物理服务器上部署，一直有报错，相关报错信息描述在第2章。是其他同学的服务器，后建议其在物理服务器上创建ubuntu2204容器进行操作。</p>
-<p>第2次，准备在自己的ubuntu20.04 LTS-x86_64物理服务器上进行操作，成功。</p>
+<p>第2次，准备在自己的ubuntu20.04
+LTS-x86_64物理服务器上进行操作，成功。</p>
 <h1 id="二centos8上报错处理">二、Centos8上报错处理</h1>
-<h2 id="使用torch2.6.0时kt仓库根目录下执行pip-install-.报read-time-out">2.1 使用torch2.6.0时，KT仓库根目录下执行"pip install ."报“Read time out”</h2>
+<h2
+id="使用torch2.6.0时kt仓库根目录下执行pip-install-.报read-time-out">2.1
+使用torch2.6.0时，KT仓库根目录下执行"pip install ."报“Read time
+out”</h2>
 <figure>
-<img src="https://s2.loli.net/2025/03/15/mMQ7nO9Uj8fohJI.png" srcset="/img/loading.gif" lazyload alt="image-20250315204632081" /><figcaption aria-hidden="true">image-20250315204632081</figcaption>
+<img src="https://s2.loli.net/2025/03/15/mMQ7nO9Uj8fohJI.png" srcset="/img/loading.gif" lazyload
+alt="image-20250315204632081" />
+<figcaption aria-hidden="true">image-20250315204632081</figcaption>
 </figure>
 <p>#换成使用torch2.4.1</p>
 <p><code>pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu124</code></p>
@@ -354,14 +364,20 @@
 <p>如下提示探查到的CUDA12.6小版本与用来编译当前使用PyTorch2.4.1所使用的CUDA版本（应该是12.4）不匹配，但大部分情况下这不是一个严重问题，所以只是一个警告信息。</p>
 <p>第2行提示，不存在为CUDA12.6定义的g++版本边界。</p>
 <figure>
-<img src="https://s2.loli.net/2025/03/15/CaKZwxAcIYXeU5O.png" srcset="/img/loading.gif" lazyload alt="image-20250315211142720" /><figcaption aria-hidden="true">image-20250315211142720</figcaption>
+<img src="https://s2.loli.net/2025/03/15/CaKZwxAcIYXeU5O.png" srcset="/img/loading.gif" lazyload
+alt="image-20250315211142720" />
+<figcaption aria-hidden="true">image-20250315211142720</figcaption>
 </figure>
 <figure>
-<img src="https://s2.loli.net/2025/03/15/XVSxMlW8rKqpc2R.png" srcset="/img/loading.gif" lazyload alt="image-20250315211246828" /><figcaption aria-hidden="true">image-20250315211246828</figcaption>
+<img src="https://s2.loli.net/2025/03/15/XVSxMlW8rKqpc2R.png" srcset="/img/loading.gif" lazyload
+alt="image-20250315211246828" />
+<figcaption aria-hidden="true">image-20250315211246828</figcaption>
 </figure>
 <p>然后，安装<code>cuda12.4+torch2.4.1</code>，再执行<code>sh install.sh</code>，还有g++版本、cmake相关报错</p>
 <figure>
-<img src="https://s2.loli.net/2025/03/16/eKdXrGVz1RD48th.png" srcset="/img/loading.gif" lazyload alt="image-20250316091400204" /><figcaption aria-hidden="true">image-20250316091400204</figcaption>
+<img src="https://s2.loli.net/2025/03/16/eKdXrGVz1RD48th.png" srcset="/img/loading.gif" lazyload
+alt="image-20250316091400204" />
+<figcaption aria-hidden="true">image-20250316091400204</figcaption>
 </figure>
 <p>对于g++版本相关报错，可以考虑升级gcc与g++版本，然后再执行<code>sh install.sh</code>，再查看是否仍有报销</p>
 <h1 id="三ubuntu20.04-上部署">三、Ubuntu20.04 上部署</h1>
@@ -399,11 +415,15 @@
 <h3 id="安装kt">安装KT</h3>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">1）对于有双槽CPU和内存是模型文件两倍大小以上的服务器</span><br>(kt) root@ksp-registry:/opt/code_repos/ktransformers# apt install libnuma-dev<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##(kt) root@ksp-registry:/opt/code_repos/ktransformers# export USE_NUMA=1  #不要执行，笔者执行了后面启动模型服务时内存爆了</span></span><br>(kt) root@ksp-registry:/opt/code_repos/ktransformers# bash install.sh   # or #make dev_install<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">2）否则，直接执行如下命令</span><br>(kt) root@ksp-registry:/opt/code_repos/ktransformers# bash install.sh<br></code></pre></td></tr></table></figure>
 <figure>
-<img src="https://s2.loli.net/2025/03/18/sKoiTC7548E3rGN.png" srcset="/img/loading.gif" lazyload alt="image-20250318155035637" /><figcaption aria-hidden="true">image-20250318155035637</figcaption>
+<img src="https://s2.loli.net/2025/03/18/sKoiTC7548E3rGN.png" srcset="/img/loading.gif" lazyload
+alt="image-20250318155035637" />
+<figcaption aria-hidden="true">image-20250318155035637</figcaption>
 </figure>
 <p>如下查看安装成功的KTransformers：<code>pip show ktransformers</code></p>
 <figure>
-<img src="https://s2.loli.net/2025/03/18/w7XSJMEuI9yi8Om.png" srcset="/img/loading.gif" lazyload alt="image-20250318155131355" /><figcaption aria-hidden="true">image-20250318155131355</figcaption>
+<img src="https://s2.loli.net/2025/03/18/w7XSJMEuI9yi8Om.png" srcset="/img/loading.gif" lazyload
+alt="image-20250318155131355" />
+<figcaption aria-hidden="true">image-20250318155131355</figcaption>
 </figure>
 <h2 id="local-chat本地对话">3.5 Local Chat本地对话</h2>
 <p>参考：https://github.com/kvcache-ai/ktransformers/blob/v0.2.3post2/doc/zh/DeepseekR1_V3_tutorial_zh.md#v02-%E5%B1%95%E7%A4%BA</p>
@@ -411,33 +431,51 @@
 <h3 id="启动本地对话">3.5.1 启动本地对话</h3>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">(kt) root@ksp-registry:/opt/code_repos/ktransformers# cp ./ktransformers/models/configuration_deepseek.py /opt/code_repos/AI_models/DeepSeek-R1-GGUF<br>(kt) root@ksp-registry:/opt/code_repos/ktransformers# cp ./ktransformers/models/configuration_deepseek_v3.py /opt/code_repos/AI_models/DeepSeek-R1-GGUF<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">#在KT仓库根目录执行如下命令</span></span><br>(kt) root@ksp-registry:/opt/code_repos/ktransformers# python ./ktransformers/local_chat.py --model_path deepseek-ai/DeepSeek-R1 \<br>  --gguf_path /opt/code_repos/AI_models/DeepSeek-R1-GGUF/DeepSeek-R1-Q4_K_M \<br>  --cpu_infer 36 --max_new_tokens 8192 --port 10002 --web True  <br><span class="hljs-meta prompt_">#</span><span class="language-bash">启动过程上，可以看到进程使用了GPU</span><br></code></pre></td></tr></table></figure>
 <figure>
-<img src="https://s2.loli.net/2025/03/19/K4hIlFSWxVzQd3e.png" srcset="/img/loading.gif" lazyload alt="image-20250319102718590" /><figcaption aria-hidden="true">image-20250319102718590</figcaption>
+<img src="https://s2.loli.net/2025/03/19/K4hIlFSWxVzQd3e.png" srcset="/img/loading.gif" lazyload
+alt="image-20250319102718590" />
+<figcaption aria-hidden="true">image-20250319102718590</figcaption>
 </figure>
 <p>最终看到对话窗口：</p>
 <figure>
-<img src="https://s2.loli.net/2025/03/19/RV5CGyF3UTxajkH.png" srcset="/img/loading.gif" lazyload alt="image-20250319174522477" /><figcaption aria-hidden="true">image-20250319174522477</figcaption>
+<img src="https://s2.loli.net/2025/03/19/RV5CGyF3UTxajkH.png" srcset="/img/loading.gif" lazyload
+alt="image-20250319174522477" />
+<figcaption aria-hidden="true">image-20250319174522477</figcaption>
 </figure>
 <p>加载过程中及完成后，占用的内存很少：</p>
 <figure>
-<img src="https://s2.loli.net/2025/03/19/AUjrnoeQc1gFstK.png" srcset="/img/loading.gif" lazyload alt="image-20250319175945166" /><figcaption aria-hidden="true">image-20250319175945166</figcaption>
+<img src="https://s2.loli.net/2025/03/19/AUjrnoeQc1gFstK.png" srcset="/img/loading.gif" lazyload
+alt="image-20250319175945166" />
+<figcaption aria-hidden="true">image-20250319175945166</figcaption>
 </figure>
 <p>但GPU 显存占用较多，但远没满</p>
 <figure>
-<img src="https://s2.loli.net/2025/03/19/cNX6p1FGWhUC2gl.png" srcset="/img/loading.gif" lazyload alt="image-20250319180135883" /><figcaption aria-hidden="true">image-20250319180135883</figcaption>
+<img src="https://s2.loli.net/2025/03/19/cNX6p1FGWhUC2gl.png" srcset="/img/loading.gif" lazyload
+alt="image-20250319180135883" />
+<figcaption aria-hidden="true">image-20250319180135883</figcaption>
 </figure>
 <h3 id="报错与处理">3.5.2 报错与处理</h3>
-<h4 id="couldnt-connect-to-httpshuggingface.co">3.5.2.1 couldn't connect to 'https://huggingface.co'</h4>
+<h4 id="couldnt-connect-to-httpshuggingface.co">3.5.2.1 couldn't connect
+to 'https://huggingface.co'</h4>
 <p>第一次，笔者执行命令<code>python ./ktransformers/local_chat.py --model_path unsloth/DeepSeek-R1-GGUF --gguf_path /opt/code_repos/AI_models/DeepSeek-R1-GGUF/DeepSeek-R1-Q4_K_M --cpu_infer 36 --max_new_tokens 8192</code>时，提示</p>
-<p>“OSError: We couldn't connect to 'https://huggingface.co' to load this file, couldn't find it in the cached files and it looks like unsloth/DeepSeek-R1-GGUF is not the path to a directory containing a file named config.json.</p>
-<p>Checkout your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.”</p>
+<p>“OSError: We couldn't connect to 'https://huggingface.co' to load
+this file, couldn't find it in the cached files and it looks like
+unsloth/DeepSeek-R1-GGUF is not the path to a directory containing a
+file named config.json.</p>
+<p>Checkout your internet connection or see how to run the library in
+offline mode at
+'https://huggingface.co/docs/transformers/installation#offline-mode'.”</p>
 <p>具体如下：</p>
 <figure>
-<img src="https://s2.loli.net/2025/03/18/wcEQDdAToZ3MFUL.png" srcset="/img/loading.gif" lazyload alt="image-20250318162546417" /><figcaption aria-hidden="true">image-20250318162546417</figcaption>
+<img src="https://s2.loli.net/2025/03/18/wcEQDdAToZ3MFUL.png" srcset="/img/loading.gif" lazyload
+alt="image-20250318162546417" />
+<figcaption aria-hidden="true">image-20250318162546417</figcaption>
 </figure>
 <p>解决办法：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">参考https://github.com/huggingface/diffusers/issues/6223</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">添加变量</span><br>(kt) root@ksp-registry:/opt/code_repos/ktransformers# export HF_ENDPOINT=https://hf-mirror.com<br><span class="hljs-meta prompt_">#</span><span class="language-bash">再次执行</span><br>(kt) root@ksp-registry:/opt/code_repos/ktransformers# python ./ktransformers/local_chat.py --model_path unsloth/DeepSeek-R1-GGUF --gguf_path /opt/code_repos/AI_models/DeepSeek-R1-GGUF/DeepSeek-R1-Q4_K_M --cpu_infer 36 --max_new_tokens 8192<br><span class="hljs-meta prompt_">#</span><span class="language-bash">此时还是报错，但报错内容不一样。如下“OSError: unsloth/DeepSeek-R1-GGUF does not appear to have a file named configuration_deepseek.py. Checkout <span class="hljs-string">&#x27;https://huggingface.co/unsloth/DeepSeek-R1-GGUF/tree/main&#x27;</span> <span class="hljs-keyword">for</span> available files.”</span><br></code></pre></td></tr></table></figure>
 <figure>
-<img src="https://s2.loli.net/2025/03/19/R51KPNGjdcb8E6H.png" srcset="/img/loading.gif" lazyload alt="image-20250319101437770" /><figcaption aria-hidden="true">image-20250319101437770</figcaption>
+<img src="https://s2.loli.net/2025/03/19/R51KPNGjdcb8E6H.png" srcset="/img/loading.gif" lazyload
+alt="image-20250319101437770" />
+<figcaption aria-hidden="true">image-20250319101437770</figcaption>
 </figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">笔者先前在“https://modelscope.cn/models/unsloth/DeepSeek-R1-GGUF/files”下载的<span class="hljs-string">&quot;DeepSeek-R1-Q4_K_M&quot;</span>相关文件，但此链接下并没有上述报错中提到的（启动对话过程中需要用到的）configuration_deepseek.py 文件，根据KT官网的示例，需要指定“--model_path deepseek-ai/DeepSeek-R1”，此时再执行就会正常下载configuration_deepseek.py 文件并继续往后执行了</span><br>(kt) root@ksp-registry:/opt/code_repos/ktransformers# python ./ktransformers/local_chat.py --model_path deepseek-ai/DeepSeek-R1 \<br>  --gguf_path /opt/code_repos/AI_models/DeepSeek-R1-GGUF/DeepSeek-R1-Q4_K_M \<br>  --cpu_infer 36 --max_new_tokens 8192<br></code></pre></td></tr></table></figure>
 <h4 id="内存不够被-killed">3.5.2.2 内存不够，被 killed</h4>
@@ -451,16 +489,23 @@
 <p>解决办法：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">此步骤很关键</span><br>(kt) root@ksp-registry:/opt/code_repos/ktransformers# unset USE_NUMA<br><span class="hljs-meta prompt_">#</span><span class="language-bash">重新安装KTransformers</span><br>(kt) root@ksp-registry:/opt/code_repos/ktransformers# bash install.sh   # or #make dev_install<br></code></pre></td></tr></table></figure>
 <figure>
-<img src="https://s2.loli.net/2025/03/19/RV5CGyF3UTxajkH.png" srcset="/img/loading.gif" lazyload alt="image-20250319174522477" /><figcaption aria-hidden="true">image-20250319174522477</figcaption>
+<img src="https://s2.loli.net/2025/03/19/RV5CGyF3UTxajkH.png" srcset="/img/loading.gif" lazyload
+alt="image-20250319174522477" />
+<figcaption aria-hidden="true">image-20250319174522477</figcaption>
 </figure>
 <h4 id="安装flashinfer可选">3.5.2.3 安装flashinfer(可选)</h4>
 <p>每次启动模型服务时，都会提示<code>flashinfer not found, use triton for linux using custom modeling_xxx.py.</code></p>
-<p>flashinfer 是一个用于加速大型语言模型（LLM）部署的核库。它通过提供高效的内存带宽共享前缀批处理解码技术，显著提升了自注意力机制的性能。FlashInfer 支持多种 GPU 架构，包括 sm80、sm86、sm89 和 sm90，并且正在开发对 sm75 和 sm70 的支持。</p>
+<p>flashinfer
+是一个用于加速大型语言模型（LLM）部署的核库。它通过提供高效的内存带宽共享前缀批处理解码技术，显著提升了自注意力机制的性能。FlashInfer
+支持多种 GPU 架构，包括 sm80、sm86、sm89 和 sm90，并且正在开发对 sm75 和
+sm70 的支持。</p>
 <p>其在github上的代码仓库地址：https://github.com/flashinfer-ai/flashinfer.git</p>
 <p>官方安装文档：https://docs.flashinfer.ai/installation.html</p>
 <h5 id="通过pip安装">通过pip安装</h5>
 <figure>
-<img src="https://s2.loli.net/2025/03/19/NpZwmkMroBP2WLt.png" srcset="/img/loading.gif" lazyload alt="image-20250319215515077" /><figcaption aria-hidden="true">image-20250319215515077</figcaption>
+<img src="https://s2.loli.net/2025/03/19/NpZwmkMroBP2WLt.png" srcset="/img/loading.gif" lazyload
+alt="image-20250319215515077" />
+<figcaption aria-hidden="true">image-20250319215515077</figcaption>
 </figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell">pip install flashinfer -i https://flashinfer.ai/whl/cu124/torch2.4/<br><span class="hljs-meta prompt_">#</span><span class="language-bash">或</span><br>wget https://github.com/flashinfer-ai/flashinfer/releases/download/v0.2.0.post1/flashinfer-0.2.0.post1+cu124torch2.4-cp311-cp311-linux_x86_64.whl<br>pip install flashinfer-0.2.0.post1+cu124torch2.4-cp311-cp311-linux_x86_64.whl<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##但此时会提示flashinfer do not have attribute mla，看到如下处理方法（https://github.com/kvcache-ai/ktransformers/issues/792）：</span></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">replace pip install flashinfer -i https://flashinfer.ai/whl/cu121/torch2.3 with:</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">install JIT version:</span><br>pip install flashinfer-python<br>conda install cuda-nvcc -c nvidia<br>export CUDA_HOME=$CONDA_PREFIX<br>export TORCH_CUDA_ARCH_LIST=&quot;8.0+PTX&quot;<br></code></pre></td></tr></table></figure>
 <h5 id="通过源码安装">通过源码安装</h5>

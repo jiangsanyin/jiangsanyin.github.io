@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="001 HAMi 能否感知其他进程对物理GPU的使用？提问具体描述：如果一个物理NVIDIA GPU卡，显存24G。已经在物理服务器上创建了一个进程使用此GPU卡，占用显存12G（它此时空闲显存12G）。此时我能否创建4个显存大小是4G的vGPU出来（创建出来后就会一直处于使用中）？ 回答：HAMi（我使用的是2.4.1）无法感知其他进程对物理GPU的使用。比如上述问题中，一个物理NVIDIA G">
+    <meta name="description" content="001 HAMi 能否感知其他进程对物理GPU的使用？ 提问具体描述：如果一个物理NVIDIA GPU卡，显存24G。已经在物理服务器上创建了一个进程使用此GPU卡，占用显存12G（它此时空闲显存12G）。此时我能否创建4个显存大小是4G的vGPU出来（创建出来后就会一直处于使用中）？ 回答：HAMi（我使用的是2.4.1）无法感知其他进程对物理GPU的使用。比如上述问题中，一个物理NVI">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HAMi使用相关faq">
 <meta property="og:url" content="https://jiangsanyin.github.io/2025/01/21/HAMi%E4%BD%BF%E7%94%A8%E7%9B%B8%E5%85%B3faq/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="001 HAMi 能否感知其他进程对物理GPU的使用？提问具体描述：如果一个物理NVIDIA GPU卡，显存24G。已经在物理服务器上创建了一个进程使用此GPU卡，占用显存12G（它此时空闲显存12G）。此时我能否创建4个显存大小是4G的vGPU出来（创建出来后就会一直处于使用中）？ 回答：HAMi（我使用的是2.4.1）无法感知其他进程对物理GPU的使用。比如上述问题中，一个物理NVIDIA G">
+<meta property="og:description" content="001 HAMi 能否感知其他进程对物理GPU的使用？ 提问具体描述：如果一个物理NVIDIA GPU卡，显存24G。已经在物理服务器上创建了一个进程使用此GPU卡，占用显存12G（它此时空闲显存12G）。此时我能否创建4个显存大小是4G的vGPU出来（创建出来后就会一直处于使用中）？ 回答：HAMi（我使用的是2.4.1）无法感知其他进程对物理GPU的使用。比如上述问题中，一个物理NVI">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-01-21T09:26:05.000Z">
 <meta property="article:modified_time" content="2025-01-22T02:32:56.000Z">
@@ -298,8 +298,12 @@
             
               <div class="markdown-body">
                 
-                <h1 id="001-HAMi-能否感知其他进程对物理GPU的使用？"><a href="#001-HAMi-能否感知其他进程对物理GPU的使用？" class="headerlink" title="001 HAMi 能否感知其他进程对物理GPU的使用？"></a>001 HAMi 能否感知其他进程对物理GPU的使用？</h1><p>提问具体描述：如果一个物理NVIDIA GPU卡，显存24G。已经在物理服务器上创建了一个进程使用此GPU卡，占用显存12G（它此时空闲显存12G）。此时我能否创建4个显存大小是4G的vGPU出来（创建出来后就会一直处于使用中）？</p>
-<p>回答：HAMi（我使用的是2.4.1）无法感知其他进程对物理GPU的使用。比如上述问题中，一个物理NVIDIA GPU卡，显存24G。已经在物理服务器上创建了一个进程使用此GPU卡，占用显存12G（它此时空闲显存12G），此时还能使用HAMi创建出4个或更多个数的显存大小是4G的vGPU，但仅限于能创建出来，如果后续把这4个vGPU的显存全部跑满，则会发生OOM显存溢出报错</p>
+                <h1 id="hami-能否感知其他进程对物理gpu的使用">001 HAMi
+能否感知其他进程对物理GPU的使用？</h1>
+<p>提问具体描述：如果一个物理NVIDIA
+GPU卡，显存24G。已经在物理服务器上创建了一个进程使用此GPU卡，占用显存12G（它此时空闲显存12G）。此时我能否创建4个显存大小是4G的vGPU出来（创建出来后就会一直处于使用中）？</p>
+<p>回答：HAMi（我使用的是2.4.1）无法感知其他进程对物理GPU的使用。比如上述问题中，一个物理NVIDIA
+GPU卡，显存24G。已经在物理服务器上创建了一个进程使用此GPU卡，占用显存12G（它此时空闲显存12G），此时还能使用HAMi创建出4个或更多个数的显存大小是4G的vGPU，但仅限于能创建出来，如果后续把这4个vGPU的显存全部跑满，则会发生OOM显存溢出报错</p>
 
                 
               </div>

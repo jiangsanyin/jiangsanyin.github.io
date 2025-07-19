@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、构建tensor1234#一、构建tensor###PyTorch常用数据类型#官方教程： https:&#x2F;&#x2F;pytorch.org&#x2F;tutorials&#x2F;beginner&#x2F;basics&#x2F;tensorqs_tutorial.html#官方API文档： https:&#x2F;&#x2F;pytorch.org&#x2F;docs&#x2F;stable&#x2F;index.html   12345678###张量（Tensor）：PyTorch">
+    <meta name="description" content="一、构建tensor 1234#一、构建tensor###PyTorch常用数据类型#官方教程： https:&#x2F;&#x2F;pytorch.org&#x2F;tutorials&#x2F;beginner&#x2F;basics&#x2F;tensorqs_tutorial.html#官方API文档： https:&#x2F;&#x2F;pytorch.org&#x2F;docs&#x2F;stable&#x2F;index.html 12345678###张量（Tensor）：PyTorc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="torch1.13.0+cpu中tensor的常用属性与方法">
 <meta property="og:url" content="https://jiangsanyin.github.io/2025/02/28/torch1-13-0-cpu%E4%B8%ADtensor%E7%9A%84%E5%B8%B8%E7%94%A8%E5%B1%9E%E6%80%A7%E4%B8%8E%E6%96%B9%E6%B3%95/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、构建tensor1234#一、构建tensor###PyTorch常用数据类型#官方教程： https:&#x2F;&#x2F;pytorch.org&#x2F;tutorials&#x2F;beginner&#x2F;basics&#x2F;tensorqs_tutorial.html#官方API文档： https:&#x2F;&#x2F;pytorch.org&#x2F;docs&#x2F;stable&#x2F;index.html   12345678###张量（Tensor）：PyTorch">
+<meta property="og:description" content="一、构建tensor 1234#一、构建tensor###PyTorch常用数据类型#官方教程： https:&#x2F;&#x2F;pytorch.org&#x2F;tutorials&#x2F;beginner&#x2F;basics&#x2F;tensorqs_tutorial.html#官方API文档： https:&#x2F;&#x2F;pytorch.org&#x2F;docs&#x2F;stable&#x2F;index.html 12345678###张量（Tensor）：PyTorc">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-02-28T01:52:25.000Z">
 <meta property="article:modified_time" content="2025-03-22T08:36:26.000Z">
@@ -298,30 +298,22 @@
             
               <div class="markdown-body">
                 
-                <h1 id="一、构建tensor"><a href="#一、构建tensor" class="headerlink" title="一、构建tensor"></a>一、构建tensor</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#一、构建tensor</span><br><span class="hljs-comment">###PyTorch常用数据类型</span><br><span class="hljs-comment">#官方教程： https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html</span><br><span class="hljs-comment">#官方API文档： https://pytorch.org/docs/stable/index.html</span><br></code></pre></td></tr></table></figure>
-
-
+                <h1 id="一构建tensor">一、构建tensor</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#一、构建tensor</span><br><span class="hljs-comment">###PyTorch常用数据类型</span><br><span class="hljs-comment">#官方教程： https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html</span><br><span class="hljs-comment">#官方API文档： https://pytorch.org/docs/stable/index.html</span><br></code></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">###张量（Tensor）：PyTorch网络运算中的基本数据结构（类似ndarray ）</span><br><span class="hljs-comment">###创建张量</span><br><span class="hljs-keyword">import</span> torch<br>a = torch.tensor(<span class="hljs-number">0.1</span>)  <span class="hljs-comment">#此张量只有一个标量元素0.1</span><br>b = torch.tensor(<span class="hljs-number">0.3</span>, dtype=torch.float64)<br><span class="hljs-comment">#执行运算</span><br>result = a + b<br><span class="hljs-built_in">print</span>(result)<br></code></pre></td></tr></table></figure>
-
-<pre><code class="hljs">tensor(0.4000, dtype=torch.float64)
-</code></pre>
+<pre><code class="hljs">tensor(0.4000, dtype=torch.float64)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">###创建特定的张量</span><br><span class="hljs-keyword">import</span> torch<br><span class="hljs-comment"># 全1张量</span><br>ones = torch.ones((<span class="hljs-number">3</span>, <span class="hljs-number">2</span>))                  <br><span class="hljs-comment"># 等差序列张量</span><br>range_tensor = torch.arange(<span class="hljs-number">1</span>, <span class="hljs-number">11</span>, <span class="hljs-number">1</span>)      <br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;ones:&#x27;</span>, ones, <span class="hljs-string">&#x27;\n&#x27;</span>, <span class="hljs-string">&#x27;range_tensor:&#x27;</span>, range_tensor)<br></code></pre></td></tr></table></figure>
-
 <pre><code class="hljs">ones: tensor([[1., 1.],
         [1., 1.],
         [1., 1.]]) 
- range_tensor: tensor([ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10])
-</code></pre>
+ range_tensor: tensor([ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">###tensor与ndarray相互转化</span><br><span class="hljs-keyword">import</span> torch<br>output = torch.zeros((<span class="hljs-number">2</span>, <span class="hljs-number">2</span>), dtype=torch.float32)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;1---&gt;&quot;</span>, output)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;2---&gt;output: &#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">type</span>(output)))<br><br>n_output = output.numpy()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;3---&gt;n_output: &#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">type</span>(n_output)))<br><br>t_output = torch.from_numpy(n_output)    <span class="hljs-comment"># 将ndarray转为tensor</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;4---&gt;t_output: &#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">type</span>(t_output)))<br></code></pre></td></tr></table></figure>
-
 <pre><code class="hljs">1---&gt; tensor([[0., 0.],
         [0., 0.]])
 2---&gt;output: &lt;class &#39;torch.Tensor&#39;&gt;
 3---&gt;n_output: &lt;class &#39;numpy.ndarray&#39;&gt;
-4---&gt;t_output: &lt;class &#39;torch.Tensor&#39;&gt;
-</code></pre>
+4---&gt;t_output: &lt;class &#39;torch.Tensor&#39;&gt;</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#从变量继承属性创建张量、从numpy创建张量</span><br><span class="hljs-comment">###官方教程： https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html</span><br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br>data = [[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>],[<span class="hljs-number">3</span>, <span class="hljs-number">4</span>]]<br>x_data = torch.tensor(data) <span class="hljs-comment">#直接从数据创建一个tensor，数据类型可以被自动推断出来</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;1---&gt;x_data:&quot;</span>, x_data)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;x_data type:&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">type</span>(x_data)))<br>np_array = np.array(data) <span class="hljs-comment">#直接从数据创建一个numpy变量</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;2---&gt;np_array&quot;</span>, np_array)<br>x_np = torch.from_numpy(np_array) <span class="hljs-comment">#从numpy变量创建一个tensor</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;3---&gt;x_np&quot;</span>, x_np)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;x_np type:&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">type</span>(x_np)))<br><br>x_ones = torch.ones_like(x_data)   <span class="hljs-comment"># 根据x_data的创建一个新tensor，新tensor的属性（此处因为没有指定数据类型，所以新tensor数据类型跟x_data也一样。其他属性也是类似规律）跟x_data一样，但数值可以指定为全是1</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Ones Tensor: \n <span class="hljs-subst">&#123;x_ones&#125;</span> \n&quot;</span>)<br>x_rand = torch.rand_like(x_data, dtype=torch.<span class="hljs-built_in">float</span>) <span class="hljs-comment"># 根据x_data的创建一个新tensor，形状与原tensor一样，但指定了新的数据类型为torch.float、且它的元素值都是一些随机生成的数</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Random Tensor: \n <span class="hljs-subst">&#123;x_rand&#125;</span> \n&quot;</span>)<br></code></pre></td></tr></table></figure>
-
 <pre><code class="hljs">1---&gt;x_data: tensor([[1, 2],
         [3, 4]])
 x_data type:&lt;class &#39;torch.Tensor&#39;&gt;
@@ -336,30 +328,20 @@ Ones Tensor:
 
 Random Tensor: 
  tensor([[0.0282, 0.8095],
-        [0.2707, 0.1938]]) 
-</code></pre>
-<p>​    </p>
+        [0.2707, 0.1938]]) </code></pre>
+<p>​</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#创建随机数张量</span><br><span class="hljs-comment">###官方教程： https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html</span><br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br>tensor = torch.rand(<span class="hljs-number">4</span>, <span class="hljs-number">4</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;First row: <span class="hljs-subst">&#123;tensor[<span class="hljs-number">1</span>]&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;First column: <span class="hljs-subst">&#123;tensor[:, <span class="hljs-number">0</span>]&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Last column: <span class="hljs-subst">&#123;tensor[..., -<span class="hljs-number">1</span>]&#125;</span>&quot;</span>)<br>tensor[:,<span class="hljs-number">1</span>] = <span class="hljs-number">0</span><br><span class="hljs-built_in">print</span>(tensor)<br></code></pre></td></tr></table></figure>
-
 <pre><code class="hljs">First row: tensor([0.1094, 0.4258, 0.9837, 0.3118])
 First column: tensor([0.3335, 0.1094, 0.4532, 0.2374])
 Last column: tensor([0.7949, 0.3118, 0.5406, 0.5577])
 tensor([[0.3335, 0.0000, 0.1649, 0.7949],
         [0.1094, 0.0000, 0.9837, 0.3118],
         [0.4532, 0.0000, 0.6070, 0.5406],
-        [0.2374, 0.0000, 0.7951, 0.5577]])
-</code></pre>
+        [0.2374, 0.0000, 0.7951, 0.5577]])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><br></code></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><br></code></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#二、tensor属性</span><br></code></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#tensor.data用法</span><br><span class="hljs-keyword">import</span> torch<br>t = torch.tensor([[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>], [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>]], dtype=torch.float32)<br><span class="hljs-built_in">print</span>(t)<br><span class="hljs-built_in">print</span>(t.data) <span class="hljs-comment">#在 PyTorch 中，torch.tensor.data 是一个 属性，用于访问张量的底层数据（即存储张量值的实际内存）。它返回一个与原始张量共享相同存储的新张量，但 不参与自动求导（即不跟踪计算历史）。</span><br><span class="hljs-built_in">print</span>(t.data.numpy())  <span class="hljs-comment">#numpy() 方法将 PyTorch 张量转换为 NumPy 数组。转换后的 NumPy 数组与原始张量共享存储，因此修改 NumPy 数组会影响原始张量。</span><br><span class="hljs-built_in">print</span>(t.data.numpy().argmax(axis=<span class="hljs-number">1</span>))  <span class="hljs-comment">#argmax() 是 NumPy 数组的方法，用于返回沿指定轴的最大值的索引。axis=1 表示沿着第 1 轴（即行方向）查找最大值的索引。</span><br><br>x = torch.tensor([<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>], requires_grad=<span class="hljs-literal">True</span>)<br><span class="hljs-built_in">print</span>(x)<br><span class="hljs-built_in">print</span>(x.data)<br></code></pre></td></tr></table></figure>
-
 <pre><code class="hljs">tensor([[1., 2.],
         [3., 4.]])
 tensor([[1., 2.],
@@ -368,16 +350,10 @@ tensor([[1., 2.],
  [3. 4.]]
 [1 1]
 tensor([1., 2., 3.], requires_grad=True)
-tensor([1., 2., 3.])
-</code></pre>
+tensor([1., 2., 3.])</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><br></code></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#三、tensor方法 </span><br></code></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#在 PyTorch 中，torch.tensor.mean() 是一个用于计算张量中所有元素平均值的方法。它可以沿着指定的维度计算平均值，也可以计算整个张量的平均值。</span><br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br>tensor = torch.tensor([[<span class="hljs-number">2</span>, <span class="hljs-number">3</span>], [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>], [<span class="hljs-number">6</span>, <span class="hljs-number">7</span>]], dtype=torch.float64)<br><span class="hljs-built_in">print</span>(tensor)<br>tensor.mean()<br></code></pre></td></tr></table></figure>
-
 <pre><code class="hljs">tensor([[2., 3.],
         [4., 5.],
         [6., 7.]], dtype=torch.float64)
@@ -386,17 +362,12 @@ tensor([1., 2., 3.])
 
 
 
-tensor(4.5000, dtype=torch.float64)
-</code></pre>
+tensor(4.5000, dtype=torch.float64)</code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><br></code></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><br></code></pre></td></tr></table></figure>
-
-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><br></code></pre></td></tr></table></figure>
+<h1 id="section"></h1>
 
-<h1 id=""><a href="#" class="headerlink" title=""></a></h1>
                 
               </div>
             

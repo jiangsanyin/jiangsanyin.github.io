@@ -303,11 +303,12 @@
                 
                 <h1 id="一前言">一、前言</h1>
 <p>随着DeepSeek-V3与R1的持续爆火，国内各个厂商掀起了一场接入或适配DeepSeek模型的浪潮，这无疑是一件好事。同时，也有越来越多的用户或公司想要在本地部署DeepSeek模型，体验其带来的便捷功能或二次开发，但DeepSeek模型部署时对硬件有一定要不，以下这DeepSeek-R1的基础模型及蒸馏模型的部署硬件要求进行整理汇总。</p>
-<h1 id="二deepseek-r1基础模型本地部署配置要求">二、DeepSeek-R1基础模型本地部署配置要求</h1>
+<h1
+id="二deepseek-r1基础模型本地部署配置要求">二、DeepSeek-R1基础模型本地部署配置要求</h1>
 <table>
 
 <thead>
-<tr class="header">
+<tr>
 <th>模型|要求</th>
 <th>CPU</th>
 <th>内存</th>
@@ -317,23 +318,25 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><strong>DeepSeek-R1-1.5B</strong></td>
 <td>最低 4 核（推荐 Intel/AMD 多核处理器）</td>
 <td>8GB+</td>
 <td>3GB+ 存储空间（模型文件约 1.5-2GB）</td>
 <td>非必需（纯 CPU 推理），若 GPU 加速可选 4GB+ 显存（如 GTX 1650）</td>
-<td>低资源设备部署（如树莓派、旧款笔记本） 实时文本生成（聊天机器人、简单问答） 嵌入式系统或物联网设备</td>
+<td>低资源设备部署（如树莓派、旧款笔记本）
+实时文本生成（聊天机器人、简单问答） 嵌入式系统或物联网设备</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>DeepSeek-R1-7B</strong></td>
 <td>8 核以上（推荐现代多核 CPU）</td>
 <td>16GB+</td>
 <td>8GB+（模型文件约 4-5GB）</td>
 <td>推荐 8GB+ 显存（如 RTX 3070/4060）</td>
-<td>本地开发测试（中小型企业） 中等复杂度 NLP 任务（文本摘要、翻译） 轻量级多轮对话系统</td>
+<td>本地开发测试（中小型企业） 中等复杂度 NLP 任务（文本摘要、翻译）
+轻量级多轮对话系统</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>DeepSeek-R1-8B</strong></td>
 <td>与 7B 相近</td>
 <td>与 7B 相近，略高 10-20%</td>
@@ -341,55 +344,69 @@
 <td>与 7B 相近</td>
 <td>需更高精度的轻量级任务（如代码生成、逻辑推理）</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>DeepSeek-R1-14B</strong></td>
 <td>12 核以上</td>
 <td>32GB+</td>
 <td>15GB+</td>
 <td>16GB+ 显存（如 RTX 4090 或 A5000）</td>
-<td>企业级复杂任务（合同分析、报告生成） 长文本理解与生成（书籍/论文辅助写作）</td>
+<td>企业级复杂任务（合同分析、报告生成）
+长文本理解与生成（书籍/论文辅助写作）</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>DeepSeek-R1-32B</strong></td>
 <td>16 核以上（如 AMD Ryzen 9 或 Intel i9）</td>
 <td>64GB+</td>
 <td>30GB+</td>
 <td>24GB+ 显存（如 A100 40GB 或双卡 RTX 3090）</td>
-<td>高精度专业领域任务（医疗/法律咨询） 多模态任务预处理（需结合其他框架）</td>
+<td>高精度专业领域任务（医疗/法律咨询）
+多模态任务预处理（需结合其他框架）</td>
 </tr>
-<tr class="even">
+<tr>
 <td><strong>DeepSeek-R1-70B</strong></td>
 <td>32 核以上（服务器级 CPU）</td>
 <td>128GB+</td>
 <td>70GB+</td>
 <td>多卡并行（如 2x A100 80GB 或 4x RTX 4090）</td>
-<td>科研机构/大型企业（金融预测、大规模数据分析） 高复杂度生成任务（创意写作、算法设计）</td>
+<td>科研机构/大型企业（金融预测、大规模数据分析）
+高复杂度生成任务（创意写作、算法设计）</td>
 </tr>
-<tr class="odd">
+<tr>
 <td><strong>DeepSeek-R1-671B</strong></td>
 <td>64 核以上（服务器集群）</td>
 <td>512GB+</td>
 <td>300GB+</td>
 <td>多节点分布式训练（如 8x A100/H100）</td>
-<td>国家级/超大规模 AI 研究（如气候建模、基因组分析） 通用人工智能（AGI）探索</td>
+<td>国家级/超大规模 AI 研究（如气候建模、基因组分析）
+通用人工智能（AGI）探索</td>
 </tr>
 </tbody>
 </table>
 <figure>
-<img src="https://s2.loli.net/2025/02/13/Iz3B64UwqTaYHXl.png" srcset="/img/loading.gif" lazyload alt="image-20250213142425088" /><figcaption aria-hidden="true">image-20250213142425088</figcaption>
+<img src="https://s2.loli.net/2025/02/13/Iz3B64UwqTaYHXl.png" srcset="/img/loading.gif" lazyload
+alt="image-20250213142425088" />
+<figcaption aria-hidden="true">image-20250213142425088</figcaption>
 </figure>
 <p><strong>针对DeepSeek-R1模型本地部署与使用的通用建议</strong></p>
 <ul>
-<li><p><strong>量化优化</strong>：使用 4-bit/8-bit 量化可降低显存占用 30-50%。</p></li>
-<li><p><strong>推理框架</strong>：搭配 vLLM、TensorRT 等加速库提升效率。</p></li>
-<li><p><strong>云部署</strong>：70B/671B 建议优先考虑云服务以弹性扩展资源。</p></li>
-<li><p><strong>能耗注意</strong>：32B+ 模型需高功率电源（1000W+）和散热系统。</p></li>
+<li><p><strong>量化优化</strong>：使用 4-bit/8-bit 量化可降低显存占用
+30-50%。</p></li>
+<li><p><strong>推理框架</strong>：搭配 vLLM、TensorRT
+等加速库提升效率。</p></li>
+<li><p><strong>云部署</strong>：70B/671B
+建议优先考虑云服务以弹性扩展资源。</p></li>
+<li><p><strong>能耗注意</strong>：32B+
+模型需高功率电源（1000W+）和散热系统。</p></li>
 </ul>
-<h1 id="三deepseek-r1蒸馏模型及其量化版本本地部署配置要求">三、DeepSeek-R1蒸馏模型及其量化版本本地部署配置要求</h1>
+<h1
+id="三deepseek-r1蒸馏模型及其量化版本本地部署配置要求">三、DeepSeek-R1蒸馏模型及其量化版本本地部署配置要求</h1>
 <figure>
-<img src="https://s2.loli.net/2025/02/13/mFkuPELIxc7Z4yX.png" srcset="/img/loading.gif" lazyload alt="image-20250213102615401" /><figcaption aria-hidden="true">image-20250213102615401</figcaption>
+<img src="https://s2.loli.net/2025/02/13/mFkuPELIxc7Z4yX.png" srcset="/img/loading.gif" lazyload
+alt="image-20250213102615401" />
+<figcaption aria-hidden="true">image-20250213102615401</figcaption>
 </figure>
-<p>使用蒸馏模型时，CPU配置应该尽量跟同等参数规模的DeepSeek-R1模型靠近或略低。本人在本地使用一个NVIDIA A40也成功部署了DeepSeek-R1-Distill-Llama-70B，试用着直接使用ollama或使用python程序向其提问，其回答问题的速度与准确性（只针对所提普通问题而言）还能接受。</p>
+<p>使用蒸馏模型时，CPU配置应该尽量跟同等参数规模的DeepSeek-R1模型靠近或略低。本人在本地使用一个NVIDIA
+A40也成功部署了DeepSeek-R1-Distill-Llama-70B，试用着直接使用ollama或使用python程序向其提问，其回答问题的速度与准确性（只针对所提普通问题而言）还能接受。</p>
 <p>另外，在部署与使用AI模型过程中，我们应该根据自己的需求从较小的模型开始部署进行试用，如有需要再升级至更高参数规模的模型，在满足需求的同时也可以避免资源的浪费。</p>
 
                 

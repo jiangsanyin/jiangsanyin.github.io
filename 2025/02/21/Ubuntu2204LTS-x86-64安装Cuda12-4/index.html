@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="安装Cuda之前需要保证NVIDIA驱动安装好。Cuda安装可参考NVIDIA官方文档：cuda-installation-guide-linux 123456789101112#服务器拿到手时，发现已经安装了Cuda11.5.119###如果要使用apt安装nvcc（此方式在Ubuntu22.04LTS上安装的是Cuda11.5.119）：sudo apt install nvidia-cud">
+    <meta name="description" content="安装Cuda之前需要保证NVIDIA驱动安装好。Cuda安装可参考NVIDIA官方文档：cuda-installation-guide-linux 123456789101112#服务器拿到手时，发现已经安装了Cuda11.5.119###如果要使用apt安装nvcc（此方式在Ubuntu22.04LTS上安装的是Cuda11.5.119）：sudo apt install nvidia-cud">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Ubuntu2204LTS-x86_64安装Cuda12.4">
 <meta property="og:url" content="https://jiangsanyin.github.io/2025/02/21/Ubuntu2204LTS-x86-64%E5%AE%89%E8%A3%85Cuda12-4/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="安装Cuda之前需要保证NVIDIA驱动安装好。Cuda安装可参考NVIDIA官方文档：cuda-installation-guide-linux 123456789101112#服务器拿到手时，发现已经安装了Cuda11.5.119###如果要使用apt安装nvcc（此方式在Ubuntu22.04LTS上安装的是Cuda11.5.119）：sudo apt install nvidia-cud">
+<meta property="og:description" content="安装Cuda之前需要保证NVIDIA驱动安装好。Cuda安装可参考NVIDIA官方文档：cuda-installation-guide-linux 123456789101112#服务器拿到手时，发现已经安装了Cuda11.5.119###如果要使用apt安装nvcc（此方式在Ubuntu22.04LTS上安装的是Cuda11.5.119）：sudo apt install nvidia-cud">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2025/02/21/iv6oBq75Rr8EzDO.png">
 <meta property="og:image" content="https://s2.loli.net/2025/02/21/i8vKNVPkExZjD65.png">
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          561 字
+          564 字
         
       </span>
     
@@ -302,22 +302,29 @@
             
               <div class="markdown-body">
                 
-                <p> 安装Cuda之前需要保证NVIDIA驱动安装好。Cuda安装可参考NVIDIA官方文档：<a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#ubuntu">cuda-installation-guide-linux</a></p>
+                <p>安装Cuda之前需要保证NVIDIA驱动安装好。Cuda安装可参考NVIDIA官方文档：<a
+target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#ubuntu">cuda-installation-guide-linux</a></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">服务器拿到手时，发现已经安装了Cuda11.5.119</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##如果要使用apt安装nvcc（此方式在Ubuntu22.04LTS上安装的是Cuda11.5.119）：sudo apt install nvidia-cuda-toolkit</span></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看现有nvcc版本</span><br>deepseek@deepseek1:~/installPkgs$ nvcc -V<br>nvcc: NVIDIA (R) Cuda compiler driver<br>Copyright (c) 2005-2021 NVIDIA Corporation<br>Built on Thu_Nov_18_09:45:30_PST_2021<br>Cuda compilation tools, release 11.5, V11.5.119<br>Build cuda_11.5.r11.5/compiler.30672275_0<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##卸载现有的Cuda11.5.119：</span></span><br>deepseek@deepseek1:~/installPkgs$ sudo apt remove nvidia-cuda-toolkit<br></code></pre></td></tr></table></figure>
-
-<p>我想改成使用Cuda12.4。访问<a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-12-4-0-download-archive">NVIDIA官网cuda安装文件下载网页</a> ，依次选择如下选项找到下载与安装命令：</p>
-<p><img src="https://s2.loli.net/2025/02/21/iv6oBq75Rr8EzDO.png" srcset="/img/loading.gif" lazyload alt="image-20250221172033572"></p>
+<p>我想改成使用Cuda12.4。访问<a
+target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-12-4-0-download-archive">NVIDIA官网cuda安装文件下载网页</a>
+，依次选择如下选项找到下载与安装命令：</p>
+<figure>
+<img src="https://s2.loli.net/2025/02/21/iv6oBq75Rr8EzDO.png" srcset="/img/loading.gif" lazyload
+alt="image-20250221172033572" />
+<figcaption aria-hidden="true">image-20250221172033572</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">下载安装文件</span><br>(self-llm) deepseek@deepseek1:~/installPkgs$ wget https://developer.download.nvidia.com/compute/cuda/12.4.0/local_installers/cuda_12.4.0_550.54.14_linux.run<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">执行安装</span><br>(self-llm) deepseek@deepseek1:~/installPkgs$ sudo sh cuda_12.4.0_550.54.14_linux.run<br><span class="hljs-meta prompt_">#</span><span class="language-bash">在弹出对话中输入“accept”接受条款，然后如下选择</span><br></code></pre></td></tr></table></figure>
-
-<img src="https://s2.loli.net/2025/02/21/i8vKNVPkExZjD65.png" srcset="/img/loading.gif" lazyload alt="image-20250221173309528" style="zoom:50%;" />
-
-<p><img src="https://s2.loli.net/2025/02/22/s8wCKUVEL2Sphna.png" srcset="/img/loading.gif" lazyload alt="image-20250222162736130"></p>
+<p><img src="https://s2.loli.net/2025/02/21/i8vKNVPkExZjD65.png" srcset="/img/loading.gif" lazyload alt="image-20250221173309528" style="zoom:50%;" /></p>
+<figure>
+<img src="https://s2.loli.net/2025/02/22/s8wCKUVEL2Sphna.png" srcset="/img/loading.gif" lazyload
+alt="image-20250222162736130" />
+<figcaption aria-hidden="true">image-20250222162736130</figcaption>
+</figure>
 <p>安装进程完成后，输出如下内容：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs shell">===========<br>= Summary =<br>===========<br><br>Driver:   Not Selected<br>Toolkit:  Installed in /usr/local/cuda-12.4/<br><br>Please make sure that<br> -   PATH includes /usr/local/cuda-12.4/bin<br> -   LD_LIBRARY_PATH includes /usr/local/cuda-12.4/lib64, or, add /usr/local/cuda-12.4/lib64 to /etc/ld.so.conf and run ldconfig as root<br><br>To uninstall the CUDA Toolkit, run cuda-uninstaller in /usr/local/cuda-12.4/bin<br>***WARNING: Incomplete installation! This installation did not install the CUDA Driver. A driver of version at least 550.00 is required for CUDA 12.4 functionality to work.<br>To install the driver using this installer, run the following command, replacing &lt;CudaInstaller&gt; with the name of this run file:<br>    sudo &lt;CudaInstaller&gt;.run --silent --driver<br><br>Logfile is /var/log/cuda-installer.log<br></code></pre></td></tr></table></figure>
-
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">发现系统已经创建软链接/usr/local/cuda，指向/usr/local/cuda-12.4/。后续使用此软链接</span><br>(self-llm) deepseek@deepseek1:~/installPkgs$ ls -al /usr/local/cuda<br>lrwxrwxrwx 1 root root 21 Feb 21 17:55 /usr/local/cuda -&gt; /usr/local/cuda-12.4/<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">按照提示修改系统环境变量PATH、LD_LIBRARY_PATH</span><br>(self-llm) deepseek@deepseek1:~/installPkgs$ sudo vi /etc/profile<br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-comment">##在最后添加如下内容</span></span><br>export PATH=$PATH:/usr/local/cuda/bin/<br>export LD_LIBRARY_PATH=/usr/local/cuda/lib64/<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重新打一个终端会话窗口或重新加载上述文件以启用上述两个修改或添加的系统环境变量</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重新加载上述文件的方法：<span class="hljs-built_in">source</span> /etc/profile</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">以下以重新打一个终端会话窗口为例继续后续操作</span><br>(base) deepseek@deepseek1:~$ conda activate self-llm<br>(self-llm) deepseek@deepseek1:~$ echo $PATH<br>/home/deepseek/anaconda3/envs/self-llm/bin:/home/deepseek/anaconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/cuda/bin<br>(self-llm) deepseek@deepseek1:~$ echo $LD_LIBRARY_PATH  <br>/usr/local/cuda/lib64/<br><span class="hljs-meta prompt_">#</span><span class="language-bash">可以看到当前使用的Cuda版本已经是V12.4.99</span><br>(self-llm) deepseek@deepseek1:~$ nvcc -V<br>nvcc: NVIDIA (R) Cuda compiler driver<br>Copyright (c) 2005-2024 NVIDIA Corporation<br>Built on Tue_Feb_27_16:19:38_PST_2024<br>Cuda compilation tools, release 12.4, V12.4.99<br>Build cuda_12.4.r12.4/compiler.33961263_0<br>(self-llm) deepseek@deepseek1:~$ <br></code></pre></td></tr></table></figure>
+<h2 id="section"></h2>
 
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2>
                 
               </div>
             

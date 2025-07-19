@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、背景描述​		现有k8s环境是使用kubeadm部署的k8s1.23.9环境，使用的网络解决方案是flannel，k8s节点使用的Centos 7.9.2009-amd64 虚拟机，k8s节点的容器运行时使用是的Docker。k8s1.23.9集群一共有3个节点，详情如下（升级前集群是否正常可用的，图是后面临时截取的，所以状态可以忽略）：  ​		目的是在联网的情况下，使用kubeadm升级到">
+    <meta name="description" content="一、背景描述 ​ 现有k8s环境是使用kubeadm部署的k8s1.23.9环境，使用的网络解决方案是flannel，k8s节点使用的Centos 7.9.2009-amd64 虚拟机，k8s节点的容器运行时使用是的Docker。k8s1.23.9集群一共有3个节点，详情如下（升级前集群是否正常可用的，图是后面临时截取的，所以状态可以忽略）：   image-202411181903">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用kubeadm将k8s从1.23.x升级到1.24.x">
 <meta property="og:url" content="https://jiangsanyin.github.io/2024/11/18/%E4%BD%BF%E7%94%A8kubeadm%E5%B0%86k8s%E4%BB%8E1-23-x%E5%8D%87%E7%BA%A7%E5%88%B01-24-x/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、背景描述​		现有k8s环境是使用kubeadm部署的k8s1.23.9环境，使用的网络解决方案是flannel，k8s节点使用的Centos 7.9.2009-amd64 虚拟机，k8s节点的容器运行时使用是的Docker。k8s1.23.9集群一共有3个节点，详情如下（升级前集群是否正常可用的，图是后面临时截取的，所以状态可以忽略）：  ​		目的是在联网的情况下，使用kubeadm升级到">
+<meta property="og:description" content="一、背景描述 ​ 现有k8s环境是使用kubeadm部署的k8s1.23.9环境，使用的网络解决方案是flannel，k8s节点使用的Centos 7.9.2009-amd64 虚拟机，k8s节点的容器运行时使用是的Docker。k8s1.23.9集群一共有3个节点，详情如下（升级前集群是否正常可用的，图是后面临时截取的，所以状态可以忽略）：   image-202411181903">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2024/11/18/RfmFejCV1Y2DB37.png">
 <meta property="og:image" content="https://s2.loli.net/2024/11/18/3N9O7BbQmyVpXU6.png">
@@ -320,87 +320,185 @@
             
               <div class="markdown-body">
                 
-                <h1 id="一、背景描述"><a href="#一、背景描述" class="headerlink" title="一、背景描述"></a>一、背景描述</h1><p>​		现有k8s环境是使用kubeadm部署的k8s1.23.9环境，使用的网络解决方案是flannel，k8s节点使用的Centos 7.9.2009-amd64 虚拟机，k8s节点的容器运行时使用是的Docker。k8s1.23.9集群一共有3个节点，详情如下（升级前集群是否正常可用的，图是后面临时截取的，所以状态可以忽略）：</p>
-<p><img src="https://s2.loli.net/2024/11/18/RfmFejCV1Y2DB37.png" srcset="/img/loading.gif" lazyload alt="image-20241118190306646"></p>
-<p>​		目的是在联网的情况下，使用kubeadm升级到k8s1.24.2。但Kubernetes从1.20版本开始已经弃用了DockerShim，并在1.24版本移除了DockerShim，后续如果需要使用Docker作为容器运行时（Container Runtime），需要安装cri-docker，即一个CRI（Container Runtime Interface）的实现。因为并不能直接使用kubeadm将集群升级到k8s1.24.2，但在执行一些针对容器运行时的安装配置后就可以了。具体步骤如下。</p>
-<p>​		同时还需注意，使用kubeadm升级k8s集群时不支持跨大版本升级。打个比方，如果要从k8s1.23.x 升级到k8s1.25.x，就需要先从k8s1.23.x 升级到k8s1.24.x，然后再从k8s1.24.x 升级到k8s1.25.x。如果想在此文档的基础上将k8s升级到更版本，就需要一级一级往上升，不能跳级（可能kubeadm不承认天才吧，哈哈^_^）！</p>
-<p>​		参考：<a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/">https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/</a></p>
-<h1 id="二、升级步骤"><a href="#二、升级步骤" class="headerlink" title="二、升级步骤"></a>二、升级步骤</h1><h2 id="2-1-安装cri-dockerd-所有节点"><a href="#2-1-安装cri-dockerd-所有节点" class="headerlink" title="2.1 安装cri-dockerd(所有节点)"></a>2.1 安装cri-dockerd(所有节点)</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">访问：https://github.com/Mirantis/cri-dockerd/releases</span><br><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.2/cri-dockerd-0.3.2.amd64.tgz<br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# gunzip cri-dockerd-0.3.2.amd64.tgz<br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# tar -xf cri-dockerd-0.3.2.amd64.tar<br><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# cp cri-dockerd/cri-dockerd /usr/local/bin/<br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# chmod 755 /usr/local/bin/cri-dockerd<br><span class="hljs-meta prompt_">#</span><span class="language-bash">删除先前存在的文件</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# rm -f /usr/lib/systemd/system/cri-docker*<br></code></pre></td></tr></table></figure>
-
+                <h1 id="一背景描述">一、背景描述</h1>
+<p>​
+现有k8s环境是使用kubeadm部署的k8s1.23.9环境，使用的网络解决方案是flannel，k8s节点使用的Centos
+7.9.2009-amd64
+虚拟机，k8s节点的容器运行时使用是的Docker。k8s1.23.9集群一共有3个节点，详情如下（升级前集群是否正常可用的，图是后面临时截取的，所以状态可以忽略）：</p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/RfmFejCV1Y2DB37.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118190306646" />
+<figcaption aria-hidden="true">image-20241118190306646</figcaption>
+</figure>
+<p>​
+目的是在联网的情况下，使用kubeadm升级到k8s1.24.2。但Kubernetes从1.20版本开始已经弃用了DockerShim，并在1.24版本移除了DockerShim，后续如果需要使用Docker作为容器运行时（Container
+Runtime），需要安装cri-docker，即一个CRI（Container Runtime
+Interface）的实现。因为并不能直接使用kubeadm将集群升级到k8s1.24.2，但在执行一些针对容器运行时的安装配置后就可以了。具体步骤如下。</p>
+<p>​
+同时还需注意，使用kubeadm升级k8s集群时不支持跨大版本升级。打个比方，如果要从k8s1.23.x
+升级到k8s1.25.x，就需要先从k8s1.23.x 升级到k8s1.24.x，然后再从k8s1.24.x
+升级到k8s1.25.x。如果想在此文档的基础上将k8s升级到更版本，就需要一级一级往上升，不能跳级（可能kubeadm不承认天才吧，哈哈^_^）！</p>
+<p>​
+参考：https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/</p>
+<h1 id="二升级步骤">二、升级步骤</h1>
+<h2 id="安装cri-dockerd所有节点">2.1 安装cri-dockerd(所有节点)</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">访问：https://github.com/Mirantis/cri-dockerd/releases</span><br><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.2/cri-dockerd-0.3.2.amd64.tgz<br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# gunzip cri-dockerd-0.3.2.amd64.tgz<br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# tar -xf cri-dockerd-0.3.2.amd64.tar<br><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# cp cri-dockerd/cri-dockerd /usr/local/bin/<br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# chmod 755 /usr/local/bin/cri-dockerd<br><span class="hljs-meta prompt_">#</span><span class="language-bash">删除先前存在的文件</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# rm -f /usr/lib/systemd/system/cri-docker*<br></code></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">封装cri-dockerd.service</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# cat /usr/lib/systemd/system/cri-dockerd.service<br>[Unit]<br>Description=CRI Interface for Docker Application Container Engine<br>Documentation=https://docs.mirantis.com<br>After=network-online.target firewalld.service docker.service<br>Wants=network-online.target<br>Requires=cri-dockerd.socket<br><br>[Service]<br>Type=notify<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">ExecStart=/usr/local/bin/cri-dockerd --network-plugin=cni --pod-infra-container-image=registry.aliyuncs.com/google_containers/pause:3.7</span><br>ExecStart=/usr/local/bin/cri-dockerd --network-plugin=cni --pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.9 --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin --container-runtime-endpoint=unix:///var/run/cri-dockerd.sock --cri-dockerd-root-directory=/var/ib/dockershim --docker-endpoint=unix:///var/run/docker.sock --cri-dockerd-root-directory=/var/1ib/docker<br><br>ExecReload=/bin/kill -s HUP $MAINPID<br>TimeoutSec=0<br>RestartSec=2<br>Restart=always<br><br>StartLimitBurst=3<br><br>StartLimitInterval=60s<br><br>LimitNOFILE=infinity<br>LimitNPROC=infinity<br>LimitCORE=infinity<br><br>TasksMax=infinity<br>Delegate=yes<br>KillMode=process<br><br>[Install]<br>WantedBy=multi-user.target<br></code></pre></td></tr></table></figure>
-
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">封装cri-dockerd.socket</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# cat /usr/lib/systemd/system/cri-dockerd.socket<br>[Unit]<br>Description=CRI Docker Socket for the API<br>PartOf=cri-dockerd.service<br><br>[Socket]<br>ListenStream=/var/run/cri-dockerd.sock<br>SocketMode=0660<br>SocketUser=root<br>SocketGroup=docker<br><br>[Install]<br>WantedBy=sockets.target<br></code></pre></td></tr></table></figure>
-
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">配置Kubernetes使用cri-docker：</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# vi /var/lib/kubelet/kubeadm-flags.env<br><span class="hljs-meta prompt_"># </span><span class="language-bash">添加参数或修改参数为如下</span><br>KUBELET_KUBEADM_ARGS=&quot;--cgroup-driver=system -pod-infra-container-image=registry.aliyuncs.com/google_containers/pause:3.7 --container-runtime=remote --container-runtime-endpoint=unix:///var/run/cri-dockerd.sock&quot;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">启动cri-dockerd服务</span><br>systemctl daemon-reload<br>systemctl restart cri-dockerd.service cri-dockerd.socket<br>systemctl status cri-dockerd.service cri-dockerd.socket<br></code></pre></td></tr></table></figure>
-
-<h2 id="2-2-Master-节点操作"><a href="#2-2-Master-节点操作" class="headerlink" title="2.2 Master 节点操作"></a>2.2 Master 节点操作</h2><h3 id="2-2-1-升级-kubeadm"><a href="#2-2-1-升级-kubeadm" class="headerlink" title="2.2.1 升级 kubeadm"></a>2.2.1 升级 kubeadm</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">kubeadm版本与目的k8s版本要一致</span><br>[root@k8s-master01 ~]# yum install -y kubeadm-1.24.2-0 --disableexcludes=kubernetes<br>[root@k8s-master01 ~]# kubeadm version<br></code></pre></td></tr></table></figure>
-
-<h3 id="2-2-2-查看升级计划"><a href="#2-2-2-查看升级计划" class="headerlink" title="2.2.2 查看升级计划"></a>2.2.2 查看升级计划</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">k8s不支持跨大版本升级</span><br>[root@k8s-master01 ~]# kubeadm upgrade plan<br><span class="hljs-meta prompt_">#</span><span class="language-bash">下图转存过一次，所以有点模糊。可以看到，输出内容提示现在的k8s.1.23.9最高只能升级到k8s.1.24.17，而且还需要升级kubeadm</span><br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/3N9O7BbQmyVpXU6.png" srcset="/img/loading.gif" lazyload alt="image-20241118184701703"></p>
-<h3 id="2-2-3-执行Master节点升级"><a href="#2-2-3-执行Master节点升级" class="headerlink" title="2.2.3 执行Master节点升级"></a>2.2.3 执行Master节点升级</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@k8s-master01 ~]# kubeadm upgrade apply v1.24.2<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果执行失败并提示：Error <span class="hljs-keyword">while</span> dialing dial unix /var/run/dockershim.sock，参考“2.4 问题处理”-&gt;“2.4.1 xxx章节”内容进行处理</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果有多个控制节点，后续控制节点请执行：kubeadm upgrade node</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">参考：https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/</span><br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/jtbh3DgFzPZUr7I.png" srcset="/img/loading.gif" lazyload alt="image-20241118185005730"></p>
+<h2 id="master-节点操作">2.2 Master 节点操作</h2>
+<h3 id="升级-kubeadm">2.2.1 升级 kubeadm</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">kubeadm版本与目的k8s版本要一致</span><br>[root@k8s-master01 ~]# yum install -y kubeadm-1.24.2-0 --disableexcludes=kubernetes<br>[root@k8s-master01 ~]# kubeadm version<br></code></pre></td></tr></table></figure>
+<h3 id="查看升级计划">2.2.2 查看升级计划</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">k8s不支持跨大版本升级</span><br>[root@k8s-master01 ~]# kubeadm upgrade plan<br><span class="hljs-meta prompt_">#</span><span class="language-bash">下图转存过一次，所以有点模糊。可以看到，输出内容提示现在的k8s.1.23.9最高只能升级到k8s.1.24.17，而且还需要升级kubeadm</span><br></code></pre></td></tr></table></figure>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/3N9O7BbQmyVpXU6.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118184701703" />
+<figcaption aria-hidden="true">image-20241118184701703</figcaption>
+</figure>
+<h3 id="执行master节点升级">2.2.3 执行Master节点升级</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@k8s-master01 ~]# kubeadm upgrade apply v1.24.2<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果执行失败并提示：Error <span class="hljs-keyword">while</span> dialing dial unix /var/run/dockershim.sock，参考“2.4 问题处理”-&gt;“2.4.1 xxx章节”内容进行处理</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果有多个控制节点，后续控制节点请执行：kubeadm upgrade node</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">参考：https://kubernetes.io/zh-cn/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/</span><br></code></pre></td></tr></table></figure>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/jtbh3DgFzPZUr7I.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118185005730" />
+<figcaption aria-hidden="true">image-20241118185005730</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubectl get nodes --show-labels<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/kioEC92BZcArsJe.png" srcset="/img/loading.gif" lazyload alt="image-20241118185157241"></p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/kioEC92BZcArsJe.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118185157241" />
+<figcaption aria-hidden="true">image-20241118185157241</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">将k8s-master01节点设置为不可调度，然后将将其上现有pod迁移到其他节点上去</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubectl drain k8s-master01 --ignore-daemonsets<br><span class="hljs-meta prompt_">#</span><span class="language-bash">升级client端的kubectl版本</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# yum install kubectl-1.24.2<br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubectl version --short<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/5KaFLOk63w4ySGV.png" srcset="/img/loading.gif" lazyload alt="image-20241118185720354"></p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/5KaFLOk63w4ySGV.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118185720354" />
+<figcaption aria-hidden="true">image-20241118185720354</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">升级kubelet</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# yum install kubelet-1.24.2<br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubelet –version<br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启kubelet服务</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# systemctl daemon-reload <br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# systemctl restart kubelet<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/iWgwrjpQ1sXq4ck.png" srcset="/img/loading.gif" lazyload alt="image-20241118185814268"></p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/iWgwrjpQ1sXq4ck.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118185814268" />
+<figcaption aria-hidden="true">image-20241118185814268</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubectl uncordon k8s-master01<br><span class="hljs-meta prompt_">#</span><span class="language-bash">uncordon此节点后，此节点上kubelet服务才变成Running状态</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# systemctl status kubelet<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/sPeXuLvaDnA2VpU.png" srcset="/img/loading.gif" lazyload alt="image-20241118185943405"></p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/sPeXuLvaDnA2VpU.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118185943405" />
+<figcaption aria-hidden="true">image-20241118185943405</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">查看各节点，可以看到当前显示集群版本还是1.23.9</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubectl get nodes<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/TQ2Wz8cJeLxDs1f.png" srcset="/img/loading.gif" lazyload alt="image-20241118190029580"></p>
-<h3 id="2-2-4-后续配置"><a href="#2-2-4-后续配置" class="headerlink" title="2.2.4 后续配置"></a>2.2.4 后续配置</h3><p>​		k8s1.24 弃用了 node-role.kubernetes.io&#x2F;master， 替换成了 node-role.kubernetes.io&#x2F;control-plane , 所以需要手动添加 master 相关的 lable 和 taint，否则之前使用了该 label，taint 的应用会出问题。</p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/TQ2Wz8cJeLxDs1f.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118190029580" />
+<figcaption aria-hidden="true">image-20241118190029580</figcaption>
+</figure>
+<h3 id="后续配置">2.2.4 后续配置</h3>
+<p>​ k8s1.24 弃用了 node-role.kubernetes.io/master， 替换成了
+node-role.kubernetes.io/control-plane , 所以需要手动添加 master 相关的
+lable 和 taint，否则之前使用了该 label，taint 的应用会出问题。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubectl label nodes k8s-master01 node-role.kubernetes.io/master=<br><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubectl taint nodes k8s-master01 node-role.kubernetes.io/control-plane-<br><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubectl taint nodes k8s-master01 node-role.kubernetes.io/master:NoSchedule --overwrite<br></code></pre></td></tr></table></figure>
-
-<h2 id="2-3-Worker-节点操作"><a href="#2-3-Worker-节点操作" class="headerlink" title="2.3 Worker 节点操作"></a>2.3 Worker 节点操作</h2><h3 id="2-3-1-升级-kubeadm"><a href="#2-3-1-升级-kubeadm" class="headerlink" title="2.3.1 升级 kubeadm"></a>2.3.1 升级 kubeadm</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@k8s-worker01 ~]# yum install -y kubeadm-1.24.2-0 --disableexcludes=Kubernetes<br>[root@k8s-worker01 ~]# kubeadm version<br></code></pre></td></tr></table></figure>
-
-<h3 id="2-3-2-升级工作节点"><a href="#2-3-2-升级工作节点" class="headerlink" title="2.3.2 升级工作节点"></a>2.3.2 升级工作节点</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@k8s-worker01 ~]# kubeadm upgrade node<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/htp6UgM8y4ILYbc.png" srcset="/img/loading.gif" lazyload alt="image-20241118190900487"></p>
+<h2 id="worker-节点操作">2.3 Worker 节点操作</h2>
+<h3 id="升级-kubeadm-1">2.3.1 升级 kubeadm</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@k8s-worker01 ~]# yum install -y kubeadm-1.24.2-0 --disableexcludes=Kubernetes<br>[root@k8s-worker01 ~]# kubeadm version<br></code></pre></td></tr></table></figure>
+<h3 id="升级工作节点">2.3.2 升级工作节点</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@k8s-worker01 ~]# kubeadm upgrade node<br></code></pre></td></tr></table></figure>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/htp6UgM8y4ILYbc.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118190900487" />
+<figcaption aria-hidden="true">image-20241118190900487</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@k8s-worker01 ~]# yum install kubectl-1.24.2 kubelet-1.24.2 -y<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/r7vUfkptloyubjF.png" srcset="/img/loading.gif" lazyload alt="image-20241118190925463"></p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/r7vUfkptloyubjF.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118190925463" />
+<figcaption aria-hidden="true">image-20241118190925463</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@k8s-worker01 ~]# systemctl daemon-reload<br>[root@k8s-worker01 ~]# systemctl restart kubelet<br><span class="hljs-meta prompt_">#</span><span class="language-bash">uncordon此节点后，此节点上kubelet服务才变成Running状态</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubectl uncordon k8s-worker01<br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubectl get nodes<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/xlyCmRFfwueAa1K.png" srcset="/img/loading.gif" lazyload alt="image-20241118191051445"></p>
-<h3 id="2-3-3-工作节点生成config文件"><a href="#2-3-3-工作节点生成config文件" class="headerlink" title="2.3.3 工作节点生成config文件"></a>2.3.3 工作节点生成config文件</h3><p>​		上述操作完成后，在工作节点无法执行kubectl命令，报错如下</p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/xlyCmRFfwueAa1K.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118191051445" />
+<figcaption aria-hidden="true">image-20241118191051445</figcaption>
+</figure>
+<h3 id="工作节点生成config文件">2.3.3 工作节点生成config文件</h3>
+<p>​ 上述操作完成后，在工作节点无法执行kubectl命令，报错如下</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@k8s-worker01 ~]# kubectl get nodes<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/B75ZOdthCPTfVpQ.png" srcset="/img/loading.gif" lazyload alt="image-20241118191753051"></p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/B75ZOdthCPTfVpQ.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118191753051" />
+<figcaption aria-hidden="true">image-20241118191753051</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在所有工作节点上创建目录</span><br>[root@k8s-worker01 ~]# mkdir -p $HOME/.kube<br><span class="hljs-meta prompt_">#</span><span class="language-bash">从主节点复制文件到工作节点指定目录</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# scp /etc/kubernetes/admin.conf root@k8s-worker01:/root/.kube/config<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">之后在此工作节点就可以正常执行kubectl命令</span><br></code></pre></td></tr></table></figure>
-
-<h3 id="2-3-4-注意"><a href="#2-3-4-注意" class="headerlink" title="2.3.4 注意"></a>2.3.4 注意</h3><p>​		其他k8s工作节点都要执行上述操作。</p>
-<p>​		所有工作执行完上述操作后，此时所有k8s节点的状态仍是处于NotReady状态，所有节点keubelet服务activating (auto-restart)，请参考以下章节“问题处理”解决。</p>
-<p>​		升级所有操作都完成后，k8s1.24.2集群的所有节点都会处于Ready状态，k8s集群版本显示为v1.24.2：</p>
-<p><img src="https://s2.loli.net/2024/11/18/wYLPAKD5JvCopcQ.png" srcset="/img/loading.gif" lazyload alt="image-20241118224834915"></p>
-<h2 id="2-4-问题处理"><a href="#2-4-问题处理" class="headerlink" title="2.4 问题处理"></a>2.4 问题处理</h2><h3 id="2-4-1-控制节点升级时，报“Error-while-dialing-dial-unix-var-run-dockershim-sock”"><a href="#2-4-1-控制节点升级时，报“Error-while-dialing-dial-unix-var-run-dockershim-sock”" class="headerlink" title="2.4.1  控制节点升级时，报“Error while dialing dial unix &#x2F;var&#x2F;run&#x2F;dockershim.sock”"></a>2.4.1  控制节点升级时，报“Error while dialing dial unix &#x2F;var&#x2F;run&#x2F;dockershim.sock”</h3><p><img src="https://s2.loli.net/2024/11/18/sG4WQDX1BoYva8U.png" srcset="/img/loading.gif" lazyload alt="image-20241118223816806"></p>
+<h3 id="注意">2.3.4 注意</h3>
+<p>​ 其他k8s工作节点都要执行上述操作。</p>
+<p>​
+所有工作执行完上述操作后，此时所有k8s节点的状态仍是处于NotReady状态，所有节点keubelet服务activating
+(auto-restart)，请参考以下章节“问题处理”解决。</p>
+<p>​
+升级所有操作都完成后，k8s1.24.2集群的所有节点都会处于Ready状态，k8s集群版本显示为v1.24.2：</p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/wYLPAKD5JvCopcQ.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118224834915" />
+<figcaption aria-hidden="true">image-20241118224834915</figcaption>
+</figure>
+<h2 id="问题处理">2.4 问题处理</h2>
+<h3
+id="控制节点升级时报error-while-dialing-dial-unix-varrundockershim.sock">2.4.1
+控制节点升级时，报“Error while dialing dial unix
+/var/run/dockershim.sock”</h3>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/sG4WQDX1BoYva8U.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118223816806" />
+<figcaption aria-hidden="true">image-20241118223816806</figcaption>
+</figure>
 <p>解决办法：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">编辑所有节点</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubectl edit nodes k8s-master01 <br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubectl edit nodes k8s-worker01 <br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# kubectl edit nodes k8s-worker02<br><span class="hljs-meta prompt_">#</span><span class="language-bash">做如下修改：</span><br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/A6HFoIDcMvk9WBP.png" srcset="/img/loading.gif" lazyload alt="image-20241118224008028"></p>
-<h3 id="2-4-2-升级操作完成后，所有节点都是NotReady状态，所有节点keubelet服务activating-auto-restart"><a href="#2-4-2-升级操作完成后，所有节点都是NotReady状态，所有节点keubelet服务activating-auto-restart" class="headerlink" title="2.4.2 升级操作完成后，所有节点都是NotReady状态，所有节点keubelet服务activating (auto-restart)"></a>2.4.2 升级操作完成后，所有节点都是NotReady状态，所有节点keubelet服务activating (auto-restart)</h3><p><img src="https://s2.loli.net/2024/11/18/qQFNxa6HjRPZ2Ay.png" srcset="/img/loading.gif" lazyload alt="image-20241118224047709"></p>
-<p><img src="https://s2.loli.net/2024/11/18/HxZkC9NJyXMuti1.png" srcset="/img/loading.gif" lazyload alt="image-20241118224208751"></p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/A6HFoIDcMvk9WBP.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118224008028" />
+<figcaption aria-hidden="true">image-20241118224008028</figcaption>
+</figure>
+<h3
+id="升级操作完成后所有节点都是notready状态所有节点keubelet服务activating-auto-restart">2.4.2
+升级操作完成后，所有节点都是NotReady状态，所有节点keubelet服务activating
+(auto-restart)</h3>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/qQFNxa6HjRPZ2Ay.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118224047709" />
+<figcaption aria-hidden="true">image-20241118224047709</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/HxZkC9NJyXMuti1.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118224208751" />
+<figcaption aria-hidden="true">image-20241118224208751</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">分析定位：</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# journalctl -xeu kubelet &gt; kubelet.log<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看kubelet的相关日志</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# vi kubelet.log<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/ZphI32MCdzlei8t.png" srcset="/img/loading.gif" lazyload alt="image-20241118224327843"></p>
-<p>发现kubelet无法识别”–network-plugin”这个参数，因为该配置和”DockerShim”一起在Kubernetes的1.24版本被移除了。</p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/ZphI32MCdzlei8t.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118224327843" />
+<figcaption aria-hidden="true">image-20241118224327843</figcaption>
+</figure>
+<p>发现kubelet无法识别"--network-plugin"这个参数，因为该配置和"DockerShim"一起在Kubernetes的1.24版本被移除了。</p>
 <p>解决办法：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">找到 <span class="hljs-string">&quot;--network-plugin&quot;</span> 删除即可</span><br>[root@k8s-master01 upgrade-k8s1.23.9-to-1.24.2]# vi /var/lib/kubelet/kubeadm-flags.env<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/okGdNUQBxLE6KDs.png" srcset="/img/loading.gif" lazyload alt="image-20241118224524590"></p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/okGdNUQBxLE6KDs.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118224524590" />
+<figcaption aria-hidden="true">image-20241118224524590</figcaption>
+</figure>
 <figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs livescript">[root@k8s-master01 upgrade-k8s1.<span class="hljs-number">23.9</span>-<span class="hljs-keyword">to</span>-<span class="hljs-number">1.24</span>.<span class="hljs-number">2</span>]<span class="hljs-comment"># source /var/lib/kubelet/kubeadm-flags.env                                                                                                                     </span><br>[root@k8s-master01 upgrade-k8s1.<span class="hljs-number">23.9</span>-<span class="hljs-keyword">to</span>-<span class="hljs-number">1.24</span>.<span class="hljs-number">2</span>]<span class="hljs-comment"># systemctl restart kubelet</span><br>[root@k8s-master01 upgrade-k8s1.<span class="hljs-number">23.9</span>-<span class="hljs-keyword">to</span>-<span class="hljs-number">1.24</span>.<span class="hljs-number">2</span>]<span class="hljs-comment"># systemctl status kubelet -l</span><br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2024/11/18/NYnPLoQvpMSTUut.png" srcset="/img/loading.gif" lazyload alt="image-20241118224556425"></p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/NYnPLoQvpMSTUut.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118224556425" />
+<figcaption aria-hidden="true">image-20241118224556425</figcaption>
+</figure>
 <p>其他节点也是这样修改与操作后，重启kubelet服务，之后kubelet服务处于Running状态。</p>
 <p>之后K8s集群中所有节点都是Ready状态：</p>
-<p><img src="https://s2.loli.net/2024/11/18/891feAnlkdjO2hp.png" srcset="/img/loading.gif" lazyload alt="image-20241118224702797"></p>
+<figure>
+<img src="https://s2.loli.net/2024/11/18/891feAnlkdjO2hp.png" srcset="/img/loading.gif" lazyload
+alt="image-20241118224702797" />
+<figcaption aria-hidden="true">image-20241118224702797</figcaption>
+</figure>
 
                 
               </div>

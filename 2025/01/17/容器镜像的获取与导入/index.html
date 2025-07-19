@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1 容器镜像概述​      容器镜像（Image）所承载的是封装了应用程序及其所有软件依赖的二进制数据。 容器镜像是可执行的软件包，可以单独运行；该软件包对所处的运行时环境具有良定（Well Defined）的假定。 ​      容器镜像与容器的关系，类似于可执行文件与进程的关系。也就是说，可以将容器理解为容器镜像的动态形式，容器镜像则容器的静态形式。一般地，实现某特定业务功能的容器镜像都是在">
+    <meta name="description" content="1 容器镜像概述 ​ 容器镜像（Image）所承载的是封装了应用程序及其所有软件依赖的二进制数据。 容器镜像是可执行的软件包，可以单独运行；该软件包对所处的运行时环境具有良定（Well Defined）的假定。 ​ 容器镜像与容器的关系，类似于可执行文件与进程的关系。也就是说，可以将容器理解为容器镜像的动态形式，容器镜像则容器的静态形式。一般地，实现某特定业务功能的容器镜像都是在某一个">
 <meta property="og:type" content="article">
 <meta property="og:title" content="容器镜像的获取与导入">
 <meta property="og:url" content="https://jiangsanyin.github.io/2025/01/17/%E5%AE%B9%E5%99%A8%E9%95%9C%E5%83%8F%E7%9A%84%E8%8E%B7%E5%8F%96%E4%B8%8E%E5%AF%BC%E5%85%A5/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="1 容器镜像概述​      容器镜像（Image）所承载的是封装了应用程序及其所有软件依赖的二进制数据。 容器镜像是可执行的软件包，可以单独运行；该软件包对所处的运行时环境具有良定（Well Defined）的假定。 ​      容器镜像与容器的关系，类似于可执行文件与进程的关系。也就是说，可以将容器理解为容器镜像的动态形式，容器镜像则容器的静态形式。一般地，实现某特定业务功能的容器镜像都是在">
+<meta property="og:description" content="1 容器镜像概述 ​ 容器镜像（Image）所承载的是封装了应用程序及其所有软件依赖的二进制数据。 容器镜像是可执行的软件包，可以单独运行；该软件包对所处的运行时环境具有良定（Well Defined）的假定。 ​ 容器镜像与容器的关系，类似于可执行文件与进程的关系。也就是说，可以将容器理解为容器镜像的动态形式，容器镜像则容器的静态形式。一般地，实现某特定业务功能的容器镜像都是在某一个">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2025/01/17/4rxylmhikKt9AIa.png">
 <meta property="og:image" content="https://s2.loli.net/2025/01/17/M3BUG9NsPkfzhbD.png">
@@ -316,27 +316,55 @@
             
               <div class="markdown-body">
                 
-                <h1 id="1-容器镜像概述"><a href="#1-容器镜像概述" class="headerlink" title="1 容器镜像概述"></a>1 容器镜像概述</h1><p>​      容器镜像（Image）所承载的是封装了应用程序及其所有软件依赖的二进制数据。 容器镜像是可执行的软件包，可以单独运行；该软件包对所处的运行时环境具有良定（Well Defined）的假定。</p>
-<p>​      容器镜像与容器的关系，类似于可执行文件与进程的关系。也就是说，可以将容器理解为容器镜像的动态形式，容器镜像则容器的静态形式。一般地，实现某特定业务功能的容器镜像都是在某一个基础镜像的基础上构建的。</p>
-<p><img src="https://s2.loli.net/2025/01/17/4rxylmhikKt9AIa.png" srcset="/img/loading.gif" lazyload alt="image-20250117211509892"></p>
-<p>​      <code>Docker</code>容器镜像是符合<code>OCI</code>规范的，而<code>Containerd</code>支持所有符合<code>OCI</code>规范的容器镜像。但<code>Containerd</code>本身附带的<code>ctr</code>工具并不提供创建容器镜像的能力，但<code>Containerd</code>的子项目 <code>nerdctl</code>，它兼容 <code>docker cli</code>，可以像 <code>docker</code> 命令一样来管理本地的镜像和容器。笔者目前使用的容器场景与云原生环境下，暂时还是以<code>Docker</code>命令管理镜像与容器居多，但正在往使用<code>Containerd</code>及其子项目<code>nerdctl</code>转移中。</p>
-<p>​      容器镜像实际上是由一层一层的系统文件组成，这种层级的文件系统被称为UnionFS( Union file system 统一文件系统)，镜像可以基于Dockerfile构建，Dockerfile是一个描述文件，里面包含了若干条密令，每条命令都会对基础文件系统创建新的层次结构。<code>docker build与nerdctl</code>及<code>buildctl</code>命令都可以使用Dockerfile文件来构建容器镜像。</p>
-<h1 id="2-容器镜像的获取与生成方法"><a href="#2-容器镜像的获取与生成方法" class="headerlink" title="2 容器镜像的获取与生成方法"></a>2 容器镜像的获取与生成方法</h1><p>•    <strong>方法一：在DockerHub直接下载</strong></p>
-<p>   DockerHub是docker容器镜像的官网上传与下载网站（当然全球还有很多公司如阿里云提供了公开的容器镜像可供下载与使用），下载下来的容器镜像可以直接用来创建容器，也可以作为自定义容器镜像的基础镜像。</p>
-<p>•    <strong>方法二：把操作系统中文件系统打包为容器镜像</strong></p>
-<p>   利用Docker容器引擎的功能，可以将物理机或虚拟机上正在运行的操作系统的全部或部分内容打包成一个容器镜像。</p>
-<p>•    <strong>方法三：把正在运行的容器打包为容器镜像</strong></p>
-<p>   类似地，利用Docker容器引擎的功能可以将一个容器保存为一个容器镜像。这也可以更形象具体地将容器镜像理解为容器的静止状态。</p>
-<p>•    <strong>方法四：通过Dockerfile实现容器镜像的自定义与构建</strong></p>
-<p>   这是开发与生产环境中经常用到一种构建容器的方式。</p>
+                <h1 id="容器镜像概述">1 容器镜像概述</h1>
+<p>​
+容器镜像（Image）所承载的是封装了应用程序及其所有软件依赖的二进制数据。
+容器镜像是可执行的软件包，可以单独运行；该软件包对所处的运行时环境具有良定（Well
+Defined）的假定。</p>
+<p>​
+容器镜像与容器的关系，类似于可执行文件与进程的关系。也就是说，可以将容器理解为容器镜像的动态形式，容器镜像则容器的静态形式。一般地，实现某特定业务功能的容器镜像都是在某一个基础镜像的基础上构建的。</p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/4rxylmhikKt9AIa.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117211509892" />
+<figcaption aria-hidden="true">image-20250117211509892</figcaption>
+</figure>
+<p>​
+<code>Docker</code>容器镜像是符合<code>OCI</code>规范的，而<code>Containerd</code>支持所有符合<code>OCI</code>规范的容器镜像。但<code>Containerd</code>本身附带的<code>ctr</code>工具并不提供创建容器镜像的能力，但<code>Containerd</code>的子项目
+<code>nerdctl</code>，它兼容 <code>docker cli</code>，可以像
+<code>docker</code>
+命令一样来管理本地的镜像和容器。笔者目前使用的容器场景与云原生环境下，暂时还是以<code>Docker</code>命令管理镜像与容器居多，但正在往使用<code>Containerd</code>及其子项目<code>nerdctl</code>转移中。</p>
+<p>​
+容器镜像实际上是由一层一层的系统文件组成，这种层级的文件系统被称为UnionFS(
+Union file system
+统一文件系统)，镜像可以基于Dockerfile构建，Dockerfile是一个描述文件，里面包含了若干条密令，每条命令都会对基础文件系统创建新的层次结构。<code>docker build与nerdctl</code>及<code>buildctl</code>命令都可以使用Dockerfile文件来构建容器镜像。</p>
+<h1 id="容器镜像的获取与生成方法">2 容器镜像的获取与生成方法</h1>
+<p>• <strong>方法一：在DockerHub直接下载</strong></p>
+<p>DockerHub是docker容器镜像的官网上传与下载网站（当然全球还有很多公司如阿里云提供了公开的容器镜像可供下载与使用），下载下来的容器镜像可以直接用来创建容器，也可以作为自定义容器镜像的基础镜像。</p>
+<p>• <strong>方法二：把操作系统中文件系统打包为容器镜像</strong></p>
+<p>利用Docker容器引擎的功能，可以将物理机或虚拟机上正在运行的操作系统的全部或部分内容打包成一个容器镜像。</p>
+<p>• <strong>方法三：把正在运行的容器打包为容器镜像</strong></p>
+<p>类似地，利用Docker容器引擎的功能可以将一个容器保存为一个容器镜像。这也可以更形象具体地将容器镜像理解为容器的静止状态。</p>
+<p>•
+<strong>方法四：通过Dockerfile实现容器镜像的自定义与构建</strong></p>
+<p>这是开发与生产环境中经常用到一种构建容器的方式。</p>
 <p>容器镜像获取后，可以保存到本地的registry或自己搭建的harbor镜像仓库中，以便后续使用。</p>
-<h2 id="2-1-方法一：在DockerHub直接下载"><a href="#2-1-方法一：在DockerHub直接下载" class="headerlink" title="2.1 方法一：在DockerHub直接下载"></a>2.1 方法一：在DockerHub直接下载</h2><p>​      访问DockerHub官网： <a target="_blank" rel="noopener" href="https://hub.docker.com/">https://hub.docker.com/</a> 。</p>
-<p><img src="https://s2.loli.net/2025/01/17/M3BUG9NsPkfzhbD.png" srcset="/img/loading.gif" lazyload alt="image-20250117213321848"></p>
+<h2 id="方法一在dockerhub直接下载">2.1 方法一：在DockerHub直接下载</h2>
+<p>​ 访问DockerHub官网： https://hub.docker.com/ 。</p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/M3BUG9NsPkfzhbD.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117213321848" />
+<figcaption aria-hidden="true">image-20250117213321848</figcaption>
+</figure>
 <p>（1）可以看到DockerHub可以注册登录，登录后可以上传镜像到用户空间内。这些上传的镜像可以设置为public，这样其他人都可以使用它。与此相应地，镜像设置为private时，其他人则是不可见的。</p>
 <p>（2）可以看到DockerHub上的容器镜像支持多种不同构架，同一个镜像不同的构架在拉取时，使用不同的Digest</p>
-<p>（3）同时， DockerHub已经检测并告诉用户，当前镜像有多少个不同级别的漏洞或安全隐患，并可以查看这些漏洞的详情。对容器镜像安全性有较高要求时要注意</p>
+<p>（3）同时，
+DockerHub已经检测并告诉用户，当前镜像有多少个不同级别的漏洞或安全隐患，并可以查看这些漏洞的详情。对容器镜像安全性有较高要求时要注意</p>
 <p>（4）下载镜像。</p>
-<p><img src="https://s2.loli.net/2025/01/17/ZA8oQLOmq9KlyrP.png" srcset="/img/loading.gif" lazyload alt="image-20250117213552141"></p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/ZA8oQLOmq9KlyrP.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117213552141" />
+<figcaption aria-hidden="true">image-20250117213552141</figcaption>
+</figure>
 <p>比如我们要下载<code>nginx:stable-perl</code>镜像在arm64构架平台上对应的镜像文件时，有如下两种方法：</p>
 <ul>
 <li>已有Docker服务运行在一个arm64构架平台上</li>
@@ -345,60 +373,126 @@
 <ul>
 <li>已有Docker服务运行在一个非arm64构架平台上，比如常见的x86_64构架的windows电脑或一个amd64构架的Linux服务器上</li>
 </ul>
-<p>此时并不能直接使用<code>docker pull nginx:stable-perl</code>，要是要像上图中展示的一样，单击此构架镜像对应的Digest 即<code>61eaeb2c1479</code>，跳转到如下图界面。然后复制下图中Index digest对应的值，如下是<code>sha256:746bca4640fce6b18814e47162c26da63f185a2b4a1bbc5fd137cbf9bc8293e8</code>，然后组合成命令如下命令拉取nginx:stable-perl镜像在arm64构架平台上对应的镜像文件：</p>
+<p>此时并不能直接使用<code>docker pull nginx:stable-perl</code>，要是要像上图中展示的一样，单击此构架镜像对应的Digest
+即<code>61eaeb2c1479</code>，跳转到如下图界面。然后复制下图中Index
+digest对应的值，如下是<code>sha256:746bca4640fce6b18814e47162c26da63f185a2b4a1bbc5fd137cbf9bc8293e8</code>，然后组合成命令如下命令拉取nginx:stable-perl镜像在arm64构架平台上对应的镜像文件：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker pull nginx@sha256:746bca4640fce6b18814e47162c26da63f185a2b4a1bbc5fd137cbf9bc8293e8<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2025/01/17/mcLwOzxoC41ap29.png" srcset="/img/loading.gif" lazyload alt="image-20250117213752425"></p>
-<p>​      可以看到DockerHub可以注册登录，登录后可以上传镜像到用户空间内。这些上传的镜像可以设置为public，这样其他人都可以使用它。</p>
-<p>​      可以看到DockerHub上的容器镜像支持多种不同构架，同一个镜像不同的构架在拉取时，使用不同的Digest。</p>
-<p>​      同时，还需要DockerHub已经检测并告诉用户，当前有多少个不同级别的漏洞或安全隐患，并可以查看这些漏洞的详情。对容器镜像安全性有较高要求时要注意。</p>
-<h2 id="2-2-方法二：把操作系统中文件系统打包为容器镜像"><a href="#2-2-方法二：把操作系统中文件系统打包为容器镜像" class="headerlink" title="2.2 方法二：把操作系统中文件系统打包为容器镜像"></a>2.2 方法二：把操作系统中文件系统打包为容器镜像</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">打包镜像（其中--exclude参数指定不打包的目录，可以指定多次、取并集）</span><br>tar --numeric-owner --exclude=/proc --exclude=/sys -cvf centos7u6.tar /<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">导入镜像到本地</span><br>docker import centos7u6.tar centos7u6:v1<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">使用此镜像创建并进入容器</span><br>docker run -it centos7u6:v1 bash<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2025/01/17/Xzwmuh4k7QO9SFv.png" srcset="/img/loading.gif" lazyload alt="image-20250117220842655"></p>
-<h2 id="2-3-方法三：把容器打包为容器镜像"><a href="#2-3-方法三：把容器打包为容器镜像" class="headerlink" title="2.3 方法三：把容器打包为容器镜像"></a>2.3 方法三：把容器打包为容器镜像</h2><p>​      现有一个容器<code>test01</code>，创建一个新文件<code>/opt/test01.txt</code>，并在其中写入字符串内容<code>container test01</code>。</p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/mcLwOzxoC41ap29.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117213752425" />
+<figcaption aria-hidden="true">image-20250117213752425</figcaption>
+</figure>
+<p>​
+可以看到DockerHub可以注册登录，登录后可以上传镜像到用户空间内。这些上传的镜像可以设置为public，这样其他人都可以使用它。</p>
+<p>​
+可以看到DockerHub上的容器镜像支持多种不同构架，同一个镜像不同的构架在拉取时，使用不同的Digest。</p>
+<p>​
+同时，还需要DockerHub已经检测并告诉用户，当前有多少个不同级别的漏洞或安全隐患，并可以查看这些漏洞的详情。对容器镜像安全性有较高要求时要注意。</p>
+<h2 id="方法二把操作系统中文件系统打包为容器镜像">2.2
+方法二：把操作系统中文件系统打包为容器镜像</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">打包镜像（其中--exclude参数指定不打包的目录，可以指定多次、取并集）</span><br>tar --numeric-owner --exclude=/proc --exclude=/sys -cvf centos7u6.tar /<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">导入镜像到本地</span><br>docker import centos7u6.tar centos7u6:v1<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">使用此镜像创建并进入容器</span><br>docker run -it centos7u6:v1 bash<br></code></pre></td></tr></table></figure>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/Xzwmuh4k7QO9SFv.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117220842655" />
+<figcaption aria-hidden="true">image-20250117220842655</figcaption>
+</figure>
+<h2 id="方法三把容器打包为容器镜像">2.3
+方法三：把容器打包为容器镜像</h2>
+<p>​
+现有一个容器<code>test01</code>，创建一个新文件<code>/opt/test01.txt</code>，并在其中写入字符串内容<code>container test01</code>。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">查看所有容器</span><br>docker ps -a<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">进入容器，打开一个交互式命令虚拟终端</span><br>docker exec -it test01 bash<br>root@271b105e357f:/# echo &quot;container test01&quot; &gt; /opt/test01.txt<br>root@271b105e357f:/# cat /opt/test01.txt<br><span class="hljs-meta prompt_">#</span><span class="language-bash">使用组合键“ctrl+p+q”退出容器</span><br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2025/01/17/XmOSNLVnKkBvxWU.png" srcset="/img/loading.gif" lazyload alt="image-20250117214428285"></p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/XmOSNLVnKkBvxWU.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117214428285" />
+<figcaption aria-hidden="true">image-20250117214428285</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">将容器保存为镜像（容器处于Up或Exited状态都无所谓）</span><br>root@ubuntu20:~# docker commit -a &quot;a good man&quot; -m &quot;测试&quot; test01 ubuntu:test01<br>root@ubuntu20:~# docker images | grep ubuntu<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2025/01/17/Kuv58rnx1dVJPpo.png" srcset="/img/loading.gif" lazyload alt="image-20250117214858751"></p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/Kuv58rnx1dVJPpo.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117214858751" />
+<figcaption aria-hidden="true">image-20250117214858751</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">使用上述打包后的镜像创建一个新的容器test001，可以看到容器中的/opt/test01.txt 文件内容跟前面写入的一样</span><br>root@ubuntu20:~# docker run -it --name test001 ubuntu:test01 bash<br>root@66a8e5be6b13:/# ls -al /opt/<br>root@66a8e5be6b13:/# cat /opt/test01.txt<br>root@ubuntu20:~# docker ps -a | egrep &quot;NAME|test001&quot;<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2025/01/17/5NfjhmXIdg4DTqE.png" srcset="/img/loading.gif" lazyload alt="image-20250117214936732"></p>
-<h2 id="2-4-方法四：通过Dockerfile实现容器镜像的自定义与构建"><a href="#2-4-方法四：通过Dockerfile实现容器镜像的自定义与构建" class="headerlink" title="2.4 方法四：通过Dockerfile实现容器镜像的自定义与构建"></a>2.4 方法四：通过Dockerfile实现容器镜像的自定义与构建</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment">#创建一个Dockerfile文件，就取名Dockerfile</span><br><span class="hljs-string">root@ubuntu20:/opt/manual-for-ppt#</span> <span class="hljs-string">cat</span> <span class="hljs-string">Dockerfile</span><br><span class="hljs-string">FROM</span> <span class="hljs-string">centos:centos7</span><br><span class="hljs-string">MAINTAINER</span> <span class="hljs-string">&quot;a good man&quot;</span><br><span class="hljs-string">RUN</span> <span class="hljs-string">yum</span> <span class="hljs-string">makecache</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">yum</span> <span class="hljs-string">-y</span> <span class="hljs-string">install</span> <span class="hljs-string">wget</span><br><span class="hljs-string">RUN</span> <span class="hljs-string">wget</span> <span class="hljs-string">-O</span> <span class="hljs-string">/etc/yum.repos.d/epel.repo</span> <span class="hljs-string">\</span><br>    <span class="hljs-string">http://mirrors.aliyun.com/repo/epel-7.repo</span><br><span class="hljs-string">RUN</span> <span class="hljs-string">yum</span> <span class="hljs-string">-y</span> <span class="hljs-string">install</span> <span class="hljs-string">nginx</span><br><span class="hljs-string">RUN</span> <span class="hljs-string">echo</span> <span class="hljs-string">&quot;nginx index page!&quot;</span> <span class="hljs-string">&gt;</span> <span class="hljs-string">\</span><br>    <span class="hljs-string">/usr/share/nginx/html/index.html</span><br><span class="hljs-string">RUN</span> <span class="hljs-string">echo</span> <span class="hljs-string">&quot;daemon off;&quot;</span><span class="hljs-string">&gt;&gt;</span> <span class="hljs-string">/etc/nginx/nginx.conf</span><br><span class="hljs-string">EXPOSE</span> <span class="hljs-number">80</span><br><span class="hljs-string">CMD</span> <span class="hljs-string">/usr/sbin/nginx</span><br></code></pre></td></tr></table></figure>
-
-<p>​      相关指令的意义如下。</p>
-<p><img src="https://s2.loli.net/2025/01/17/kcve1uAWLjZG8Ka.png" srcset="/img/loading.gif" lazyload alt="image-20250117215021189"></p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/5NfjhmXIdg4DTqE.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117214936732" />
+<figcaption aria-hidden="true">image-20250117214936732</figcaption>
+</figure>
+<h2 id="方法四通过dockerfile实现容器镜像的自定义与构建">2.4
+方法四：通过Dockerfile实现容器镜像的自定义与构建</h2>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment">#创建一个Dockerfile文件，就取名Dockerfile</span><br><span class="hljs-string">root@ubuntu20:/opt/manual-for-ppt#</span> <span class="hljs-string">cat</span> <span class="hljs-string">Dockerfile</span><br><span class="hljs-string">FROM</span> <span class="hljs-string">centos:centos7</span><br><span class="hljs-string">MAINTAINER</span> <span class="hljs-string">&quot;a good man&quot;</span><br><span class="hljs-string">RUN</span> <span class="hljs-string">yum</span> <span class="hljs-string">makecache</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">yum</span> <span class="hljs-string">-y</span> <span class="hljs-string">install</span> <span class="hljs-string">wget</span><br><span class="hljs-string">RUN</span> <span class="hljs-string">wget</span> <span class="hljs-string">-O</span> <span class="hljs-string">/etc/yum.repos.d/epel.repo</span> <span class="hljs-string">\</span><br>    <span class="hljs-string">http://mirrors.aliyun.com/repo/epel-7.repo</span><br><span class="hljs-string">RUN</span> <span class="hljs-string">yum</span> <span class="hljs-string">-y</span> <span class="hljs-string">install</span> <span class="hljs-string">nginx</span><br><span class="hljs-string">RUN</span> <span class="hljs-string">echo</span> <span class="hljs-string">&quot;nginx index page!&quot;</span> <span class="hljs-string">&gt;</span> <span class="hljs-string">\</span><br>    <span class="hljs-string">/usr/share/nginx/html/index.html</span><br><span class="hljs-string">RUN</span> <span class="hljs-string">echo</span> <span class="hljs-string">&quot;daemon off;&quot;</span><span class="hljs-string">&gt;&gt;</span> <span class="hljs-string">/etc/nginx/nginx.conf</span><br><span class="hljs-string">EXPOSE</span> <span class="hljs-number">80</span><br><span class="hljs-string">CMD</span> <span class="hljs-string">/usr/sbin/nginx</span><br></code></pre></td></tr></table></figure>
+<p>​ 相关指令的意义如下。</p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/kcve1uAWLjZG8Ka.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117215021189" />
+<figcaption aria-hidden="true">image-20250117215021189</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell">上述Dockerfile文件中有一个指令“MAINTAINER”在上表中未列出，它指定的是镜像的维护人员信息一般也就是镜像作者<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果本地没有镜像“centos:centos7”，建议先执行如下命令将此镜像拉取下来，减少dcoker build阶段的时间</span><br>docker pull centos:centos7<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">接下来就可以构建镜像了，编译镜像的命令如下</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">其中build是docker的子命令</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">./ 表示编译镜像时宿主的工作目录</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">-f参数指定要使用的Dockerfile文件。如果有另外一个nginx.Dockerfile则使用这个名字</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">-t 参数指定编译完成生成的镜像的名称与标签</span><br>root@ubuntu20:/opt/manual-for-ppt# docker build ./ -f Dockerfile -t nginx:v001<br><span class="hljs-meta prompt_">#</span><span class="language-bash">从下图中可以看到，本地docker环境中有了一个镜像 nginx:v001</span><br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2025/01/17/SaByPpFNumClfqI.png" srcset="/img/loading.gif" lazyload alt="image-20250117215154332"></p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/SaByPpFNumClfqI.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117215154332" />
+<figcaption aria-hidden="true">image-20250117215154332</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">查看镜像信息</span><br>root@ubuntu20:/opt/manual-for-ppt# docker inspect nginx:v001 | grep -i &quot;good&quot;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">可以看到Dockerfile文件中MAINTAINER指令指定的值就是镜像的Authtor属性值。</span><br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2025/01/17/zwXn9j7ZQfEMmJB.png" srcset="/img/loading.gif" lazyload alt="image-20250117215246362"></p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/zwXn9j7ZQfEMmJB.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117215246362" />
+<figcaption aria-hidden="true">image-20250117215246362</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">利用上述生成的镜像创建一个启动nginx进程的容器</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">以下命令指定容器名称为nginx01，-d表示以后台模式运行，-p做宿主机与容器端口映射</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">因为制作容器nginx:v001时，已经指定” CMD /usr/sbin/nginx”表示容器启动后就会自动执行/usr/sbin/nginx，不需要再在docker run命令后面再添加指令参数，添加指令参数如/bin/bash将会替换“/usr/sbin/nginx”，则此容器将不会自动启动nginx相关进程</span><br>docker run -d --name nginx01 -p 8080:80 nginx:v001<br>docker ps -a | egrep &quot;NAME|nginx01&quot;<br>curl 127.0.0.1:8080<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2025/01/17/8jF6xlUL9HOaZMp.png" srcset="/img/loading.gif" lazyload alt="image-20250117215313476"></p>
-<p>​      此时，比如当前宿主机的ip是10.10.0.51，自己笔记本电脑上或其他有桌面的操作系统通过浏览器访问 <a target="_blank" rel="noopener" href="http://10.10.0.51:8080/">http://10.10.0.51:8080</a> ，也可以访问上述nginx主页。</p>
-<p>​      关于Dockerfile更详细的用法，可以参考 <a target="_blank" rel="noopener" href="https://docs.docker.com/reference/dockerfile/">官网文档Dockerfile reference</a> 或  <a target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-dockerfile.html">菜鸟教程Dockerfile文档</a> </p>
-<h1 id="3-docker-save与docker-load-命令"><a href="#3-docker-save与docker-load-命令" class="headerlink" title="3 docker save与docker load 命令"></a>3 docker save与docker load 命令</h1><p>​      <code>docker save</code>命令的功能是将一个容器镜像保存为一个本地文件（相当于被持久化保存了），<code>docker load</code>命令将<code>docker save</code>生成的本地镜像文件导入到本地docker环境中。</p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/8jF6xlUL9HOaZMp.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117215313476" />
+<figcaption aria-hidden="true">image-20250117215313476</figcaption>
+</figure>
+<p>​
+此时，比如当前宿主机的ip是10.10.0.51，自己笔记本电脑上或其他有桌面的操作系统通过浏览器访问
+http://10.10.0.51:8080 ，也可以访问上述nginx主页。</p>
+<p>​ 关于Dockerfile更详细的用法，可以参考 <a
+target="_blank" rel="noopener" href="https://docs.docker.com/reference/dockerfile/">官网文档Dockerfile
+reference</a> 或 <a
+target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-dockerfile.html">菜鸟教程Dockerfile文档</a></p>
+<h1 id="docker-save与docker-load-命令">3 docker save与docker load
+命令</h1>
+<p>​
+<code>docker save</code>命令的功能是将一个容器镜像保存为一个本地文件（相当于被持久化保存了），<code>docker load</code>命令将<code>docker save</code>生成的本地镜像文件导入到本地docker环境中。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">将容器镜像保存为本地文件nginx-v001.tar</span><br>root@ubuntu20:~# docker save -o nginx-v001.tar nginx:v001<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2025/01/17/AcsGyjJk2mewr5z.png" srcset="/img/loading.gif" lazyload alt="image-20250117215708133"></p>
-<p><img src="https://s2.loli.net/2025/01/17/1Nj6Z45L7WqmMpy.png" srcset="/img/loading.gif" lazyload alt="image-20250117215716903"></p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/AcsGyjJk2mewr5z.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117215708133" />
+<figcaption aria-hidden="true">image-20250117215708133</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/1Nj6Z45L7WqmMpy.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117215716903" />
+<figcaption aria-hidden="true">image-20250117215716903</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">可以将文件传输到其他安装了docker容器引擎的服务器上，再使用docker load命令导入即是一个可用的容器镜像</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">比如传输此文件到另外一个服务器controller01上，然后导入并使用</span><br></code></pre></td></tr></table></figure>
-
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:~# docker load -i nginx-v001.tar<br>root@controller01:~# docker run -d --name nginx-test -p 8085:80 nginx:v001<br>root@controller01:~# curl 127.0.0.1:8085<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2025/01/17/MKIiy79hOutlXW3.png" srcset="/img/loading.gif" lazyload alt="image-20250117215853043"></p>
-<h1 id="4-docker-export与docker-import命令"><a href="#4-docker-export与docker-import命令" class="headerlink" title="4 docker export与docker import命令"></a>4 docker export与docker import命令</h1><p>​      <code>docker export</code>命令，类似于<code>docker save</code>，但前者是将一个容器保存成一个文件，后者是将一个容器镜像保存成一个文件。</p>
-<p>​      <code>docker import</code>命令，有点类似于<code>docker load</code>，将<code>docker export</code>保存的文件导入成<code>docker</code>镜像。</p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/MKIiy79hOutlXW3.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117215853043" />
+<figcaption aria-hidden="true">image-20250117215853043</figcaption>
+</figure>
+<h1 id="docker-export与docker-import命令">4 docker export与docker
+import命令</h1>
+<p>​
+<code>docker export</code>命令，类似于<code>docker save</code>，但前者是将一个容器保存成一个文件，后者是将一个容器镜像保存成一个文件。</p>
+<p>​
+<code>docker import</code>命令，有点类似于<code>docker load</code>，将<code>docker export</code>保存的文件导入成<code>docker</code>镜像。</p>
 <p><strong>注意</strong>：<code>docker import</code>与<code>docker export</code>是一对的，它们成对使用。<code>docker import</code>不能跟<code>docker save</code>混用。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">将centos01容器打包保存成镜像文件centos-v0.2.tar到本地</span><br>root@kafka:/opt# docker export -o centos-v0.2.tar centos01<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2025/01/17/fGsZeQrVFNlgq3R.png" srcset="/img/loading.gif" lazyload alt="image-20250117220238284"></p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/fGsZeQrVFNlgq3R.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117220238284" />
+<figcaption aria-hidden="true">image-20250117220238284</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">docker import时，强烈建议设定好镜像名与标签（否则就像下图最底行一样，镜像名与标签都没有，只能通过镜像<span class="hljs-built_in">id</span>来引用）</span><br>root@kafka:/opt/msb_study# docker import centos-v0.2.tar centos:v0.2<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2025/01/17/I1Y9V27uoq5m4Cz.png" srcset="/img/loading.gif" lazyload alt="image-20250117220654638"></p>
+<figure>
+<img src="https://s2.loli.net/2025/01/17/I1Y9V27uoq5m4Cz.png" srcset="/img/loading.gif" lazyload
+alt="image-20250117220654638" />
+<figcaption aria-hidden="true">image-20250117220654638</figcaption>
+</figure>
 
                 
               </div>

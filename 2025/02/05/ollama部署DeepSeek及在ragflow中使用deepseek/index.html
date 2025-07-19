@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="环境信息   主机名 IP 操作系统 规格 GPU情况 备注    controller01 172.20.0.21 Ubuntu 20.04.3 LTS -amd64 16c64g+400G NVIDIA A40*2    安装配置Ollama自动安装官网地址：https:&#x2F;&#x2F;ollama.com&#x2F;下载地址：https:&#x2F;&#x2F;ollama.com&#x2F;download 123456789101112#">
+    <meta name="description" content="环境信息     主机名 IP 操作系统 规格 GPU情况 备注     controller01 172.20.0.21 Ubuntu 20.04.3 LTS -amd64 16c64g+400G NVIDIA A40*2     安装配置Ollama 自动安装 官网地址：https:&#x2F;&#x2F;ollama.com&#x2F; 下载地址：https:&#x2F;&#x2F;ol">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ollama部署DeepSeek及在ragflow中使用deepseek">
 <meta property="og:url" content="https://jiangsanyin.github.io/2025/02/05/ollama%E9%83%A8%E7%BD%B2DeepSeek%E5%8F%8A%E5%9C%A8ragflow%E4%B8%AD%E4%BD%BF%E7%94%A8deepseek/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="环境信息   主机名 IP 操作系统 规格 GPU情况 备注    controller01 172.20.0.21 Ubuntu 20.04.3 LTS -amd64 16c64g+400G NVIDIA A40*2    安装配置Ollama自动安装官网地址：https:&#x2F;&#x2F;ollama.com&#x2F;下载地址：https:&#x2F;&#x2F;ollama.com&#x2F;download 123456789101112#">
+<meta property="og:description" content="环境信息     主机名 IP 操作系统 规格 GPU情况 备注     controller01 172.20.0.21 Ubuntu 20.04.3 LTS -amd64 16c64g+400G NVIDIA A40*2     安装配置Ollama 自动安装 官网地址：https:&#x2F;&#x2F;ollama.com&#x2F; 下载地址：https:&#x2F;&#x2F;ol">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2025/02/11/gOoV2h73r8sqFvX.png">
 <meta property="og:image" content="https://s2.loli.net/2025/02/06/1re9RnYW6bmwvp5.png">
@@ -315,7 +315,9 @@
             
               <div class="markdown-body">
                 
-                <h1 id="环境信息"><a href="#环境信息" class="headerlink" title="环境信息"></a>环境信息</h1><table>
+                <h1 id="环境信息">环境信息</h1>
+<table>
+
 <thead>
 <tr>
 <th>主机名</th>
@@ -326,7 +328,8 @@
 <th>备注</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>controller01</td>
 <td>172.20.0.21</td>
 <td>Ubuntu 20.04.3 LTS -amd64</td>
@@ -334,59 +337,133 @@
 <td>NVIDIA A40*2</td>
 <td></td>
 </tr>
-</tbody></table>
-<h1 id="安装配置Ollama"><a href="#安装配置Ollama" class="headerlink" title="安装配置Ollama"></a>安装配置Ollama</h1><h2 id="自动安装"><a href="#自动安装" class="headerlink" title="自动安装"></a>自动安装</h2><p>官网地址：<a target="_blank" rel="noopener" href="https://ollama.com/">https://ollama.com/</a><br>下载地址：<a target="_blank" rel="noopener" href="https://ollama.com/download">https://ollama.com/download</a></p>
+</tbody>
+</table>
+<h1 id="安装配置ollama">安装配置Ollama</h1>
+<h2 id="自动安装">自动安装</h2>
+<p>官网地址：https://ollama.com/
+下载地址：https://ollama.com/download</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">此处安装Linux版本ollama</span><br>root@controller01:~# curl -fsSL https://ollama.com/install.sh | sh<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">但https://ollama.com/download/ollama-linux-amd64.tgz一直无法正常下载，所以先手动下载放到指定目录。再修改上述脚本文件继续安装</span><br>root@t1-gpu:/opt/installPkgs# wget https://ollama.com/install.sh -O ollama-install.sh <br>root@t1-gpu:/opt/installPkgs# vi ollama-install.sh<br>...<br> 82 #curl --fail --show-error --location --progress-bar \<br> 83 #    &quot;https://ollama.com/download/ollama-linux-$&#123;ARCH&#125;.tgz$&#123;VER_PARAM&#125;&quot; | \<br> 84 #    $SUDO tar -xzf - -C &quot;$OLLAMA_INSTALL_DIR&quot;<br> 85 $SUDO tar -xzf ollama-linux-amd64.tgz -C &quot;$OLLAMA_INSTALL_DIR&quot;<br>...<br></code></pre></td></tr></table></figure>
-
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装时将输出如下内容</span><br>root@controller01:/opt/installPkgs# bash ollama-install.sh <br><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; Cleaning up old version at /usr/local/lib/ollama</span><br><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; Installing ollama to /usr/local</span><br><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; Downloading Linux amd64 bundle</span><br><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; Creating ollama user...</span><br><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; Adding ollama user to render group...</span><br><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; Adding ollama user to video group...</span><br><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; Adding current user to ollama group...</span><br><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; Creating ollama systemd service...</span><br><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; Enabling and starting ollama service...</span><br>Created symlink /etc/systemd/system/default.target.wants/ollama.service → /etc/systemd/system/ollama.service.<br><span class="hljs-meta prompt_">&gt;</span><span class="language-bash">&gt;&gt; NVIDIA GPU installed.</span><br></code></pre></td></tr></table></figure>
-
-
-
-<h2 id="手动安装"><a href="#手动安装" class="headerlink" title="手动安装"></a>手动安装</h2><p>参考：<a target="_blank" rel="noopener" href="https://github.com/datawhalechina/handy-ollama/blob/main/docs/C2/3.%20Ollama%20%E5%9C%A8%20Linux%20%E4%B8%8B%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE.md#ollama-%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE---linux-%E7%B3%BB%E7%BB%9F%E7%AF%87">https://github.com/datawhalechina/handy-ollama/blob/main/docs/C2/3.%20Ollama%20%E5%9C%A8%20Linux%20%E4%B8%8B%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE.md#ollama-%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE---linux-%E7%B3%BB%E7%BB%9F%E7%AF%87</a></p>
-<h3 id="下载-ollama二进制文件"><a href="#下载-ollama二进制文件" class="headerlink" title="下载 ollama二进制文件"></a>下载 ollama二进制文件</h3><p>将 Ollama 的二进制文件下载到 PATH 中的目录：</p>
+<h2 id="手动安装">手动安装</h2>
+<p>参考：https://github.com/datawhalechina/handy-ollama/blob/main/docs/C2/3.%20Ollama%20%E5%9C%A8%20Linux%20%E4%B8%8B%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE.md#ollama-%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE---linux-%E7%B3%BB%E7%BB%9F%E7%AF%87</p>
+<h3 id="下载-ollama二进制文件">下载 ollama二进制文件</h3>
+<p>将 Ollama 的二进制文件下载到 PATH 中的目录：</p>
 <figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo curl -L https:<span class="hljs-regexp">//</span>ollama.com<span class="hljs-regexp">/download/</span>ollama-linux-amd64 -o <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/bin/</span>ollama<br>sudo chmod +x <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/bin/</span>ollama<br></code></pre></td></tr></table></figure>
-
-<h3 id="将-Ollama-添加为自启动服务"><a href="#将-Ollama-添加为自启动服务" class="headerlink" title="将 Ollama 添加为自启动服务"></a>将 Ollama 添加为自启动服务</h3><p>首先，为 Ollama 创建用户：</p>
+<h3 id="将-ollama-添加为自启动服务">将 Ollama 添加为自启动服务</h3>
+<p>首先，为 Ollama 创建用户：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo useradd -r -s /bin/false -m -d /usr/share/ollama ollama<br></code></pre></td></tr></table></figure>
-
-<p>然后在该位置：<code>/etc/systemd/system/ollama.service</code> 创建服务文件</p>
+<p>然后在该位置：<code>/etc/systemd/system/ollama.service</code>
+创建服务文件</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell">[Unit]<br>Description=Ollama Service<br>After=network-online.target<br><br>[Service]<br>ExecStart=/usr/local/bin/ollama serve<br>User=ollama<br>Group=ollama<br>Restart=always<br>RestartSec=3<br><span class="hljs-meta prompt_">#</span><span class="language-bash">其中PATH的值就是系统环境变量PATH的值</span><br>Environment=&quot;PATH=/root/anaconda3/envs/graphrag-test/bin:/usr/local/cuda-12.4/bin:/root/anaconda3/bin:/root/anaconda3/condabin:/usr/local/jdk-11/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/go/bin:/sbin:/usr/sbin:/usr/local/sbin&quot;<br>Environment=&quot;OLLAMA_HOST=0.0.0.0&quot;<br><br>[Install]<br>WantedBy=default.target<br></code></pre></td></tr></table></figure>
-
 <p>最后启动服务：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo systemctl daemon-reload<br>sudo systemctl enable ollama<br></code></pre></td></tr></table></figure>
-
-<h3 id="启动-Ollama"><a href="#启动-Ollama" class="headerlink" title="启动 Ollama"></a>启动 Ollama</h3><p>使用以下命令启动 Ollama：<code>systemd</code></p>
+<h3 id="启动-ollama">启动 Ollama</h3>
+<p>使用以下命令启动 Ollama：<code>systemd</code></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo systemctl start ollama<br></code></pre></td></tr></table></figure>
-
-<h1 id="使用Ollama运行DeepSeek-r1-7b"><a href="#使用Ollama运行DeepSeek-r1-7b" class="headerlink" title="使用Ollama运行DeepSeek-r1:7b"></a>使用Ollama运行DeepSeek-r1:7b</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">如果本地没有deepseek-r1:7b模型，它会自动下载相关模型文件，此时耗时4个两个小时</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">然后开始执行此大模型</span><br>root@controller01:~# ollama run deepseek-r1:7b<br>pulling manifest <br>pulling manifest <br>pulling 96c415656d37... 100% ▕████████████████████████████████████████████████████████████████████▏ 4.7 GB                         <br>pulling 369ca498f347... 100% ▕████████████████████████████████████████████████████████████████████ 387 B                         <br>pulling 6e4c38e1172f... 100% ▕████████████████████████████████████████████████████████████████████▏ 1.1 KB                         <br>pulling f4d24e9138dd... 100% ▕████████████████████████████████████████████████████████████████████▏  148 B                         <br>pulling 40fb844194b2... 100% ▕████████████████████████████████████████████████████████████████████▏  487 B                         <br>verifying sha256 digest <br>writing manifest <br>removing any unused layers <br>success <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">至此就可以在命令行中进行对话了</span><br></code></pre></td></tr></table></figure>
-
-<h1 id="安装ragflow"><a href="#安装ragflow" class="headerlink" title="安装ragflow"></a>安装ragflow</h1><p>官网 ：<a target="_blank" rel="noopener" href="https://github.com/infiniflow/ragflow">https://github.com/infiniflow/ragflow</a></p>
+<h1 id="使用ollama运行deepseek-r17b">使用Ollama运行DeepSeek-r1:7b</h1>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">如果本地没有deepseek-r1:7b模型，它会自动下载相关模型文件，此时耗时4个两个小时</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">然后开始执行此大模型</span><br>root@controller01:~# ollama run deepseek-r1:7b<br>pulling manifest <br>pulling manifest <br>pulling 96c415656d37... 100% ▕████████████████████████████████████████████████████████████████████▏ 4.7 GB                         <br>pulling 369ca498f347... 100% ▕████████████████████████████████████████████████████████████████████ 387 B                         <br>pulling 6e4c38e1172f... 100% ▕████████████████████████████████████████████████████████████████████▏ 1.1 KB                         <br>pulling f4d24e9138dd... 100% ▕████████████████████████████████████████████████████████████████████▏  148 B                         <br>pulling 40fb844194b2... 100% ▕████████████████████████████████████████████████████████████████████▏  487 B                         <br>verifying sha256 digest <br>writing manifest <br>removing any unused layers <br>success <br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">至此就可以在命令行中进行对话了</span><br></code></pre></td></tr></table></figure>
+<h1 id="安装ragflow">安装ragflow</h1>
+<p>官网 ：https://github.com/infiniflow/ragflow</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@controller01:/opt/code_repos# git clone https://github.com/infiniflow/ragflow.git<br><span class="hljs-meta prompt_">#</span><span class="language-bash">或 root@controller01:/opt/code_repos# git <span class="hljs-built_in">clone</span> https://gitee.com/sy-jiang/ragflow.git</span><br><br>root@controller01:/opt/code_repos# cd ragflow/docker/<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改RAGFLOW_IMAGE 镜像为国内镜像源提供的镜像（建议不要使用精简版的ragflow镜像）</span><br>root@controller01:/opt/code_repos/ragflow/docker# vi .env<br><span class="hljs-meta prompt_">#</span><span class="language-bash">RAGFLOW_IMAGE=infiniflow/ragflow:v0.15.1-slim</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">RAGFLOW_IMAGE=infiniflow/ragflow:v0.15.1</span><br>RAGFLOW_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/infiniflow/ragflow:v0.15.1<br><br>root@controller01:/opt/code_repos/ragflow/docker# docker-compose -f docker-compose.yml up -d<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果有NVIDIA GPU，使用如下</span><br>root@controller01:/opt/code_repos/ragflow/docker# docker-compose -f docker-compose-gpu.yml up -d<br></code></pre></td></tr></table></figure>
-
-<h1 id="使用ragflow"><a href="#使用ragflow" class="headerlink" title="使用ragflow"></a>使用ragflow</h1><h2 id="注册与登录"><a href="#注册与登录" class="headerlink" title="注册与登录"></a>注册与登录</h2><p>登录前必须使用邮箱注册（注册信息保存在本地），然后登录（第一个注册的用户默认就是管理员）</p>
-<p><img src="https://s2.loli.net/2025/02/11/gOoV2h73r8sqFvX.png" srcset="/img/loading.gif" lazyload alt="image-20250206095806493"></p>
-<p><img src="https://s2.loli.net/2025/02/06/1re9RnYW6bmwvp5.png" srcset="/img/loading.gif" lazyload alt="image-20250206100000908"></p>
-<h2 id="将ollama中管理的DeepSeek模型接入ragflow"><a href="#将ollama中管理的DeepSeek模型接入ragflow" class="headerlink" title="将ollama中管理的DeepSeek模型接入ragflow"></a>将ollama中管理的DeepSeek模型接入ragflow</h2><p>先在模型提供商中添加嵌入模型和LLM，然后在“系统模型设置”中设置它们。</p>
-<p><img src="https://s2.loli.net/2025/02/06/Z23MyxmtfS8JqQo.png" srcset="/img/loading.gif" lazyload alt="image-20250206100217493"></p>
-<p><img src="https://s2.loli.net/2025/02/06/FqMHjzUmwOYRetC.png" srcset="/img/loading.gif" lazyload alt="image-20250206100425361"></p>
+<h1 id="使用ragflow">使用ragflow</h1>
+<h2 id="注册与登录">注册与登录</h2>
+<p>登录前必须使用邮箱注册（注册信息保存在本地），然后登录（第一个注册的用户默认就是管理员）</p>
+<figure>
+<img src="https://s2.loli.net/2025/02/11/gOoV2h73r8sqFvX.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206095806493" />
+<figcaption aria-hidden="true">image-20250206095806493</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/1re9RnYW6bmwvp5.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206100000908" />
+<figcaption aria-hidden="true">image-20250206100000908</figcaption>
+</figure>
+<h2
+id="将ollama中管理的deepseek模型接入ragflow">将ollama中管理的DeepSeek模型接入ragflow</h2>
+<p>先在模型提供商中添加嵌入模型和LLM，然后在“系统模型设置”中设置它们。</p>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/Z23MyxmtfS8JqQo.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206100217493" />
+<figcaption aria-hidden="true">image-20250206100217493</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/FqMHjzUmwOYRetC.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206100425361" />
+<figcaption aria-hidden="true">image-20250206100425361</figcaption>
+</figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">chat就是用来对话的模型。</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">embedding是一类特殊的模型，用来将用户输入的内容进行一个编码，然后输入给大模型。</span><br><br>root@controller01:/opt/code_repos/ragflow/docker# ollama list<br>NAME                                    ID              SIZE    MODIFIED     <br>deepseek-r1:7b                          0a8c26691023    4.7 GB  18 hours ago<br>qwen:7b                                 2091ee8c8d8f    4.5 GB  2 months ago<br>EntropyYue/chatglm3:6b                  254ec1286add    3.6 GB  2 months ago<br>qwen:14b                                80362ced6553    8.2 GB  2 months ago<br>qwen:0.5b                               b5dc5e784f2a    394 MB  2 months ago<br>deepseek-coder:1.3b                     3ddd2d3fc8d2    776 MB  2 months ago<br>quentinz/bge-large-zh-v1.5:latest       bc8ca0995fcd    651 MB  6 months ago<br>gemma2:9b                               ff02c3702f32    5.4 GB  6 months ago<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://s2.loli.net/2025/02/06/gynacCU7fqPSvJZ.png" srcset="/img/loading.gif" lazyload alt="image-20250206101409923"></p>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/gynacCU7fqPSvJZ.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206101409923" />
+<figcaption aria-hidden="true">image-20250206101409923</figcaption>
+</figure>
 <p>添加模型后，进行系统模型设置</p>
-<p><img src="https://s2.loli.net/2025/02/06/DEaqA4ZY1Td2pOo.png" srcset="/img/loading.gif" lazyload alt="image-20250206101725314"></p>
-<p><img src="https://s2.loli.net/2025/02/06/FmcUf9dbOqtJklp.png" srcset="/img/loading.gif" lazyload alt="image-20250206151941934"></p>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/DEaqA4ZY1Td2pOo.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206101725314" />
+<figcaption aria-hidden="true">image-20250206101725314</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/FmcUf9dbOqtJklp.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206151941934" />
+<figcaption aria-hidden="true">image-20250206151941934</figcaption>
+</figure>
 <p>其中large表示嵌入模型的规模是large，如果资源足够，模型规模越大效果越好；zh表示此嵌入模型是一个中文解析模型。</p>
-<h2 id="知识库"><a href="#知识库" class="headerlink" title="知识库"></a>知识库</h2><h3 id="创建知识库"><a href="#创建知识库" class="headerlink" title="创建知识库"></a>创建知识库</h3><p>此处我准备了一个《中华人民共和国食品安全法.pdf》文件，用来创建知识库</p>
-<p><img src="https://s2.loli.net/2025/02/06/do1VKj3CHT8bhUF.png" srcset="/img/loading.gif" lazyload alt="image-20250206102421822"></p>
-<h3 id="知识库配置"><a href="#知识库配置" class="headerlink" title="知识库配置"></a>知识库配置</h3><p><img src="https://s2.loli.net/2025/02/06/PF1QBIheHO6t2i7.png" srcset="/img/loading.gif" lazyload alt="image-20250206152608551"></p>
-<h3 id="数据集配置"><a href="#数据集配置" class="headerlink" title="数据集配置"></a>数据集配置</h3><p><img src="https://s2.loli.net/2025/02/06/uAahNb9JYQORBci.png" srcset="/img/loading.gif" lazyload alt="image-20250206152802622"></p>
-<p><img src="https://s2.loli.net/2025/02/06/eyU3OQaSg4MTBhf.png" srcset="/img/loading.gif" lazyload alt="image-20250206152833439"></p>
-<p>《食品安全法.pdf》下载地址：<a target="_blank" rel="noopener" href="https://sj.als.gov.cn/attach/0/d50b5b9d5b7e4387abd14da4b1e05f73.pdf">https://sj.als.gov.cn/attach/0/d50b5b9d5b7e4387abd14da4b1e05f73.pdf</a></p>
-<p><img src="https://s2.loli.net/2025/02/06/MevyOWxD13uq8ro.png" srcset="/img/loading.gif" lazyload alt="image-20250206152929373"></p>
-<p><img src="https://s2.loli.net/2025/02/06/m3Z2xtvRgTlseWF.png" srcset="/img/loading.gif" lazyload alt="image-20250206153412950"></p>
-<h2 id="聊天"><a href="#聊天" class="headerlink" title="聊天"></a>聊天</h2><h3 id="新建助理"><a href="#新建助理" class="headerlink" title="新建助理"></a>新建助理</h3><p><img src="https://s2.loli.net/2025/02/06/xVebYaBqKLy61Ei.png" srcset="/img/loading.gif" lazyload alt="image-20250206154504678"></p>
-<h3 id="新建聊天"><a href="#新建聊天" class="headerlink" title="新建聊天"></a>新建聊天</h3><p><img src="https://s2.loli.net/2025/02/06/hJOIvbS3zuyYU9C.png" srcset="/img/loading.gif" lazyload alt="image-20250206154651562"></p>
-<p><img src="https://s2.loli.net/2025/02/06/J4lj5gHoXDOKqWb.png" srcset="/img/loading.gif" lazyload alt="image-20250206155149390"></p>
+<h2 id="知识库">知识库</h2>
+<h3 id="创建知识库">创建知识库</h3>
+<p>此处我准备了一个《中华人民共和国食品安全法.pdf》文件，用来创建知识库</p>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/do1VKj3CHT8bhUF.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206102421822" />
+<figcaption aria-hidden="true">image-20250206102421822</figcaption>
+</figure>
+<h3 id="知识库配置">知识库配置</h3>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/PF1QBIheHO6t2i7.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206152608551" />
+<figcaption aria-hidden="true">image-20250206152608551</figcaption>
+</figure>
+<h3 id="数据集配置">数据集配置</h3>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/uAahNb9JYQORBci.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206152802622" />
+<figcaption aria-hidden="true">image-20250206152802622</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/eyU3OQaSg4MTBhf.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206152833439" />
+<figcaption aria-hidden="true">image-20250206152833439</figcaption>
+</figure>
+<p>《食品安全法.pdf》下载地址：https://sj.als.gov.cn/attach/0/d50b5b9d5b7e4387abd14da4b1e05f73.pdf</p>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/MevyOWxD13uq8ro.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206152929373" />
+<figcaption aria-hidden="true">image-20250206152929373</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/m3Z2xtvRgTlseWF.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206153412950" />
+<figcaption aria-hidden="true">image-20250206153412950</figcaption>
+</figure>
+<h2 id="聊天">聊天</h2>
+<h3 id="新建助理">新建助理</h3>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/xVebYaBqKLy61Ei.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206154504678" />
+<figcaption aria-hidden="true">image-20250206154504678</figcaption>
+</figure>
+<h3 id="新建聊天">新建聊天</h3>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/hJOIvbS3zuyYU9C.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206154651562" />
+<figcaption aria-hidden="true">image-20250206154651562</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/02/06/J4lj5gHoXDOKqWb.png" srcset="/img/loading.gif" lazyload
+alt="image-20250206155149390" />
+<figcaption aria-hidden="true">image-20250206155149390</figcaption>
+</figure>
 
                 
               </div>

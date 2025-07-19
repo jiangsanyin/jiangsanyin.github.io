@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1 容器的定义​		容器是一种虚拟化技术，用于将应用程序及其所有依赖项打包在一起，以便在不同的计算环境中进行移植和运行。 ​		每个运行的容器都是可重复的，意味着无论在哪里运行它都会得到相同的行为。容器将应用程序从底层的主机设施中解耦。这使得在不同的云或OS环境中部署更加容易。 ​		容器提供了一种隔离的运行环境，使不同应用程序能够在独立的文件系统、网络和进程空间等独立运行环境中运行，提升了安全性">
+    <meta name="description" content="1 容器的定义 ​ 容器是一种虚拟化技术，用于将应用程序及其所有依赖项打包在一起，以便在不同的计算环境中进行移植和运行。 ​ 每个运行的容器都是可重复的，意味着无论在哪里运行它都会得到相同的行为。容器将应用程序从底层的主机设施中解耦。这使得在不同的云或OS环境中部署更加容易。 ​ 容器提供了一种隔离的运行环境，使不同应用程序能够在独立的文件系统、网络和进程空间等独立运行环境中运行，提升">
 <meta property="og:type" content="article">
 <meta property="og:title" content="容器概述">
 <meta property="og:url" content="https://jiangsanyin.github.io/2024/12/18/%E5%AE%B9%E5%99%A8%E6%A6%82%E8%BF%B0/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="1 容器的定义​		容器是一种虚拟化技术，用于将应用程序及其所有依赖项打包在一起，以便在不同的计算环境中进行移植和运行。 ​		每个运行的容器都是可重复的，意味着无论在哪里运行它都会得到相同的行为。容器将应用程序从底层的主机设施中解耦。这使得在不同的云或OS环境中部署更加容易。 ​		容器提供了一种隔离的运行环境，使不同应用程序能够在独立的文件系统、网络和进程空间等独立运行环境中运行，提升了安全性">
+<meta property="og:description" content="1 容器的定义 ​ 容器是一种虚拟化技术，用于将应用程序及其所有依赖项打包在一起，以便在不同的计算环境中进行移植和运行。 ​ 每个运行的容器都是可重复的，意味着无论在哪里运行它都会得到相同的行为。容器将应用程序从底层的主机设施中解耦。这使得在不同的云或OS环境中部署更加容易。 ​ 容器提供了一种隔离的运行环境，使不同应用程序能够在独立的文件系统、网络和进程空间等独立运行环境中运行，提升">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2024/12/18/XlrPybfMmukY3tL.png">
 <meta property="og:image" content="https://s2.loli.net/2024/12/18/KyaMD6qQFgxBGU2.png">
@@ -301,26 +301,46 @@
             
               <div class="markdown-body">
                 
-                <h1 id="1-容器的定义"><a href="#1-容器的定义" class="headerlink" title="1 容器的定义"></a>1 容器的定义</h1><p>​		容器是一种虚拟化技术，用于将应用程序及其所有依赖项打包在一起，以便在不同的计算环境中进行移植和运行。</p>
-<p>​		每个运行的容器都是可重复的，意味着无论在哪里运行它都会得到相同的行为。容器将应用程序从底层的主机设施中解耦。这使得在不同的云或OS环境中部署更加容易。</p>
-<p>​		容器提供了一种隔离的运行环境，使不同应用程序能够在独立的文件系统、网络和进程空间等独立运行环境中运行，提升了安全性和稳定性。通过利用容器技术，可以将应用及其整个运行时环境（包括需要的所有文件及信赖环境）一起进行打包和隔离。从而可以在不同环境（如开发、测试和生产等环境）之间轻松迁移应用，同时还可保留应用的全部功能。容器也是保障IT安全的一个重要组成部分。将安全防护内置于容器管道并为基础架构增添防护，可以保障容器的可靠性、可扩展性和信赖度。利用容器，还可以轻松地在具有一致行为和功能的公共、私有和混合云环境和数据中心（或本地环境）之间移动容器化应用。</p>
-<h1 id="2-容器与虚拟机的区别"><a href="#2-容器与虚拟机的区别" class="headerlink" title="2 容器与虚拟机的区别"></a>2 容器与虚拟机的区别</h1><p>​        容器和虚拟机之间的主要区别在于虚拟化层级、资源利用效率、启动速度和性能以及隔离性。</p>
-<p><img src="https://s2.loli.net/2024/12/18/XlrPybfMmukY3tL.png" srcset="/img/loading.gif" lazyload alt="image-20241218234125009"></p>
-<p>​		相比于传统的虚拟机技术，容器具有更快的启动和停止速度，更少的资源占用，更高的可伸缩性和更好的性能。容器还提供了更好的环境隔离和更高的应用程序密度，可以在相同的硬件资源上运行更多的应用程序实例。</p>
-<p>​		容器和传统的虚拟机技术有所不同。传统的虚拟机技术是通过在物理服务器上运行一个完整的操作系统实例来实现虚拟化，每个虚拟机都有自己的内核和操作系统。而容器是在宿主机的操作系统上运行，共享宿主机的内核和操作系统，每个容器只包含应用程序及其依赖项。</p>
-<h1 id="3-容器是如何工作的"><a href="#3-容器是如何工作的" class="headerlink" title="3 容器是如何工作的"></a>3 容器是如何工作的</h1><p>​		容器技术基于操作系统级的虚拟化技术，利用Linux内核的命名空间和控制组等特性，实现了容器的隔离和资源管理。容器使用了一种称为容器镜像的打包格式，包含了应用程序及其依赖项，以及运行时所需的文件系统、网络和进程空间等。容器镜像可以通过容器运行时创建和启动，形成一个独立的运行环境。</p>
-<p>​		在Linux内核中，容器不是一类对象。容器本质上由几个底层的内核原语组成：namespace（允许你跟谁交谈），cgroups（允许使用的资源量），和LSMs（Linux安全模块——允许你做的事情）。这些凑在一起能够为我们的进程设置安全、隔离和可计量的执行环境。</p>
-<p>​		有兴趣的或想进行更深入学习的“同学”，可以再进一步去学习Linux内核的命名空间、控制组等相关知识。Linux内核的命名空间一共包括mnt、uts、pid、net、ipc、user、cgroup这7种不同命名空间。</p>
-<p>​		Linux内核命名空间参考文章：</p>
+                <h1 id="容器的定义">1 容器的定义</h1>
+<p>​
+容器是一种虚拟化技术，用于将应用程序及其所有依赖项打包在一起，以便在不同的计算环境中进行移植和运行。</p>
+<p>​
+每个运行的容器都是可重复的，意味着无论在哪里运行它都会得到相同的行为。容器将应用程序从底层的主机设施中解耦。这使得在不同的云或OS环境中部署更加容易。</p>
+<p>​
+容器提供了一种隔离的运行环境，使不同应用程序能够在独立的文件系统、网络和进程空间等独立运行环境中运行，提升了安全性和稳定性。通过利用容器技术，可以将应用及其整个运行时环境（包括需要的所有文件及信赖环境）一起进行打包和隔离。从而可以在不同环境（如开发、测试和生产等环境）之间轻松迁移应用，同时还可保留应用的全部功能。容器也是保障IT安全的一个重要组成部分。将安全防护内置于容器管道并为基础架构增添防护，可以保障容器的可靠性、可扩展性和信赖度。利用容器，还可以轻松地在具有一致行为和功能的公共、私有和混合云环境和数据中心（或本地环境）之间移动容器化应用。</p>
+<h1 id="容器与虚拟机的区别">2 容器与虚拟机的区别</h1>
+<p>​
+容器和虚拟机之间的主要区别在于虚拟化层级、资源利用效率、启动速度和性能以及隔离性。</p>
+<figure>
+<img src="https://s2.loli.net/2024/12/18/XlrPybfMmukY3tL.png" srcset="/img/loading.gif" lazyload
+alt="image-20241218234125009" />
+<figcaption aria-hidden="true">image-20241218234125009</figcaption>
+</figure>
+<p>​
+相比于传统的虚拟机技术，容器具有更快的启动和停止速度，更少的资源占用，更高的可伸缩性和更好的性能。容器还提供了更好的环境隔离和更高的应用程序密度，可以在相同的硬件资源上运行更多的应用程序实例。</p>
+<p>​
+容器和传统的虚拟机技术有所不同。传统的虚拟机技术是通过在物理服务器上运行一个完整的操作系统实例来实现虚拟化，每个虚拟机都有自己的内核和操作系统。而容器是在宿主机的操作系统上运行，共享宿主机的内核和操作系统，每个容器只包含应用程序及其依赖项。</p>
+<h1 id="容器是如何工作的">3 容器是如何工作的</h1>
+<p>​
+容器技术基于操作系统级的虚拟化技术，利用Linux内核的命名空间和控制组等特性，实现了容器的隔离和资源管理。容器使用了一种称为容器镜像的打包格式，包含了应用程序及其依赖项，以及运行时所需的文件系统、网络和进程空间等。容器镜像可以通过容器运行时创建和启动，形成一个独立的运行环境。</p>
+<p>​
+在Linux内核中，容器不是一类对象。容器本质上由几个底层的内核原语组成：namespace（允许你跟谁交谈），cgroups（允许使用的资源量），和LSMs（Linux安全模块——允许你做的事情）。这些凑在一起能够为我们的进程设置安全、隔离和可计量的执行环境。</p>
+<p>​
+有兴趣的或想进行更深入学习的“同学”，可以再进一步去学习Linux内核的命名空间、控制组等相关知识。Linux内核的命名空间一共包括mnt、uts、pid、net、ipc、user、cgroup这7种不同命名空间。</p>
+<p>​ Linux内核命名空间参考文章：</p>
 <ul>
 <li><p>Linux kernel内核官网：</p>
-<p><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/admin-guide/namespaces/index.html">https://www.kernel.org/doc/html/latest/admin-guide/namespaces/index.html</a></p>
-</li>
-<li><p>man7.org网站：<a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man7/namespaces.7.html">https://man7.org/linux/man-pages/man7/namespaces.7.html</a></p>
-</li>
+<p>https://www.kernel.org/doc/html/latest/admin-guide/namespaces/index.html</p></li>
+<li><p>man7.org网站：https://man7.org/linux/man-pages/man7/namespaces.7.html</p></li>
 </ul>
-<h1 id="4-容器与虚拟机的构架对比"><a href="#4-容器与虚拟机的构架对比" class="headerlink" title="4 容器与虚拟机的构架对比"></a>4 容器与虚拟机的构架对比</h1><p><img src="https://s2.loli.net/2024/12/18/KyaMD6qQFgxBGU2.png" srcset="/img/loading.gif" lazyload alt="image-20241218234218202"></p>
-<h1 id="5-容器的优势"><a href="#5-容器的优势" class="headerlink" title="5 容器的优势"></a>5 容器的优势</h1><ul>
+<h1 id="容器与虚拟机的构架对比">4 容器与虚拟机的构架对比</h1>
+<figure>
+<img src="https://s2.loli.net/2024/12/18/KyaMD6qQFgxBGU2.png" srcset="/img/loading.gif" lazyload
+alt="image-20241218234218202" />
+<figcaption aria-hidden="true">image-20241218234218202</figcaption>
+</figure>
+<h1 id="容器的优势">5 容器的优势</h1>
+<ul>
 <li><strong>可移植性</strong></li>
 </ul>
 <p>容器已经成为应用分发和交付的标准技术，将应用与底层运行环境进行解耦，使得应用程序可以在不同的计算环境中快速移植和运行。</p>
@@ -336,7 +356,8 @@
 <li><strong>可伸缩性</strong></li>
 </ul>
 <p>容器可以根据需求进行水平和垂直扩展，快速实现应用程序的弹性伸缩。通过容器编排工具，可以自动管理和调度容器的部署和扩展，提高了应用程序的可伸缩性和可靠性。</p>
-<h1 id="6-容器有哪些实际应用"><a href="#6-容器有哪些实际应用" class="headerlink" title="6 容器有哪些实际应用"></a>6 容器有哪些实际应用</h1><p>​		容器在各种应用场景中有着广泛的应用，以下是其中几个主要应用场景：</p>
+<h1 id="容器有哪些实际应用">6 容器有哪些实际应用</h1>
+<p>​ 容器在各种应用场景中有着广泛的应用，以下是其中几个主要应用场景：</p>
 <ul>
 <li><strong>应用程序开发和测试</strong></li>
 </ul>
@@ -349,10 +370,12 @@
 <li><strong>持续集成和持续部署</strong></li>
 </ul>
 <p>容器可以与持续集成和持续部署工具集成，实现自动化的构建、测试和部署。容器可以快速启动和停止，提供了快速迭代和发布的能力，加快了软件交付的速度。</p>
-<h1 id="7-备注与引用"><a href="#7-备注与引用" class="headerlink" title="7 备注与引用"></a>7 备注与引用</h1><p>​		某些观点或阐述，笔者水平有限无法给出正式严谨的答案，唯有引用企业或单位的官网正式描述。本文某些内容来自以下文章：</p>
+<h1 id="备注与引用">7 备注与引用</h1>
+<p>​
+某些观点或阐述，笔者水平有限无法给出正式严谨的答案，唯有引用企业或单位的官网正式描述。本文某些内容来自以下文章：</p>
 <ul>
-<li>容器的定义与优势：来自阿里云官网“<a target="_blank" rel="noopener" href="https://www.aliyun.com/getting-started/what-is/what-is-container%E2%80%9D">https://www.aliyun.com/getting-started/what-is/what-is-container”</a></li>
-<li>容器技术的用途或作用：来自redhat官网“<a target="_blank" rel="noopener" href="https://www.redhat.com/zh/topics/containers%E2%80%9D">https://www.redhat.com/zh/topics/containers”</a></li>
+<li>容器的定义与优势：来自阿里云官网“https://www.aliyun.com/getting-started/what-is/what-is-container”</li>
+<li>容器技术的用途或作用：来自redhat官网“https://www.redhat.com/zh/topics/containers”</li>
 </ul>
 
                 
