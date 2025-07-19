@@ -4,6 +4,56 @@
   
   
   <entry>
+    <title>机器学习入门-03线性模型</title>
+    <link href="/2025/07/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-03%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/"/>
+    <url>/2025/07/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-03%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/</url>
+    
+    <content type="html"><![CDATA[<h1 id="第3章-线性模型">第3章 线性模型</h1><h2 id="线性差别分析">3.4 线性差别分析</h2><ul><li>均值向量：提供了数据集中每个特征的平均值。对于含有<em>n</em>个观测值的<em>m</em>个特征的数据集，均值向量是一个m<em>m</em>维向量，其中每个元素是对应特征的均值。<span class="math display">\[μ=[μ1,μ2, ... ,μm]\]</span></li></ul><p>协方差矩阵：</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>机器学习入门</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>西瓜书与南瓜书</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>线性代数-常见矩阵</title>
+    <link href="/2025/07/17/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-%E5%B8%B8%E8%A7%81%E7%9F%A9%E9%98%B5/"/>
+    <url>/2025/07/17/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-%E5%B8%B8%E8%A7%81%E7%9F%A9%E9%98%B5/</url>
+    
+    <content type="html"><![CDATA[<h1 id="线性代数参考文档">线性代数参考文档</h1><p>https://zh.d2l.ai/chapter_preliminaries/linear-algebra.html#id5</p><p>https://machine-learning-from-scratch.readthedocs.io/zh-cn/latest/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0.html</p><h1 id="单元矩阵">单元矩阵</h1><p>单位矩阵（Identity matrix），也称为恒等矩阵（Identitymatrix）或标准矩阵（unitmatrix），是一种特殊的方阵，其主对角线上的元素全为1，其余元素全为0。单位矩阵通常用字母"I" 或 "E"表示，其大小由行数（或列数）决定。单位矩阵在矩阵运算中具有类似于数字中的1 的作用。</p><p>3阶单位矩阵示例如下： <span class="math display">\[\left[\begin{matrix}   1 &amp; 0 &amp; 0 \\   0 &amp; 1 &amp; 0 \\   0 &amp; 0 &amp; 1  \end{matrix}\right]\]</span></p><h1 id="满轶矩阵">满轶矩阵</h1><p>若矩阵秩等于行数，称为行满秩；若矩阵秩等于列数，称为列满秩。既是行满秩又是列满秩则为n阶矩阵即n阶方阵。行满秩矩阵就是行向量线性无关，列满秩矩阵就是列向量线性无关；所以如果是方阵,行满秩矩阵与列满秩矩阵是等价的。</p><h1 id="对称矩阵">对称矩阵</h1><p>在<ahref="https://zh.wikipedia.org/wiki/線性代數">线性代数</a>中，<strong>对称矩阵</strong>（英语：symmetricmatrix）指<ahref="https://zh.wikipedia.org/wiki/轉置矩陣">转置矩阵</a>和自身相等<ahref="https://zh.wikipedia.org/wiki/方形矩陣">方形矩阵</a>。 <spanclass="math display">\[A^T=A\]</span> 对称矩阵中的右上至左下方向元素以<ahref="https://zh.wikipedia.org/wiki/主對角線">主对角线</a>（左上至右下）为轴进行对称。若将其写作<imgsrc="https://wikimedia.org/api/rest_v1/media/math/render/svg/296ad42d9541f8285979ce822ccb661da56111ca"alt="{A=(a_{ij})}" />，则对所有的<em>i</em>和<em>j</em>，<imgsrc="https://wikimedia.org/api/rest_v1/media/math/render/svg/345ee164a8ed5ddbfaf43a3dabb821bcbed54324"alt="{a_{ij}=a_{ji} !}" /></p><p>对称矩阵示例： <span class="math display">\[\left[\begin{matrix}   1 &amp; 2 &amp; 3 \\   2 &amp; 4 &amp; -5 \\   3 &amp; -5 &amp; 6  \end{matrix}\right]\]</span></p><h1 id="正定矩阵">正定矩阵</h1><p>参考https://basics.sjtu.edu.cn/~yangqizhe/pdf/la2024s/slides/LALec13-handout-zh.pdf</p><ul><li><p>广义定义</p><ul><li>设M是n阶方阵，如果对任何非零向量z，都有 z'Mz &gt; 0，其中z'表示z的转置，就称M正定矩阵。例如：B为n阶矩阵，E为单位矩阵，a为正实数。aE+B在a充分大时，aE+B为正定矩阵。（B必须为对称阵）</li></ul></li><li><p>狭义定义</p><ul><li>一个n阶的实对称矩阵M是正定的当且仅当对于所有的非零实系数向量z，都有z'Mz&gt;0。其中z'表示z的转置。</li></ul><p>一个对称矩阵 S 被称为是正定矩阵，如果其所有的特征值 λ 都满足 λ &gt;0。</p></li></ul><h1 id="矩阵变换">矩阵变换</h1><p>在<ahref="https://baike.baidu.com/item/线性代数/800?fromModule=lemma_inlink">线性代数</a>中，<ahref="https://baike.baidu.com/item/矩阵/18069?fromModule=lemma_inlink">矩阵</a>的初等行变换是指以下三种变换类型：</p><ol type="1"><li><p>交换矩阵的两行（对调i,j，两行记为r<sub>i</sub>，r<sub>j</sub>）；</p></li><li><p>以一个非零数k乘矩阵的某一行所有元素（第i行乘以k记为r<sub>i</sub>× k）；</p></li><li><p>把矩阵的某一行所有元素乘以一个数k后加到另一行对应的元素(第j行乘以k加到第i行记为r<sub>i</sub>+ k × r<sub>j</sub>)。 <span class="math display">\[A=\left[\begin{matrix}   1 &amp; 2 &amp; 3 \\   0 &amp; 4 &amp; 5 \\   0 &amp; 0 &amp; 6 \\  \end{matrix} \\\right]，经过矩阵初等变换后，矩阵A可以转换成右侧形式，B=\left[  \begin{matrix}   1 &amp; 2 &amp; 3 \\   0 &amp; 4 &amp; 5 \\   0 &amp; 0 &amp; 6 \\  \end{matrix} \\\right]\]</span></p></li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>线性代数</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>线性代数</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>机器学习入门-02模型评估</title>
     <link href="/2025/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-02%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0/"/>
     <url>/2025/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-02%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0/</url>
@@ -847,7 +897,7 @@
     <link href="/2025/03/26/markdown%E6%96%87%E4%BB%B6%E4%B8%AD%E7%BC%96%E8%BE%91%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E4%B8%8E%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F/"/>
     <url>/2025/03/26/markdown%E6%96%87%E4%BB%B6%E4%B8%AD%E7%BC%96%E8%BE%91%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E4%B8%8E%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F/</url>
     
-    <content type="html"><![CDATA[<h1 id="一特殊符号">一、特殊符号</h1><p><strong><font color='red'>注：</font></strong>markdown文件中支持HTML语法，所以<ahref="https://tool.chinaz.com/tools/htmlchar.aspx">HTML语法符号</a>也可以用来输出某些特殊符号。</p><h2 id="上下标">2.1 上下标</h2><p>上标：a<sup>2</sup></p><p>下标：a<sub>2</sub></p><h1 id="二数学公式">二、数学公式</h1><p>参考：https://blog.csdn.net/weixin_42782150/article/details/104878759</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="一特殊符号">一、特殊符号</h1><p><strong><font color='red'>注：</font></strong>markdown文件中支持HTML语法，所以<ahref="https://tool.chinaz.com/tools/htmlchar.aspx">HTML语法符号</a>也可以用来输出某些特殊符号。</p><h2 id="上下标">2.1 上下标</h2><p>上标：a<sup>2</sup></p><p>下标：a<sub>2</sub></p><h1 id="二数学公式">二、数学公式</h1><p>参考：https://blog.csdn.net/weixin_42782150/article/details/104878759</p><h1 id="矩阵">矩阵</h1><p>使用markdown写矩阵：<ahref="https://blog.csdn.net/qq_38228254/article/details/79469727">使用markdown写矩阵</a></p><p>如下是一个3阶单位矩阵： <span class="math display">\[\left[\begin{matrix}   1 &amp; 0 &amp; 0 \\   0 &amp; 1 &amp; 0 \\   0 &amp; 0 &amp; 1  \end{matrix}\right]\]</span></p>]]></content>
     
     
     <categories>
