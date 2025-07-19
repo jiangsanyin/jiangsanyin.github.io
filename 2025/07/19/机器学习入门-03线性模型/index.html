@@ -27,7 +27,7 @@
 <meta property="og:description" content="第3章 线性模型 ​ 哈 3.4 线性差别分析 均值向量 定义：均值向量（Mean Vector）提供了数据集中每个特征的平均值。对于 \[ \begin{flalign*} μ&#x3D;[μ_1,μ_2,...,μ_m] \\ 其中μ_j&#x3D;\frac{1}{n}\sum_{i &#x3D; 1} ^m(x_{ij}) \\ μ_j是第j个特征的均值。 \\ x_{ij}是第i个观测的第j个特征">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-19T08:19:12.000Z">
-<meta property="article:modified_time" content="2025-07-19T11:31:06.000Z">
+<meta property="article:modified_time" content="2025-07-19T14:49:52.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="西瓜书与南瓜书">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          694 字
+          797 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          6 分钟
+          7 分钟
         
       </span>
     
@@ -333,7 +333,29 @@ Matrix）描述了数据集中特征间的相互变化趋势。它不仅展示�
 μ_j和μ_k分别是特征j和k的均值。\\
 n是观测值的数量。\\
 \end{flalign*}
-\]</span> ​ 举例：使用上述身高和体重数据计算协方差矩阵。 $$ $$</p>
+\]</span> ​ 举例：使用上述身高和体重数据计算协方差矩阵。 <span
+class="math display">\[
+\begin{flalign*}
+\text{首先，我们已知:}\\
+μ_{\text{身高}} = 167.5\\
+μ_{\text{体重}} = 62.5\\
+\\
+\text{计算方差和协方差:}\\
+\text{方差(身高): 使用公式计算得} \Sigma_{11} \\
+\text{方差(体重): 使用公式计算得} \Sigma_{22} \\
+\text{协方差(身高, 体重): 使用公式计算得} \Sigma_{12}、\Sigma_{21} \\
+\\
+\text{数据集：}
+\text{X=}\left[
+\begin{matrix}
+   160 &amp; 55 \\
+   165 &amp; 60 \\
+   170 &amp; 65 \\
+   175 &amp; 70
+  \end{matrix}
+\right] \\\\
+\end{flalign*}
+\]</span></p>
 <p><span class="math display">\[
 \begin{flalign*}
 &amp;(1)当j=1、k=1时,\Sigma_{11}=\frac{1}{4-1}[(160-167.5)^2+(165-167.5)^2+(170-167.5)^2+(175-167.5)^2]=\frac{125}{3}=41.67\\
