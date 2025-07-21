@@ -19,24 +19,21 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="第3章 线性模型 参考：《机械学习第1版第47次印刷-周志华著》、https:&#x2F;&#x2F;www.datawhale.cn&#x2F;learn&#x2F;content&#x2F;2&#x2F;65 西瓜书代码实战：https:&#x2F;&#x2F;github.com&#x2F;datawhalechina&#x2F;machine-learning-toy-code&#x2F;blob&#x2F;main&#x2F;%E8%A5%BF%E7%93%9C%E4%B9%A6%E4%BB%A3%E7%A0%">
+    <meta name="description" content="一、行列式的本质定义(定义一) ... 二、行列式的性质 ... 三、行列式的逆序数定义(定义二) 排列与逆序 排列：由n个数 1, 2, ..., n 组成的一个有序数组称为一个n级排列，如23145是一个5级排列，34521也是一5级排列。显然，由这样的n个数组成的n级排列一共有n!个。 逆序：在一个n级排列i1, i2, ..., in中，若is&gt;it，且is排在it">
 <meta property="og:type" content="article">
-<meta property="og:title" content="机器学习入门-03线性模型">
-<meta property="og:url" content="https://jiangsanyin.github.io/2025/07/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-03%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:title" content="线性代数-01-行列式的基本概念与计算">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/07/21/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-01-%E8%A1%8C%E5%88%97%E5%BC%8F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E8%AE%A1%E7%AE%97/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="第3章 线性模型 参考：《机械学习第1版第47次印刷-周志华著》、https:&#x2F;&#x2F;www.datawhale.cn&#x2F;learn&#x2F;content&#x2F;2&#x2F;65 西瓜书代码实战：https:&#x2F;&#x2F;github.com&#x2F;datawhalechina&#x2F;machine-learning-toy-code&#x2F;blob&#x2F;main&#x2F;%E8%A5%BF%E7%93%9C%E4%B9%A6%E4%BB%A3%E7%A0%">
+<meta property="og:description" content="一、行列式的本质定义(定义一) ... 二、行列式的性质 ... 三、行列式的逆序数定义(定义二) 排列与逆序 排列：由n个数 1, 2, ..., n 组成的一个有序数组称为一个n级排列，如23145是一个5级排列，34521也是一5级排列。显然，由这样的n个数组成的n级排列一共有n!个。 逆序：在一个n级排列i1, i2, ..., in中，若is&gt;it，且is排在it">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2025/07/20/ZYTKx9RDXygBEuc.png">
-<meta property="article:published_time" content="2025-07-19T08:19:12.000Z">
-<meta property="article:modified_time" content="2025-07-19T17:21:54.000Z">
+<meta property="article:published_time" content="2025-07-21T13:19:58.000Z">
+<meta property="article:modified_time" content="2025-07-21T14:11:22.000Z">
 <meta property="article:author" content="sanyinjiang">
-<meta property="article:tag" content="西瓜书与南瓜书">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2025/07/20/ZYTKx9RDXygBEuc.png">
   
   
   
-  <title>机器学习入门-03线性模型 - sanyinjiang</title>
+  <title>线性代数-01-行列式的基本概念与计算 - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -215,7 +212,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">机器学习入门-03线性模型</span>
+            <span id="subtitle">线性代数-01-行列式的基本概念与计算</span>
           
         </div>
 
@@ -226,8 +223,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-07-19 16:19" pubdate>
-          2025年7月19日 下午
+        <time datetime="2025-07-21 21:19" pubdate>
+          2025年7月21日 晚上
         </time>
       </span>
     
@@ -238,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          515 字
         
       </span>
     
@@ -249,7 +246,7 @@
         
         
         
-          13 分钟
+          5 分钟
         
       </span>
     
@@ -295,133 +292,58 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">机器学习入门-03线性模型</h1>
+            <h1 id="seo-header">线性代数-01-行列式的基本概念与计算</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="第3章-线性模型">第3章 线性模型</h1>
-<p>参考：《机械学习第1版第47次印刷-周志华著》、https://www.datawhale.cn/learn/content/2/65</p>
-<p>西瓜书代码实战：https://github.com/datawhalechina/machine-learning-toy-code/blob/main/%E8%A5%BF%E7%93%9C%E4%B9%A6%E4%BB%A3%E7%A0%81%E5%AE%9E%E6%88%98.md</p>
-<h2 id="基本形式">3.1 基本形式</h2>
-<p>以下内容如无特别说明，向量都是列向量。即<strong>w</strong>=(<em>w</em><sub>1</sub>;<em>w</em><sub>2</sub>;...;<em>w</em><sub><em>d</em></sub>)和<strong>x</strong>=(<em>x</em><sub>1</sub>;<em>x</em><sub>2</sub>;...;<em>x</em><sub><em>d</em></sub>)均为<em>d</em>行1列的列向量。</p>
-<h2 id="线性回归">3.2 线性回归</h2>
-<p>给定数据集D={(x<sub>1</sub>,y<sub>1</sub>),
-(x<sub>2</sub>,y<sub>2</sub>), ... ,
-(x<sub>m</sub>,y<sub>m</sub>)}，其中xi=(x<sub>i1</sub>, x<sub>i2</sub>,
-..., x<sub>id</sub>)，y<sub>i</sub>∈R。</p>
-<p>线性回归（linear
-regression）就是要觉得一个线性模型以尽可能准确地预测实值输出标记。</p>
-<p>线性回归经常用到的一类算法就是最小二乘法，但最小二乘法不仅限于线性回归。</p>
-<p>如果要将线性回归模型的的预测值逼近真实值y的衍生物，比如㏑<sup>y</sup>
-，此时即有㏑<sup>y</sup> = ，此模型称为对数线性回归。</p>
-<p>更一般地情况，对于连续可微函数g(·)，令y=g<sup>-1</sup>(<strong>w</strong><sup>T</sup><strong>x</strong>+b)，此时得到的模型称为广义线性模型，其中函数g(·)称为联系函数。可以知道，对数线性回归模型就是广义线性模型在g(·)=㏑(·)时特例。</p>
-<h2 id="对数几率回归">3.3 对数几率回归</h2>
-<p>对数几率函数： <span class="math display">\[
-y=\frac{1}{1+e^{-z}}
-\]</span> 对数几率模型： <span class="math display">\[
-y=\frac{1}{1+e^{-(\mathbf{w}^T\mathbf{x}+b)}}\\
-\]</span> 对数几率： <span class="math display">\[
-y=\ln{\frac{y}{1-y}}
+                <h1 id="一行列式的本质定义定义一">一、行列式的本质定义(定义一)</h1>
+<p>...</p>
+<h1 id="二行列式的性质">二、行列式的性质</h1>
+<p>...</p>
+<h1 id="三行列式的逆序数定义定义二">三、行列式的逆序数定义(定义二)</h1>
+<h2 id="排列与逆序">排列与逆序</h2>
+<p>排列：由n个数 <em>1, 2, ..., n</em>
+组成的一个有序数组称为一个n级排列，如23145是一个5级排列，34521也是一5级排列。显然，由这样的n个数组成的n级排列一共有n!个。</p>
+<p>逆序：在一个n级排列i<sub>1</sub>, i<sub>2</sub>, ...,
+i<sub>n</sub>中，若i<sub>s</sub>&gt;i<sub>t</sub>，且i<sub>s</sub>排在i<sub>t</sub>的前面，则称这两个数构成一个逆序。</p>
+<p>逆序数：一个排列中，逆序的总数称为该排列的逆序数，记作τ(i<sub>1</sub>,
+i<sub>2</sub>, ..., i<sub>n</sub>)，如τ(23145)=，τ(34521)=。
+由从小到大排的排列称为自然排序，如12345，显然自然排序的逆序数为0。</p>
+<ul>
+<li>求逆序数方法
+<ul>
+<li>当我们计算一个排列的逆序数时，最好从最后一个数开始往前计算：如计算τ(23145)时，</li>
+<li>先看最后一个数5，数列中在5前面且比5大的数有0个；</li>
+<li>再看倒数第2个数4，数列中在4前面且比4大的数有0个；</li>
+<li>再看倒数第3个数1，数列中在1前面且比1大的数有2个；</li>
+<li>再看倒数第4个数3，数列中在3前面且比3大的数有0个；</li>
+<li>再看倒数第5个数2，数列中在3前面且比2大的数有0个；</li>
+<li>所以，综上所述，τ(23145)=0+0+2+0+0=2</li>
+</ul></li>
+</ul>
+<p>奇排列与偶排列：排列的逆序数为奇数时，该排列称为奇排列；排列的逆序数为偶数时，该排列称为偶排列；</p>
+<h2 id="n阶行列式的定义">n阶行列式的定义</h2>
+<p>n(n≥2)阶行列式，总是由n*n个元素组成： <span class="math display">\[
+\begin{vmatrix}
+a_{11} &amp; a_{12} &amp; ... &amp; a_{1n} \\
+a_{21} &amp; a_{22} &amp; ... &amp; a_{2n} \\
+...                   \\
+a_{n1} &amp; a_{n2} &amp; ... &amp; a_{nn} \\
+\end{vmatrix}
+=\sum_{j_1j_2...j_n}^{}(-1)^{τ(j_1j_2...j_n)}a_{1j_1}a_{2j_2}...a_{nj_n}
 \]</span></p>
-<hr />
-<p>对率回归最大化“对数似然”，表达式变化的相关推导（其中相关说明在图片之前进行了说明）：
-<span class="math display">\[
+<p><span class="math display">\[
 \begin{aligned}
-\mathbf{β}=(\mathbf{w};b) \\
-\mathbf{\hat{x}}=(\mathbf{x};1) \\
-\text{这样，就可以将}\mathbf{w}^T\mathbf{x}+b
-\text{改写成}\mathbf{β^T}\mathbf{\hat{x}} \\
+\text{行列式举例：}\\
+\begin{vmatrix}
+a_{11} &amp; a_{12}\\
+a_{21} &amp; a_{22}\\
+\end{vmatrix}
+&amp;=(-1)^{τ(12)}a_{11}a_{12}+(-1)^{τ(21)}a_{21}a_{22}\\
+&amp;=a_{11}a_{12}-a_{21}a_{22}\\
 \end{aligned}
-\]</span> <img src="https://s2.loli.net/2025/07/20/ZYTKx9RDXygBEuc.png" srcset="/img/loading.gif" lazyload
-alt="image-20250720004825761" /></p>
-<h2 id="线性差别分析">3.4 线性差别分析</h2>
-<h3 id="均值向量">均值向量</h3>
-<p><strong>定义</strong>：均值向量（Mean
-Vector）提供了数据集中每个特征的平均值。对于 <span
-class="math display">\[
-\begin{flalign*}
-μ=[μ_1,μ_2,...,μ_m] \\
-其中μ_j=\frac{1}{n}\sum_{i = 1} ^m(x_{ij}) \\
-μ_j是第j个特征的均值。 \\
-x_{ij}是第i个观测的第j个特征值。\\
-n是观测值的数量。
-\end{flalign*}
-\]</span> ​ 举例如下： <span class="math display">\[
-\begin{flalign*}
-考虑身高和体重的数据集，包含4个观测值：\\
-身高: [160,165,170,175]\\
-体重: [55,60,65,70]\\
-平均身高: μ_{\text{身高}} = \frac{160 + 165 + 170 + 175}{4} = 167.5 \\
-平均体重: μ_{\text{体重}} = \frac{55 + 60 + 65 + 70}{4} = 62.5 \\
-因此，均值向量为: μ = [167.5, 62.5]
-\end{flalign*}
 \]</span></p>
-<h3 id="协方差矩阵">协方差矩阵：</h3>
-<p><strong>定义</strong>：协方差矩阵（Covariance
-Matrix）描述了数据集中特征间的相互变化趋势。它不仅展示了单个特征的变异性（通过方差），还显示了特征之间的协方差。</p>
-<p>对于<em>m</em>个特征，协方差矩阵是一个<em>m×m</em>矩阵，其中元素定义为:
-<span class="math display">\[
-\begin{flalign*}
-∑_{jk}=\frac{1}{n-1}\sum_{i = 1} ^n(x_{ij}-μ_j)(x_{ik}-μ_k) \\
-其中：Σ_{jk}是特征j和特征k之间的协方差。\\
-μ_j和μ_k分别是特征j和k的均值。\\
-n是观测值的数量。\\
-\end{flalign*}
-\]</span> ​ 举例：使用上述身高和体重数据计算协方差矩阵。 <span
-class="math display">\[
-\begin{flalign*}
-\text{首先，我们已知:}\\
-μ_{\text{身高}} = 167.5\\
-μ_{\text{体重}} = 62.5\\
-\\
-\text{计算方差和协方差:}\\
-\text{方差(身高): 使用公式计算得} \Sigma_{11} \\
-\text{方差(体重): 使用公式计算得} \Sigma_{22} \\
-\text{协方差(身高, 体重): 使用公式计算得} \Sigma_{12}、\Sigma_{21} \\
-\\
-\text{数据集：}
-\text{X=}\left[
-\begin{matrix}
-   160 &amp; 55 \\
-   165 &amp; 60 \\
-   170 &amp; 65 \\
-   175 &amp; 70
-  \end{matrix}
-\right] \\\\
-\end{flalign*}
-\]</span></p>
-<p><span class="math display">\[
-\begin{flalign*}
-&amp;(1)当j=1、k=1时,\Sigma_{11}=\frac{1}{4-1}[(160-167.5)^2+(165-167.5)^2+(170-167.5)^2+(175-167.5)^2]=\frac{125}{3}=41.67\\
-&amp;(2)当j=1、k=2时,\Sigma_{12}=\frac{1}{4-1}[(160-167.5)(160-62.5)+(165-167.5)(165-62.5)+(170-167.5)(170-62.5)+(175-167.5)(175-62.5)]=\frac{125}{3}=41.67\\
-&amp;(3)当j=2、k=1时,\Sigma_{21}=\frac{1}{4-1}[(55-62.5)(55-167.5)+(60-62.5)(60167.5)+(65-62.5)(65-167.5)+(70-62.5)(70-167.5)]=\frac{125}{3}=41.67\\
-&amp;(4)当j=2、k=2时,\Sigma_{22}=\frac{1}{4-1}[(55-62.5)^2+(60-62.5)^2+(65-62.5)^2+(70-62.5)^2]=\frac{125}{3}=41.67\\
-\end{flalign*}
-\]</span></p>
-<p><span class="math display">\[
-\begin{flalign*}
-经过上述计算，得到协方差矩阵如下：\\
-C=\left[
-\begin{matrix}
-   41.67 &amp; 41.67 \\
-   41.67 &amp; 41.67
-  \end{matrix}
-\right]\\
-\end{flalign*}
-\]</span></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#也可以使用python代码实现均值向量与协方差矩阵的计算，如下：</span><br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><br><span class="hljs-comment"># 数据</span><br>heights = np.array([<span class="hljs-number">160</span>, <span class="hljs-number">165</span>, <span class="hljs-number">170</span>, <span class="hljs-number">175</span>])<br>weights = np.array([<span class="hljs-number">55</span>, <span class="hljs-number">60</span>, <span class="hljs-number">65</span>, <span class="hljs-number">70</span>])<br><br><span class="hljs-comment"># 计算均值</span><br>mean_height = np.mean(heights)<br>mean_weight = np.mean(weights)<br><br><span class="hljs-comment"># 计算方差和协方差</span><br>variance_height = np.var(heights, ddof=<span class="hljs-number">1</span>)<br>variance_weight = np.var(weights, ddof=<span class="hljs-number">1</span>)<br>covariance_height_weight = np.cov(heights, weights)[<span class="hljs-number">0</span>, <span class="hljs-number">1</span>]<br><br><span class="hljs-comment"># 构造协方差矩阵</span><br>covariance_matrix = np.array([[variance_height, covariance_height_weight],<br>                              [covariance_height_weight, variance_weight]])<br><br><span class="hljs-comment">#打印到均值向量</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;均值向量: (<span class="hljs-subst">&#123;mean_height&#125;</span>, <span class="hljs-subst">&#123;mean_weight&#125;</span>)\n&quot;</span>)<br><span class="hljs-comment">#打印协方差矩阵</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;协方差矩阵: <span class="hljs-subst">&#123;covariance_matrix&#125;</span>\n&quot;</span>)<br><br><br><span class="hljs-comment">###输出如下（可见使用python中相关科学计算库，可以极大地简化我们的计算工作）：</span><br>均值向量: (<span class="hljs-number">167.5</span>, <span class="hljs-number">62.5</span>)<br>协方差矩阵: [[<span class="hljs-number">41.66666667</span> <span class="hljs-number">41.66666667</span>]<br> [<span class="hljs-number">41.66666667</span> <span class="hljs-number">41.66666667</span>]]<br></code></pre></td></tr></table></figure>
-<h2 id="多分类学习">3.5 多分类学习</h2>
-<p>一般情况下，我们可以利用二分类学习器来解决多分类问题。</p>
-<p>一般地，如果有N个分类：C<sub>1</sub>,C<sub>2</sub>, ...,
-C<sub>N</sub>，多分类
-学习的基础思路是拆解法，即将多分类任务拆成若干个二分类任务进行求解。即训练时，对问题进行拆分，然后为拆分的每个二分类任务训练得到一个分类器；在测试时，这前面得到的多个分类器的预测结果进行综合与集成
-，获取最终的多分类结果。
-此处的关键在于如何对多分类任务进行拆分、如何对多个分类器的结果进行集成。</p>
-<p>常用的拆分策略有三种：一对一（One vs. One，简称OvO）、一对其余（One
-vs. Rest，简称OvR）、多对多（Many vs. Many，简称MvM）</p>
-<h2 id="类别不平衡问题">3.6 类别不平衡问题</h2>
-<p>在类别不平衡时，常规的训练与测试方法已经失效或无意义，此时常采用《机械学习第1版第47次印刷-周志华著》2.3节中的查准率、查全率和F1来度量学习器的性能。</p>
 
                 
               </div>
@@ -430,34 +352,6 @@ vs. Rest，简称OvR）、多对多（Many vs. Many，简称MvM）</p>
             <div>
               <div class="post-metas my-3">
   
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8/" class="category-chain-item">机器学习入门</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
-  
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/%E8%A5%BF%E7%93%9C%E4%B9%A6%E4%B8%8E%E5%8D%97%E7%93%9C%E4%B9%A6/" class="print-no-link">#西瓜书与南瓜书</a>
-      
-    </div>
   
 </div>
 
@@ -467,8 +361,8 @@ vs. Rest，简称OvR）、多对多（Many vs. Many，简称MvM）</p>
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>机器学习入门-03线性模型</div>
-      <div>https://jiangsanyin.github.io/2025/07/19/机器学习入门-03线性模型/</div>
+      <div>线性代数-01-行列式的基本概念与计算</div>
+      <div>https://jiangsanyin.github.io/2025/07/21/线性代数-01-行列式的基本概念与计算/</div>
     </div>
     <div class="license-meta">
       
@@ -480,7 +374,7 @@ vs. Rest，简称OvR）、多对多（Many vs. Many，简称MvM）</p>
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年7月19日</div>
+          <div>2025年7月21日</div>
         </div>
       
       
@@ -512,9 +406,9 @@ vs. Rest，简称OvR）、多对多（Many vs. Many，简称MvM）</p>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/07/21/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-01-%E8%A1%8C%E5%88%97%E5%BC%8F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E8%AE%A1%E7%AE%97/" title="线性代数-01-行列式的基本概念与计算">
+                      <a href="/2025/07/21/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-04-%E4%BC%B4%E9%9A%8F%E7%9F%A9%E9%98%B5%E3%80%81%E5%88%9D%E7%AD%89%E7%9F%A9%E9%98%B5%E4%B8%8E%E7%9F%A9%E9%98%B5%E6%96%B9%E7%A8%8B/" title="线性代数-04-伴随矩阵、初等矩阵与矩阵方程">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">线性代数-01-行列式的基本概念与计算</span>
+                        <span class="hidden-mobile">线性代数-04-伴随矩阵、初等矩阵与矩阵方程</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -522,8 +416,8 @@ vs. Rest，简称OvR）、多对多（Many vs. Many，简称MvM）</p>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/07/17/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-%E5%B8%B8%E8%A7%81%E7%9F%A9%E9%98%B5/" title="线性代数-常见矩阵">
-                        <span class="hidden-mobile">线性代数-常见矩阵</span>
+                      <a href="/2025/07/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-03%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/" title="机器学习入门-03线性模型">
+                        <span class="hidden-mobile">机器学习入门-03线性模型</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -611,12 +505,6 @@ vs. Rest，简称OvR）、多对多（Many vs. Many，简称MvM）</p>
 
 
   
-
-
-  
-  
-
-
 
 
 
@@ -820,49 +708,6 @@ vs. Rest，简称OvR）、多对多（Many vs. Many，简称MvM）</p>
 
 
   <script>Fluid.plugins.imageCaption();</script>
-
-  
-      <script>
-        if (!window.MathJax) {
-          window.MathJax = {
-            tex    : {
-              inlineMath: { '[+]': [['$', '$']] }
-            },
-            loader : {
-              load: ['ui/lazy']
-            },
-            options: {
-              renderActions: {
-                insertedScript: [200, () => {
-                  document.querySelectorAll('mjx-container').forEach(node => {
-                    let target = node.parentNode;
-                    if (target.nodeName.toLowerCase() === 'li') {
-                      target.parentNode.classList.add('has-jax');
-                    }
-                  });
-                }, '', false]
-              }
-            }
-          };
-        } else {
-          MathJax.startup.document.state(0);
-          MathJax.texReset();
-          MathJax.typeset();
-          MathJax.typesetPromise();
-        }
-
-        Fluid.events.registerRefreshCallback(function() {
-          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
-            MathJax.startup.document.state(0);
-            MathJax.texReset();
-            MathJax.typeset();
-            MathJax.typesetPromise();
-          }
-        });
-      </script>
-    
-
-  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script defer src="/js/leancloud.js" ></script>
 

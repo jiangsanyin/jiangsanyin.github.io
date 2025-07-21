@@ -4,6 +4,44 @@
   
   
   <entry>
+    <title>线性代数-04-伴随矩阵、初等矩阵与矩阵方程</title>
+    <link href="/2025/07/21/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-04-%E4%BC%B4%E9%9A%8F%E7%9F%A9%E9%98%B5%E3%80%81%E5%88%9D%E7%AD%89%E7%9F%A9%E9%98%B5%E4%B8%8E%E7%9F%A9%E9%98%B5%E6%96%B9%E7%A8%8B/"/>
+    <url>/2025/07/21/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-04-%E4%BC%B4%E9%9A%8F%E7%9F%A9%E9%98%B5%E3%80%81%E5%88%9D%E7%AD%89%E7%9F%A9%E9%98%B5%E4%B8%8E%E7%9F%A9%E9%98%B5%E6%96%B9%E7%A8%8B/</url>
+    
+    <content type="html"><![CDATA[<h1id="三等价矩阵和矩阵的等价标准形">三、等价矩阵和矩阵的等价标准形</h1><h1 id="四矩阵的轶">四、矩阵的轶</h1><p>定义：设<em>A</em>是m×n矩阵，<em>A</em>中的最大的不为零的子行列式的阶数称为矩阵<em>A</em>的轶，记为r(<em>A</em>)。或这样定义：若存在k阶子式不为零，而任意k+1阶子式全为零（如果有的话），则k为矩阵A的轶，记作r(<em>A</em>)=k。</p><p>显然如果一个n阶方阵的轶为n，则可知：<strong><em>r(A<sub>n×n</sub>)=n</em></strong> &lt;=&gt;<strong>|<em>A</em>|≠0</strong> &lt;=&gt;<strong><em>A</em>可逆</strong></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>线性代数</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>线性代数</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>线性代数-01-行列式的基本概念与计算</title>
+    <link href="/2025/07/21/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-01-%E8%A1%8C%E5%88%97%E5%BC%8F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E8%AE%A1%E7%AE%97/"/>
+    <url>/2025/07/21/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-01-%E8%A1%8C%E5%88%97%E5%BC%8F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E8%AE%A1%E7%AE%97/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一行列式的本质定义定义一">一、行列式的本质定义(定义一)</h1><p>...</p><h1 id="二行列式的性质">二、行列式的性质</h1><p>...</p><h1 id="三行列式的逆序数定义定义二">三、行列式的逆序数定义(定义二)</h1><h2 id="排列与逆序">排列与逆序</h2><p>排列：由n个数 <em>1, 2, ..., n</em>组成的一个有序数组称为一个n级排列，如23145是一个5级排列，34521也是一5级排列。显然，由这样的n个数组成的n级排列一共有n!个。</p><p>逆序：在一个n级排列i<sub>1</sub>, i<sub>2</sub>, ...,i<sub>n</sub>中，若i<sub>s</sub>&gt;i<sub>t</sub>，且i<sub>s</sub>排在i<sub>t</sub>的前面，则称这两个数构成一个逆序。</p><p>逆序数：一个排列中，逆序的总数称为该排列的逆序数，记作τ(i<sub>1</sub>,i<sub>2</sub>, ..., i<sub>n</sub>)，如τ(23145)=，τ(34521)=。由从小到大排的排列称为自然排序，如12345，显然自然排序的逆序数为0。</p><ul><li>求逆序数方法<ul><li>当我们计算一个排列的逆序数时，最好从最后一个数开始往前计算：如计算τ(23145)时，</li><li>先看最后一个数5，数列中在5前面且比5大的数有0个；</li><li>再看倒数第2个数4，数列中在4前面且比4大的数有0个；</li><li>再看倒数第3个数1，数列中在1前面且比1大的数有2个；</li><li>再看倒数第4个数3，数列中在3前面且比3大的数有0个；</li><li>再看倒数第5个数2，数列中在3前面且比2大的数有0个；</li><li>所以，综上所述，τ(23145)=0+0+2+0+0=2</li></ul></li></ul><p>奇排列与偶排列：排列的逆序数为奇数时，该排列称为奇排列；排列的逆序数为偶数时，该排列称为偶排列；</p><h2 id="n阶行列式的定义">n阶行列式的定义</h2><p>n(n≥2)阶行列式，总是由n*n个元素组成： <span class="math display">\[\begin{vmatrix}a_{11} &amp; a_{12} &amp; ... &amp; a_{1n} \\a_{21} &amp; a_{22} &amp; ... &amp; a_{2n} \\...                   \\a_{n1} &amp; a_{n2} &amp; ... &amp; a_{nn} \\\end{vmatrix}=\sum_{j_1j_2...j_n}^{}(-1)^{τ(j_1j_2...j_n)}a_{1j_1}a_{2j_2}...a_{nj_n}\]</span></p><p><span class="math display">\[\begin{aligned}\text{行列式举例：}\\\begin{vmatrix}a_{11} &amp; a_{12}\\a_{21} &amp; a_{22}\\\end{vmatrix}&amp;=(-1)^{τ(12)}a_{11}a_{12}+(-1)^{τ(21)}a_{21}a_{22}\\&amp;=a_{11}a_{12}-a_{21}a_{22}\\\end{aligned}\]</span></p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>机器学习入门-03线性模型</title>
     <link href="/2025/07/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-03%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/"/>
     <url>/2025/07/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-03%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/</url>
@@ -33,7 +71,7 @@
     <link href="/2025/07/17/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-%E5%B8%B8%E8%A7%81%E7%9F%A9%E9%98%B5/"/>
     <url>/2025/07/17/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-%E5%B8%B8%E8%A7%81%E7%9F%A9%E9%98%B5/</url>
     
-    <content type="html"><![CDATA[<h1 id="线性代数参考文档">线性代数参考文档</h1><p>https://zh.d2l.ai/chapter_preliminaries/linear-algebra.html#id5</p><p>https://machine-learning-from-scratch.readthedocs.io/zh-cn/latest/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0.html</p><h1 id="单元矩阵">单元矩阵</h1><p>单位矩阵（Identity matrix），也称为恒等矩阵（Identitymatrix）或标准矩阵（unitmatrix），是一种特殊的方阵，其主对角线上的元素全为1，其余元素全为0。单位矩阵通常用字母"I" 或 "E"表示，其大小由行数（或列数）决定。单位矩阵在矩阵运算中具有类似于数字中的1 的作用。</p><p>3阶单位矩阵示例如下： <span class="math display">\[\left[\begin{matrix}   1 &amp; 0 &amp; 0 \\   0 &amp; 1 &amp; 0 \\   0 &amp; 0 &amp; 1  \end{matrix}\right]\]</span></p><h1 id="满轶矩阵">满轶矩阵</h1><p>若矩阵秩等于行数，称为行满秩；若矩阵秩等于列数，称为列满秩。既是行满秩又是列满秩则为n阶矩阵即n阶方阵。行满秩矩阵就是行向量线性无关，列满秩矩阵就是列向量线性无关；所以如果是方阵,行满秩矩阵与列满秩矩阵是等价的。</p><h1 id="对称矩阵">对称矩阵</h1><p>在<ahref="https://zh.wikipedia.org/wiki/線性代數">线性代数</a>中，<strong>对称矩阵</strong>（英语：symmetricmatrix）指<ahref="https://zh.wikipedia.org/wiki/轉置矩陣">转置矩阵</a>和自身相等<ahref="https://zh.wikipedia.org/wiki/方形矩陣">方形矩阵</a>。 <spanclass="math display">\[A^T=A\]</span> 对称矩阵中的右上至左下方向元素以<ahref="https://zh.wikipedia.org/wiki/主對角線">主对角线</a>（左上至右下）为轴进行对称。若将其写作<imgsrc="https://wikimedia.org/api/rest_v1/media/math/render/svg/296ad42d9541f8285979ce822ccb661da56111ca"alt="{A=(a_{ij})}" />，则对所有的<em>i</em>和<em>j</em>，<imgsrc="https://wikimedia.org/api/rest_v1/media/math/render/svg/345ee164a8ed5ddbfaf43a3dabb821bcbed54324"alt="{a_{ij}=a_{ji} !}" /></p><p>对称矩阵示例： <span class="math display">\[\left[\begin{matrix}   1 &amp; 2 &amp; 3 \\   2 &amp; 4 &amp; -5 \\   3 &amp; -5 &amp; 6  \end{matrix}\right]\]</span></p><h1 id="正定矩阵">正定矩阵</h1><p>参考https://basics.sjtu.edu.cn/~yangqizhe/pdf/la2024s/slides/LALec13-handout-zh.pdf</p><ul><li><p>广义定义</p><ul><li>设M是n阶方阵，如果对任何非零向量z，都有 z'Mz &gt; 0，其中z'表示z的转置，就称M正定矩阵。例如：B为n阶矩阵，E为单位矩阵，a为正实数。aE+B在a充分大时，aE+B为正定矩阵。（B必须为对称阵）</li></ul></li><li><p>狭义定义</p><ul><li>一个n阶的实对称矩阵M是正定的当且仅当对于所有的非零实系数向量z，都有z'Mz&gt;0。其中z'表示z的转置。</li></ul><p>一个对称矩阵 S 被称为是正定矩阵，如果其所有的特征值 λ 都满足 λ &gt;0。</p></li></ul><h1 id="矩阵变换">矩阵变换</h1><p>在<ahref="https://baike.baidu.com/item/线性代数/800?fromModule=lemma_inlink">线性代数</a>中，<ahref="https://baike.baidu.com/item/矩阵/18069?fromModule=lemma_inlink">矩阵</a>的初等行变换是指以下三种变换类型：</p><ol type="1"><li><p>交换矩阵的两行（对调i,j，两行记为r<sub>i</sub>，r<sub>j</sub>）；</p></li><li><p>以一个非零数k乘矩阵的某一行所有元素（第i行乘以k记为r<sub>i</sub>× k）；</p></li><li><p>把矩阵的某一行所有元素乘以一个数k后加到另一行对应的元素(第j行乘以k加到第i行记为r<sub>i</sub>+ k × r<sub>j</sub>)。 <span class="math display">\[A=\left[\begin{matrix}   1 &amp; 2 &amp; 3 \\   0 &amp; 4 &amp; 5 \\   0 &amp; 0 &amp; 6 \\  \end{matrix} \\\right]，经过矩阵初等变换后，矩阵A可以转换成右侧形式，B=\left[  \begin{matrix}   1 &amp; 2 &amp; 3 \\   0 &amp; 4 &amp; 5 \\   0 &amp; 0 &amp; 6 \\  \end{matrix} \\\right]\]</span></p></li></ol>]]></content>
+    <content type="html"><![CDATA[<h1 id="线性代数参考文档">线性代数参考文档</h1><p>https://zh.d2l.ai/chapter_preliminaries/linear-algebra.html#id5</p><p>https://machine-learning-from-scratch.readthedocs.io/zh-cn/latest/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0.html</p><h1 id="单元矩阵">单元矩阵</h1><p>单位矩阵（Identity matrix），也称为恒等矩阵（Identitymatrix）或标准矩阵（unitmatrix），是一种特殊的方阵，其主对角线上的元素全为1，其余元素全为0。单位矩阵通常用字母"I" 或 "E"表示，其大小由行数（或列数）决定。单位矩阵在矩阵运算中具有类似于数字中的1 的作用。</p><p>3阶单位矩阵示例如下： <span class="math display">\[\left[\begin{matrix}   1 &amp; 0 &amp; 0 \\   0 &amp; 1 &amp; 0 \\   0 &amp; 0 &amp; 1  \end{matrix}\right]\]</span></p><h1 id="满轶矩阵">满轶矩阵</h1><p>若矩阵秩等于行数，称为行满秩；若矩阵秩等于列数，称为列满秩。</p><p>既是行满秩又是列满秩则为n阶矩阵即n阶方阵（可用反证法证明，列满轶时与行满轶时矩阵的轶是同一个数值）。</p><p>行满秩矩阵就是行向量线性无关，列满秩矩阵就是列向量线性无关；所以如果是方阵,行满秩矩阵与列满秩矩阵是等价的。</p><h1 id="对称矩阵">对称矩阵</h1><p>在<ahref="https://zh.wikipedia.org/wiki/線性代數">线性代数</a>中，<strong>对称矩阵</strong>（英语：symmetricmatrix）指<ahref="https://zh.wikipedia.org/wiki/轉置矩陣">转置矩阵</a>和自身相等<ahref="https://zh.wikipedia.org/wiki/方形矩陣">方形矩阵</a>。 <spanclass="math display">\[A^T=A\]</span> 对称矩阵中的右上至左下方向元素以<ahref="https://zh.wikipedia.org/wiki/主對角線">主对角线</a>（左上至右下）为轴进行对称。若将其写作<imgsrc="https://wikimedia.org/api/rest_v1/media/math/render/svg/296ad42d9541f8285979ce822ccb661da56111ca"alt="{A=(a_{ij})}" />，则对所有的<em>i</em>和<em>j</em>，<imgsrc="https://wikimedia.org/api/rest_v1/media/math/render/svg/345ee164a8ed5ddbfaf43a3dabb821bcbed54324"alt="{a_{ij}=a_{ji} !}" /></p><p>对称矩阵示例： <span class="math display">\[\left[\begin{matrix}   1 &amp; 2 &amp; 3 \\   2 &amp; 4 &amp; -5 \\   3 &amp; -5 &amp; 6  \end{matrix}\right]\]</span></p><h1 id="正定矩阵">正定矩阵</h1><p>参考https://basics.sjtu.edu.cn/~yangqizhe/pdf/la2024s/slides/LALec13-handout-zh.pdf</p><ul><li><p>广义定义</p><ul><li>设M是n阶方阵，如果对任何非零向量z，都有 z'Mz &gt; 0，其中z'表示z的转置，就称M正定矩阵。例如：B为n阶矩阵，E为单位矩阵，a为正实数。aE+B在a充分大时，aE+B为正定矩阵。（B必须为对称阵）</li></ul></li><li><p>狭义定义</p><ul><li>一个n阶的实对称矩阵M是正定的当且仅当对于所有的非零实系数向量z，都有z'Mz&gt;0。其中z'表示z的转置。</li></ul><p>一个对称矩阵 S 被称为是正定矩阵，如果其所有的特征值 λ 都满足 λ &gt;0。</p></li></ul><h1 id="矩阵变换">矩阵变换</h1><p>在<ahref="https://baike.baidu.com/item/线性代数/800?fromModule=lemma_inlink">线性代数</a>中，<ahref="https://baike.baidu.com/item/矩阵/18069?fromModule=lemma_inlink">矩阵</a>的初等行变换是指以下三种变换类型：</p><ol type="1"><li><p>交换矩阵的两行（对调i,j，两行记为r<sub>i</sub>，r<sub>j</sub>）；</p></li><li><p>以一个非零数k乘矩阵的某一行所有元素（第i行乘以k记为r<sub>i</sub>× k）；</p></li><li><p>把矩阵的某一行所有元素乘以一个数k后加到另一行对应的元素(第j行乘以k加到第i行记为r<sub>i</sub>+ k × r<sub>j</sub>)。 <span class="math display">\[A=\left[\begin{matrix}   1 &amp; 2 &amp; 3 \\   0 &amp; 4 &amp; 5 \\   0 &amp; 0 &amp; 6 \\  \end{matrix} \\\right]，经过矩阵初等变换后，矩阵A可以转换成右侧形式，B=\left[  \begin{matrix}   1 &amp; 2 &amp; 3 \\   0 &amp; 4 &amp; 5 \\   0 &amp; 0 &amp; 6 \\  \end{matrix} \\\right]\]</span></p></li></ol>]]></content>
     
     
     <categories>
