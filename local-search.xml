@@ -61,6 +61,18 @@
     <content type="html"><![CDATA[<h1 id="一行列式的本质定义定义一">一、行列式的本质定义(定义一)</h1><p>...</p><h1 id="二行列式的性质">二、行列式的性质</h1><p>...</p><h1 id="三行列式的逆序数定义定义二">三、行列式的逆序数定义(定义二)</h1><h2 id="排列与逆序">排列与逆序</h2><p>排列：由n个数 <em>1, 2, ..., n</em>组成的一个有序数组称为一个n级排列，如23145是一个5级排列，34521也是一5级排列。显然，由这样的n个数组成的n级排列一共有n!个。</p><p>逆序：在一个n级排列i<sub>1</sub>, i<sub>2</sub>, ...,i<sub>n</sub>中，若i<sub>s</sub>&gt;i<sub>t</sub>，且i<sub>s</sub>排在i<sub>t</sub>的前面，则称这两个数构成一个逆序。</p><p>逆序数：一个排列中，逆序的总数称为该排列的逆序数，记作τ(i<sub>1</sub>,i<sub>2</sub>, ..., i<sub>n</sub>)，如τ(23145)=，τ(34521)=。由从小到大排的排列称为自然排序，如12345，显然自然排序的逆序数为0。</p><ul><li>求逆序数方法<ul><li>当我们计算一个排列的逆序数时，最好从最后一个数开始往前计算：如计算τ(23145)时，</li><li>先看最后一个数5，数列中在5前面且比5大的数有0个；</li><li>再看倒数第2个数4，数列中在4前面且比4大的数有0个；</li><li>再看倒数第3个数1，数列中在1前面且比1大的数有2个；</li><li>再看倒数第4个数3，数列中在3前面且比3大的数有0个；</li><li>再看倒数第5个数2，数列中在3前面且比2大的数有0个；</li><li>所以，综上所述，τ(23145)=0+0+2+0+0=2</li></ul></li></ul><p>奇排列与偶排列：排列的逆序数为奇数时，该排列称为奇排列；排列的逆序数为偶数时，该排列称为偶排列；</p><h2 id="n阶行列式的定义">n阶行列式的定义</h2><p>n(n≥2)阶行列式，总是由n*n个元素组成： <span class="math display">\[\begin{vmatrix}a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \\a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\\vdots &amp; \ddots &amp;        &amp; \vdots \\a_{n1} &amp; a_{n2} &amp; \cdots &amp; a_{nn} \\\end{vmatrix}=\sum_{j_1j_2...j_n}^{}(-1)^{τ(j_1j_2...j_n)}a_{1j_1}a_{2j_2}...a_{nj_n}\]</span></p><p><span class="math display">\[\begin{aligned}\text{行列式举例：}\\\begin{vmatrix}a_{11} &amp; a_{12}\\a_{21} &amp; a_{22}\\\end{vmatrix}&amp;=(-1)^{τ(12)}a_{11}a_{12}+(-1)^{τ(21)}a_{21}a_{22}\\&amp;=a_{11}a_{12}-a_{21}a_{22}\\\end{aligned}\]</span></p>]]></content>
     
     
+    <categories>
+      
+      <category>线性代数</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>线性代数</tag>
+      
+    </tags>
     
   </entry>
   

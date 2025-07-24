@@ -27,8 +27,9 @@
 <meta property="og:description" content="一、行列式的本质定义(定义一) ... 二、行列式的性质 ... 三、行列式的逆序数定义(定义二) 排列与逆序 排列：由n个数 1, 2, ..., n 组成的一个有序数组称为一个n级排列，如23145是一个5级排列，34521也是一5级排列。显然，由这样的n个数组成的n级排列一共有n!个。 逆序：在一个n级排列i1, i2, ..., in中，若is&gt;it，且is排在it">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-21T13:19:58.000Z">
-<meta property="article:modified_time" content="2025-07-21T15:01:14.000Z">
+<meta property="article:modified_time" content="2025-07-24T08:27:54.000Z">
 <meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="线性代数">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -352,6 +353,34 @@ a_{21} &amp; a_{22}\\
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" class="category-chain-item">线性代数</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" class="print-no-link">#线性代数</a>
+      
+    </div>
   
 </div>
 
@@ -505,6 +534,12 @@ a_{21} &amp; a_{22}\\
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -708,6 +743,49 @@ a_{21} &amp; a_{22}\\
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script defer src="/js/leancloud.js" ></script>
 
