@@ -27,7 +27,7 @@
 <meta property="og:description" content="一、特殊符号 注：markdown文件中支持HTML语法，所以HTML语法符号也可以用来输出某些特殊符号。 2.1 上下标 上标：a2 下标：a2 二、数学公式 参考：https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_42782150&#x2F;article&#x2F;details&#x2F;104878759 分段函数  定义函数的时候经常需要分情况给出表达式，使用 {…。其中：  （1）使">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-26T14:03:19.000Z">
-<meta property="article:modified_time" content="2025-07-24T04:37:58.000Z">
+<meta property="article:modified_time" content="2025-07-24T08:25:58.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="工具与奇技淫巧">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          375 字
+          751 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          4 分钟
+          7 分钟
         
       </span>
     
@@ -331,6 +331,47 @@ x, \quad x\gt0
 \tag{1}\]</span>
 <p>$$</p>
 <h2 id="对齐">对齐</h2>
+<p>有时需要将一行公式分多行显示，其中<code>\begin&#123;aligned&#125;</code>
+表示开始方程，<code>\end&#123;aligned&#125;</code>
+表示方程结束；使用<code>\\</code>表示公式换行。<code>\begin&#123;gather&#125;</code>表示环境设置。<code>&amp;</code>
+表示对齐的位置。</p>
+<p>如下展示公式分多行屏幕显示时，以每行的第一个=号对齐。 <span
+class="math display">\[
+\begin{aligned}
+J(\mathbf{w})&amp;=\frac{1}{2m}\sum_{i=1}^m(f(\mathbf{x_i})-y_i)^2\\
+&amp;=\frac{1}{2m}\sum_{i=1}^m
+[f(\mathbf{x_i})]^2-2f(\mathbf{x_i)}y_i+y_i^2
+\end{aligned}
+\]</span> <code>flalign*</code>
+是专门用于左对齐的LaTeX环境，每行开头需用 <code>&amp;</code>
+标记对齐位置（通常放在公式最左侧）。 <span class="math display">\[
+\begin{flalign*}
+&amp; x = y + z 放在每行开头可实现左对齐放在每行开头可实现左对齐\\
+&amp; a = b + c \\
+&amp; 1 + 2 = 3
+放在每行开头可实现左对齐放在每行开头可实现左对齐放在每行开头可实现左对齐\\
+\end{flalign*}\\
+\]</span> <code>aligned</code> 环境通过 <code>&amp;</code>
+指定对齐点，将 <code>&amp;</code> 放在每行开头可实现左对齐。 <span
+class="math display">\[
+\begin{aligned}
+&amp; f(x) = x^2 + 1 \\
+&amp; \lim_{x \to 0} \frac{\sin x}{x} = 1 放在每行开头可实现左对齐\\
+&amp; \int_0^1 x \, dx = \frac{1}{2}
+放在每行开头可实现左对齐放在每行开头可实现左对齐放在每行开头可实现左对齐
+\end{aligned}
+\]</span></p>
+<h2 id="公式编号">公式编号</h2>
+<p>同一个公式框中，只能使用一次<code>\tag</code>符号 <span
+class="math display">\[
+x^2+y^2=z^2 \tag{1$&#39;$}\\
+\]</span></p>
+<p><span class="math display">\[
+x^2+y^2=z^2 \tag{*}
+\]</span></p>
+<p><span class="math display">\[
+x^5+y^5=z^5 \tag*{*}
+\]</span></p>
 <h2 id="向量">向量</h2>
 <table>
 <thead>
