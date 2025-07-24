@@ -19,15 +19,15 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、特殊符号 注：markdown文件中支持HTML语法，所以HTML语法符号也可以用来输出某些特殊符号。 2.1 上下标 上标：a2 下标：a2 二、数学公式 参考：https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_42782150&#x2F;article&#x2F;details&#x2F;104878759 矩阵 使用markdown写矩阵：使用markdown写矩阵 如下是一个3阶单位矩阵：">
+    <meta name="description" content="一、特殊符号 注：markdown文件中支持HTML语法，所以HTML语法符号也可以用来输出某些特殊符号。 2.1 上下标 上标：a2 下标：a2 二、数学公式 参考：https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_42782150&#x2F;article&#x2F;details&#x2F;104878759 分段函数  定义函数的时候经常需要分情况给出表达式，使用 {…。其中：  （1）使">
 <meta property="og:type" content="article">
 <meta property="og:title" content="markdown文件中编辑特殊符号与数学公式">
 <meta property="og:url" content="https://jiangsanyin.github.io/2025/03/26/markdown%E6%96%87%E4%BB%B6%E4%B8%AD%E7%BC%96%E8%BE%91%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E4%B8%8E%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、特殊符号 注：markdown文件中支持HTML语法，所以HTML语法符号也可以用来输出某些特殊符号。 2.1 上下标 上标：a2 下标：a2 二、数学公式 参考：https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_42782150&#x2F;article&#x2F;details&#x2F;104878759 矩阵 使用markdown写矩阵：使用markdown写矩阵 如下是一个3阶单位矩阵：">
+<meta property="og:description" content="一、特殊符号 注：markdown文件中支持HTML语法，所以HTML语法符号也可以用来输出某些特殊符号。 2.1 上下标 上标：a2 下标：a2 二、数学公式 参考：https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_42782150&#x2F;article&#x2F;details&#x2F;104878759 分段函数  定义函数的时候经常需要分情况给出表达式，使用 {…。其中：  （1）使">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-26T14:03:19.000Z">
-<meta property="article:modified_time" content="2025-07-21T15:03:16.000Z">
+<meta property="article:modified_time" content="2025-07-24T04:37:58.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="工具与奇技淫巧">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          194 字
+          375 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          2 分钟
+          4 分钟
         
       </span>
     
@@ -306,7 +306,59 @@ target="_blank" rel="noopener" href="https://tool.chinaz.com/tools/htmlchar.aspx
 <p>下标：a<sub>2</sub></p>
 <h1 id="二数学公式">二、数学公式</h1>
 <p>参考：https://blog.csdn.net/weixin_42782150/article/details/104878759</p>
-<h1 id="矩阵">矩阵</h1>
+<h2 id="分段函数">分段函数</h2>
+<ul>
+<li>定义函数的时候经常需要分情况给出表达式，使用 {…。其中：
+<ul>
+<li>（1）使用 来分隔分组；</li>
+<li>（2）使用&amp; 来指示需要对齐的位置；</li>
+<li>（3）使用 + 空格来表示空格；</li>
+<li>（4）如果要使分类之间的垂直间隔变大，可以使用[2ex]
+代替 来分隔不同的情况。(3ex,4ex 也可以用，1ex 相当于原始距离）。</li>
+</ul></li>
+</ul>
+$$ y=
+<span class="math display">\[\begin{cases}
+-x,\quad x\leq 0\\
+x, \quad x\gt0
+\end{cases}\]</span>
+<p>\</p>
+y=
+<span class="math display">\[\begin{cases}
+-x,\quad x\leq 0 \\[2ex]
+x, \quad x\gt0
+\end{cases}
+\tag{1}\]</span>
+<p>$$</p>
+<h2 id="对齐">对齐</h2>
+<h2 id="向量">向量</h2>
+<table>
+<thead>
+<tr>
+<th>数学算式</th>
+<th>Markdown公式</th>
+<th>核心语法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(\vec{a}\)</span></td>
+<td><code>\vec&#123;a&#125;</code></td>
+<td>向量使用 <code>\vec&#123;a&#125;</code></td>
+</tr>
+<tr>
+<td><span class="math inline">\(J(\mathbf{w})\)</span></td>
+<td><code>J(\mathbf&#123;w&#125;)</code></td>
+<td>向量使用 <code>\mathbf&#123;w&#125;</code></td>
+</tr>
+</tbody>
+</table>
+<p><span class="math display">\[
+\vec{a}\\
+\text{或}\\
+\mathbf{a}
+\]</span></p>
+<h2 id="矩阵">矩阵</h2>
 <p>使用markdown写矩阵：<a
 target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38228254/article/details/79469727">使用markdown写矩阵</a></p>
 <p>如下是一个3阶单位矩阵： <span class="math display">\[
@@ -318,7 +370,7 @@ target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38228254/article/d
   \end{matrix}
 \right]
 \]</span></p>
-<h1 id="行列式">行列式</h1>
+<h2 id="行列式">行列式</h2>
 <p>行列式的行列必须一样大，因为行列式仅针对方阵（即行数和列数相等的矩阵）定义。
 <span class="math display">\[
 \begin{vmatrix}
