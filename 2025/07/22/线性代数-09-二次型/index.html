@@ -27,7 +27,7 @@
 <meta property="og:description" content="一、二次型的定义及其矩阵表达式 \[ \text{二项式定理：}\\ (a+b)^n&#x3D;\sum_{i &#x3D; 0}^{n} C_n^ia^ib^{n-i}&#x3D;\sum_{i &#x3D; 0}^{n} C_n^ia^{n-i}b^i \] n元变量x1,x2,...,xn的二次齐次多项式（其中二次的意思是：每一项中所有变量的指数之和为2；齐次的意思是：指多项式中所有项的次数相同，对于二次齐次多项式，所">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-22T06:43:38.000Z">
-<meta property="article:modified_time" content="2025-07-24T08:26:44.000Z">
+<meta property="article:modified_time" content="2025-07-24T08:32:28.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="线性代数">
 <meta name="twitter:card" content="summary_large_image">
@@ -321,12 +321,12 @@ f(x_1,x_2,...,x_n)=a_{11}x_1^2+2a_{12}x_1x_2+...+2a_{1n}x_1x_n\\
 因为x<sub>i</sub>x<sub>j</sub>=x<sub>j</sub>x<sub>i</sub>，此时若令a<sub>ij</sub>=a<sub>ji</sub>（很容易让我们想到对称矩阵），则有2a<sub>ij</sub>x<sub>i</sub>x<sub>j</sub>=a<sub>ij</sub>x<sub>i</sub>x<sub>j</sub>+a<sub>ji</sub>x<sub>j</sub>x<sub>i</sub>，这样上述二次型表达式可表述如下：
 $$
 <span class="math display">\[\begin{aligned}
-f(x_1,x_2,...,x_n)=a_{11}x_1^2+2a_{12}x_1x_2+...+2a_{1n}x_1x_n\\
-+a_{21}x_2x_1+a_{22}x_2^2\,\,\,\,\,\,\,\,\, +...+2a_{2n}x_2x_n\\
-+...\quad\quad\quad\quad\quad \\
-+a_{n1}x_nx_1+a_{n2}x_nx_2\,\,\,\,\,\,\,\,\, +...+a_{nn}x_{nn}^2
+&amp; f(x_1,x_2,...,x_n)=a_{11}x_1^2+2a_{12}x_1x_2+...+2a_{1n}x_1x_n\\
+&amp; +a_{21}x_2x_1+a_{22}x_2^2\,\,\,\,\,\,\,\,\, +...+2a_{2n}x_2x_n\\
+&amp; +...\quad\quad\quad\quad\quad \\
+&amp; +a_{n1}x_nx_1+a_{n2}x_nx_2\,\,\,\,\,\,\,\,\, +...+a_{nn}x_{nn}^2
 \quad①\\      
-=\sum_{i=1}^{n}\sum_{j=1}^{n}a_{ij}x_iX_j\quad②\\
+&amp; =\sum_{i=1}^{n}\sum_{j=1}^{n}a_{ij}x_iX_j\quad②\\
 \text{其中①式称为完全展开式，②称为和式。}\\\\
 
 \text{若令}\\
@@ -346,6 +346,7 @@ f(x)=\mathbf{x}^T\mathbf{A}\mathbf{x} \quad③\\
 \text{其中③式称为二次型}f(x_1,x_2,...,x_n)\text{的矩阵表达式，实对阵矩阵}\mathbf{A}称为二次型f(\mathbf{x})\text{的矩阵}
 \\
 \text{它是一个唯一的对称矩阵。如果不限制为实对称矩阵，则这样的矩阵可能有多个}
+
 \end{aligned}\]</span>
 <p>$$</p>
 $$
