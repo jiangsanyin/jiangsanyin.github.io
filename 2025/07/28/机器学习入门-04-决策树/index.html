@@ -19,22 +19,25 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、二次型的定义及其矩阵表达式 \[ \text{二项式定理：}\\ (a+b)^n&#x3D;\sum_{i &#x3D; 0}^{n} C_n^ia^ib^{n-i}&#x3D;\sum_{i &#x3D; 0}^{n} C_n^ia^{n-i}b^i \] n元变量x1,x2,...,xn的二次齐次多项式（其中二次的意思是：每一项中所有变量的指数之和为2；齐次的意思是：指多项式中所有项的次数相同，对于二次齐次多项式，所">
+    <meta name="description" content="第4章 决策树 4.1 基本流程 决策树是一种常见的机器学习方法。决策树又叫判定树，是基于树结构来进行决策的，是一种跟人类做决策很类似的、自然的处理机制。比如，我们如果要判别“某个瓜是好瓜吗？”这个问题时，我们通常会进行一系列的判断或子决策：它是什么颜色的？如果是青绿色的，我们再看它的根蒂是什么形态的？如果是蜷缩的，那我们看它敲起来是什么声音？如果是浊响的，那么我们可能能因此做出决策：“这是一">
 <meta property="og:type" content="article">
-<meta property="og:title" content="线性代数-09-二次型">
-<meta property="og:url" content="https://jiangsanyin.github.io/2025/07/22/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-09-%E4%BA%8C%E6%AC%A1%E5%9E%8B/index.html">
+<meta property="og:title" content="机器学习入门-04-决策树">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/07/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-04-%E5%86%B3%E7%AD%96%E6%A0%91/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、二次型的定义及其矩阵表达式 \[ \text{二项式定理：}\\ (a+b)^n&#x3D;\sum_{i &#x3D; 0}^{n} C_n^ia^ib^{n-i}&#x3D;\sum_{i &#x3D; 0}^{n} C_n^ia^{n-i}b^i \] n元变量x1,x2,...,xn的二次齐次多项式（其中二次的意思是：每一项中所有变量的指数之和为2；齐次的意思是：指多项式中所有项的次数相同，对于二次齐次多项式，所">
+<meta property="og:description" content="第4章 决策树 4.1 基本流程 决策树是一种常见的机器学习方法。决策树又叫判定树，是基于树结构来进行决策的，是一种跟人类做决策很类似的、自然的处理机制。比如，我们如果要判别“某个瓜是好瓜吗？”这个问题时，我们通常会进行一系列的判断或子决策：它是什么颜色的？如果是青绿色的，我们再看它的根蒂是什么形态的？如果是蜷缩的，那我们看它敲起来是什么声音？如果是浊响的，那么我们可能能因此做出决策：“这是一">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-07-22T06:43:38.000Z">
-<meta property="article:modified_time" content="2025-07-24T08:44:48.000Z">
+<meta property="og:image" content="https://s2.loli.net/2025/07/28/cPW3QVfDYoaymhz.png">
+<meta property="og:image" content="https://s2.loli.net/2025/07/28/vmMFngS3kpPBWou.png">
+<meta property="article:published_time" content="2025-07-28T14:42:35.000Z">
+<meta property="article:modified_time" content="2025-07-28T15:49:58.000Z">
 <meta property="article:author" content="sanyinjiang">
-<meta property="article:tag" content="线性代数">
+<meta property="article:tag" content="西瓜书与南瓜书">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/07/28/cPW3QVfDYoaymhz.png">
   
   
   
-  <title>线性代数-09-二次型 - sanyinjiang</title>
+  <title>机器学习入门-04-决策树 - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +216,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">线性代数-09-二次型</span>
+            <span id="subtitle">机器学习入门-04-决策树</span>
           
         </div>
 
@@ -224,8 +227,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-07-22 14:43" pubdate>
-          2025年7月22日 下午
+        <time datetime="2025-07-28 22:42" pubdate>
+          2025年7月28日 晚上
         </time>
       </span>
     
@@ -236,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.5k 字
+          1k 字
         
       </span>
     
@@ -247,7 +250,7 @@
         
         
         
-          13 分钟
+          9 分钟
         
       </span>
     
@@ -293,199 +296,51 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">线性代数-09-二次型</h1>
+            <h1 id="seo-header">机器学习入门-04-决策树</h1>
             
             
               <div class="markdown-body">
                 
-                <h1
-id="一二次型的定义及其矩阵表达式">一、二次型的定义及其矩阵表达式</h1>
-<p><span class="math display">\[
-\text{二项式定理：}\\
-(a+b)^n=\sum_{i = 0}^{n} C_n^ia^ib^{n-i}=\sum_{i = 0}^{n}
-C_n^ia^{n-i}b^i
-\]</span></p>
-n元变量x<sub>1</sub>,x<sub>2</sub>,...,x<sub>n</sub>的二次齐次多项式（其中<strong>二次</strong>的意思是：每一项中所有变量的指数之和为2；<strong>齐次</strong>的意思是：指多项式中所有项的次数相同，对于二次齐次多项式，所有项的次数必须均为2）：
-$$
-<span class="math display">\[\begin{aligned}
-f(x_1,x_2,...,x_n)=a_{11}x_1^2+2a_{12}x_1x_2+...+2a_{1n}x_1x_n\\
-+a_{22}x_2^2\,\,\,\,\,\,\,\,\, +...+2a_{2n}x_2x_n\\
-+...\quad\quad\quad\quad\quad \\
-+a_{nn}x_{nn}^2\\\\
-
-\text{以上表达式称为n元二次型，简称二次型。}
-\end{aligned}\]</span>
-<p>$$
-一般情况下（中国大陆考研、常规科研），我们只研究系数a<sub>ij</sub>∈R
-的情况，称此二次型f为实二次型。</p>
-<p>因为x<sub>i</sub>x<sub>j</sub>=x<sub>j</sub>x<sub>i</sub>，此时若令a<sub>ij</sub>=a<sub>ji</sub>（很容易让我们想到对称矩阵），则有2a<sub>ij</sub>x<sub>i</sub>x<sub>j</sub>=a<sub>ij</sub>x<sub>i</sub>x<sub>j</sub>+a<sub>ji</sub>x<sub>j</sub>x<sub>i</sub>，这样上述二次型表达式可表述如下：
-<span class="math display">\[
-\begin{aligned}
-f(x_1,x_2,...,x_n)=a_{11}x_1^2+2a_{12}x_1x_2+...+2a_{1n}x_1x_n\\
-+a_{21}x_2x_1+a_{22}x_2^2+...+2a_{2n}x_2x_n\\
-+...\quad\quad\quad\quad\quad \\
-+a_{n1}x_nx_1+a_{n2}x_nx_2+...+a_{nn}x_{nn}^2 \quad①\\      
-=\sum_{i=1}^{n}\sum_{j=1}^{n}a_{ij}x_iX_j\quad②\\
-\text{其中①式称为完全展开式，②称为和式。}
-\end{aligned}
-\\
-\]</span></p>
-<p><span class="math display">\[
-\begin{aligned}
-&amp; \text{若令}\\
-&amp; A=\begin{vmatrix}
-a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \\
-a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
-\vdots &amp; \ddots &amp;        &amp; \vdots \\
-a_{n1} &amp; a_{n2} &amp; \cdots &amp; a_{nn} \\
-\end{vmatrix},x=\begin{vmatrix}
-&amp; x_1 \\
-&amp; x_2 \\
-&amp; \vdots \\
-&amp; x_n \\
-\end{vmatrix}\\
-&amp; \text{则二次型即①或②可表述如下：}\\
-&amp; f(x)=\mathbf{x}^T\mathbf{A}\mathbf{x} \quad③\\
-&amp;
-\text{其中③式称为二次型}f(x_1,x_2,...,x_n)\text{的矩阵表达式，实对阵矩阵}\mathbf{A}称为二次型f(\mathbf{x})\text{的矩阵}
-\\
-&amp;
-\text{它是一个唯一的对称矩阵。如果不限制为实对称矩阵，则这样的矩阵可能有多个}
-\end{aligned}
-\]</span></p>
-$$
-<span class="math display">\[\begin{aligned}
-&amp; \text{举例：写出三元二次齐次多项式即如下三元二次型}\\
-&amp;
-f(x_1,x_2,x_3)=2x_1^2+2x_2^2+2x_3^2-2x_1x_2-2x_2x_3+2x_1x_3的二次型矩阵A
-\\\\
-
-&amp;
-方法1：A的对角线元素a_{ii}是平方项x_{ii}^2的系统，a_{ij}是混合项x_ix_j的系数的一半\\
-&amp; 故：A=\begin{vmatrix}
-2 &amp; -1 &amp; 1 \\
--1 &amp; 2 &amp; -1 \\
-1 &amp; -1 &amp; 2 \\
-\end{vmatrix}
-\\\\
-&amp;
-方法2：利用矩阵乘法按照x^TAx的形式将二次型f表达出来，即可得到矩阵A。\\
-&amp; 显然，方法2更加繁琐，方法1 更加简便
-\end{aligned}\]</span>
-<p>$$</p>
-<h1
-id="二合同变换二次型的合同酷标准形与规范形">二、合同变换，二次型的合同酷标准形与规范形</h1>
-<h2 id="线性变换的定义">线性变换的定义</h2>
-$$
-<span class="math display">\[\begin{aligned}
-\text{对于n元二次型}f(x_1,x_2,...,x_n)，若令\\
-\begin{cases}
-x_1=c_{11}y_1+c_{12}y_2+...+c_{1n}y_n \\
-x_2=c_{21}y_1+c_{22}y_2+...+c_{2n}y_n \\
-\ldots \\
-x_n=c_{n1}y_1+c_{n2}y_2+...+c_{nn}y_n  \\
-\end{cases} \\\\
-
-\text{记} \\ \mathbf{x}=\left[\begin{matrix}
-x_1 \\
-x_2 \\
-\vdots \\
-x_n \\
-\end{matrix}
-\right],
-
-\mathbf{C}=\left[\begin{matrix}
-c_{11} &amp; c_{12} &amp; \cdots &amp; c_{1n} \\
-c_{21} &amp; c_{22} &amp; \cdots &amp; c_{2n} \\
-\vdots &amp; \ddots &amp;        &amp; \vdots \\
-c_{n1} &amp; c_{n2} &amp; \cdots &amp; c_{nn} \\
-\end{matrix}
-\right],
-
-\mathbf{y}=\left[\begin{matrix}
-y_1 \\
-y_2 \\
-\vdots \\
-y_n \\
-\end{matrix}
-\right]
-\end{aligned}\]</span>
-<p>$$</p>
-<p><span class="math display">\[
-\begin{aligned}
-\text{则上述大括号整体表述的表达式可写为：}\mathbf{x}=\mathbf{C}\mathbf{y}
-\end{aligned}
-\]</span></p>
-<p>上式称为从y<sub>1</sub>,y<sub>2</sub>,...,y<sub>n</sub>到x<sub>1</sub>,x<sub>2</sub>,...,x<sub>n</sub>的线性变换。若线性变换的系数矩阵<strong><em>C</em></strong>可逆，即|<strong><em>C</em></strong>|≠0，则称为可逆线性变换。</p>
-<p>若有二次型f(<strong><em>x</em></strong>)=<strong><em>x</em></strong><sup>T</sup><strong><em>Ax</em></strong>，又<strong><em>x</em></strong>=<strong><em>Cy</em></strong>，则有：
-<span class="math display">\[
-\begin{aligned}
-&amp;
-f(\mathbf{x})=\mathbf{x}^TA\mathbf{x}=\mathbf{(Cy)}^TA\mathbf{(Cy)}=\mathbf{y}^T(\mathbf{C}^T\mathbf{A}\mathbf{C})\mathbf{y}
-\\
-&amp; \text{记}\mathbf{B}=\mathbf{C}^T\mathbf{A}\mathbf{C}，则有：\\
-&amp; f(\mathbf{x})=\mathbf{y}^T\mathbf{B}\mathbf{y} = g(\mathbf{y})
-，\text{二次型从矩阵x的函数变成矩阵y的函数。}\\
-&amp;
-此时，二次型f(\mathbf{x})=\mathbf{x}^TA\mathbf{x}通过线性变换\mathbf{x}=\mathbf{C}\mathbf{y}得到一个新二次型g(\mathbf{y})=\mathbf{y}^TB\mathbf{y}
-\end{aligned}
-\]</span></p>
-<h2 id="矩阵合同的定义与性质">矩阵合同的定义与性质</h2>
-<p>可以看到二次型f(<strong><em>x</em></strong>)与g(<strong><em>x</em></strong>)的矩阵A与B有如下关系：
-<span class="math display">\[
-\begin{aligned}
-\mathbf{B}=\mathbf{C}^T\mathbf{A}\mathbf{C}
-\end{aligned}
-\]</span> 矩阵合同的定义：设A、B为n阶实对称矩阵，若存在可逆矩阵C使得：
-<span class="math display">\[
-\begin{aligned}
-&amp; \mathbf{C}^T\mathbf{A}\mathbf{C}=\mathbf{B}
-\end{aligned}
-\]</span>
-则称矩阵A与矩阵B合同，记作（其实教科书中合同符号是横置s下面加一个横线，但这个符号在markdown公式中书写不出来，暂用如下符号表示）：
-<span class="math display">\[
-\begin{aligned}
-&amp; \mathbf{A}\cong\mathbf{B} \\
-&amp; \text{或者，我看到还有些书中或网上文章中用如下符号表示：}\\
-&amp; A \sim_c B
-\end{aligned}
-\]</span>
-此时，称f(<strong><em>x</em></strong>)与g(<strong><em>x</em></strong>)为合同二次型。</p>
-<hr />
-<p>可知，在二次型中，矩阵A与矩阵B的合同，就是指同一个二次型在可逆线性变换下的两个不同状态的联系。
-<span class="math display">\[
-\begin{aligned}
-&amp; \text{合同有如下3个性质：} \\
-&amp; (1)\mathbf{A}\cong\mathbf{A} ，称为反身性\\
-&amp; (2)若\mathbf{A}\cong\mathbf{B}，则\mathbf{B}\cong\mathbf{A}
-，称为对称性\\
-&amp;
-(3)若\mathbf{A}\cong\mathbf{B}，且\mathbf{B}\cong\mathbf{C}，则\mathbf{A}\cong\mathbf{C}
-，称为传递性\\
-\end{aligned}
-\]</span></p>
-<p><span class="math display">\[
-\begin{aligned}
-&amp; 注：关于可逆矩阵的两个性质：\\
-&amp;
-(1)对于任意可逆矩阵\mathbf{C}，有(\mathbf{C}^{-1})^\mathrm{T}=(\mathbf{C}^\mathrm{T})^{-1}
-\\\\
-&amp;
-(2)可逆线性变换不会改变二次型的轶。即对于矩阵\mathbf{A}，若\mathbf{Q}可逆，则有r(\mathbf{Q}\mathbf{A})=r(\mathbf{A}\mathbf{Q})=r(\mathbf{A})\\
-&amp; 证明如下：\\
-&amp;
-设\mathbf{A}是m×n矩阵，\mathbf{P}与\mathbf{Q}分别是m阶可逆方阵、n阶可逆方阵。\\
-&amp;
-故有r(\mathbf{A})=r(\mathbf{P}^{-1}\mathbf{P}\mathbf{A})≤r(\mathbf{P}\mathbf{A})≤r(\mathbf{A})，即有
-r(\mathbf{A})≤r(\mathbf{P}\mathbf{A})≤r(\mathbf{A})\\
-&amp; 故：r(\mathbf{P}\mathbf{A})=r(\mathbf{A})\\
-&amp; 同理，有r(\mathbf{A})≤r(\mathbf{A}\mathbf{Q})≤r(\mathbf{A})\\
-&amp; 故：r(\mathbf{A}\mathbf{Q})=r(\mathbf{A})\\
-\end{aligned}
-\]</span></p>
-<h2 id="二次型的标准形与规范形">二次型的标准形与规范形</h2>
-<h1 id="三惯性定理">三、惯性定理</h1>
-<h1 id="四正定二次型及其判别">四、正定二次型及其判别</h1>
+                <h1 id="第4章-决策树">第4章 决策树</h1>
+<h2 id="基本流程">4.1 基本流程</h2>
+<p>决策树是一种常见的机器学习方法。决策树又叫判定树，是基于树结构来进行决策的，是一种跟人类做决策很类似的、自然的处理机制。比如，我们如果要判别“某个瓜是好瓜吗？”这个问题时，我们通常会进行一系列的判断或子决策：它是什么<strong>颜色</strong>的？如果是青绿色的，我们再看它的<strong>根蒂</strong>是什么形态的？如果是蜷缩的，那我们看它敲起来是什么<strong>声音</strong>？如果是浊响的，那么我们可能能因此做出决策：“这是一个好瓜”。</p>
+<figure>
+<img src="https://s2.loli.net/2025/07/28/cPW3QVfDYoaymhz.png" srcset="/img/loading.gif" lazyload
+alt="image-20250728225926896" />
+<figcaption aria-hidden="true">image-20250728225926896</figcaption>
+</figure>
+<p>决策树学习的目的是为了产生一棵泛化能力强即处理未见示例能力强的决策树，其基本流程遵循简单且直观的“分而治之”的策略。决策树学习基本算法如下：</p>
+<figure>
+<img src="https://s2.loli.net/2025/07/28/vmMFngS3kpPBWou.png" srcset="/img/loading.gif" lazyload
+alt="image-20250728230327359" />
+<figcaption aria-hidden="true">image-20250728230327359</figcaption>
+</figure>
+<h2 id="划分选择">4.2 划分选择</h2>
+<p>在决策树的算法过程中，有一个步骤需要选择最优划分属性（就是上图中的第8行）。总体来说，随着划分子结点的层数越大，我们总是希望决策树的分支结点所包含的样本尽可能属于同一个类别，即结点的纯度越来越高。</p>
+<p>一般地，有如下4种方法来辅助我们选择最优划分属性：信息增益、增益率、基尼指数。</p>
+<h3 id="信息增益">信息增益</h3>
+<p>著名的ID3决策树学习算法就是以信息增益为准则来选择划分属性的。</p>
+<p>它的思想大致就是：从父结点到子结点，选择使得熵的减少量最大即信息增益最大的属性a来执行从父结点到子结点的决策。</p>
+<p>公式细节待续。。。</p>
+<h3 id="增益率">增益率</h3>
+<p>著名的C4.5决策树学习算法就是以信息增益为准则来选择划分属性的。</p>
+<p>它是在信息增益准则的基础发展而来或规避其不足而提出的，因为信息增益准则对可取值数目较多的属性有所偏好。但是增益率准则
+对可取值数目
+较少的属性又有所偏好，因为在实际场景中，C4.5并没有直接使用增益率最大的候选划分属性，而是使用了一个启发式思路：先从候选划分属性中找出信息增益高于平均水平的属性，再从中选择增益率最高的。</p>
+<p>公式细节待续。。。</p>
+<h3 id="基尼指数">基尼指数</h3>
+<p>著名的CART决策树学习算法就是以信息增益为准则来选择划分属性的。</p>
+<p>公式细节待续。。。</p>
+<h2 id="剪枝处理">4.3 剪枝处理</h2>
+<p>剪枝是决策树学习算法对付“过拟合”的主要手段。</p>
+<p>决策树剪枝的基本策略有预剪枝与后剪枝。<strong>预剪枝</strong>是指在决策树生成过程中，结每个结点在划分前进行估计，若当前结点的划分不能带来决策树泛化性能提升，则停止
+划分并将当前结点标记为叶结点。<strong>后剪枝</strong>则是先从训练集生成一棵完整的决策树，然后自底向上地对非叶子结点进行考察，若将该结点对应的子树替换为叶结点能带来决策树泛化性能提升，则将该子树替换为叶结点。</p>
+<p>判断决策树逍化性能是否提升的方法，可以采用2.2节点中介绍的性能评估方法，如“留出法”，就是将数据集划分为训练集与验证集，在验证集上计算验证集精度看是否有所提升。</p>
+<h2 id="连续与缺失值">4.4 连续与缺失值</h2>
+<h3 id="连续值处理">连续值处理</h3>
+<p>使用连续属性离散化技术，比如最简单的策略是采用二分法将连续属性进行处理。（C4.5决策树算法中就是使用此机制）</p>
+<h3 id="缺失值处理">缺失值处理</h3>
+<h2 id="多变量决策树">4.5 多变量决策树</h2>
 
                 
               </div>
@@ -504,7 +359,7 @@ r(\mathbf{A})≤r(\mathbf{P}\mathbf{A})≤r(\mathbf{A})\\
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" class="category-chain-item">线性代数</a>
+  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8/" class="category-chain-item">机器学习入门</a>
   
   
 
@@ -519,7 +374,7 @@ r(\mathbf{A})≤r(\mathbf{P}\mathbf{A})≤r(\mathbf{A})\\
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" class="print-no-link">#线性代数</a>
+        <a href="/tags/%E8%A5%BF%E7%93%9C%E4%B9%A6%E4%B8%8E%E5%8D%97%E7%93%9C%E4%B9%A6/" class="print-no-link">#西瓜书与南瓜书</a>
       
     </div>
   
@@ -531,8 +386,8 @@ r(\mathbf{A})≤r(\mathbf{P}\mathbf{A})≤r(\mathbf{A})\\
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>线性代数-09-二次型</div>
-      <div>https://jiangsanyin.github.io/2025/07/22/线性代数-09-二次型/</div>
+      <div>机器学习入门-04-决策树</div>
+      <div>https://jiangsanyin.github.io/2025/07/28/机器学习入门-04-决策树/</div>
     </div>
     <div class="license-meta">
       
@@ -544,7 +399,7 @@ r(\mathbf{A})≤r(\mathbf{P}\mathbf{A})≤r(\mathbf{A})\\
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年7月22日</div>
+          <div>2025年7月28日</div>
         </div>
       
       
@@ -576,18 +431,12 @@ r(\mathbf{A})≤r(\mathbf{P}\mathbf{A})≤r(\mathbf{A})\\
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/07/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-04-%E5%86%B3%E7%AD%96%E6%A0%91/" title="机器学习入门-04-决策树">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">机器学习入门-04-决策树</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/07/21/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-04-%E4%BC%B4%E9%9A%8F%E7%9F%A9%E9%98%B5%E3%80%81%E5%88%9D%E7%AD%89%E7%9F%A9%E9%98%B5%E4%B8%8E%E7%9F%A9%E9%98%B5%E6%96%B9%E7%A8%8B/" title="线性代数-04-伴随矩阵、初等矩阵与矩阵方程">
-                        <span class="hidden-mobile">线性代数-04-伴随矩阵、初等矩阵与矩阵方程</span>
+                      <a href="/2025/07/22/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-09-%E4%BA%8C%E6%AC%A1%E5%9E%8B/" title="线性代数-09-二次型">
+                        <span class="hidden-mobile">线性代数-09-二次型</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
