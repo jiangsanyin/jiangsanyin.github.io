@@ -28,8 +28,13 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2025/07/30/Ruk7Flda8jNvHb3.png">
 <meta property="og:image" content="https://s2.loli.net/2025/07/30/uG3PgBLqFO4KN5c.png">
+<meta property="og:image" content="https://s2.loli.net/2025/08/01/OpkilmMdGZno6I4.png">
+<meta property="og:image" content="https://s2.loli.net/2025/08/01/tz9MJBeaTPAoUEj.png">
+<meta property="og:image" content="https://s2.loli.net/2025/08/01/7aHf1W8Ps6dANQy.png">
+<meta property="og:image" content="https://s2.loli.net/2025/08/01/bKiGyWdUqHVPsJo.png">
+<meta property="og:image" content="https://s2.loli.net/2025/08/01/gpCULviOQIHrsyE.png">
 <meta property="article:published_time" content="2025-07-30T14:40:52.000Z">
-<meta property="article:modified_time" content="2025-07-30T15:54:06.000Z">
+<meta property="article:modified_time" content="2025-07-31T17:51:42.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="西瓜书与南瓜书">
 <meta name="twitter:card" content="summary_large_image">
@@ -239,7 +244,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          593 字
+          1.4k 字
         
       </span>
     
@@ -250,7 +255,7 @@
         
         
         
-          5 分钟
+          12 分钟
         
       </span>
     
@@ -325,6 +330,58 @@ alt="image-20250730234928652" />
 </figure>
 <p>它将可能在较大范围内变化的输入值挤压到了（0,1）输出值范围内，所以有时也称为“挤压函数”。</p>
 <h2 id="感知机与多层网络">5.2 感知机与多层网络</h2>
+<p>感知机由两层神经元组成。大致示意图如下图：</p>
+<p><img src="https://s2.loli.net/2025/08/01/OpkilmMdGZno6I4.png" srcset="/img/loading.gif" lazyload alt="image-20250801005811964" style="zoom: 33%;" /></p>
+<p>输入层接收输入信号后传递给输出层，输出层是M-P神经元，也被称为阀值逻辑单元。</p>
+<hr />
+<p>感知机能够容易地实现逻辑与、或与非运算。令y=f(Σ<sub>i</sub>ω<sub>i</sub>x<sub>i</sub>
+- θ)，其中函数是阶跃函数。</p>
+<ul>
+<li>令ω<sub>1</sub>=ω<sub>2</sub>=1，θ=2时，可以实现“x<sub>1</sub>与x<sub>2</sub>”</li>
+<li>令ω<sub>1</sub>=ω<sub>2</sub>=1，θ=0.5时，可以实现“x<sub>1</sub>或x<sub>2</sub>”</li>
+<li>令ω<sub>1</sub>=-0.6，ω<sub>2</sub>=0，θ=-0.5时，可以实现“非x<sub>1</sub>”；类似地也可实现"非x<sub>2</sub>"</li>
+</ul>
+<p>对于两层神经元系统结构，给定训练数据集，权重ω<sub>i</sub>(i=1,2,...,n)以输出层神经元的阀值θ可以通过学习得到。如果将阀值θ看成一个固定输入为-1的哑结点的连接权重ω<sub>n+1</sub>，这样权重与阀值的学习就可以统一为权重的学习。此时其他n个输入层及其对应权重、加上此哑结点的输入即-1及其权重“θ”即为阶跃函数的总体参数值，阶跃函数计算此总体参数对应的函数值即可，结果即为输出层神经元的结果。</p>
+<hr />
+<p>感知机的学习规则如下：对训练样本(<strong>x</strong>,
+y)，若当前感知机的输出为ŷ，则感知机权重将可以如下这样调整： <span
+class="math display">\[
+\begin{aligned}
+&amp; ω_i←ω_i+Δω_i,
+\quad\quad\quad\quad\quad\quad\quad\quad\quad\,\,\,\,\,\,\,\,(5.1) \\
+&amp; Δω_i=η(y-\overset{\wedge}{y})x_i，
+\quad\quad\quad\quad\quad\quad\quad\quad\quad(5.2) \\
+&amp;
+其中η∈(0,1)，称为学习率。可知，如果感知机预测正确，则有y-\overset{\wedge}{y}=0
+，\\
+&amp; 此时Δω_i=0,则ω_i不再发生变化，否则会逐渐对ω_i进行权重调整
+\end{aligned}
+\]</span></p>
+<hr />
+<p>感知机只有一层功能神经元，即只有输出层神经元进行激活函数处理，所以其学习非常有限。</p>
+<p>上述与、或与非问题都是线性可分的问题，可以证明，若两类模式是线性可分的，则存在一个线性超平面能将它们分开。</p>
+<p>若要解决非线性可分问题，需要考虑使用多层神经功能神经元。常见的神经网络是形如下图所示的层级结构：每层神经元与下一层神经元全互连，神经元之间不存在同层连接，也不存在跨层连接。这样的神经元结构通常被称为“多层前馈神经网络”。</p>
+<p><img src="https://s2.loli.net/2025/08/01/tz9MJBeaTPAoUEj.png" srcset="/img/loading.gif" lazyload alt="image-20250801013916971" style="zoom:33%;" /></p>
+<h2 id="误差逆传播算法">5.3 误差逆传播算法</h2>
+<p>误差逆传播（error
+BackPropagation，简称BP）算法是迄今为止最成功的神经网络学习算法
+。此算法不仅适应于多层前馈神经网络，还可用于其他类似的神经网络如递归神经网络。</p>
+<p>关于反向传播算法，自己暂时跟下面的步骤将公式大体上证明完成，但并未理解其中的意义！（记得自己以前单独证明过一次函数模拟二维直角坐标系中的点，是通过最小二乘法来计算误差的，在不断调整一次函数的k、b参数过程中，每轮调整两个参数后一次函数都是向误差的反方向进行偏移）</p>
+<figure>
+<img src="https://s2.loli.net/2025/08/01/7aHf1W8Ps6dANQy.png" srcset="/img/loading.gif" lazyload
+alt="image-20250801014603419" />
+<figcaption aria-hidden="true">image-20250801014603419</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/08/01/bKiGyWdUqHVPsJo.png" srcset="/img/loading.gif" lazyload
+alt="image-20250801014630674" />
+<figcaption aria-hidden="true">image-20250801014630674</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/08/01/gpCULviOQIHrsyE.png" srcset="/img/loading.gif" lazyload
+alt="image-20250801014647271" />
+<figcaption aria-hidden="true">image-20250801014647271</figcaption>
+</figure>
 
                 
               </div>
