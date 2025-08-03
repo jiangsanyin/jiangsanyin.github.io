@@ -4,6 +4,56 @@
   
   
   <entry>
+    <title>线性代数-10-向量概念与运算</title>
+    <link href="/2025/08/03/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-10-%E5%90%91%E9%87%8F%E6%A6%82%E5%BF%B5%E4%B8%8E%E8%BF%90%E7%AE%97/"/>
+    <url>/2025/08/03/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-10-%E5%90%91%E9%87%8F%E6%A6%82%E5%BF%B5%E4%B8%8E%E8%BF%90%E7%AE%97/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一向量概念">一、向量概念</h1><h1 id="二向量的运算">二、向量的运算</h1><h2 id="点积">点积</h2><p><span class="math display">\[\begin{aligned}&amp; 对于两个向量\mathbf{a}=[a_1,a_2,…,a_n]和  \mathbf{b}=[b_1,b_2,…,b_n]，点积为：\\&amp;\mathbf{a}·\mathbf{b}=\sum_{i=1}^n(a_ib_i)=a_1b_1+a_2b_2+...+a_nb_n\end{aligned}\]</span></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>机器学习入门</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>向量</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>机器学习入门-06-支持向量机</title>
+    <link href="/2025/08/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-06-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/"/>
+    <url>/2025/08/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-06-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/</url>
+    
+    <content type="html"><![CDATA[<h1 id="第6章-支持向量机">第6章 支持向量机</h1><h2 id="间隔与支持向量">6.1 间隔与支持向量</h2><h2 id="对偶问题">6.2 对偶问题</h2>]]></content>
+    
+    
+    <categories>
+      
+      <category>机器学习入门</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>西瓜书与南瓜书</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>机器学习入门-05-神经网络</title>
     <link href="/2025/07/30/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-05-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/"/>
     <url>/2025/07/30/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-05-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</url>
