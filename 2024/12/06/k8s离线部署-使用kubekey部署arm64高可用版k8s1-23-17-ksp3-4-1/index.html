@@ -34,10 +34,11 @@
 <meta property="og:image" content="https://s2.loli.net/2024/12/30/3LfSJPVpq6zwTAe.png">
 <meta property="og:image" content="https://s2.loli.net/2024/12/31/TkcI3ZlBXCdhmvA.png">
 <meta property="og:image" content="https://s2.loli.net/2024/12/31/RKht1DJzk2FAogm.png">
+<meta property="og:image" content="https://s2.loli.net/2025/08/08/qoLR7ySk6EWUaDQ.png">
 <meta property="og:image" content="https://s2.loli.net/2024/12/30/FuNh3jOedGBbZwC.png">
 <meta property="og:image" content="https://s2.loli.net/2024/12/30/OsUv98dunWCNKJy.png">
 <meta property="article:published_time" content="2024-12-06T13:18:42.000Z">
-<meta property="article:modified_time" content="2025-08-07T03:24:26.000Z">
+<meta property="article:modified_time" content="2025-08-08T03:32:42.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="kubekey 离线部署 arm64 k8s kubesphere">
 <meta name="twitter:card" content="summary_large_image">
@@ -247,7 +248,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          7.1k 字
+          7.3k 字
         
       </span>
     
@@ -258,7 +259,7 @@
         
         
         
-          60 分钟
+          62 分钟
         
       </span>
     
@@ -503,6 +504,7 @@ alt="image-20241229171432036" />
 节点，所有节点信息参考文档最开始处的描述) 的 /opt/deploy-k8s-ksp
 目录（可根据实际情况修改）。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">创离线资源存放的数据目录</span><br>root@node01:/# mkdir /opt/deploy-k8s-ksp<br><span class="hljs-meta prompt_"># </span><span class="language-bash">上传kubesphere-images.tar.gz与deploy-files.tar.gz 文件到node01:/opt/deploy-k8s-ksp 目录下</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">执行以下命令，解压相关文件：</span><br>root@node01:/opt/deploy-k8s-ksp# tar -zxf kubesphere-images.tar.gz<br>root@node01:/opt/deploy-k8s-ksp# tar -zxf deploy-files.tar.gz<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">至此获得如下文件（夹）</span><br>root@node01:/opt/deploy-k8s-ksp# ls -alh<br>total 4.3G<br>drwxr-xr-x  7 root root 4.0K Dec 30 20:17 .<br>drwxr-xr-x  5 root root 4.0K Dec 30 19:32 ..<br>-rw-r--r--  1 root root 6.8M Dec 30 13:04 dependent-components.tar.gz<br>-rw-r--r--  1 root root 250M Dec 30 20:17 deploy-files.tar.gz<br>-rw-r--r--  1 root root 2.7K Dec 30 19:34 images-list.txt<br>drwxr-xr-x 16 root root 4.0K Dec 29 17:05 kubekey<br>-rw-r--r--  1 root root  32M Dec 28 17:23 kubekey-v3.0.13-linux-arm64.tar.gz<br>drwxr-xr-x  2 root root 4.0K Dec 29 17:10 kubesphere-images<br>-rw-r--r--  1 root root 4.0G Dec 29 17:35 kubesphere-images.tar.gz<br>-rwxr-xr-x  1 root root 8.6K Dec  6 22:52 offline-installation-tool.sh<br>-rw-------  1 root root  25M Dec 29 17:29 registry-2.tar.gz<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">可能能用上的代码段</span><br>root@node01:/opt/deploy-k8s-ksp# ssh-keygen -P &quot;&quot;<br>root@node01:/opt/deploy-k8s-ksp# ips=(81 82 83 84 85)<br>root@node01:/opt/deploy-k8s-ksp# for ip in $&#123;ips[*]&#125;; <br>do <br><span class="hljs-meta prompt_">  #</span><span class="language-bash">ssh-copy-id root@172.24.11.<span class="hljs-variable">$&#123;ip&#125;</span></span><br>  scp /opt/deploy-k8s-ksp/kubekey/v1.23.17/arm64/docker-24.0.6.tgz root@172.24.11.$&#123;ip&#125;:/opt/deploy-k8s-ksp/<br>done<br></code></pre></td></tr></table></figure>
 <h2 id="安装docker容器服务">5.2 安装docker容器服务</h2>
 <p>​ k8s集群的每个节点都要安装与配置。将node01节点上的
 /opt/deploy-k8s-ksp/kubekey/v1.23.17/arm64/docker-24.0.6.tgz
@@ -529,7 +531,7 @@ alt="image-20241229221911321" />
 <figcaption aria-hidden="true">image-20241229221911321</figcaption>
 </figure>
 <h3 id="启动-docker-仓库">启动 Docker 仓库</h3>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">加载registry:2镜像</span><br>root@node01:/opt/deploy-k8s-ksp# docker load -i registry-2.tar.gz <br>2ee1e756df5d: Loading layer [==================================================&gt;]  7.955MB/7.955MB<br>9ef0c8e13134: Loading layer [==================================================&gt;]  898.6kB/898.6kB<br>a7c03a80ddda: Loading layer [==================================================&gt;]  16.65MB/16.65MB<br>55f11e417f9b: Loading layer [==================================================&gt;]  3.584kB/3.584kB<br>caa2189153ef: Loading layer [==================================================&gt;]  2.048kB/2.048kB<br>Loaded image: registry:2<br>root@node01:/opt/deploy-k8s-ksp# docker images <br>REPOSITORY   TAG       IMAGE ID       CREATED         SIZE<br>registry     2         1c6adc34955d   15 months ago   25MB<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">让Docker信任刚生成的证书</span><br>root@node01:/opt/deploy-k8s-ksp# mkdir -p  /etc/docker/certs.d/dockerhub.kubekey.local<br>root@node01:/opt/deploy-k8s-ksp# cp certs/domain.crt  /etc/docker/certs.d/dockerhub.kubekey.local/ca.crt<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">执行以下命令启动 Docker 仓库</span><br>root@node01:/opt/deploy-k8s-ksp# docker run -d \<br> --restart=always \<br> --name registry \<br> -v &quot;$(pwd)&quot;/certs:/certs \<br> -v /mnt/registry:/var/lib/registry \<br> -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \<br> -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \<br> -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \<br> -p 443:443 \<br> registry:2<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">加载registry:2镜像</span><br>root@node01:/opt/deploy-k8s-ksp# docker load -i registry-2.tar.gz <br>2ee1e756df5d: Loading layer [==================================================&gt;]  7.955MB/7.955MB<br>9ef0c8e13134: Loading layer [==================================================&gt;]  898.6kB/898.6kB<br>a7c03a80ddda: Loading layer [==================================================&gt;]  16.65MB/16.65MB<br>55f11e417f9b: Loading layer [==================================================&gt;]  3.584kB/3.584kB<br>caa2189153ef: Loading layer [==================================================&gt;]  2.048kB/2.048kB<br>Loaded image: registry:2<br>root@node01:/opt/deploy-k8s-ksp# docker images <br>REPOSITORY   TAG       IMAGE ID       CREATED         SIZE<br>registry     2         1c6adc34955d   15 months ago   25MB<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">让Docker信任刚生成的证书（所有节点都需要此证书。但registry容器只存在于部署节点上，此处部署节点是node01）</span><br>root@node01:/opt/deploy-k8s-ksp# mkdir -p  /etc/docker/certs.d/dockerhub.kubekey.local<br>root@node01:/opt/deploy-k8s-ksp# cp certs/domain.crt  /etc/docker/certs.d/dockerhub.kubekey.local/ca.crt<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">执行以下命令启动 Docker 仓库</span><br>root@node01:/opt/deploy-k8s-ksp# docker run -d \<br> --restart=always \<br> --name registry \<br> -v &quot;$(pwd)&quot;/certs:/certs \<br> -v /mnt/registry:/var/lib/registry \<br> -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \<br> -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \<br> -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \<br> -p 443:443 \<br> registry:2<br></code></pre></td></tr></table></figure>
 <h3 id="验证仓库">验证仓库</h3>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">要验证私有仓库是否有效，可以修改镜像registry:2的namespace，然后使用 docker push 和 docker pull 来测试。</span><br>root@node01:/opt/deploy-k8s-ksp# docker tag registry:2 dockerhub.kubekey.local/registry:2<br>root@node01:/opt/deploy-k8s-ksp# docker push dockerhub.kubekey.local/registry:2<br>root@node01:/opt/deploy-k8s-ksp# docker pull dockerhub.kubekey.local/registry:2<br></code></pre></td></tr></table></figure>
 <h2 id="推送镜像至私有仓库">5.5 推送镜像至私有仓库</h2>
@@ -621,6 +623,16 @@ alt="image-20241231095318516" />
 alt="image-20241231095456573" />
 <figcaption aria-hidden="true">image-20241231095456573</figcaption>
 </figure>
+<h3
+id="提示docker-pull-dockerhub.kubekey.localcorednscoredns1.8.6---platform-arm64执行失败">6.2.2
+提示“docker pull dockerhub.kubekey.local/coredns/coredns:1.8.6
+--platform arm64”执行失败</h3>
+<figure>
+<img src="https://s2.loli.net/2025/08/08/qoLR7ySk6EWUaDQ.png" srcset="/img/loading.gif" lazyload
+alt="image-20250808113150044" />
+<figcaption aria-hidden="true">image-20250808113150044</figcaption>
+</figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">在各节点执行如下命令即可，原因暂不清楚</span><br>docker pull coredns/coredns:1.8.6 --platform arm64<br>docker pull dockerhub.kubekey.local/coredns/coredns:1.8.6 --platform arm64<br><br>docker pull kubesphere/k8s-dns-node-cache:1.15.12 --platform arm64<br>docker pull dockerhub.kubekey.local/kubesphere/k8s-dns-node-cache:1.15.12 --platform arm64<br></code></pre></td></tr></table></figure>
 <h2 id="控制节点配置keepalived">6.3 控制节点配置keepalived</h2>
 <p>​
 暂略。配置keepalived相关方法可以参考：https://jiangsanyin.github.io/2024/08/10/%E6%90%AD%E5%BB%BA%E4%BA%92%E4%B8%BA%E4%B8%BB%E5%A4%87MySQL5-7%E9%9B%86%E7%BE%A4%E5%B9%B6%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2/#2-3-%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AEkeepalived</p>
