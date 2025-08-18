@@ -8,7 +8,7 @@
     <link href="/2025/08/18/%E6%8E%A2%E7%B4%A2%E9%80%9A%E7%94%A8%E7%A7%91%E7%A0%94%E6%99%BA%E8%83%BD%E4%BD%93Scimaster/"/>
     <url>/2025/08/18/%E6%8E%A2%E7%B4%A2%E9%80%9A%E7%94%A8%E7%A7%91%E7%A0%94%E6%99%BA%E8%83%BD%E4%BD%93Scimaster/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<h1 id="一背景与介绍">一、背景与介绍</h1><p>深势科技（DeePTech）是一家将人工智能和物理模拟相结合，专注于解决复杂科学计算问题的科技公司，其技术应用涵盖分子模拟、材料科学、药物发现等多个领域。通过提升物理模拟效率，深势科技旨在加速科研进程，促进科学与工业的融合。</p><h1 id="二试用玻尔">二、试用玻尔</h1><p>玻尔官网：https://www.bohrium.com/</p><p>Bohrium（玻尔） 应用，是一款面向科研人员的 AI驱动研究平台，致力于在科学文献、专利与学者资源中提供更精准、高效的搜索与分析。其中包括约1.6 亿篇论文、14 万本期刊、1.6 亿件专利以及超过 2000万活跃学者档案，让用户在全球范围的学术资源中进行探索与挖掘。其以海量的科研文档材料为基础，以领先的人工智能技术为核心，实现精准地搜索学术成果、深入分析科学内容，帮助研究者节省扫文献的时间，加速科研突破过程。</p><figure><img src="https://s2.loli.net/2025/08/18/cGPLTBDW1X5rNgA.png"alt="image-20250818110422583" /><figcaption aria-hidden="true">image-20250818110422583</figcaption></figure><h1 id="三试用scimaster">三、试用scimaster</h1><p>scimaster官网：https://scimaster.bohrium.com/?utm_source=bohrium_home&amp;utm_term=bohrium_ads。7月26日，上海交通大学-上海算法创新院-深势科技在上海人工智能大会上共同发布科学基座大模型Innovator，并依托Innovator推出全球首个通用科研智能体SciMaster。SciMaster集成了众多科学专用工具，可生成“深度调研报告”、支持思维链编辑功能。期间，研究者可以主动干预SciMaster的执行逻辑，对任务逻辑、内容进行修改，更准确合理实现研究需求。SciMaster现已接入DeepModeling开源社区。</p><p>scimaster 有点类似manus。</p><figure><img src="https://s2.loli.net/2025/08/18/kdDOxVcQFBbJKew.png"alt="image-20250818110125989" /><figcaption aria-hidden="true">image-20250818110125989</figcaption></figure><p>但手动刷新页面后，可以看到完整的回复内容。</p><h1 id="四探索学习scimaster">四、探索学习scimaster</h1><p>了解它的原理、实现流程和一些方法等。</p>]]></content>
     
     
     <categories>
