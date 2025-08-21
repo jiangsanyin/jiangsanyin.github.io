@@ -4,11 +4,86 @@
   
   
   <entry>
+    <title>阅读&#39;Tree-of-Thoughts思维树&#39;论文</title>
+    <link href="/2025/08/21/%E9%98%85%E8%AF%BB-Tree-of-Thoughts%E6%80%9D%E7%BB%B4%E6%A0%91-%E8%AE%BA%E6%96%87/"/>
+    <url>/2025/08/21/%E9%98%85%E8%AF%BB-Tree-of-Thoughts%E6%80%9D%E7%BB%B4%E6%A0%91-%E8%AE%BA%E6%96%87/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一论文公开链接">一、论文公开链接</h1><p>https://arxiv.org/pdf/2305.10601</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>论文</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>论文</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>阅读&#39;SELF-CONSISTENCY自我一致性(思维链)&#39;论文</title>
+    <link href="/2025/08/21/%E9%98%85%E8%AF%BB-SELF-CONSISTENCY%E8%87%AA%E6%88%91%E4%B8%80%E8%87%B4%E6%80%A7(%E6%80%9D%E7%BB%B4%E9%93%BE)-%E8%AE%BA%E6%96%87/"/>
+    <url>/2025/08/21/%E9%98%85%E8%AF%BB-SELF-CONSISTENCY%E8%87%AA%E6%88%91%E4%B8%80%E8%87%B4%E6%80%A7(%E6%80%9D%E7%BB%B4%E9%93%BE)-%E8%AE%BA%E6%96%87/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一论文公开链接">一、论文公开链接</h1><p>https://arxiv.org/pdf/2203.11171</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>论文</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>论文</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>coze-loop本地部署与试用</title>
+    <link href="/2025/08/21/coze-loop%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2%E4%B8%8E%E8%AF%95%E7%94%A8/"/>
+    <url>/2025/08/21/coze-loop%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2%E4%B8%8E%E8%AF%95%E7%94%A8/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一背景与环境信息">一、背景与环境信息</h1><ul><li><p>官方部署文档：</p><ul><li>https://github.com/coze-dev</li><li>https://github.com/coze-dev/coze-studio</li></ul></li><li><p>服务器信息：</p><ul><li><table><thead><tr><th>主机名</th><th>IP</th><th>操作系统</th><th>规格</th><th>GPU情况</th><th>备注</th></tr></thead><tbody><tr><td>ksp-registry</td><td>172.20.0.22</td><td>Ubuntu 20.04.3 LTS</td><td>12c20g+300G</td><td>NVIDIA A40*1</td><td></td></tr></tbody></table></li></ul></li></ul><p>此文档使用docker-compose的方式来部署coze-loop。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>AIGC</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>AIGC</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>coze-studio主要能力列举及与商业版比较</title>
     <link href="/2025/08/20/coze-studio%E4%B8%BB%E8%A6%81%E8%83%BD%E5%8A%9B%E5%88%97%E4%B8%BE%E5%8F%8A%E4%B8%8E%E5%95%86%E4%B8%9A%E7%89%88%E6%AF%94%E8%BE%83/"/>
     <url>/2025/08/20/coze-studio%E4%B8%BB%E8%A6%81%E8%83%BD%E5%8A%9B%E5%88%97%E4%B8%BE%E5%8F%8A%E4%B8%8E%E5%95%86%E4%B8%9A%E7%89%88%E6%AF%94%E8%BE%83/</url>
     
-    <content type="html"><![CDATA[<h1 id="一">一、</h1>]]></content>
+    <content type="html"><![CDATA[<h1 id="一背景与目的">一、背景与目的</h1><p>大概写一下coze开源了哪些能力，对比闭源版本有什么区别</p><h1 id="二coze开源功能">二、coze开源功能</h1><p>以下如果没有特别说明，coze就是指其商业版，coze-studio或coze开源版就是其coze目前开源的版本。coze-loop是跟coze-studio一起开源的项目。</p><figure><img src="https://s2.loli.net/2025/08/21/yYzqDMGTUROlkJt.png"alt="image-20250821171953967" /><figcaption aria-hidden="true">image-20250821171953967</figcaption></figure><h1 id="三问题或bug">三、问题或bug</h1><p>除前一个sheet中列举的coze开源版相对商业版缺少的功能外，coze开源版目前存在多个问题或bug</p><figure><img src="https://s2.loli.net/2025/08/21/ejyia5TuEKnIrBC.png"alt="image-20250821172526006" /><figcaption aria-hidden="true">image-20250821172526006</figcaption></figure><p>更多问题见：https://github.com/coze-dev/coze-studio/issues</p>]]></content>
     
     
     <categories>
