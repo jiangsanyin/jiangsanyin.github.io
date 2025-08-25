@@ -104,11 +104,11 @@
   
   
   <entry>
-    <title>coze-studio主要能力列举及与商业版比较</title>
-    <link href="/2025/08/20/coze-studio%E4%B8%BB%E8%A6%81%E8%83%BD%E5%8A%9B%E5%88%97%E4%B8%BE%E5%8F%8A%E4%B8%8E%E5%95%86%E4%B8%9A%E7%89%88%E6%AF%94%E8%BE%83/"/>
-    <url>/2025/08/20/coze-studio%E4%B8%BB%E8%A6%81%E8%83%BD%E5%8A%9B%E5%88%97%E4%B8%BE%E5%8F%8A%E4%B8%8E%E5%95%86%E4%B8%9A%E7%89%88%E6%AF%94%E8%BE%83/</url>
+    <title>coze-studio比其商业版缺少的能力</title>
+    <link href="/2025/08/20/coze-studio%E6%AF%94%E5%85%B6%E5%95%86%E4%B8%9A%E7%89%88%E7%BC%BA%E5%B0%91%E7%9A%84%E8%83%BD%E5%8A%9B/"/>
+    <url>/2025/08/20/coze-studio%E6%AF%94%E5%85%B6%E5%95%86%E4%B8%9A%E7%89%88%E7%BC%BA%E5%B0%91%E7%9A%84%E8%83%BD%E5%8A%9B/</url>
     
-    <content type="html"><![CDATA[<h1 id="一背景与目的">一、背景与目的</h1><p>大概写一下coze开源了哪些能力，对比闭源版本有什么区别</p><h1 id="二coze开源功能">二、coze开源功能</h1><p>以下如果没有特别说明，coze就是指其商业版，coze-studio或coze开源版就是其coze目前开源的版本。coze-loop是跟coze-studio一起开源的项目。</p><figure><img src="https://s2.loli.net/2025/08/21/yYzqDMGTUROlkJt.png"alt="image-20250821171953967" /><figcaption aria-hidden="true">image-20250821171953967</figcaption></figure><h1 id="三问题或bug">三、问题或bug</h1><p>除前一个sheet中列举的coze开源版相对商业版缺少的功能外，coze开源版目前存在多个问题或bug</p><figure><img src="https://s2.loli.net/2025/08/21/ejyia5TuEKnIrBC.png"alt="image-20250821172526006" /><figcaption aria-hidden="true">image-20250821172526006</figcaption></figure><p>更多问题见：https://github.com/coze-dev/coze-studio/issues</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="一背景与目的">一、背景与目的</h1><p>大概写一下coze开源了哪些能力，对比闭源版本有什么区别</p><h1 id="二coze开源功能">二、coze开源功能</h1><p>以下如果没有特别说明，coze就是指其商业版，coze-studio或coze开源版就是其coze目前开源的版本。coze-loop是跟coze-studio一起开源的项目。</p><p>首次整理时间：2025年8月21日</p><p>在线表格文档链接： https://www.kdocs.cn/l/cgPHMb4jqNCa（只有自己有访问权限）</p><figure><img src="https://s2.loli.net/2025/08/25/gTRG4ZrdjqxYCtN.png"alt="image-20250825094549752" /><figcaption aria-hidden="true">image-20250825094549752</figcaption></figure><h1 id="三问题或bug">三、问题或bug</h1><p>除前一个sheet中列举的coze开源版相对商业版缺少的功能外，coze开源版目前存在多个问题或bug</p><figure><img src="https://s2.loli.net/2025/08/21/ejyia5TuEKnIrBC.png"alt="image-20250821172526006" /><figcaption aria-hidden="true">image-20250821172526006</figcaption></figure><p>更多问题见：https://github.com/coze-dev/coze-studio/issues</p>]]></content>
     
     
     <categories>
