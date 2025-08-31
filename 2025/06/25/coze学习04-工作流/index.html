@@ -30,8 +30,12 @@
 <meta property="og:image" content="https://s2.loli.net/2025/06/25/IbZwUx61DPECjBv.png">
 <meta property="og:image" content="https://s2.loli.net/2025/06/25/Mpyj8fEGtQFKC9D.png">
 <meta property="og:image" content="https://s2.loli.net/2025/06/25/Rp1ocvQqIr4Uk6d.png">
+<meta property="og:image" content="https://s2.loli.net/2025/08/29/ukJjbYRzAMl8Uwg.png">
+<meta property="og:image" content="https://s2.loli.net/2025/08/31/PNnwObUIEDi1Y27.png">
+<meta property="og:image" content="https://s2.loli.net/2025/08/31/41UmWtX768ojDLf.png">
+<meta property="og:image" content="https://s2.loli.net/2025/08/31/DkagsO6J2hmSul9.png">
 <meta property="article:published_time" content="2025-06-25T13:16:12.000Z">
-<meta property="article:modified_time" content="2025-06-25T15:15:58.000Z">
+<meta property="article:modified_time" content="2025-08-31T12:42:14.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="AIGC">
 <meta name="twitter:card" content="summary_large_image">
@@ -241,7 +245,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          636 字
+          2.8k 字
         
       </span>
     
@@ -252,7 +256,7 @@
         
         
         
-          6 分钟
+          23 分钟
         
       </span>
     
@@ -324,7 +328,7 @@ alt="image-20250625220907419" />
 <p>最终的运行效果如下：</p>
 <p><img src="https://s2.loli.net/2025/06/25/IbZwUx61DPECjBv.png" srcset="/img/loading.gif" lazyload alt="image-20250625220818809" style="zoom:67%;" /></p>
 <p>当试运行工作流成功后，就可以将其发布，然后后续可以智能体调用此工作流。</p>
-<h2 id="其他操作">其他操作</h2>
+<h2 id="其他操作">2.2 其他操作</h2>
 <p>如删除工作流、添加节点、编辑节点等，玩过百炼平台的话还是很容易上手的。不再累述</p>
 <h1 id="三聊天机器人案例上">三、聊天机器人案例（上）</h1>
 <figure>
@@ -337,7 +341,59 @@ alt="image-20250625231506326" />
 alt="image-20250625231519913" />
 <figcaption aria-hidden="true">image-20250625231519913</figcaption>
 </figure>
-<p>比较内容多，还没有学习完成，暂时到“循环节点”处，明天继续</p>
+<p>经过添加循环节点及其他节点，并经过调试后最终得到如下可运行的工作流：</p>
+<figure>
+<img src="https://s2.loli.net/2025/08/29/ukJjbYRzAMl8Uwg.png" srcset="/img/loading.gif" lazyload
+alt="image-20250829175042208" />
+<figcaption aria-hidden="true">image-20250829175042208</figcaption>
+</figure>
+<p>上述工作流的完整解释如下：</p>
+<ol type="1">
+<li>开始节点：因为上述工作流是一个特殊的工作流，它在coze叫做对话流（对话流Chatflow的定义：是基于对话场景的特殊工作流，更适合处理对话类请求。对话流通过对话的方式和用户交互，并完成复杂的业务逻辑。对话流适用于
+Chatbot
+等需要在响应请求时进行复杂逻辑处理的对话式应用程序，例如个人助手、智能客服、虚拟伴侣等。），对话流一定会有一个开始节点与一个结束节点，且对话流的开始节点一定会有两个输入变量<code>USER_INPUT</code>、<code>CONVERSATION_NAME</code>，它们分别代表用户的输入与会话名称，其中会话名称会有一个默认值"Default"且不能更新。</li>
+<li>长期记忆节点：它用于在工作流中召回长期记忆中储存的用户的个性化信息。此处使用开始节点的输入<code>USER_INPUT</code>作为自己的输入，且在长期记忆节点中将此输入重命名为<code>Query</code>，此节点输出变量outputList，这个变量的类型是Array<Object>，这个输出变量的相关信息是由coze已经定义好的，使用者无法修改，它代表着根据<code>Query</code>从长期记忆中召回一些与<code>Query</code>相关的、用户的个性化信息。</li>
+<li>大模型节点：它接收两个输入，接收开始节点的输入<code>USER_INPUT</code>作为输入值并重命名为<code>input</code>、接收长期记忆节点的输出变量<code>outputList</code>的值作为输入值还是叫<code>outputList</code>，根据在系统提示词与用户提示词中使用自己的这两个输入变量与其他一些提示内容，加上其他LLM相关设置比如我使用的LLM是<code>豆包·工具调用</code>等，此节点的输出是一个类型为String的变量output，其中就包含了LLM在提示词的提示下针对用户输入内容、参考长期记忆节点的召回内容所做作出的回复。</li>
+<li>文本输入节点：接收大模型节点的输出<code>output</code>作为输入值并重命名为<code>String</code>，针对此输入值使用多个分隔符如换行符、制表符、句号、逗号等，对此节点的输入<code>String</code>进行分割结果是一个字符串列表，它赋值给了此节点的输出变量output</li>
+<li>代码节点：接收文本处理节点的输出<code>output</code>作为输入值并重命名为<code>input</code>，经过代码的处理后，得到一个字符串和一个字符串列表，分别赋值给了此节点的输出变量last、arr。其中last代表代码节点输入<code>input</code>（类型是一个字符串列表）这个字符串列表中最后一个不为空的字符串元素，arr则是前述这个不为空的字符串元素前面的所有元素所组成的字符串列表（不包含前述这个不为空的字符串元素）。</li>
+<li>循环节点：（1）接收代码节点的输出<code>arr</code>作为输入值并重命名为<code>input</code>，（2）有一个中间变量variable，它的值来自开始节点的<code>USER_INPUT</code>，（3）有一个输出变量output，一般代表着整个循环的最终结果，但此处其实后面没有用到</li>
+<li>循环体节点：循环体节点其实是循环节点的组成部分，熟悉计算机语言如python编程的人都知道，for循环会有一个循环体，类似地这个循环体节点就相当于for循环的循环体实现。
+此处循环体节点依次遍历循环节点输入input中每一个元素，由循环体节点中的选择器节点判断此字符串元素的长度是否大于0，如果是，则由输出节点直接在对话流的输出窗口中打印出此字符串，然后由<code>代码_1</code>节点中实现的逻辑随机休眠一段时间（单位是秒。此处是随机生成一个浮点型数字，大小在0.7~1.7之间），用于模拟人类打字时随机的停顿或连续感，代码节点的输出变量output我这里直接返回了一个固定字符串"123"。
+回到循环节点，循环节点的输出变量output是引用了此处循环体节点的<code>代码_1</code>节点的输出变量output，因为有多个循环（循环次数就是循环节点输入input列表的长度），所以循环节点的输出变量output是由每一轮循环中循环体节点中的<code>代码_1</code>节点的输出变量output所组成的列表。</li>
+<li>结束节点：接收代码节点的输出<code>last</code>作为输出变量并重命名为<code>output</code>，再输出此变量<code>output</code>的内容。因为前面的循环与循环体节点其实只输出代码节点的输出变量arr中的值，代码节点的输出变量last还没输出，在此处处理下。结束节点一定会在最后执行，大模型节点生成的文本内容分割成字符串列表后，各种元素的输出次序还是不会改变。</li>
+</ol>
+<p>值得注意的是，对话流试运行时强制要求关联上一个智能体或应用。</p>
+<p>最终的执行效果如下图：</p>
+<figure>
+<img src="https://s2.loli.net/2025/08/31/PNnwObUIEDi1Y27.png" srcset="/img/loading.gif" lazyload
+alt="image-20250831200013699" />
+<figcaption aria-hidden="true">image-20250831200013699</figcaption>
+</figure>
+<h1 id="四聊天机器人案例下">四、聊天机器人案例（下）</h1>
+<p>我将上述对话流chater01复制一份，生成副本并将副本命名为chitChat_Machima_204。</p>
+<p>在副本中添加如下红圈中的4个节点，用于实现根据LLM的回复内容从某个图片知识库中检索一个最匹配的图片并输出到对话流的输出窗口中，这样同时实现了文字与图片的结合输出。</p>
+<figure>
+<img src="https://s2.loli.net/2025/08/31/41UmWtX768ojDLf.png" srcset="/img/loading.gif" lazyload
+alt="image-20250831200441730" />
+<figcaption aria-hidden="true">image-20250831200441730</figcaption>
+</figure>
+<p>首先需要创建一个图片知识库，此处叫“御坂美琴”，其中上传了40张御坂美琴（或其他表情丰富的多张人物图片也可以）这个动漫人物的图片，并使用大模型对图片进行了自动标注，知识库其余设置默认（此处这不是重点）。</p>
+<p>以下是副本中新添加节点描述：</p>
+<ol type="1">
+<li><p>知识库检索节点：接收大模型节点的输出<code>output</code>作为输入变量并重命名为<code>Query</code>，从上述图片知识库中检索到最匹配Query内容的仅一张图片，此节点的输出变量outputList最多只有一个元素，这个元素的类型是dict，数据内容大致如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>	output <span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;&lt;img src=\&quot;https://lf3-appstore-sign.oceancloudapi.com/ocean-cloud-tos/FileBizType.BIZ_BOT_DATASET/1549645375611208_1750600881056937057_U9hXe7I5eq.jpg?lk3s=61a3dea3&amp;x-expires=1759234339&amp;x-signature=qji2exaVzNPI%2B228rJ9Cpm8CrdQ%3D\&quot;&gt; description: 这是一幅漫画画面，展示了一位女性站在一个桌子旁边。她穿着一件白色和红色相间的衣服，手握着桌子的边缘，似乎在喝水。她的头发被梳理得很整洁，带着一个小发夹。整个场景充满了活力和动感。&quot;</span><br>	documentId <span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;7518769722872446986&quot;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure></li>
+<li><p>解析image_url
+节点：它其中一个代码节点，其中的代码将上述<code>&lt;img src=\"https://lf3-appstore-sign.oceancloudapi.com/ocean-cloud-tos/FileBizType.BIZ_BOT_DATASET/1549645375611208_1750600881056937057_U9hXe7I5eq.jpg?lk3s=61a3dea3&amp;x-expires=1759234339&amp;x-signature=qji2exaVzNPI%2B228rJ9Cpm8CrdQ%3D\"&gt;</code>中的src属性的值提取出来了，以当前节点的输出变量key0输出，同时当前节点还有一个输出变量key1，它是一个布尔类型变量，表示是否提取图片src成功，True为成功。</p></li>
+<li><p>选择器_是否成功解析到image_url
+节点：它其实是一个选择器节点。它判断<code>解析image_url 节点</code>的输出变量key1是否为True，如果是，则执行<code>输出匹配的表情</code>节点，它其实是一个输出节点，<code>输出匹配的表情</code>节点接收选择器_是否成功解析到image_url节点的输出<code>key0</code>作为输出变量并重命名为<code>output</code>，输出内容
+栏中的内容是<code>![emo](&#123;&#123;output&#125;&#125;)</code>，这是markdown中插入图片元素的写法，coze对话流的输出节点支持此语法，这样就可以输出图片；如果否，这个分支就直接到结束节点了。</p></li>
+</ol>
+<p>修改后对话流试运行时的效果如下：</p>
+<figure>
+<img src="https://s2.loli.net/2025/08/31/DkagsO6J2hmSul9.png" srcset="/img/loading.gif" lazyload
+alt="image-20250831203953258" />
+<figcaption aria-hidden="true">image-20250831203953258</figcaption>
+</figure>
 
                 
               </div>
