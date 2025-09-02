@@ -19,27 +19,22 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、背景与介绍 深势科技（DeePTech）是一家将人工智能和物理模拟相结合，专注于解决复杂科学计算问题的科技公司，其技术应用涵盖分子模拟、材料科学、药物发现等多个领域。通过提升物理模拟效率，深势科技旨在加速科研进程，促进科学与工业的融合 。 二、试用玻尔 玻尔官网：https:&#x2F;&#x2F;www.bohrium.com&#x2F; Bohrium（玻尔） 应用，是一款面向科研人员的 AI 驱动研究平台">
+    <meta name="description" content="论文：https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2502.01390">
 <meta property="og:type" content="article">
-<meta property="og:title" content="探索通用科研智能体Scimaster">
-<meta property="og:url" content="https://jiangsanyin.github.io/2025/08/18/%E6%8E%A2%E7%B4%A2%E9%80%9A%E7%94%A8%E7%A7%91%E7%A0%94%E6%99%BA%E8%83%BD%E4%BD%93Scimaster/index.html">
+<meta property="og:title" content="Plan-and-Execute认知框架及在langchain3中的使用示例">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/08/31/Plan-and-Execute%E8%AE%A4%E7%9F%A5%E6%A1%86%E6%9E%B6%E5%8F%8A%E5%9C%A8langchain3%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、背景与介绍 深势科技（DeePTech）是一家将人工智能和物理模拟相结合，专注于解决复杂科学计算问题的科技公司，其技术应用涵盖分子模拟、材料科学、药物发现等多个领域。通过提升物理模拟效率，深势科技旨在加速科研进程，促进科学与工业的融合 。 二、试用玻尔 玻尔官网：https:&#x2F;&#x2F;www.bohrium.com&#x2F; Bohrium（玻尔） 应用，是一款面向科研人员的 AI 驱动研究平台">
+<meta property="og:description" content="论文：https:&#x2F;&#x2F;arxiv.org&#x2F;pdf&#x2F;2502.01390">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s2.loli.net/2025/08/18/cGPLTBDW1X5rNgA.png">
-<meta property="og:image" content="https://s2.loli.net/2025/08/18/kdDOxVcQFBbJKew.png">
-<meta property="og:image" content="https://s2.loli.net/2025/08/18/gZj2pnTq9cC1SYH.png">
-<meta property="og:image" content="https://s2.loli.net/2025/08/18/vgmIMO7T9JU8xP3.png">
-<meta property="article:published_time" content="2025-08-18T01:50:49.000Z">
-<meta property="article:modified_time" content="2025-09-02T08:02:38.000Z">
+<meta property="article:published_time" content="2025-08-31T12:45:26.000Z">
+<meta property="article:modified_time" content="2025-08-31T13:01:16.000Z">
 <meta property="article:author" content="sanyinjiang">
-<meta property="article:tag" content="AIGC">
+<meta property="article:tag" content="标签">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s2.loli.net/2025/08/18/cGPLTBDW1X5rNgA.png">
   
   
   
-  <title>探索通用科研智能体Scimaster - sanyinjiang</title>
+  <title>Plan-and-Execute认知框架及在langchain3中的使用示例 - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -218,7 +213,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">探索通用科研智能体Scimaster</span>
+            <span id="subtitle">Plan-and-Execute认知框架及在langchain3中的使用示例</span>
           
         </div>
 
@@ -229,8 +224,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-08-18 09:50" pubdate>
-          2025年8月18日 上午
+        <time datetime="2025-08-31 20:45" pubdate>
+          2025年8月31日 晚上
         </time>
       </span>
     
@@ -241,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          631 字
+          8 字
         
       </span>
     
@@ -252,7 +247,7 @@
         
         
         
-          6 分钟
+          1 分钟
         
       </span>
     
@@ -298,60 +293,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">探索通用科研智能体Scimaster</h1>
+            <h1 id="seo-header">Plan-and-Execute认知框架及在langchain3中的使用示例</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一背景与介绍">一、背景与介绍</h1>
-<p>深势科技（DeePTech）是一家将人工智能和物理模拟相结合，专注于解决复杂科学计算问题的科技公司，其技术应用涵盖分子模拟、材料科学、药物发现等多个领域。通过提升物理模拟效率，深势科技旨在加速科研进程，促进科学与工业的融合
-。</p>
-<h1 id="二试用玻尔">二、试用玻尔</h1>
-<p>玻尔官网：https://www.bohrium.com/</p>
-<p>Bohrium（玻尔） 应用，是一款面向科研人员的 AI
-驱动研究平台，致力于在科学文献、专利与学者资源中提供更精准、高效的搜索与分析。其中包括约
-1.6 亿篇论文、14 万本期刊、1.6 亿件专利以及超过 2000
-万活跃学者档案，让用户在全球范围的学术资源中进行探索与挖掘。其以海量的科研文档材料为基础，以领先的人工智能技术为核心，实现精准地搜索学术成果、深入分析科学内容，帮助研究者节省扫文献的时间，加速科研突破过程。</p>
-<figure>
-<img src="https://s2.loli.net/2025/08/18/cGPLTBDW1X5rNgA.png" srcset="/img/loading.gif" lazyload
-alt="image-20250818110422583" />
-<figcaption aria-hidden="true">image-20250818110422583</figcaption>
-</figure>
-<h1 id="三试用scimaster">三、试用scimaster</h1>
-<p>scimaster官网：https://scimaster.bohrium.com/?utm_source=bohrium_home&amp;utm_term=bohrium_ads。7月26日，上海交通大学-上海算法创新院-深势科技在上海人工智能大会上共同发布科学基座大模型Innovator，并依托Innovator推出全球首个通用科研智能体SciMaster。SciMaster集成了众多科学专用工具，可生成“深度调研报告”、支持思维链编辑功能。期间，研究者可以主动干预SciMaster的执行逻辑，对任务逻辑、内容进行修改，更准确合理实现研究需求。SciMaster现已接入DeepModeling开源社区。</p>
-<p>scimaster 有点类似manus。</p>
-<figure>
-<img src="https://s2.loli.net/2025/08/18/kdDOxVcQFBbJKew.png" srcset="/img/loading.gif" lazyload
-alt="image-20250818110125989" />
-<figcaption aria-hidden="true">image-20250818110125989</figcaption>
-</figure>
-<p>但手动刷新页面后，可以看到完整的回复内容。</p>
-<figure>
-<img src="https://s2.loli.net/2025/08/18/gZj2pnTq9cC1SYH.png" srcset="/img/loading.gif" lazyload
-alt="image-20250818152500650" />
-<figcaption aria-hidden="true">image-20250818152500650</figcaption>
-</figure>
-<figure>
-<img src="https://s2.loli.net/2025/08/18/vgmIMO7T9JU8xP3.png" srcset="/img/loading.gif" lazyload
-alt="image-20250818152614436" />
-<figcaption aria-hidden="true">image-20250818152614436</figcaption>
-</figure>
-<h1 id="四探索学习scimaster">四、探索学习scimaster</h1>
-<p>微信搜索“scimaster的实现原理”，https://mp.weixin.qq.com/s/kOJHqZZ4K5w5YwugluSi4A、https://mp.weixin.qq.com/s/UEFiOrtg2vikGLWadKqnQQ</p>
-<p>了解它的原理、实现流程和一些方法等。</p>
-<hr />
-<p>非官方介绍性文章：</p>
-<ul>
-<li>https://mp.weixin.qq.com/s/UEFiOrtg2vikGLWadKqnQQ</li>
-<li></li>
-</ul>
-<p>官方介绍性文章：</p>
-<ul>
-<li>论文https://arxiv.org/abs/2507.05241</li>
-<li></li>
-</ul>
-<h1 id="五调研的细节内容">五、调研的细节内容</h1>
-<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs abnf">自主规划，自主执行，自主检查<br><br><br>整体架构<br>功能流程<br>技术实现，技术栈 （多智能体如何协作、如何记忆）<br>主要功能<br>如何处理<span class="hljs-comment">;图文，token超限，用到哪些MCP（FireCrawl、bing搜索），知识库如何关联的。一般会爬哪些网站；</span><br></code></pre></td></tr></table></figure>
+                <p>论文：https://arxiv.org/pdf/2502.01390</p>
 
                 
               </div>
@@ -370,7 +317,7 @@ alt="image-20250818152614436" />
     
       <span class="category-chain">
         
-  <a href="/categories/AIGC/" class="category-chain-item">AIGC</a>
+  <a href="/categories/%E7%B1%BB%E5%88%AB/" class="category-chain-item">类别</a>
   
   
 
@@ -385,7 +332,7 @@ alt="image-20250818152614436" />
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/AIGC/" class="print-no-link">#AIGC</a>
+        <a href="/tags/%E6%A0%87%E7%AD%BE/" class="print-no-link">#标签</a>
       
     </div>
   
@@ -397,8 +344,8 @@ alt="image-20250818152614436" />
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>探索通用科研智能体Scimaster</div>
-      <div>https://jiangsanyin.github.io/2025/08/18/探索通用科研智能体Scimaster/</div>
+      <div>Plan-and-Execute认知框架及在langchain3中的使用示例</div>
+      <div>https://jiangsanyin.github.io/2025/08/31/Plan-and-Execute认知框架及在langchain3中的使用示例/</div>
     </div>
     <div class="license-meta">
       
@@ -410,7 +357,7 @@ alt="image-20250818152614436" />
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年8月18日</div>
+          <div>2025年8月31日</div>
         </div>
       
       
@@ -442,18 +389,12 @@ alt="image-20250818152614436" />
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/08/20/coze-studio%E6%AF%94%E5%85%B6%E5%95%86%E4%B8%9A%E7%89%88%E7%BC%BA%E5%B0%91%E7%9A%84%E8%83%BD%E5%8A%9B/" title="coze-studio比其商业版缺少的能力">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">coze-studio比其商业版缺少的能力</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/08/14/%E5%BC%80%E6%BA%90%E7%89%88coze%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2%E4%B8%8E%E8%AF%95%E7%94%A8/" title="开源版coze本地部署与试用">
-                        <span class="hidden-mobile">开源版coze本地部署与试用</span>
+                      <a href="/2025/08/25/coze-studio%E5%BC%80%E6%BA%90%E8%83%BD%E5%8A%9B%E5%88%97%E4%B8%BE/" title="coze-studio开源能力列举">
+                        <span class="hidden-mobile">coze-studio开源能力列举</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

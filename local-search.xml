@@ -4,11 +4,36 @@
   
   
   <entry>
+    <title>Plan-and-Execute认知框架及在langchain3中的使用示例</title>
+    <link href="/2025/08/31/Plan-and-Execute%E8%AE%A4%E7%9F%A5%E6%A1%86%E6%9E%B6%E5%8F%8A%E5%9C%A8langchain3%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B/"/>
+    <url>/2025/08/31/Plan-and-Execute%E8%AE%A4%E7%9F%A5%E6%A1%86%E6%9E%B6%E5%8F%8A%E5%9C%A8langchain3%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B/</url>
+    
+    <content type="html"><![CDATA[<p>论文：https://arxiv.org/pdf/2502.01390</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>类别</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>标签</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>coze-studio开源能力列举</title>
     <link href="/2025/08/25/coze-studio%E5%BC%80%E6%BA%90%E8%83%BD%E5%8A%9B%E5%88%97%E4%B8%BE/"/>
     <url>/2025/08/25/coze-studio%E5%BC%80%E6%BA%90%E8%83%BD%E5%8A%9B%E5%88%97%E4%B8%BE/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<h1 id="一coze-studio的功能">一、coze-studio的功能</h1><p>以下功能点整理自coze-studio-v0.2.4，然后整理完成之后发现v0.2.5与v0.2.6在两天时间内接连发布，但自己查看了这两者的更新日志，只是在修复一些关键性的bug，并没有新增什么重要功能。</p><figure><img src="https://s2.loli.net/2025/09/02/L4FDqQk86rWuPYg.png"alt="image-20250902162438856" /><figcaption aria-hidden="true">image-20250902162438856</figcaption></figure><h1id="二相比coze官方闭源版缺失功能">二、相比coze官方闭源版缺失功能</h1><h2 id="缺失功能">2.1 缺失功能</h2><p>大致对比了一下coze-studio相比coze官方闭源版缺少的功能，如下。</p><figure><img src="https://s2.loli.net/2025/09/02/ik2PYGWwmpgyjhS.png"alt="image-20250902163254112" /><figcaption aria-hidden="true">image-20250902163254112</figcaption></figure><h2 id="缺失功能总结">2.2 缺失功能总结</h2><p>可以看到，缺失的功能主要集中在以下几个方面：</p><ol type="1"><li><strong>平台层面</strong><ul><li>官方生态的账号体系、分享与社区互动功能</li></ul></li><li><strong>智能体交互与体验</strong><ul><li>官方闭源版多模态支持（语音输入输出、图像等）</li><li>官方闭源版更多样化的消息展示形式（如富文本、卡片、图表等）</li><li>官方闭源版智能体的上下文管理更强（token限制提升、多轮对话的记忆和优化）</li></ul></li><li><strong>应用开发与管理</strong><ul><li>工作流设计器（闭源版支持更复杂的节点、触发器）</li><li>对话体验优化工具（如测试、调试环境）</li><li>丰富的插件/扩展生态能力（闭源版可接入更多外部服务）</li></ul></li><li><strong>团队与协作</strong><ul><li>成员管理、团队协作、权限分配</li><li>项目空间管理和跨项目共享</li></ul></li><li><strong>数据与监控</strong><ul><li>完整的数据统计和分析能力</li><li>更完善的发布与版本控制机制</li></ul></li></ol><h1 id="三自己体验过的bug或问题">三、自己体验过的bug或问题</h1><table><thead><tr><th>序号</th><th>问题或bug</th><th>目前解决情况</th></tr></thead><tbody><tr><td>1</td><td>切换嵌入模型时，重启coze-server时报错</td><td>已解决。https://github.com/coze-dev/coze-studio/issues/537</td></tr><tr><td>2</td><td>创建知识库的，无召回测试功能。当前coze开源版创建智能体，使用知识库时召回率非常低，同样的本地嵌入模型与文本生成大模型，fastgpt中召回率要高得多</td><td>目前正在研究中，看issue中有人回复说需要仔细调整嵌入模型与知识库参数等</td></tr><tr><td>3</td><td>创建文本知识库并上传文件时，文档会反复解析数次。每次解析解析进度从0到100%,然后又开始下一轮解析</td><td>未解决。最新的main与v0.2.4分支中都存在此问题</td></tr><tr><td>4</td><td>知识库召回时，如果存在内容相近的分片，检索不正确</td><td>未解决。需要优化下rerank算法，让召回内容更加精确，会在近期进行优化。https://github.com/coze-dev/coze-studio/issues/707</td></tr><tr><td>5</td><td>coze-studio-v0.2.4，知识检索过程不支持本地重排模型</td><td><ahref="https://github.com/coze-dev/coze-studio/issues/411">未解决。社区回复需要自己改源码实现https://github.com/coze-dev/coze-studio/issues/411在v0.2.5中，支持了ark重排模型</a></td></tr><tr><td>6</td><td>coze-studio-v0.2.4，创建表格知识库，并上传一个包含112369行（每行两列数据）数据的excel文件，经过将近一个小时的解析，在99%后失败，提示“code=105000003message=MySQL operation failed: batch set slice status failed, err:Error 1390 (HY000): Prepared statement contains too manyplaceholders”</td><td>未解决。</td></tr><tr><td>7</td><td>coze-studio-v0.2.4，创建图片知识库，并上传一张186KB的图片，一直处于处理中</td><td>未解决。</td></tr></tbody></table>]]></content>
     
     
     <categories>
@@ -133,7 +158,7 @@
     <link href="/2025/08/20/coze-studio%E6%AF%94%E5%85%B6%E5%95%86%E4%B8%9A%E7%89%88%E7%BC%BA%E5%B0%91%E7%9A%84%E8%83%BD%E5%8A%9B/"/>
     <url>/2025/08/20/coze-studio%E6%AF%94%E5%85%B6%E5%95%86%E4%B8%9A%E7%89%88%E7%BC%BA%E5%B0%91%E7%9A%84%E8%83%BD%E5%8A%9B/</url>
     
-    <content type="html"><![CDATA[<h1 id="一背景与目的">一、背景与目的</h1><p>大概写一下coze开源了哪些能力，对比闭源版本有什么区别</p><h1 id="二coze开源功能">二、coze开源功能</h1><p>以下如果没有特别说明，coze就是指其商业版，coze-studio或coze开源版就是其coze目前开源的版本。coze-loop是跟coze-studio一起开源的项目。</p><p>首次整理时间：2025年8月21日</p><p>在线表格文档链接： https://www.kdocs.cn/l/cgPHMb4jqNCa（只有自己有访问权限）</p><figure><img src="https://s2.loli.net/2025/08/25/gTRG4ZrdjqxYCtN.png"alt="image-20250825094549752" /><figcaption aria-hidden="true">image-20250825094549752</figcaption></figure><h1 id="三问题或bug">三、问题或bug</h1><p>除前一个sheet中列举的coze开源版相对商业版缺少的功能外，coze开源版目前存在多个问题或bug</p><figure><img src="https://s2.loli.net/2025/08/21/ejyia5TuEKnIrBC.png"alt="image-20250821172526006" /><figcaption aria-hidden="true">image-20250821172526006</figcaption></figure><p>更多问题见：https://github.com/coze-dev/coze-studio/issues</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="一背景与目的">一、背景与目的</h1><p>大概写一下coze开源了哪些能力，对比闭源版本有什么区别</p><h1 id="二coze开源功能">二、coze开源功能</h1><p>以下如果没有特别说明，coze就是指其商业版，coze-studio或coze开源版就是其coze目前开源的版本。coze-loop是跟coze-studio一起开源的项目。</p><p>首次整理时间：2025年8月21日</p><p>在线表格文档链接： https://www.kdocs.cn/l/ct6EtjXCJZbO（只有自己有访问权限）</p><figure><img src="https://s2.loli.net/2025/08/25/gTRG4ZrdjqxYCtN.png"alt="image-20250825094549752" /><figcaption aria-hidden="true">image-20250825094549752</figcaption></figure><h1 id="三问题或bug">三、问题或bug</h1><p>除前一个sheet中列举的coze开源版相对商业版缺少的功能外，coze开源版目前存在多个问题或bug</p><figure><img src="https://s2.loli.net/2025/08/21/ejyia5TuEKnIrBC.png"alt="image-20250821172526006" /><figcaption aria-hidden="true">image-20250821172526006</figcaption></figure><p>更多问题见：https://github.com/coze-dev/coze-studio/issues</p>]]></content>
     
     
     <categories>
@@ -158,7 +183,7 @@
     <link href="/2025/08/18/%E6%8E%A2%E7%B4%A2%E9%80%9A%E7%94%A8%E7%A7%91%E7%A0%94%E6%99%BA%E8%83%BD%E4%BD%93Scimaster/"/>
     <url>/2025/08/18/%E6%8E%A2%E7%B4%A2%E9%80%9A%E7%94%A8%E7%A7%91%E7%A0%94%E6%99%BA%E8%83%BD%E4%BD%93Scimaster/</url>
     
-    <content type="html"><![CDATA[<h1 id="一背景与介绍">一、背景与介绍</h1><p>深势科技（DeePTech）是一家将人工智能和物理模拟相结合，专注于解决复杂科学计算问题的科技公司，其技术应用涵盖分子模拟、材料科学、药物发现等多个领域。通过提升物理模拟效率，深势科技旨在加速科研进程，促进科学与工业的融合。</p><h1 id="二试用玻尔">二、试用玻尔</h1><p>玻尔官网：https://www.bohrium.com/</p><p>Bohrium（玻尔） 应用，是一款面向科研人员的 AI驱动研究平台，致力于在科学文献、专利与学者资源中提供更精准、高效的搜索与分析。其中包括约1.6 亿篇论文、14 万本期刊、1.6 亿件专利以及超过 2000万活跃学者档案，让用户在全球范围的学术资源中进行探索与挖掘。其以海量的科研文档材料为基础，以领先的人工智能技术为核心，实现精准地搜索学术成果、深入分析科学内容，帮助研究者节省扫文献的时间，加速科研突破过程。</p><figure><img src="https://s2.loli.net/2025/08/18/cGPLTBDW1X5rNgA.png"alt="image-20250818110422583" /><figcaption aria-hidden="true">image-20250818110422583</figcaption></figure><h1 id="三试用scimaster">三、试用scimaster</h1><p>scimaster官网：https://scimaster.bohrium.com/?utm_source=bohrium_home&amp;utm_term=bohrium_ads。7月26日，上海交通大学-上海算法创新院-深势科技在上海人工智能大会上共同发布科学基座大模型Innovator，并依托Innovator推出全球首个通用科研智能体SciMaster。SciMaster集成了众多科学专用工具，可生成“深度调研报告”、支持思维链编辑功能。期间，研究者可以主动干预SciMaster的执行逻辑，对任务逻辑、内容进行修改，更准确合理实现研究需求。SciMaster现已接入DeepModeling开源社区。</p><p>scimaster 有点类似manus。</p><figure><img src="https://s2.loli.net/2025/08/18/kdDOxVcQFBbJKew.png"alt="image-20250818110125989" /><figcaption aria-hidden="true">image-20250818110125989</figcaption></figure><p>但手动刷新页面后，可以看到完整的回复内容。</p><figure><img src="https://s2.loli.net/2025/08/18/gZj2pnTq9cC1SYH.png"alt="image-20250818152500650" /><figcaption aria-hidden="true">image-20250818152500650</figcaption></figure><figure><img src="https://s2.loli.net/2025/08/18/vgmIMO7T9JU8xP3.png"alt="image-20250818152614436" /><figcaption aria-hidden="true">image-20250818152614436</figcaption></figure><h1 id="四探索学习scimaster">四、探索学习scimaster</h1><p>微信搜索“scimaster的实现原理”，https://mp.weixin.qq.com/s/kOJHqZZ4K5w5YwugluSi4A、https://mp.weixin.qq.com/s/UEFiOrtg2vikGLWadKqnQQ</p><p>了解它的原理、实现流程和一些方法等。</p><hr /><p>非官方介绍性文章：</p><ul><li>https://mp.weixin.qq.com/s/UEFiOrtg2vikGLWadKqnQQ</li><li>林</li></ul><p>官方介绍性文章：</p><ul><li>论文https://arxiv.org/abs/2507.05241</li><li></li></ul>]]></content>
+    <content type="html"><![CDATA[<h1 id="一背景与介绍">一、背景与介绍</h1><p>深势科技（DeePTech）是一家将人工智能和物理模拟相结合，专注于解决复杂科学计算问题的科技公司，其技术应用涵盖分子模拟、材料科学、药物发现等多个领域。通过提升物理模拟效率，深势科技旨在加速科研进程，促进科学与工业的融合。</p><h1 id="二试用玻尔">二、试用玻尔</h1><p>玻尔官网：https://www.bohrium.com/</p><p>Bohrium（玻尔） 应用，是一款面向科研人员的 AI驱动研究平台，致力于在科学文献、专利与学者资源中提供更精准、高效的搜索与分析。其中包括约1.6 亿篇论文、14 万本期刊、1.6 亿件专利以及超过 2000万活跃学者档案，让用户在全球范围的学术资源中进行探索与挖掘。其以海量的科研文档材料为基础，以领先的人工智能技术为核心，实现精准地搜索学术成果、深入分析科学内容，帮助研究者节省扫文献的时间，加速科研突破过程。</p><figure><img src="https://s2.loli.net/2025/08/18/cGPLTBDW1X5rNgA.png"alt="image-20250818110422583" /><figcaption aria-hidden="true">image-20250818110422583</figcaption></figure><h1 id="三试用scimaster">三、试用scimaster</h1><p>scimaster官网：https://scimaster.bohrium.com/?utm_source=bohrium_home&amp;utm_term=bohrium_ads。7月26日，上海交通大学-上海算法创新院-深势科技在上海人工智能大会上共同发布科学基座大模型Innovator，并依托Innovator推出全球首个通用科研智能体SciMaster。SciMaster集成了众多科学专用工具，可生成“深度调研报告”、支持思维链编辑功能。期间，研究者可以主动干预SciMaster的执行逻辑，对任务逻辑、内容进行修改，更准确合理实现研究需求。SciMaster现已接入DeepModeling开源社区。</p><p>scimaster 有点类似manus。</p><figure><img src="https://s2.loli.net/2025/08/18/kdDOxVcQFBbJKew.png"alt="image-20250818110125989" /><figcaption aria-hidden="true">image-20250818110125989</figcaption></figure><p>但手动刷新页面后，可以看到完整的回复内容。</p><figure><img src="https://s2.loli.net/2025/08/18/gZj2pnTq9cC1SYH.png"alt="image-20250818152500650" /><figcaption aria-hidden="true">image-20250818152500650</figcaption></figure><figure><img src="https://s2.loli.net/2025/08/18/vgmIMO7T9JU8xP3.png"alt="image-20250818152614436" /><figcaption aria-hidden="true">image-20250818152614436</figcaption></figure><h1 id="四探索学习scimaster">四、探索学习scimaster</h1><p>微信搜索“scimaster的实现原理”，https://mp.weixin.qq.com/s/kOJHqZZ4K5w5YwugluSi4A、https://mp.weixin.qq.com/s/UEFiOrtg2vikGLWadKqnQQ</p><p>了解它的原理、实现流程和一些方法等。</p><hr /><p>非官方介绍性文章：</p><ul><li>https://mp.weixin.qq.com/s/UEFiOrtg2vikGLWadKqnQQ</li><li></li></ul><p>官方介绍性文章：</p><ul><li>论文https://arxiv.org/abs/2507.05241</li><li></li></ul><h1 id="五调研的细节内容">五、调研的细节内容</h1><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs abnf">自主规划，自主执行，自主检查<br><br><br>整体架构<br>功能流程<br>技术实现，技术栈 （多智能体如何协作、如何记忆）<br>主要功能<br>如何处理<span class="hljs-comment">;图文，token超限，用到哪些MCP（FireCrawl、bing搜索），知识库如何关联的。一般会爬哪些网站；</span><br></code></pre></td></tr></table></figure>]]></content>
     
     
     <categories>
