@@ -1,0 +1,1007 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、TTS 模型（音色与并发性能） huggingface地址：https:&#x2F;&#x2F;huggingface.co&#x2F;hexgrad&#x2F;Kokoro-82M-v1.1-zh ，这是一个语音合成模型。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tts相关模型与开源library测评">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/09/08/tts%E7%9B%B8%E5%85%B3%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%BC%80%E6%BA%90library%E6%B5%8B%E8%AF%84/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、TTS 模型（音色与并发性能） huggingface地址：https:&#x2F;&#x2F;huggingface.co&#x2F;hexgrad&#x2F;Kokoro-82M-v1.1-zh ，这是一个语音合成模型。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/09/08/eGFBnUa9V6OSWjr.png">
+<meta property="og:image" content="https://s2.loli.net/2025/09/10/ocnTez8lUKiBGAf.png">
+<meta property="article:published_time" content="2025-09-08T08:20:44.000Z">
+<meta property="article:modified_time" content="2025-09-12T06:12:38.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="标签">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/09/08/eGFBnUa9V6OSWjr.png">
+  
+  
+  
+  <title>tts相关模型与开源library测评 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">tts相关模型与开源library测评</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-09-08 16:20" pubdate>
+          2025年9月8日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          76 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">tts相关模型与开源library测评</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一tts-模型音色与并发性能">一、TTS 模型（音色与并发性能）</h1>
+<p>huggingface地址：https://huggingface.co/hexgrad/Kokoro-82M-v1.1-zh
+，这是一个语音合成模型。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># This file is hardcoded to transparently reproduce HEARME_zh.wav</span><br><span class="hljs-comment"># Therefore it may NOT generalize gracefully to other texts</span><br><span class="hljs-comment"># Refer to Usage in README.md for more general usage patterns</span><br><span class="hljs-keyword">import</span> os<br><span class="hljs-comment"># pip install kokoro&gt;=0.8.1 &quot;misaki[zh]&gt;=0.8.1&quot;</span><br><span class="hljs-keyword">import</span> time<br><br><span class="hljs-keyword">from</span> kokoro <span class="hljs-keyword">import</span> KModel, KPipeline<br><span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-keyword">import</span> soundfile <span class="hljs-keyword">as</span> sf<br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> tqdm<br><br>REPO_ID = <span class="hljs-string">&#x27;hexgrad/Kokoro-82M-v1.1-zh&#x27;</span><br>SAMPLE_RATE = <span class="hljs-number">24000</span><br><br><span class="hljs-comment"># How much silence to insert between paragraphs: 5000 is about 0.2 seconds</span><br>N_ZEROS = <span class="hljs-number">5000</span><br><br><span class="hljs-comment"># Whether to join sentences in paragraphs 1 and 3</span><br>JOIN_SENTENCES = <span class="hljs-literal">True</span><br><br><span class="hljs-comment">#VOICE = &#x27;zf_001&#x27; if True else &#x27;zm_010&#x27;</span><br><span class="hljs-comment">#VOICE = &#x27;zf_002&#x27; if True else &#x27;zm_010&#x27;</span><br><span class="hljs-comment">#VOICE = &#x27;zm_009&#x27;</span><br><br>device = <span class="hljs-string">&#x27;cuda&#x27;</span> <span class="hljs-keyword">if</span> torch.cuda.is_available() <span class="hljs-keyword">else</span> <span class="hljs-string">&#x27;cpu&#x27;</span><br><br><span class="hljs-comment">#texts = [(</span><br><span class="hljs-comment">#&quot;Kokoro 是一系列体积虽小但功能强大的 TTS 模型。&quot;,</span><br><span class="hljs-comment">#), (</span><br><span class="hljs-comment">#&quot;该模型是经过短期训练的结果，从专业数据集中添加了100名中文使用者。&quot;,</span><br><span class="hljs-comment">#&quot;中文数据由专业数据集公司「龙猫数据」免费且无偿地提供给我们。感谢你们让这个模型成为可能。&quot;,</span><br><span class="hljs-comment">#), (</span><br><span class="hljs-comment">#&quot;另外，一些众包合成英语数据也进入了训练组合：&quot;,</span><br><span class="hljs-comment">#&quot;1小时的 Maple，美国女性。&quot;,</span><br><span class="hljs-comment">#&quot;1小时的 Sol，另一位美国女性。&quot;,</span><br><span class="hljs-comment">#&quot;和1小时的 Vale，一位年长的英国女性。&quot;,</span><br><span class="hljs-comment">#), (</span><br><span class="hljs-comment">#&quot;由于该模型删除了许多声音，因此它并不是对其前身的严格升级，但它提前发布以收集有关新声音和标记化的反馈。&quot;,</span><br><span class="hljs-comment">#&quot;除了中文数据集和3小时的英语之外，其余数据都留在本次训练中。&quot;,</span><br><span class="hljs-comment">#&quot;目标是推动模型系列的发展，并最终恢复一些被遗留的声音。&quot;,</span><br><span class="hljs-comment">#), (</span><br><span class="hljs-comment">#&quot;美国版权局目前的指导表明，合成数据通常不符合版权保护的资格。&quot;,</span><br><span class="hljs-comment">#&quot;由于这些合成数据是众包的，因此模型训练师不受任何服务条款的约束。&quot;,</span><br><span class="hljs-comment">#&quot;该 Apache 许可模式也符合 OpenAI 所宣称的广泛传播 AI 优势的使命。&quot;,</span><br><span class="hljs-comment">#&quot;如果您愿意帮助进一步完成这一使命，请考虑为此贡献许可的音频数据。&quot;,</span><br><span class="hljs-comment">#)]</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">texts = [(&quot;ReAct全称是\&quot;Reasoning and Acting\&quot;，可以翻译成“推理与行动”。&quot;,</span><br><span class="hljs-string">          &quot;它来自一篇于 2023 年 ICLR 会议上发表的会议论文https://arxiv.org/pdf/2210.03629 &quot;,</span><br><span class="hljs-string">          &quot;ReAct相关的简介可在此查看https://react-lm.github.io/。&quot;),</span><br><span class="hljs-string">        (&quot;在ReAct提出之前，大家都只是将推理与行动分开来进行研究&quot;,</span><br><span class="hljs-string">         &quot;比如推理方面就是提升LLM的推理能力，行动方面有给LLM增加FunctionCalling的能力等&quot;,</span><br><span class="hljs-string">         &quot;这篇论文首创性地提出将LLM的这二者结合起来协同使用。&quot;,</span><br><span class="hljs-string">         &quot;在解决问题的过程中，“reasoning traces”与“Actions”很多情况下是交错执行的&quot;,</span><br><span class="hljs-string">         &quot;前者帮助LLM进行推断、跟踪和更新行动方案，并处理异常情况；&quot;,</span><br><span class="hljs-string">         &quot;后者则使LLM能够与外部资源（如知识库或环境）进行交互，从而获取更多信息。&quot;)]</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-comment">#texts = [(&quot;AI认知框架 ReAct（Reason + Act）结合推理与行动：&quot;,</span><br><span class="hljs-comment">#          &quot;模型先生成推理链条，再基于推理选择行动（如查询工具），循环迭代，直到输出最终答案，实现更强的推理与任务解决能力。&quot;),</span><br><span class="hljs-comment">#         (&quot;实践证明，ReAct是一种行之有效的AI认知框架。&quot;)]</span><br><br><span class="hljs-comment">#if JOIN_SENTENCES:</span><br><span class="hljs-comment">#    for i in (1, 3):</span><br><span class="hljs-comment">#        texts[i] = [&#x27;&#x27;.join(texts[i])]</span><br><span class="hljs-comment">#print(&quot;debug1&quot;)</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">GenerateWav</span>:<br>    REPO_ID = <span class="hljs-string">&#x27;hexgrad/Kokoro-82M-v1.1-zh&#x27;</span><br>    SAMPLE_RATE = <span class="hljs-number">24000</span><br>    <span class="hljs-comment"># How much silence to insert between paragraphs: 5000 is about 0.2 seconds</span><br>    N_ZEROS = <span class="hljs-number">5000</span><br>    <span class="hljs-comment"># Whether to join sentences in paragraphs 1 and 3</span><br>    JOIN_SENTENCES = <span class="hljs-literal">True</span><br><br>    <span class="hljs-comment">#device = &#x27;cuda&#x27; if torch.cuda.is_available() else &#x27;cpu&#x27;</span><br>    device = <span class="hljs-string">&#x27;cpu&#x27;</span><br>    en_pipeline = KPipeline(lang_code=<span class="hljs-string">&#x27;a&#x27;</span>, repo_id=REPO_ID, model=<span class="hljs-literal">False</span>)<br><br>    <span class="hljs-comment"># print(&quot;debug2&quot;)</span><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">en_callable</span>(<span class="hljs-params">text</span>):<br>        <span class="hljs-keyword">if</span> text == <span class="hljs-string">&#x27;Kokoro&#x27;</span>:<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;kˈOkəɹO&#x27;</span><br>        <span class="hljs-keyword">elif</span> text == <span class="hljs-string">&#x27;Sol&#x27;</span>:<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;sˈOl&#x27;</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">next</span>(GenerateWav.en_pipeline(text)).phonemes<br><br>    <span class="hljs-comment"># <span class="hljs-doctag">HACK:</span> Mitigate rushing caused by lack of training data beyond ~100 tokens</span><br>    <span class="hljs-comment"># Simple piecewise linear fn that decreases speed as len_ps increases</span><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">speed_callable</span>(<span class="hljs-params">len_ps</span>):<br>        speed = <span class="hljs-number">0.8</span><br>        <span class="hljs-keyword">if</span> len_ps &lt;= <span class="hljs-number">83</span>:<br>            speed = <span class="hljs-number">1</span><br>        <span class="hljs-keyword">elif</span> len_ps &lt; <span class="hljs-number">183</span>:<br>            speed = <span class="hljs-number">1</span> - (len_ps - <span class="hljs-number">83</span>) / <span class="hljs-number">500</span><br>        <span class="hljs-keyword">return</span> speed * <span class="hljs-number">1.1</span><br><br>    <span class="hljs-comment"># print(&quot;debug3&quot;)</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;正在使用的device：<span class="hljs-subst">&#123;device&#125;</span>&quot;</span>)<br>    model = KModel(repo_id=REPO_ID).to(device).<span class="hljs-built_in">eval</span>()<br>    <span class="hljs-comment"># print(&quot;debug4&quot;)</span><br>    zh_pipeline = KPipeline(lang_code=<span class="hljs-string">&#x27;z&#x27;</span>, repo_id=REPO_ID, model=model, en_callable=en_callable)<br>    <span class="hljs-comment"># print(&quot;debug5&quot;)</span><br>    path = Path(__file__).parent<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">genetate_wav</span>(<span class="hljs-params">texts: <span class="hljs-built_in">list</span>, VOICE: <span class="hljs-built_in">str</span>, device: <span class="hljs-built_in">str</span> = <span class="hljs-string">&#x27;cpu&#x27;</span>, test_type: <span class="hljs-built_in">str</span> = <span class="hljs-string">&#x27;tone&#x27;</span></span>):<br>        <span class="hljs-keyword">try</span>:<br>            <span class="hljs-comment"># print(&quot;debug6&quot;)</span><br>            middle_dir = <span class="hljs-string">&quot;01_tone&quot;</span> <span class="hljs-keyword">if</span> test_type == <span class="hljs-string">&#x27;tone&#x27;</span> <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;02_concurrency&quot;</span><br>            subdir_ = VOICE + <span class="hljs-string">&quot;-&quot;</span> +<span class="hljs-built_in">str</span>(time.time()).replace(<span class="hljs-string">&quot;.&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)<br>            wav_dir = os.path.join(GenerateWav.path, middle_dir, <span class="hljs-string">f&#x27;<span class="hljs-subst">&#123;subdir_&#125;</span>&#x27;</span>)<br>            os.makedirs(wav_dir, exist_ok=<span class="hljs-literal">True</span>)<br>            final_wav_dir = os.path.join(GenerateWav.path, middle_dir) <span class="hljs-keyword">if</span> test_type == <span class="hljs-string">&#x27;tone&#x27;</span> <span class="hljs-keyword">else</span> wav_dir<br><br>            wavs = []<br>            start = time.time()<br>            <span class="hljs-keyword">for</span> paragraph <span class="hljs-keyword">in</span> tqdm.tqdm(texts):<br>                <span class="hljs-keyword">for</span> i, sentence <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(paragraph):<br>                    generator = GenerateWav.zh_pipeline(sentence, voice=VOICE, speed=GenerateWav.speed_callable)<br>                    f = os.path.join(wav_dir, <span class="hljs-string">f&#x27;zh<span class="hljs-subst">&#123;<span class="hljs-built_in">len</span>(wavs):02&#125;</span>.wav&#x27;</span>)<br>                    result = <span class="hljs-built_in">next</span>(generator)<br>                    wav = result.audio<br>                    sf.write(f, wav, SAMPLE_RATE)<br>                    <span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span> <span class="hljs-keyword">and</span> wavs <span class="hljs-keyword">and</span> N_ZEROS &gt; <span class="hljs-number">0</span>:<br>                        wav = np.concatenate([np.zeros(N_ZEROS), wav])<br>                    wavs.append(wav)<br>            <span class="hljs-comment"># print(&quot;debug7&quot;)</span><br>            final_wav = os.path.join(final_wav_dir, <span class="hljs-string">f&#x27;HEARME_<span class="hljs-subst">&#123;VOICE&#125;</span>.wav&#x27;</span>)<br>            sf.write(final_wav, np.concatenate(wavs), SAMPLE_RATE)<br>            <span class="hljs-comment"># print(&quot;debug8&quot;)</span><br>            end = time.time()<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;生成的音频文件路径：<span class="hljs-subst">&#123;final_wav&#125;</span>，花费时间（只统计文本转音频耗时，模型加载之类的时间不统计）：<span class="hljs-subst">&#123;end - start&#125;</span>&quot;</span>)<br>            <span class="hljs-keyword">return</span> &#123;<br>                <span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">200</span>,<br>                <span class="hljs-string">&quot;msg&quot;</span>: <span class="hljs-string">&quot;成功&quot;</span>,<br>                <span class="hljs-string">&quot;data&quot;</span>: <span class="hljs-literal">None</span><br>            &#125;<br>        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> execption:<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;出异常了，异常详情为：<span class="hljs-subst">&#123;execption&#125;</span>&quot;</span>)<br>            <span class="hljs-keyword">return</span> &#123;<br>                <span class="hljs-string">&quot;code&quot;</span>: <span class="hljs-number">500</span>,<br>                <span class="hljs-string">&quot;msg&quot;</span>: <span class="hljs-string">&quot;异常&quot;</span>,<br>                <span class="hljs-string">&quot;data&quot;</span>: <span class="hljs-literal">None</span><br>            &#125;<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">texts, voice, device, test_type</span>):<br>    <span class="hljs-keyword">return</span> GenerateWav.genetate_wav(texts, voice, device, test_type)<br><br><span class="hljs-comment">#此程序代码在新环境上第一次运行时，会下载“models--hexgrad--Kokoro-82M-v1.1-zh”这个文件夹及下面的文件，一共大概314M左右</span><br><span class="hljs-comment">#因为是去huggingface网站下载上述模型文件，即使配置了 HF_ENDPOINT=&quot;https://hf-mirror.com&quot; 访问可能还是不顺利</span><br><span class="hljs-comment">#此时可以在可以顺利下载上述文件的服务器将文件下载好，然后把“models--hexgrad--Kokoro-82M-v1.1-zh”上传到此程序运行的服务器的默认目录</span><br><span class="hljs-comment">#默认位置是： &lt;家目录&gt;/.cache/huggingface/hub</span><br></code></pre></td></tr></table></figure>
+<p>上述示例中，将近400个中英文字符，在我的笔记本电脑上运行时长大概110秒。</p>
+<p>执行上述python脚本后，会在py文件的同级目录下生成一个文章文件<code>HEARME_zm_010.wav</code>，这个文件就是所有文字对应的语音。其中文字内容是通过上述py脚本中的<code>texts</code>变量定义的，它是一个列表，列表中的元素类型是元组，每个元组代表一段文字内容；每个元组（每个段）包含多句，每句是元组中的一个元素。</p>
+<figure>
+<img src="https://s2.loli.net/2025/09/08/eGFBnUa9V6OSWjr.png" srcset="/img/loading.gif" lazyload
+alt="image-20250908233511928" />
+<figcaption aria-hidden="true">image-20250908233511928</figcaption>
+</figure>
+<p>本章节以下数据都是在 10.8.36.12 物理服务器（安装有一个3090
+GPU）上测得。</p>
+<h2 id="测试不同音色">测试不同音色</h2>
+<p>在项目的voices目录有100个左右不同音色，尽量进行测试。</p>
+<table>
+
+<thead>
+<tr>
+<th>音色名称</th>
+<th>性别</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>af_maple</td>
+<td>女</td>
+<td>美国女性</td>
+</tr>
+<tr>
+<td>af_sol</td>
+<td>女</td>
+<td>另一位美国女性</td>
+</tr>
+<tr>
+<td>bf_vale</td>
+<td>女</td>
+<td>年长的英国女性</td>
+</tr>
+<tr>
+<td>zf_xxx</td>
+<td>中文-女声</td>
+<td>zf_022 个人感觉比较好，声音温柔、专业、年轻</td>
+</tr>
+<tr>
+<td>zm_yyy</td>
+<td>中文-男声</td>
+<td>zm_010 个人感觉比较好，声音稍有磁性、专业、年轻</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="测试并发生成音频">测试并发生成音频</h2>
+<h3 id="字左右">10字左右</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python">texts_list = [<br>    [(<span class="hljs-string">&quot;DNA是英文deoxyribonucleic acid的简写。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;RNA是英文ribonucleic acid的简写。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;MRI是英文magnetic resonance imaging的简写。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;CT是英文computed tomography的简写。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;API是英文application programming interface的简写。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;CPU是英文central processing unit的简写。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;GPU是英文graphics processing unit的简写。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;RAM是英文random access memory的简写。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;HTTP是英文hypertext transfer protocol的简写。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;SQL是英文structured query language的简写。&quot;</span>,)],<br>]<br></code></pre></td></tr></table></figure>
+<ul>
+<li>使用CPU时
+<ul>
+<li>单线程处理，将10字左右内容转换成音频：0.57s~0.70s</li>
+</ul></li>
+<li>使用GPU时
+<ul>
+<li>多线程并发处理，每个线程将10字左右内容转换成音频：
+<ul>
+<li>10个线程并发时，每个线程耗时约 0.659s~0.730s</li>
+<li>20个线程并发时，每个线程耗时约 0.997s~1.805s</li>
+<li>30个线程并发时，每个线程耗时约 1.700s~3.367s</li>
+</ul></li>
+<li>启动2个服务
+<ul>
+<li>每个服务分别响应10个线程，每个线程耗时约 1.082s~1.166s</li>
+<li>每个服务分别响应20个线程，每个线程耗时约 1.774s~2.556s</li>
+</ul></li>
+<li>启动3个服务
+<ul>
+<li>每个服务分别响应10个线程，每个线程耗时约 1.281s~1.732s</li>
+<li></li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="字左右-1">20字左右</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python">texts_list = [<br>    [(<span class="hljs-string">&quot;EMR&quot;</span>, <span class="hljs-string">&quot;电子病历系统，用于管理和共享患者信息，Electronic Medical Record 。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;EHR&quot;</span>, <span class="hljs-string">&quot;电子健康档案，Electronic Health Record, 涵盖患者全面健康数据。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;ICU&quot;</span>, <span class="hljs-string">&quot;Intensive Care Unit, 重症监护病房，为危重病人提供密切监护。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;CT&quot;</span>, <span class="hljs-string">&quot;Computed Tomography, 计算机断层扫描技术，用于医学影像检查。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;MRI&quot;</span>, <span class="hljs-string">&quot;磁共振成像技术，Magnetic Resonance Imaging, 提供软组织影像。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;AI&quot;</span>, <span class="hljs-string">&quot;人工智能技术，Artificial Intelligence, 广泛应用于医学和IT。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;API&quot;</span>, <span class="hljs-string">&quot;Application Programming Interface, 应用程序接口，促进系统交互。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;SQL&quot;</span>, <span class="hljs-string">&quot;Structured Query Language, 结构化查询语言，用于数据库管理。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;GPU&quot;</span>, <span class="hljs-string">&quot;图形处理单元，Graphics Processing Unit, 支持计算与AI训练。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;HTTP&quot;</span>, <span class="hljs-string">&quot;Hypertext Transfer Protocol, 超文本传输协议，Web通信基础。&quot;</span>,)],<br>]<br></code></pre></td></tr></table></figure>
+<ul>
+<li>使用CPU时
+<ul>
+<li>单线程处理，将20字左右内容转换成音频：1.06s~1.23s</li>
+</ul></li>
+<li>使用GPU时
+<ul>
+<li>多线程并发处理，每个线程将20字左右内容转换成音频：
+<ul>
+<li>8个线程并发时，每个线程耗时约
+0.666s~0.877s，如果9个线程就有可以超过1s了</li>
+<li>10个线程并发时，每个线程耗时约 1.111s~1.397s</li>
+<li>20个线程并发时，每个线程耗时约 2.843s~3.696s</li>
+<li>30个线程并发时，每个线程耗时约 s~s</li>
+</ul></li>
+<li>启动2个服务
+<ul>
+<li>每个服务分别响应10个线程，每个线程耗时约 1.517s~2.164s</li>
+<li>每个服务分别响应20个线程，每个线程耗时约 3.345s~5.045s</li>
+</ul></li>
+<li>启动3个服务
+<ul>
+<li>每个服务分别响应10个线程，每个线程耗时约 2.136s~3.076s</li>
+<li></li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="字左右-2">30字左右</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python">texts_list = [<br>    [(<span class="hljs-string">&quot;EMR&quot;</span>, <span class="hljs-string">&quot;电子病历系统，Electronic Medical Record, 用于数字化记录和管理患者完整诊疗信息。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;EHR&quot;</span>, <span class="hljs-string">&quot;Electronic Health Record, 电子健康档案，整合医疗机构数据提供患者跨机构共享健康记录。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;ICU&quot;</span>, <span class="hljs-string">&quot;Intensive Care Unit, 重症监护病房，专为危重患者提供连续监护和救治的医疗场所。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;CT&quot;</span>, <span class="hljs-string">&quot;计算机断层扫描技术，Computed Tomography, 利用X射线提供器官结构的横断面影像信息。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;MRI&quot;</span>, <span class="hljs-string">&quot;Magnetic Resonance Imaging, 磁共振成像技术，利用磁场和射频信号获取精细软组织影像。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;AI&quot;</span>, <span class="hljs-string">&quot;Artificial Intelligence, 人工智能，应用于图像识别自然语言处理及医学辅助诊断等领域。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;API&quot;</span>, <span class="hljs-string">&quot;Application Programming Interface, 应用程序接口，提供系统间调用和数据交互的统一规范。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;SQL&quot;</span>, <span class="hljs-string">&quot;结构化查询语言，Structured Query Language, 专门用于关系型数据库管理与复杂数据查询。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;GPU&quot;</span>, <span class="hljs-string">&quot;Graphics Processing Unit, 图形处理单元，广泛用于并行计算图形渲染和深度学习模型训练。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;HTTP&quot;</span>, <span class="hljs-string">&quot;超文本传输协议，Hypertext Transfer Protocol, 定义了浏览器与服务器之间数据传输方式。&quot;</span>,)],<br>]<br></code></pre></td></tr></table></figure>
+<ul>
+<li>使用CPU时
+<ul>
+<li>单线程处理，将30字左右内容转换成音频：1.49s~1.70s</li>
+</ul></li>
+<li>使用GPU时
+<ul>
+<li>多线程并发处理，每个线程将30字左右内容转换成音频：
+<ul>
+<li>10个线程并发时，每个线程耗时约 1.142s~1.492s</li>
+<li>20个线程并发时，每个线程耗时约 2.837s~3.802s</li>
+<li>30个线程并发时，每个线程耗时约 s~s</li>
+</ul></li>
+<li>启动2个服务
+<ul>
+<li>每个服务分别响应10个线程，每个线程耗时约 1.483s~2.478s</li>
+<li>每个服务分别响应20个线程，每个线程耗时约 3.434s~5.586s</li>
+</ul></li>
+<li>启动3个服务
+<ul>
+<li>每个服务分别响应10个线程，每个线程耗时约 1.557s~3.048s</li>
+<li></li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="字左右-3">40字左右</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python">texts_list = [<br>    [(<span class="hljs-string">&quot;EMR&quot;</span>, <span class="hljs-string">&quot;电子病历，数字化记录患者就诊信息，Electronic Medical Record, 实现医疗数据管理与共享的核心系统。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;EHR&quot;</span>, <span class="hljs-string">&quot;Electronic Health Record, 电子健康档案，整合不同机构医疗数据，为患者提供连续全面的健康记录服务。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;ICU&quot;</span>, <span class="hljs-string">&quot;Intensive Care Unit, 重症监护病房，配备先进设备和专科团队，为危重症患者提供全天候监护与治疗。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;CT&quot;</span>, <span class="hljs-string">&quot;计算机断层扫描，利用X射线成像技术生成断层图像，Computed Tomography, 广泛用于疾病诊断和检查。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;MRI&quot;</span>, <span class="hljs-string">&quot;Magnetic Resonance Imaging, 磁共振成像，利用磁场与射频信号成像，特别适用于软组织疾病的检测。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;AI&quot;</span>, <span class="hljs-string">&quot;Artificial Intelligence, 人工智能，应用于医疗影像识别、自然语言处理及临床辅助决策等多个领域。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;API&quot;</span>, <span class="hljs-string">&quot;应用程序接口，Application Programming Interface, 定义不同系统之间交互方式，实现功能调用与数据交换。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;SQL&quot;</span>, <span class="hljs-string">&quot;Structured Query Language, 结构化查询语言，用于关系数据库的数据查询更新和管理的标准语言。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;GPU&quot;</span>, <span class="hljs-string">&quot;图形处理单元，Graphics Processing Unit, 擅长并行计算，被广泛用于图像渲染和人工智能训练。&quot;</span>,)],<br>    [(<span class="hljs-string">&quot;HTTP&quot;</span>, <span class="hljs-string">&quot;Hypertext Transfer Protocol, 超文本传输协议，规定浏览器与服务器之间传输超文本数据的标准方式。&quot;</span>,)],<br>]<br><br></code></pre></td></tr></table></figure>
+<ul>
+<li>使用CPU时
+<ul>
+<li>单线程处理，将40字左右内容转换成音频：1.56s~1.93s</li>
+</ul></li>
+<li>使用GPU时
+<ul>
+<li>多线程并发处理，每个线程将40字左右内容转换成音频：
+<ul>
+<li>10个线程并发时，每个线程耗时约 1.241s~1.639s</li>
+<li>20个线程并发时，每个线程耗时约 3.052s~4.179s</li>
+<li>30个线程并发时，每个线程耗时约 s~s</li>
+</ul></li>
+<li>启动2个服务
+<ul>
+<li>每个服务分别响应10个线程，每个线程耗时约 1.522s~2.682s</li>
+<li>每个服务分别响应20个线程，每个线程耗时约 3.682s~6.107s</li>
+</ul></li>
+<li>启动3个服务
+<ul>
+<li>每个服务分别响应10个线程，每个线程耗时约 1.902s~3.358s</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>总结：</p>
+<h3 id="字左右全中文">50字左右（全中文）</h3>
+<p>Kokoro-82M-v1.1-zh将50字左右的文字转换成音频。多线程情况下，不同线程可以使用相同的文字内容也可能是不同的文字内容，但字数差不多。</p>
+<ul>
+<li><p>使用CPU时</p>
+<ul>
+<li><p>单线程处理，将50字左右内容转换成音频：1.2s左右</p></li>
+<li><p>多线程并发处理，每个线程将50字左右内容转换成音频：</p>
+<ul>
+<li>10个线程并发时，每个线程耗时约10s~15s</li>
+<li>20个线程并发时，每个线程耗时约24s~29s</li>
+</ul></li>
+</ul></li>
+<li><p>使用GPU时</p>
+<ul>
+<li><p>单线程处理，将50字左右内容转换成音频：0.14s左右</p></li>
+<li><p>多线程并发处理，每个线程将50字左右内容转换成音频：</p>
+<ul>
+<li>10个线程并发时，每个线程耗时约1.1s~1.5s</li>
+<li>20个线程并发时，每个线程耗时约2.6s~3.6s</li>
+</ul></li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="单句文本转语音时注意">单句文本转语音时注意</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#写法1：错误写法</span><br>texts = [(<span class="hljs-string">&quot;西安市&quot;</span>, <span class="hljs-string">&quot;陕西省会，历史文化古都，科教实力雄厚，航空航天、电子信息等产业在西部地位突出。&quot;</span>)] <br><span class="hljs-comment">#写法2：正确写法</span><br>texts = [(<span class="hljs-string">&quot;西安市，陕西省会，历史文化古都，科教实力雄厚，航空航天、电子信息等产业在西部地位突出。&quot;</span>,) ]<br></code></pre></td></tr></table></figure>
+<p><strong>总结：</strong></p>
+<p>注意当待文本内容只有一名话时，要使用写法2，写法1是错误的。写法1虽然也是定义一个列表，但是列表中的元素其实是一个字符串，而不是我们期望的元组，这样写法的结果是：程序将每个字转换为一个小音频文件，最终将形成43个小音频文件（上述一共包含43个中文字符），最后程序再将这43个音频文件拼接成一个总的音频文件，虽然内容是对的，但因为处理程序认为每个小音频文件就是一句话，拼接时将在这些小音频文件中间插入一个停顿间隔（间隔是动态调整的），导致拼接后得到的音频听起来是断断续续的，无法正常使用</p>
+<hr />
+<h2 id="cpu下分句效率及优化策略">CPU下分句效率及优化策略</h2>
+<p>CPU情况下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#以下是相同的多名话，不同的组织形式，分成不同的段落和句子，字符之间的相对顺序是不变的</span><br><br><span class="hljs-comment">#示例1：5段，每段各有几句话。处理耗时 12.14s</span><br>texts = [(<span class="hljs-string">&quot;Kokoro 是一系列体积虽小但功能强大的 TTS 模型。&quot;</span>,<br>), (<br><span class="hljs-string">&quot;该模型是经过短期训练的结果，从专业数据集中添加了100名中文使用者。&quot;</span>,<br><span class="hljs-string">&quot;中文数据由专业数据集公司「龙猫数据」免费且无偿地提供给我们。感谢你们让这个模型成为可能。&quot;</span>,<br>), (<br><span class="hljs-string">&quot;另外，一些众包合成英语数据也进入了训练组合：&quot;</span>,<br><span class="hljs-string">&quot;1小时的 Maple，美国女性。&quot;</span>,<br><span class="hljs-string">&quot;1小时的 Sol，另一位美国女性。&quot;</span>,<br><span class="hljs-string">&quot;和1小时的 Vale，一位年长的英国女性。&quot;</span>,<br>), (<br><span class="hljs-string">&quot;由于该模型删除了许多声音，因此它并不是对其前身的严格升级，但它提前发布以收集有关新声音和标记化的反馈。&quot;</span>,<br><span class="hljs-string">&quot;除了中文数据集和3小时的英语之外，其余数据都留在本次训练中。&quot;</span>,<br><span class="hljs-string">&quot;目标是推动模型系列的发展，并最终恢复一些被遗留的声音。&quot;</span>,<br>), (<br><span class="hljs-string">&quot;美国版权局目前的指导表明，合成数据通常不符合版权保护的资格。&quot;</span>,<br><span class="hljs-string">&quot;由于这些合成数据是众包的，因此模型训练师不受任何服务条款的约束。&quot;</span>,<br><span class="hljs-string">&quot;该 Apache 许可模式也符合 OpenAI 所宣称的广泛传播 AI 优势的使命。&quot;</span>,<br><span class="hljs-string">&quot;如果您愿意帮助进一步完成这一使命，请考虑为此贡献许可的音频数据。&quot;</span>,<br>)]  <br><br><span class="hljs-comment">#示例2：只有1段，里面包含多句话。处理耗时 12.117s</span><br>texts = [(<span class="hljs-string">&quot;Kokoro 是一系列体积虽小但功能强大的 TTS 模型。&quot;</span>,<br><span class="hljs-string">&quot;该模型是经过短期训练的结果，从专业数据集中添加了100名中文使用者。&quot;</span>,<br><span class="hljs-string">&quot;中文数据由专业数据集公司「龙猫数据」免费且无偿地提供给我们。感谢你们让这个模型成为可能。&quot;</span>,<br><span class="hljs-string">&quot;另外，一些众包合成英语数据也进入了训练组合：&quot;</span>,<br><span class="hljs-string">&quot;1小时的 Maple，美国女性。&quot;</span>,<br><span class="hljs-string">&quot;1小时的 Sol，另一位美国女性。&quot;</span>,<br><span class="hljs-string">&quot;和1小时的 Vale，一位年长的英国女性。&quot;</span>,<br><span class="hljs-string">&quot;由于该模型删除了许多声音，因此它并不是对其前身的严格升级，但它提前发布以收集有关新声音和标记化的反馈。&quot;</span>,<br><span class="hljs-string">&quot;除了中文数据集和3小时的英语之外，其余数据都留在本次训练中。&quot;</span>,<br><span class="hljs-string">&quot;目标是推动模型系列的发展，并最终恢复一些被遗留的声音。&quot;</span>,<br><span class="hljs-string">&quot;美国版权局目前的指导表明，合成数据通常不符合版权保护的资格。&quot;</span>,<br><span class="hljs-string">&quot;由于这些合成数据是众包的，因此模型训练师不受任何服务条款的约束。&quot;</span>,<br><span class="hljs-string">&quot;该 Apache 许可模式也符合 OpenAI 所宣称的广泛传播 AI 优势的使命。&quot;</span>,<br><span class="hljs-string">&quot;如果您愿意帮助进一步完成这一使命，请考虑为此贡献许可的音频数据。&quot;</span>,<br>)]<br><br><span class="hljs-comment">#示例3：只有1段，里面包含很长的1句话。处理耗时 4.489s（其实模型并没有把所有文本内容处理完），总共有428个字符，其中有效中英文字符大概400个左右，最终的音频文件没有包含所有文本内容，大概只包含了175个字符（这其中有效中英文字符是155个，其余是标点符号）</span><br>texts = [(<span class="hljs-string">&quot;Kokoro 是一系列体积虽小但功能强大的 TTS 模型。该模型是经过短期训练的结果，从专业数据集中添加了100名中文使用者。中文数据由专业数据集公司「龙猫数据」免费且无偿地提供给我们。感谢你们让这个模型成为可能。另外，一些众包合成英语数据也进入了训练组合：1小时的 Maple，美国女性。1小时的 Sol，另一位美国女性。和1小时的 Vale，一位年长的英国女性。由于该模型删除了许多声音，因此它并不是对其前身的严格升级，但它提前发布以收集有关新声音和标记化的反馈。除了中文数据集和3小时的英语之外，其余数据都留在本次训练中。目标是推动模型系列的发展，并最终恢复一些被遗留的声音。美国版权局目前的指导表明，合成数据通常不符合版权保护的资格。由于这些合成数据是众包的，因此模型训练师不受任何服务条款的约束。该 Apache 许可模式也符合 OpenAI 所宣称的广泛传播 AI 优势的使命。如果您愿意帮助进一步完成这一使命，请考虑为此贡献许可的音频数据。&quot;</span>,<br>)]  <br><br><br><span class="hljs-comment">#示例4：只有1段，里面包含3句较长的话（每句话最长160个字符）。测试了3次，分别耗时 12.341s、12.310s、12.345s</span><br><span class="hljs-comment">#且这次能把所有文本转换成语音并成功拼接到最后的长音频文件中</span><br>texts = [(<span class="hljs-string">&quot;Kokoro 是一系列体积虽小但功能强大的 TTS 模型。该模型是经过短期训练的结果，从专业数据集中添加了100名中文使用者。中文数据由专业数据集公司「龙猫数据」免费且无偿地提供给我们。感谢你们让这个模型成为可能。另外，一些众包合成英语数据也进入了训练组合：1小时的 Maple，美国女性。1小时的 Sol，另一位美国女性。&quot;</span>, <span class="hljs-string">&quot;和1小时的 Vale，一位年长的英国女性。由于该模型删除了许多声音，因此它并不是对其前身的严格升级，但它提前发布以收集有关新声音和标记化的反馈。除了中文数据集和3小时的英语之外，其余数据都留在本次训练中。目标是推动模型系列的发展，并最终恢复一些被遗留的声音。美国版权局目前的指导表明，合成数据通常不符合版权保护的资格。&quot;</span>, <span class="hljs-string">&quot;由于这些合成数据是众包的，因此模型训练师不受任何服务条款的约束。该 Apache 许可模式也符合 OpenAI 所宣称的广泛传播 AI 优势的使命。如果您愿意帮助进一步完成这一使命，请考虑为此贡献许可的音频数据。&quot;</span>,<br>)] <br></code></pre></td></tr></table></figure>
+<p><strong>总结：</strong></p>
+<p>（1）Kokoro-82M-v1.1-zh一次性能处理的文本上下文窗口比较小，测试时发现其一次性能够处理的中英文字符上限大概在150字左右。</p>
+<p>（2）如果一个段落包含多个句子，最好将它们拆成元组的不同元素分别存放，这样能够获得更好的句间停顿检验。</p>
+<p>注：所有待处理文本内容都被填充在一个列表中，列表中的元素类型都是元组。每一个元组代表一个段落，每个段落可能有多句话，每句话就是元组的一个元素，根据上述测试结果，我们应该尽量考虑语义连贯的同时，将一个段落拆分成多个短句（常规就用中文的句号、感叹、疑问号等作为分句的标识），每个短句对应的字符串是元组的一个元素。</p>
+<p>（3）合理的分句，而不是将一大串文本内容当成一个句子处理，能够稍微提高点转换效率（428个字符，其中有效中英文字符大概400个左右，合理分句，能将文本转语音耗时减少0.2s左右(12.3s—&gt;12.1s)）。</p>
+<hr />
+<h2 id="gpu下分句效率及优化策略">GPU下分句效率及优化策略</h2>
+<p>GPU情况下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#以下是相同的多名话，不同的组织形式，分成不同的段落和句子，字符之间的相对顺序是不变的</span><br><br><span class="hljs-comment">#示例1：5段，每段各有几句话。处理耗时 1.493s</span><br>texts = [(<span class="hljs-string">&quot;Kokoro 是一系列体积虽小但功能强大的 TTS 模型。&quot;</span>,<br>), (<br><span class="hljs-string">&quot;该模型是经过短期训练的结果，从专业数据集中添加了100名中文使用者。&quot;</span>,<br><span class="hljs-string">&quot;中文数据由专业数据集公司「龙猫数据」免费且无偿地提供给我们。感谢你们让这个模型成为可能。&quot;</span>,<br>), (<br><span class="hljs-string">&quot;另外，一些众包合成英语数据也进入了训练组合：&quot;</span>,<br><span class="hljs-string">&quot;1小时的 Maple，美国女性。&quot;</span>,<br><span class="hljs-string">&quot;1小时的 Sol，另一位美国女性。&quot;</span>,<br><span class="hljs-string">&quot;和1小时的 Vale，一位年长的英国女性。&quot;</span>,<br>), (<br><span class="hljs-string">&quot;由于该模型删除了许多声音，因此它并不是对其前身的严格升级，但它提前发布以收集有关新声音和标记化的反馈。&quot;</span>,<br><span class="hljs-string">&quot;除了中文数据集和3小时的英语之外，其余数据都留在本次训练中。&quot;</span>,<br><span class="hljs-string">&quot;目标是推动模型系列的发展，并最终恢复一些被遗留的声音。&quot;</span>,<br>), (<br><span class="hljs-string">&quot;美国版权局目前的指导表明，合成数据通常不符合版权保护的资格。&quot;</span>,<br><span class="hljs-string">&quot;由于这些合成数据是众包的，因此模型训练师不受任何服务条款的约束。&quot;</span>,<br><span class="hljs-string">&quot;该 Apache 许可模式也符合 OpenAI 所宣称的广泛传播 AI 优势的使命。&quot;</span>,<br><span class="hljs-string">&quot;如果您愿意帮助进一步完成这一使命，请考虑为此贡献许可的音频数据。&quot;</span>,<br>)]  <br><br><span class="hljs-comment">#示例2：只有1段，里面包含多句话。处理耗时 1.505s</span><br>texts = [(<span class="hljs-string">&quot;Kokoro 是一系列体积虽小但功能强大的 TTS 模型。&quot;</span>,<br><span class="hljs-string">&quot;该模型是经过短期训练的结果，从专业数据集中添加了100名中文使用者。&quot;</span>,<br><span class="hljs-string">&quot;中文数据由专业数据集公司「龙猫数据」免费且无偿地提供给我们。感谢你们让这个模型成为可能。&quot;</span>,<br><span class="hljs-string">&quot;另外，一些众包合成英语数据也进入了训练组合：&quot;</span>,<br><span class="hljs-string">&quot;1小时的 Maple，美国女性。&quot;</span>,<br><span class="hljs-string">&quot;1小时的 Sol，另一位美国女性。&quot;</span>,<br><span class="hljs-string">&quot;和1小时的 Vale，一位年长的英国女性。&quot;</span>,<br><span class="hljs-string">&quot;由于该模型删除了许多声音，因此它并不是对其前身的严格升级，但它提前发布以收集有关新声音和标记化的反馈。&quot;</span>,<br><span class="hljs-string">&quot;除了中文数据集和3小时的英语之外，其余数据都留在本次训练中。&quot;</span>,<br><span class="hljs-string">&quot;目标是推动模型系列的发展，并最终恢复一些被遗留的声音。&quot;</span>,<br><span class="hljs-string">&quot;美国版权局目前的指导表明，合成数据通常不符合版权保护的资格。&quot;</span>,<br><span class="hljs-string">&quot;由于这些合成数据是众包的，因此模型训练师不受任何服务条款的约束。&quot;</span>,<br><span class="hljs-string">&quot;该 Apache 许可模式也符合 OpenAI 所宣称的广泛传播 AI 优势的使命。&quot;</span>,<br><span class="hljs-string">&quot;如果您愿意帮助进一步完成这一使命，请考虑为此贡献许可的音频数据。&quot;</span>,<br>)]<br><br><span class="hljs-comment">#示例3：只有1段，里面包含很长的1句话。处理耗时 0.302s（其实模型并没有把所有文本内容处理完），总共有428个字符，其中有效中英文字符大概400个左右，最终的音频文件没有包含所有文本内容，大概只包含了175个字符（这其中有效中英文字符是155个，其余是标点符号）</span><br>texts = [(<span class="hljs-string">&quot;Kokoro 是一系列体积虽小但功能强大的 TTS 模型。该模型是经过短期训练的结果，从专业数据集中添加了100名中文使用者。中文数据由专业数据集公司「龙猫数据」免费且无偿地提供给我们。感谢你们让这个模型成为可能。另外，一些众包合成英语数据也进入了训练组合：1小时的 Maple，美国女性。1小时的 Sol，另一位美国女性。和1小时的 Vale，一位年长的英国女性。由于该模型删除了许多声音，因此它并不是对其前身的严格升级，但它提前发布以收集有关新声音和标记化的反馈。除了中文数据集和3小时的英语之外，其余数据都留在本次训练中。目标是推动模型系列的发展，并最终恢复一些被遗留的声音。美国版权局目前的指导表明，合成数据通常不符合版权保护的资格。由于这些合成数据是众包的，因此模型训练师不受任何服务条款的约束。该 Apache 许可模式也符合 OpenAI 所宣称的广泛传播 AI 优势的使命。如果您愿意帮助进一步完成这一使命，请考虑为此贡献许可的音频数据。&quot;</span>,<br>)]  <br><br><br><span class="hljs-comment">#示例4：只有1段，里面包含3句较长的话（每句话最长160个字符）。测试了3次，分别耗时 0.700s、0.677s、0.742s，平均0.706s</span><br><span class="hljs-comment">#且这次能把所有文本转换成语音并成功拼接到最后的长音频文件中</span><br>texts = [(<span class="hljs-string">&quot;Kokoro 是一系列体积虽小但功能强大的 TTS 模型。该模型是经过短期训练的结果，从专业数据集中添加了100名中文使用者。中文数据由专业数据集公司「龙猫数据」免费且无偿地提供给我们。感谢你们让这个模型成为可能。另外，一些众包合成英语数据也进入了训练组合：1小时的 Maple，美国女性。1小时的 Sol，另一位美国女性。&quot;</span>, <span class="hljs-string">&quot;和1小时的 Vale，一位年长的英国女性。由于该模型删除了许多声音，因此它并不是对其前身的严格升级，但它提前发布以收集有关新声音和标记化的反馈。除了中文数据集和3小时的英语之外，其余数据都留在本次训练中。目标是推动模型系列的发展，并最终恢复一些被遗留的声音。美国版权局目前的指导表明，合成数据通常不符合版权保护的资格。&quot;</span>, <span class="hljs-string">&quot;由于这些合成数据是众包的，因此模型训练师不受任何服务条款的约束。该 Apache 许可模式也符合 OpenAI 所宣称的广泛传播 AI 优势的使命。如果您愿意帮助进一步完成这一使命，请考虑为此贡献许可的音频数据。&quot;</span>,<br>)] <br></code></pre></td></tr></table></figure>
+<p><strong>总结：</strong></p>
+<p>（1）跟CPU时类似，Kokoro-82M-v1.1-zh一次性能处理的文本上下文窗口比较小，测试时发现其一次性能够处理的中英文字符上限大概在150字左右。</p>
+<p>（2）跟CPU时类似，如果一个段落包含多个句子，最好将它们拆成元组的不同元素分别存放，这样能够获得更好的句间停顿检验。</p>
+<p>注：所有待处理文本内容都被填充在一个列表中，列表中的元素类型都是元组。每一个元组代表一个段落，每个段落可能有多句话，每句话就是元组的一个元素，根据上述测试结果，我们应该尽量考虑语义连贯的同时，将一个段落拆分成多个短句（常规就用中文的句号、感叹、疑问号等作为分句的标识），每个短句对应的字符串是元组的一个元素。</p>
+<p>（3）合理的分句，将一大串文本内容当成一个句子处理（但不能超过Kokoro-82M-v1.1-zh处理窗口：大概只包含了175个字符，其中有效中英文字符是155个，其余是标点符号），能够较大提高转换效率（428个字符，其中有效中英文字符大概400个左右，合理分句，能将文本转语音耗时减少0.786s左右，耗时减少50%+）。----------<strong>此处使用GPU时跟使用CPU时，差距比较大</strong></p>
+<h2 id="进一步测试">进一步测试</h2>
+<ol type="1">
+<li>10、20、30、40个字左右，cpu只测试单线程，GPU情况下测试只多线程及其极限</li>
+<li>在GPU情况下，可以增加服务数量，测试下服务器下支持极限，文本转语音耗时大致不超过1s</li>
+</ol>
+<p>操作见：“测试并发生成音频”章节</p>
+<h1
+id="二语音合成melotts音色与并发性能">二、语音合成MeloTTS（音色与并发性能）</h1>
+<p>github仓库地址：https://github.com/myshell-ai/MeloTTS</p>
+<p>开源项目 MeloTTS 是一个高质量的 多语言文本转语音（Text-to-Speech,
+TTS） 库，主要功能和特点如下：</p>
+<ul>
+<li>项目概述：
+<ul>
+<li>MeloTTS 由 MyShell.ai 联合 MIT
+与清华大学团队开发，是一个多语言支持的 TTS
+系统，具有自然流畅的语音合成能力。</li>
+<li>支持包括英语（多个口音）、西班牙语、法语、中文（支持中英混合）、日语、韩语在内的多种语言和口音。</li>
+<li>它可以在 CPU 上实时推理使用，有较高的效率。当然也可以使用GPU</li>
+</ul></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker run -it --gpus all --name melotts -e HF_ENDPOINT=&quot;https://hf-mirror.com&quot; -e http_proxy=&quot;http://10.13.15.34:7891&quot; -e https_proxy=&quot;http://10.13.15.34:7891&quot; -p 8888:8888 swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/sensejworld/melotts<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">第一次转换文件为语音时时，容器内相关进程会自动下载 pytorch_model.bin 文件，保存位置应该是容器内的“/root/.cache/huggingface/hub/models--bert-base-multilingual-uncased/blobs/”目录下，保存文件并不是叫pytorch_model.bin，而是一个人眼无法识别的字符串名文件，文件大小为672M左右</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">此处我创建并运行此容器的服务器IP是 10.8.36.12</span><br></code></pre></td></tr></table></figure>
+<h2 id="ui界面使用">UI界面使用</h2>
+<p>然后在浏览器中访问“10.8.36.12:8888”可以看到如下界面，选定Language并设定Text文本框中的内容后，点击“Synthesize”按钮，启动文本转语音过程。</p>
+<figure>
+<img src="https://s2.loli.net/2025/09/10/ocnTez8lUKiBGAf.png" srcset="/img/loading.gif" lazyload
+alt="image-20250910142252059" />
+<figcaption aria-hidden="true">image-20250910142252059</figcaption>
+</figure>
+<h1
+id="三语音识别sensevoice性能测试">三、语音识别SenseVoice（性能测试）</h1>
+<p>GitHub 项目 <strong>SenseVoice</strong>（来自 FunAudioLLM
+组织）是一个功能强大的
+<strong>多语种语音理解基础模型</strong>，专注于构建高性能、低延迟的语音理解服务。</p>
+<hr />
+<h3 id="项目介绍">项目介绍</h3>
+<p><strong>SenseVoice 是一种 Speech Foundation
+Model，具备以下核心功能</strong>：</p>
+<ul>
+<li><strong>自动语音识别（ASR）</strong>：支持超过 50
+种语言的高精度识别，训练语料超过 40 万小时，识别性能在中文、粤语上优于
+Whisper 模型。<a
+target="_blank" rel="noopener" href="https://github.com/FunAudioLLM/SenseVoice?utm_source=chatgpt.com">GitHub</a><a
+target="_blank" rel="noopener" href="https://huggingface.co/FunAudioLLM/SenseVoiceSmall?utm_source=chatgpt.com">Hugging
+Face</a></li>
+<li><strong>语种识别（LID）</strong>：可以自动判断音频所使用的语言。<a
+target="_blank" rel="noopener" href="https://github.com/FunAudioLLM/SenseVoice?utm_source=chatgpt.com">GitHub</a></li>
+<li><strong>语音情感识别（SER）</strong>：能够识别语音中的情感，并在多个测试数据中表现超过当前最优情感识别模型。<a
+target="_blank" rel="noopener" href="https://github.com/FunAudioLLM/SenseVoice?utm_source=chatgpt.com">GitHub</a><a
+target="_blank" rel="noopener" href="https://www.marktechpost.com/2024/07/11/funaudiollm-a-multi-model-framework-for-natural-multilingual-and-emotionally-expressive-voice-interactions/?utm_source=chatgpt.com">MarkTechPost</a></li>
+<li><strong>音频事件检测（AED）</strong>：具备识别背景音乐、掌声、笑声、哭声、咳嗽、打喷嚏等语音交互中的常见事件的能力。<a
+target="_blank" rel="noopener" href="https://github.com/FunAudioLLM/SenseVoice?utm_source=chatgpt.com">GitHub</a><a
+target="_blank" rel="noopener" href="https://www.marktechpost.com/2024/07/11/funaudiollm-a-multi-model-framework-for-natural-multilingual-and-emotionally-expressive-voice-interactions/?utm_source=chatgpt.com">MarkTechPost</a></li>
+<li><strong>高效推理</strong>：SenseVoice-Small
+使用非自回归端到端结构，推理十分高效，处理 10 秒音频仅需约 70
+毫秒，速度是 Whisper-Large 的 15 倍以上、Whisper-Small 的 5 倍以上。<a
+target="_blank" rel="noopener" href="https://github.com/FunAudioLLM/SenseVoice?utm_source=chatgpt.com">GitHub</a><a
+target="_blank" rel="noopener" href="https://huggingface.co/FunAudioLLM/SenseVoiceSmall?utm_source=chatgpt.com">Hugging
+Face</a></li>
+<li><strong>便于微调与服务部署</strong>：提供微调脚本、ONNX/lbTorch
+导出工具，并支持 Python、C++、Java、C#、HTML
+等多种客户端语言的服务部署管道。</li>
+</ul>
+<h1 id="四语音合成-fish-speech-1.5性能测试">四、语音合成
+fish-speech-1.5（性能测试）</h1>
+<p>GitHub 开源项目 <strong>Fish-Speech</strong>（位于
+<code>fishaudio/fish-speech</code>）是一个先进的
+<strong>开源多语言文本转语音（TTS）系统</strong>。以下是其核心功能与特点：</p>
+<h2 id="fish-speech-项目简介">Fish-Speech 项目简介</h2>
+<ul>
+<li><strong>项目定位</strong>：一个 <strong>SOTA（最先进）开源 TTS
+系统</strong>，具备高质量合成能力，支持多语言和情感控制，专注于语音合成与语音克隆。<a
+target="_blank" rel="noopener" href="https://github.com/fishaudio/fish-speech?utm_source=chatgpt.com">GitHub</a></li>
+<li><strong>品牌演进</strong>：该项目已升级并重命名为
+<strong>OpenAudio</strong>，推出了更先进的模型如
+OpenAudio-S1、OpenAudio-S1-mini，于 Fish Audio Playground 和 Hugging
+Face 平台上提供使用。</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%B1%BB%E5%88%AB/" class="category-chain-item">类别</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%A0%87%E7%AD%BE/" class="print-no-link">#标签</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>tts相关模型与开源library测评</div>
+      <div>https://jiangsanyin.github.io/2025/09/08/tts相关模型与开源library测评/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年9月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - sanyinjiang">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/09/13/%E7%88%AC%E8%99%AB%E5%85%A5%E9%97%A8%E7%BA%A7%E6%93%8D%E4%BD%9C/" title="爬虫入门级操作">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">爬虫入门级操作</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/08/31/Plan-and-Execute%E8%AE%A4%E7%9F%A5%E6%A1%86%E6%9E%B6%E5%8F%8A%E5%9C%A8langchain3%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B/" title="Plan-and-Execute认知框架及在langchain3中的使用示例">
+                        <span class="hidden-mobile">Plan-and-Execute认知框架及在langchain3中的使用示例</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
