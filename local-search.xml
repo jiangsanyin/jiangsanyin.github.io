@@ -4,11 +4,11 @@
   
   
   <entry>
-    <title>Trae续写word文档</title>
-    <link href="/2025/09/16/Trae%E7%BB%AD%E5%86%99word%E6%96%87%E6%A1%A3/"/>
-    <url>/2025/09/16/Trae%E7%BB%AD%E5%86%99word%E6%96%87%E6%A1%A3/</url>
+    <title>Trae仿/续写word文档</title>
+    <link href="/2025/09/16/Trae%E4%BB%BF%E7%BB%AD%E5%86%99word%E6%96%87%E6%A1%A3/"/>
+    <url>/2025/09/16/Trae%E4%BB%BF%E7%BB%AD%E5%86%99word%E6%96%87%E6%A1%A3/</url>
     
-    <content type="html"><![CDATA[<h1 id="一下载与安装trae">一、下载与安装Trae</h1><p>Tare分为国际版与国内版，两边账号好像不通用。</p><p>国际版：https://www.trae.ai/</p><p>国内版：https://www.trae.cn/</p><h1 id="二使用">二、使用</h1><p>这是数据服务开放平台软件项目启动会议纪要.docx文件，</p><figure><img src="https://s2.loli.net/2025/09/16/XDfyYT4qJ2B6rzG.png"alt="image-20250916153625048" /><figcaption aria-hidden="true">image-20250916153625048</figcaption></figure><p>使用工具把它转成了 数据服务开放平台软件项目启动会议纪要.html文件（将docx格式转成html格式），使用浏览器打开后，效果如图</p><figure><img src="https://s2.loli.net/2025/09/16/6RBcgD2EmZUjAQy.png"alt="image-20250916153732089" /><figcaption aria-hidden="true">image-20250916153732089</figcaption></figure><p>我将 数据服务开放平台软件项目启动会议纪要.html 文件上传到Trae中，让它根据此html文件进行仿写，内容以html格式输出并兼容Word，生成了“医疗行业调研培训等服务合同项目启动会议纪要.html”，浏览器打开后效果如图</p><figure><img src="https://s2.loli.net/2025/09/16/y2n673mMbPgY9Z1.png"alt="image-20250916153819283" /><figcaption aria-hidden="true">image-20250916153819283</figcaption></figure><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">提示词：<br><span class="hljs-comment"># 角色：</span><br>你是项目启动会议纪要生成助手，擅长编写项目启动会议纪要。<br><br><span class="hljs-comment"># 背景：</span><br>我们公司有一个大项目（暂称为大包），其中大包中又包含多个子包，子包有如：数据集应用系统定制开发及采购合同、大数据基础平台软件及服务采购合同、数据开发平台软件及服务采购合同、数据服务开放平台软件及服务采购合同、数据洞察平台及服务采购合同等这类软件定制开发 类型的合同，它们需要的材料如下： 招标信息挂网 招标文件 3份投标文件 中标通告 项目启动会议 软件需求规格说明书 软件需求沟通会议纪要 软件需求评审会议 软件设计说明书 软件数据库设计文档 项目月报（3个月） 产品手册 产品运维部署手册 系统测试报告 系统安装配置确认书 软件实施计划 最终验收报告。<br>附件是子包“数据服务开放平台软件及服务采购合同”的数据服务开放平台软件项目启动会议纪要。<br>同时，子包中还有一个“医疗行业调研/培训等服务合同”，它不是软件定制开发 类型的合同<br><br><span class="hljs-comment"># 要求：</span><br>希望你从网上查找“医疗行业调研/培训等服务合同”相关资料，并参照附件中的数据服务开放平台软件项目启动会议纪要<span class="hljs-string">.html</span>文件的格式，为子包“医疗行业调研培训等服务合同”生成医疗行业调研培训等服务合同项目启动会议纪要，结果以HTML格式输出，并要兼容Word<br></code></pre></td></tr></table></figure><p>生成的”医疗行业调研培训等服务合同项目启动会议纪要.html“文件以wps打开，效果如下。可以发现，格式还是有些不对，我们主要关注内容就好，将先前的docx文件复制一份，将新生成的内容粘贴到复制得到的docx文件中。</p><figure><img src="https://s2.loli.net/2025/09/16/7PnOgw4HoNy8T91.png"alt="image-20250916153926961" /><figcaption aria-hidden="true">image-20250916153926961</figcaption></figure>]]></content>
+    <content type="html"><![CDATA[<h1 id="一下载与安装trae">一、下载与安装Trae</h1><p>Tare分为国际版与国内版，两边账号好像不通用。</p><p>国际版：https://www.trae.ai/</p><p>国内版：https://www.trae.cn/</p><h1 id="二使用">二、使用</h1><p>Trae中无法直接输出docx格式文件，为了更好的理解与输出内容，此文章记录将docx文件转换成html格式，将兼容word的html文件转换成docx格式。</p><h2 id="查看docx文件">查看docx文件</h2><p>这是XX项目启动会议纪要.docx文件，</p><figure><img src="https://s2.loli.net/2025/09/18/dcqSQ8TneLatjhC.png"alt="image-20250918161716361" /><figcaption aria-hidden="true">image-20250918161716361</figcaption></figure><h2 id="docx格式转html格式">docx格式转html格式</h2><p>使用工具把它转成了 XX项目启动会议纪要.html文件（将docx格式转成html格式），可用的工具推荐如下两种：</p><ul><li><p>直接使用各个主流大模型，如DeepSeek、通义千问等（提示很简单：请将此docx文件转换成html格式输出，要求尽量保留原docx文件中内容）</p></li><li><p>使用pandoc与python实现转换</p><ul><li><p>```ini #1. 安装依赖库 pip install pypandoc</p><p>#2. Pandoc工具 #下载地址：https://pandoc.org/installing.html<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><br>- ```python<br>  <span class="hljs-comment">#3. 将如下python代码保存为docx_to_html.py</span><br>  <span class="hljs-keyword">import</span> os<br>  <span class="hljs-keyword">import</span> sys<br>  <span class="hljs-keyword">import</span> pypandoc<br>  <br>  <span class="hljs-keyword">def</span> <span class="hljs-title function_">convert_docx_to_html</span>(<span class="hljs-params">docx_path, html_path</span>):<br>      pypandoc.convert_file(docx_path, <span class="hljs-string">&#x27;html&#x27;</span>, outputfile=html_path)<br>  <br>  <br>  <span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>      inputfile = sys.argv[<span class="hljs-number">1</span>]<br>      input_basename = os.path.basename(inputfile)<br>      input_file_stem = os.path.splitext(input_basename)[<span class="hljs-number">0</span>]<br>      outputfile = input_file_stem + <span class="hljs-string">&quot;.html&quot;</span><br>      convert_docx_to_html(inputfile, outputfile)<br>      <br>  <span class="hljs-comment">#4. 执行转换</span><br>  <span class="hljs-comment"># python docx_to_html.py XX项目启动会议纪要.doc</span><br>  <span class="hljs-comment"># 执行上述命令，将在docx_to_html.py文件所在目录生成“XX项目启动会议纪要.html” 文件</span><br></code></pre></td></tr></table></figure></p></li></ul></li></ul><p>使用浏览器打开生成的XX项目启动会议纪要.html文件后，效果如图。可以看到html文件基本保持了对应docx文件排版的框架，内容也一样，精确格式如表格确实丢失了，但基本还是可用的。</p><figure><img src="https://s2.loli.net/2025/09/18/RnrEfha2FtdcIwP.png"alt="image-20250918161910633" /><figcaption aria-hidden="true">image-20250918161910633</figcaption></figure><p>我将XX项目启动会议纪要.html 文件上传到Trae中，让它根据此html文件进行仿写，内容以html格式输出并兼容Word，生成了“AA项目启动会议纪要.html”，让Trae进行仿写时可以使用如下提示词：</p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-comment"># 角色：</span><br>你是项目启动会议纪要生成助手，擅长编写项目启动会议纪要。<br><br><span class="hljs-comment"># 背景：</span><br>&lt;这是描写背景描述信息&gt;<br><br><span class="hljs-comment"># 要求：</span><br>希望你从网上查找“AA”相关资料，并参照附件中的“XX项目启动会议纪要.html”文件的格式，生成AA项目启动会议纪要，结果以HTML格式输出，即生成生成“AA项目启动会议纪要.html”，要求兼容Word<br></code></pre></td></tr></table></figure><p>可以根据自己需要修改提示词，比如我要查找AI安全相关会议纪要，则可以使用如下提示词：</p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-comment"># 角色：</span><br>你是项目启动会议纪要生成助手，擅长编写项目启动会议纪要。<br><br><span class="hljs-comment"># 要求：</span><br>希望你从网上查找“AI安全”相关资料，并参照附件中的“XX项目启动会议纪要.html”文件的格式，生成AI安全项目启动会议纪要，结果以HTML格式输出，即生成生成“AI安全项目启动会议纪要.html”，要求兼容Word<br></code></pre></td></tr></table></figure><p>生成的AI安全项目启动会议纪要.html 文件用浏览器打开如下：</p><figure><img src="https://s2.loli.net/2025/09/18/h42aLTjAQcGdli1.png"alt="image-20250918163833216" /><figcaption aria-hidden="true">image-20250918163833216</figcaption></figure><h2 id="将html文件用wps打开">将html文件用wps打开</h2><p>生成的“AA项目启动会议纪要.html”文件以wps打开（选择WPS文字）。打开后效果如下。</p><figure><img src="https://s2.loli.net/2025/09/18/5WVJtkxf4Gcvj7O.png"alt="image-20250918164127629" /><figcaption aria-hidden="true">image-20250918164127629</figcaption></figure><h2 id="另存为docx格式">另存为docx格式</h2><p>在wps中将上述打开的html文件另存为docx格式，再用word打开时效果如下：</p><figure><img src="https://s2.loli.net/2025/09/18/ISdQvM7N2FlVUx8.png"alt="image-20250918164451525" /><figcaption aria-hidden="true">image-20250918164451525</figcaption></figure>]]></content>
     
     
     <categories>
@@ -21,31 +21,6 @@
     <tags>
       
       <tag>工具与奇技淫巧</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Kokora文本转语音-封装成标准与兼容接口</title>
-    <link href="/2025/09/15/Kokora%E6%96%87%E6%9C%AC%E8%BD%AC%E8%AF%AD%E9%9F%B3-%E5%B0%81%E8%A3%85%E6%88%90%E6%A0%87%E5%87%86%E4%B8%8E%E5%85%BC%E5%AE%B9%E6%8E%A5%E5%8F%A3/"/>
-    <url>/2025/09/15/Kokora%E6%96%87%E6%9C%AC%E8%BD%AC%E8%AF%AD%E9%9F%B3-%E5%B0%81%E8%A3%85%E6%88%90%E6%A0%87%E5%87%86%E4%B8%8E%E5%85%BC%E5%AE%B9%E6%8E%A5%E5%8F%A3/</url>
-    
-    <content type="html"><![CDATA[<h1 id="一背景描述">一、背景描述</h1><h1 id="二封装成标准接口">二、封装成标准接口</h1><h1 id="三封装成兼容接口">三、封装成兼容接口</h1>]]></content>
-    
-    
-    <categories>
-      
-      <category>类别</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>标签</tag>
       
     </tags>
     
