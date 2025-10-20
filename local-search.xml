@@ -4,6 +4,81 @@
   
   
   <entry>
+    <title>一些常用的命令与配置</title>
+    <link href="/2025/10/20/%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%85%8D%E7%BD%AE/"/>
+    <url>/2025/10/20/%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%85%8D%E7%BD%AE/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一大模型相关">一、大模型相关</h1><h2 id="hf-mirror">hf-mirror</h2><p>参考文档：https://hf-mirror.com/</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">1. 安装依赖</span><br>pip install -U huggingface_hub<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">2. 设置环境变量</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Linux 建议将这一行写入 ~/.bashrc</span><br>export HF_ENDPOINT=https://hf-mirror.com<br><span class="hljs-meta prompt_"># </span><span class="language-bash">Windows Powershell</span><br><span class="hljs-meta prompt_">$</span><span class="language-bash"><span class="hljs-built_in">env</span>:HF_ENDPOINT = <span class="hljs-string">&quot;https://hf-mirror.com&quot;</span></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">3.1 下载模型</span><br>huggingface-cli download --resume-download gpt2 --local-dir gpt2<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">3.2 下载数据集</span><br>huggingface-cli download --repo-type dataset --resume-download wikitext --local-dir wikitext<br><span class="hljs-meta prompt_"># </span><span class="language-bash">可以添加 --local-dir-use-symlinks False 参数禁用文件软链接，这样下载路径下所见即所得</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>命令与配置</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>命令与配置</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>大量（TB以上）医疗数据自动标注</title>
+    <link href="/2025/09/25/%E5%A4%A7%E9%87%8F%EF%BC%88TB%E4%BB%A5%E4%B8%8A%EF%BC%89%E5%8C%BB%E7%96%97%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E6%A0%87%E6%B3%A8/"/>
+    <url>/2025/09/25/%E5%A4%A7%E9%87%8F%EF%BC%88TB%E4%BB%A5%E4%B8%8A%EF%BC%89%E5%8C%BB%E7%96%97%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E6%A0%87%E6%B3%A8/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一背景">一、背景</h1><h1 id="二相关开源项目">二、相关开源项目</h1><p>cvat项目官方文档：https://docs.cvat.ai/docs/administration/basics/installation/</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>数据集处理</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>数据标签</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Transformer模型构架学习</title>
+    <link href="/2025/09/23/Transformer%E6%A8%A1%E5%9E%8B%E6%9E%84%E6%9E%B6%E5%AD%A6%E4%B9%A0/"/>
+    <url>/2025/09/23/Transformer%E6%A8%A1%E5%9E%8B%E6%9E%84%E6%9E%B6%E5%AD%A6%E4%B9%A0/</url>
+    
+    <content type="html"><![CDATA[<h1 id="一transformer整体构架">一、Transformer整体构架</h1><h1 id="二transformer中的qkv">二、Transformer中的QKV</h1><p>参考文章：https://blog.cnbang.net/tech/3934/ 、https://zhuanlan.zhihu.com/p/688660519</p><h1 id="lora微调">LoRA微调</h1><p>https://zhuanlan.zhihu.com/p/646791309</p><p>奇异值分解：https://blog.csdn.net/lomodays207/article/details/88687126</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>类别</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>标签</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Trae仿/续写word文档</title>
     <link href="/2025/09/16/Trae%E4%BB%BF%E7%BB%AD%E5%86%99word%E6%96%87%E6%A1%A3/"/>
     <url>/2025/09/16/Trae%E4%BB%BF%E7%BB%AD%E5%86%99word%E6%96%87%E6%A1%A3/</url>
