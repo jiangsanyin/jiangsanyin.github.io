@@ -19,22 +19,22 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、大模型相关 hf-mirror 参考文档：https:&#x2F;&#x2F;hf-mirror.com&#x2F; 12345678910111213141516#1. 安装依赖pip install -U &quot;huggingface_hub[hf_transfer]&quot; modelscope#2. 设置环境变量# Linux 建议将这一行写入 ~&#x2F;.bashrcexport HF_ENDPOINT">
+    <meta name="description" content="一、常用AI 插件或IDE汇总  Trae：字节跳动推出，https:&#x2F;&#x2F;www.trae.ai&#x2F;（国际版）、https:&#x2F;&#x2F;www.trae.cn&#x2F;（国内版） Cursor：Anysphere公司推出 Claude Code：Anthropics推出 Kiro：亚马逊推出 AntiGravity：谷歌推出，使用谷歌账号登录（要求谷歌账号关联的地区在此IDE可用区域内如新加坡，http">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一些常用的命令与配置">
-<meta property="og:url" content="https://jiangsanyin.github.io/2025/10/20/%E4%B8%80%E4%BA%9B%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:title" content="常用AI IDE记录">
+<meta property="og:url" content="https://jiangsanyin.github.io/2026/01/04/%E5%B8%B8%E7%94%A8AI-IDE%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、大模型相关 hf-mirror 参考文档：https:&#x2F;&#x2F;hf-mirror.com&#x2F; 12345678910111213141516#1. 安装依赖pip install -U &quot;huggingface_hub[hf_transfer]&quot; modelscope#2. 设置环境变量# Linux 建议将这一行写入 ~&#x2F;.bashrcexport HF_ENDPOINT">
+<meta property="og:description" content="一、常用AI 插件或IDE汇总  Trae：字节跳动推出，https:&#x2F;&#x2F;www.trae.ai&#x2F;（国际版）、https:&#x2F;&#x2F;www.trae.cn&#x2F;（国内版） Cursor：Anysphere公司推出 Claude Code：Anthropics推出 Kiro：亚马逊推出 AntiGravity：谷歌推出，使用谷歌账号登录（要求谷歌账号关联的地区在此IDE可用区域内如新加坡，http">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-10-20T13:49:18.000Z">
-<meta property="article:modified_time" content="2026-03-05T14:00:38.000Z">
+<meta property="article:published_time" content="2026-01-04T02:41:54.000Z">
+<meta property="article:modified_time" content="2026-01-06T07:10:02.000Z">
 <meta property="article:author" content="sanyinjiang">
-<meta property="article:tag" content="命令与配置">
+<meta property="article:tag" content="工具与奇技淫巧">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>一些常用的命令与配置 - sanyinjiang</title>
+  <title>常用AI IDE记录 - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +213,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">一些常用的命令与配置</span>
+            <span id="subtitle">常用AI IDE记录</span>
           
         </div>
 
@@ -224,8 +224,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-10-20 21:49" pubdate>
-          2025年10月20日 晚上
+        <time datetime="2026-01-04 10:41" pubdate>
+          2026年1月4日 上午
         </time>
       </span>
     
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          159 字
+          1.3k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          2 分钟
+          12 分钟
         
       </span>
     
@@ -293,17 +293,160 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">一些常用的命令与配置</h1>
+            <h1 id="seo-header">常用AI IDE记录</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一大模型相关">一、大模型相关</h1>
-<h2 id="hf-mirror">hf-mirror</h2>
-<p>参考文档：https://hf-mirror.com/</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">1. 安装依赖</span><br>pip install -U &quot;huggingface_hub[hf_transfer]&quot; modelscope<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">2. 设置环境变量</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">Linux 建议将这一行写入 ~/.bashrc</span><br>export HF_ENDPOINT=https://hf-mirror.com<br>export HF_HUB_ENABLE_HF_TRANSFER=1<br><span class="hljs-meta prompt_"># </span><span class="language-bash">Windows Powershell</span><br><span class="hljs-meta prompt_">$</span><span class="language-bash"><span class="hljs-built_in">env</span>:HF_ENDPOINT = <span class="hljs-string">&quot;https://hf-mirror.com&quot;</span></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">3.1 下载模型</span><br>huggingface-cli download --resume-download gpt2 --local-dir gpt2<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">3.2 下载数据集</span><br>huggingface-cli download --repo-type dataset --resume-download wikitext --local-dir wikitext<br><span class="hljs-meta prompt_"># </span><span class="language-bash">可以添加 --local-dir-use-symlinks False 参数禁用文件软链接，这样下载路径下所见即所得</span><br></code></pre></td></tr></table></figure>
-<h2 id="modelscope">modelscope</h2>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">Ubuntu 上用 ModelScope 预下载</span><br>python - &lt;&lt;&#x27;PY&#x27;<br>from modelscope.hub.snapshot_download import snapshot_download<br>local_dir = snapshot_download(<br>    model_id=&#x27;vidore/colqwen2-v1.0&#x27;,  # 若该ID不存在，需换ModelScope上的实际模型ID<br>    cache_dir=&#x27;/data/models&#x27;<br>)<br>print(local_dir)<br>PY<br></code></pre></td></tr></table></figure>
+                <h1 id="一常用ai-插件或ide汇总">一、常用AI 插件或IDE汇总</h1>
+<ul>
+<li>Trae：字节跳动推出，https://www.trae.ai/（国际版）、https://www.trae.cn/（国内版）</li>
+<li>Cursor：Anysphere公司推出</li>
+<li>Claude Code：Anthropics推出</li>
+<li>Kiro：亚马逊推出</li>
+<li>AntiGravity：谷歌推出，使用谷歌账号登录（要求谷歌账号关联的地区在此IDE可用区域内如新加坡，https://policies.google.com/country-association-form）</li>
+<li>CodeGeex：https://codegeex.cn/</li>
+<li>Lingma：https://lingma.aliyun.com/</li>
+<li>Cline：https://cline.bot/</li>
+<li>CoPilot：有两个版本，微软版与github版：https://copilot.microsoft.com/、https://github.com/features/copilot</li>
+<li>CodeBuddy：https://www.codebuddy.ai/</li>
+<li>Qoder：https://qoder.com/</li>
+</ul>
+<h1 id="二大致介绍与特点说明">二、大致介绍与特点说明</h1>
+<table style="width:100%;">
+
+<thead>
+<tr>
+<th>序号</th>
+<th>插件或IDE名称</th>
+<th>介绍</th>
+<th>优势</th>
+<th>劣势</th>
+<th>更多操作插件或IDE</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>vscode</td>
+<td>由微软开发且跨平台的免费源代码编辑器，插件市场中有大量插件可安装，可极大地扩展其功能</td>
+<td>（1）IDE本身开源免费（2）本身不带AI功能，但可安装各种插件以丰富与增强其AI功能</td>
+<td>（1）很多功能需要自行组装配置，上手有难度，此劣势在其他IDE或编辑器如Trae、Cursor中都不同程度存在</td>
+<td>IDE</td>
+<td>https://vscode.cool/</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Trae</td>
+<td>字节跳动公司推出的AI原生编程工具</td>
+<td>（1）费用相对国外同类产品要便宜（2）能够使用国内主流编程模型如豆包、DeepSeek、智谱清言的模型，根据官网https://docs.trae.cn/ide/models包括：Doubao-Seed-1.8、Doubao-Seed-Code、GLM-4.7、GLM-4.6、MiniMax-M2.1、MiniMax-M2、DeepSeek-V3.1-Terminus、Kimi-K2-0905、Qwen-3-Coder
+（3）可添加自定义模型</td>
+<td>（1）能力只能说基本可用，比国外领先的模型Claude的文档编写与图表绘制能力要差些，对此有严格要求或良好体验的建议用Cursor等国外产品（2）从20251104开始不再可用claude模型，劝退了很多用户包含自己</td>
+<td>IDE</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Cursor</td>
+<td>由美国Anysphere 公司开发一款基于人工智能的现代代码编辑器</td>
+<td>（1）agent模式，包含Agent、Plan、Debug、Ask（2）模型，支持国外的主流编程模型：Composer
+1、Opus 4.5、Sonnet 4.5、GPT-5.1 Codex Max、GPT-5.2、Gemini 3
+Flash、GPT-5.1 Codex Mini、Grok
+Code（3）支持mcp，但目前一般不自己配置mcp功能，而是直接使用模型自带的mcp功能</td>
+<td>（1）贵，会员分多个等级，最低级的Pro会员是20美元/月，如果指定模型消耗完20美元的token后在当月只能使用auto模型（2）对中国大陆与香港等禁用，需要翻墙使用</td>
+<td>IDE</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Claude Code</td>
+<td>同美国公司Anthropic推出，使用方式多样。</td>
+<td>（1）可用插件与IDE，也可以在命令行与网页上使用，插件可在vscode类编辑器中、JetBrains中使用。（2）编程能力、写文档的能力是真的强，画图能力也可（3）每天针对Sonnet4.5、Haiku4.5模型有少量共享免费token额度可用，大约有30-50条消息的额度限制<根据消息长度和复杂度调整>超额需要付费</td>
+<td>（1）贵（2）对中国大陆与香港禁用，需要翻墙使用（3）包括Anthropic推出的多个模型及版本如Opus/Sonnect/Haiku，但也只能使用这些模型，无法使用自定义模型（4）要全面使用其全部功能的话，上手难</td>
+<td>IDE、扩展插件、命令行、网页</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Kiro</td>
+<td>亚马逊推出的专为AI Agent设计的集成开发环境</td>
+<td>（1）模型，目前只能使用Claude Sonnet 4、Claude Sonnet 4.5、Claude
+Haiku 4.5、Claude Opus 4.5 这4个模型</td>
+<td>（1）对中国大陆与香港禁用，需要翻墙使用（2）无模式可选</td>
+<td>IDE</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>AntiGravity</td>
+<td>是由Google开发的人工智能驱动的整合式开发环境。</td>
+<td>（1）谷歌推出，目前个人可以免费使用Antigravity，但有每五小时刷新一次的速率限制（2）会话模式：包括Fast与Planning，后者适合复杂尝试任务（3）模型，能够使用多个国外主流模型：Gemini
+3 Pro (High)、Gemini 3 Pro (Low)、Gemini 3 Flash New、Claude Sonnet
+4.5、Claude Sonnet 4.5 (Thinking)、Claude Opus 4.5 (Thinking)、GPT-OSS
+120B (Medium)</td>
+<td>（1）对中国大陆与香港禁用，需要翻墙使用</td>
+<td>IDE</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>CodeGeex</td>
+<td>CodeGeex本身是清华和智谱AI联合打造的一个基于AI大模型的辅助编程工具</td>
+<td>（1）目前以插件形式在多个编辑器如vscode、JetBrains等中使用，支持多语言（Python、Java、C++
+等）（2）目前可免费无限使用</td>
+<td>（1）只能以插件形式使用，可补全、解释代码</td>
+<td>扩展插件</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Lingma</td>
+<td>一款由阿里云提供支持的AI
+编程助手，提供代码补全、代码解释与代码辅助编写等功能</td>
+<td>（1）阿里云推出的智能编码助手，背后使用的是Qwen模型，目前能以IDE与插件形式使用。（2）分为多个版本功能各有差异，个人基础版免费无限使用（3）支持有模式有：智能问答、文件编辑、智能体（4）支持的模型有：qwen3-coder、qwen3-thinking、qwen2.5-max，都是国产大模型与AI编程工具的优秀代表，对中文编程环境支持良好</td>
+<td>（1）上下文窗口较小，仅支持8K。（2）目前不支持添加自定义模型（3）大文件处理时延迟明显，多轮对话后存在约10%的卡顿现象。（4）虽然整体准确率较高，但在某些场景下生成的代码存在语法错误。</td>
+<td>扩展插件</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Cline</td>
+<td>由美国 Cline公司 推出的开源AI编程助手</td>
+<td></td>
+<td></td>
+<td>扩展插件</td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>CoPilot</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>10</td>
+<td>CodeBuddy</td>
+<td></td>
+<td></td>
+<td></td>
+<td>IDE、扩展插件、CLI</td>
+<td></td>
+</tr>
+<tr>
+<td>11</td>
+<td>Qoder</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 
                 
               </div>
@@ -322,7 +465,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%85%8D%E7%BD%AE/" class="category-chain-item">命令与配置</a>
+  <a href="/categories/%E5%B7%A5%E5%85%B7%E4%B8%8E%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/" class="category-chain-item">工具与奇技淫巧</a>
   
   
 
@@ -337,7 +480,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%91%BD%E4%BB%A4%E4%B8%8E%E9%85%8D%E7%BD%AE/" class="print-no-link">#命令与配置</a>
+        <a href="/tags/%E5%B7%A5%E5%85%B7%E4%B8%8E%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/" class="print-no-link">#工具与奇技淫巧</a>
       
     </div>
   
@@ -349,8 +492,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>一些常用的命令与配置</div>
-      <div>https://jiangsanyin.github.io/2025/10/20/一些常用的命令与配置/</div>
+      <div>常用AI IDE记录</div>
+      <div>https://jiangsanyin.github.io/2026/01/04/常用AI-IDE记录/</div>
     </div>
     <div class="license-meta">
       
@@ -362,7 +505,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年10月20日</div>
+          <div>2026年1月4日</div>
         </div>
       
       
@@ -394,18 +537,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/10/27/LoRA%E5%BE%AE%E8%B0%83%E5%8E%9F%E7%90%86/" title="LoRA微调原理">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">LoRA微调原理</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/09/25/%E5%A4%A7%E9%87%8F%EF%BC%88TB%E4%BB%A5%E4%B8%8A%EF%BC%89%E5%8C%BB%E7%96%97%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E6%A0%87%E6%B3%A8/" title="大量（TB以上）医疗数据自动标注">
-                        <span class="hidden-mobile">大量（TB以上）医疗数据自动标注</span>
+                      <a href="/2025/10/27/LoRA%E5%BE%AE%E8%B0%83%E5%8E%9F%E7%90%86/" title="LoRA微调原理">
+                        <span class="hidden-mobile">LoRA微调原理</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
