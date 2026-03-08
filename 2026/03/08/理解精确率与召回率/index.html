@@ -19,22 +19,22 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、常用AI 插件或IDE汇总  Trae：字节跳动推出，https:&#x2F;&#x2F;www.trae.ai&#x2F;（国际版）、https:&#x2F;&#x2F;www.trae.cn&#x2F;（国内版） Cursor：Anysphere公司推出 Claude Code：Anthropics推出 Kiro：亚马逊推出 AntiGravity：谷歌推出，使用谷歌账号登录（要求谷歌账号关联的地区在此IDE可用区域内如新加坡，http">
+    <meta name="description" content="一、概念介绍与直观对比 精确率（Precision）和召回率（Recall）是机器学习和信息检索领域中的核心概念，目前在评测RAG应用时经常用到。 Precision（精确率）衡量的是生成文本中有多少内容是“正确且必要”的（即被参考文本支持的）。用通俗的话来说，它是：生成文本中包含的“有效信息”占“生成总信息量”的比例。 Recall（召回率） 衡量的是参考文本（标准答案）中包含的所有关键">
 <meta property="og:type" content="article">
-<meta property="og:title" content="常用AI IDE记录">
-<meta property="og:url" content="https://jiangsanyin.github.io/2026/01/04/%E5%B8%B8%E7%94%A8AI-IDE%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:title" content="理解精确率与召回率">
+<meta property="og:url" content="https://jiangsanyin.github.io/2026/03/08/%E7%90%86%E8%A7%A3%E7%B2%BE%E7%A1%AE%E7%8E%87%E4%B8%8E%E5%8F%AC%E5%9B%9E%E7%8E%87/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、常用AI 插件或IDE汇总  Trae：字节跳动推出，https:&#x2F;&#x2F;www.trae.ai&#x2F;（国际版）、https:&#x2F;&#x2F;www.trae.cn&#x2F;（国内版） Cursor：Anysphere公司推出 Claude Code：Anthropics推出 Kiro：亚马逊推出 AntiGravity：谷歌推出，使用谷歌账号登录（要求谷歌账号关联的地区在此IDE可用区域内如新加坡，http">
+<meta property="og:description" content="一、概念介绍与直观对比 精确率（Precision）和召回率（Recall）是机器学习和信息检索领域中的核心概念，目前在评测RAG应用时经常用到。 Precision（精确率）衡量的是生成文本中有多少内容是“正确且必要”的（即被参考文本支持的）。用通俗的话来说，它是：生成文本中包含的“有效信息”占“生成总信息量”的比例。 Recall（召回率） 衡量的是参考文本（标准答案）中包含的所有关键">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-01-04T02:41:54.000Z">
-<meta property="article:modified_time" content="2026-01-06T07:10:02.000Z">
+<meta property="article:published_time" content="2026-03-08T09:29:36.000Z">
+<meta property="article:modified_time" content="2026-03-08T09:40:02.000Z">
 <meta property="article:author" content="sanyinjiang">
-<meta property="article:tag" content="工具与奇技淫巧">
+<meta property="article:tag" content="AIGC">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>常用AI IDE记录 - sanyinjiang</title>
+  <title>理解精确率与召回率 - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +213,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">常用AI IDE记录</span>
+            <span id="subtitle">理解精确率与召回率</span>
           
         </div>
 
@@ -224,8 +224,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-01-04 10:41" pubdate>
-          2026年1月4日 上午
+        <time datetime="2026-03-08 17:29" pubdate>
+          2026年3月8日 下午
         </time>
       </span>
     
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          1.6k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          12 分钟
+          14 分钟
         
       </span>
     
@@ -293,160 +293,129 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">常用AI IDE记录</h1>
+            <h1 id="seo-header">理解精确率与召回率</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一常用ai-插件或ide汇总">一、常用AI 插件或IDE汇总</h1>
-<ul>
-<li>Trae：字节跳动推出，https://www.trae.ai/（国际版）、https://www.trae.cn/（国内版）</li>
-<li>Cursor：Anysphere公司推出</li>
-<li>Claude Code：Anthropics推出</li>
-<li>Kiro：亚马逊推出</li>
-<li>AntiGravity：谷歌推出，使用谷歌账号登录（要求谷歌账号关联的地区在此IDE可用区域内如新加坡，https://policies.google.com/country-association-form）</li>
-<li>CodeGeex：https://codegeex.cn/</li>
-<li>Lingma：https://lingma.aliyun.com/</li>
-<li>Cline：https://cline.bot/</li>
-<li>CoPilot：有两个版本，微软版与github版：https://copilot.microsoft.com/、https://github.com/features/copilot</li>
-<li>CodeBuddy：https://www.codebuddy.ai/</li>
-<li>Qoder：https://qoder.com/</li>
-</ul>
-<h1 id="二大致介绍与特点说明">二、大致介绍与特点说明</h1>
-<table style="width:100%;">
+                <h1 id="一概念介绍与直观对比">一、概念介绍与直观对比</h1>
+<p>精确率（Precision）和召回率（Recall）是机器学习和信息检索领域中的核心概念，目前在评测RAG应用时经常用到。</p>
+<p><strong>Precision（精确率）</strong>衡量的是生成文本中有多少内容是“正确且必要”的（即被参考文本支持的）。用通俗的话来说，它是：生成文本中包含的“有效信息”占“生成总信息量”的比例。</p>
+<p><strong>Recall（召回率）</strong>
+衡量的是参考文本（标准答案）中包含的所有关键信息，有多少比例被模型成功地生成了出来。用通俗的话来说就是：参考文本中的“核心要点”被模型“捕捉到”的比例。</p>
+<table>
 
 <thead>
 <tr>
-<th>序号</th>
-<th>插件或IDE名称</th>
-<th>介绍</th>
-<th>优势</th>
-<th>劣势</th>
-<th>更多操作插件或IDE</th>
-<th>备注</th>
+<th><strong>特性维度</strong></th>
+<th><strong>精确率 (Precision)</strong></th>
+<th><strong>召回率 (Recall)</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>0</td>
-<td>vscode</td>
-<td>由微软开发且跨平台的免费源代码编辑器，插件市场中有大量插件可安装，可极大地扩展其功能</td>
-<td>（1）IDE本身开源免费（2）本身不带AI功能，但可安装各种插件以丰富与增强其AI功能</td>
-<td>（1）很多功能需要自行组装配置，上手有难度，此劣势在其他IDE或编辑器如Trae、Cursor中都不同程度存在</td>
-<td>IDE</td>
-<td>https://vscode.cool/</td>
+<td><strong>核心关注点</strong></td>
+<td><strong>准确性 / 质量</strong> (Quality)</td>
+<td><strong>完整性 / 数量</strong> (Quantity)</td>
 </tr>
 <tr>
-<td>1</td>
-<td>Trae</td>
-<td>字节跳动公司推出的AI原生编程工具</td>
-<td>（1）费用相对国外同类产品要便宜（2）能够使用国内主流编程模型如豆包、DeepSeek、智谱清言的模型，根据官网https://docs.trae.cn/ide/models包括：Doubao-Seed-1.8、Doubao-Seed-Code、GLM-4.7、GLM-4.6、MiniMax-M2.1、MiniMax-M2、DeepSeek-V3.1-Terminus、Kimi-K2-0905、Qwen-3-Coder
-（3）可添加自定义模型</td>
-<td>（1）能力只能说基本可用，比国外领先的模型Claude的文档编写与图表绘制能力要差些，对此有严格要求或良好体验的建议用Cursor等国外产品（2）从20251104开始不再可用claude模型，劝退了很多用户包含自己</td>
-<td>IDE</td>
-<td></td>
+<td><strong>通俗的问法</strong></td>
+<td>“你说的这些话里，有多少是真的？”</td>
+<td>“标准答案里要求的，你漏掉了多少？”</td>
 </tr>
 <tr>
-<td>2</td>
-<td>Cursor</td>
-<td>由美国Anysphere 公司开发一款基于人工智能的现代代码编辑器</td>
-<td>（1）agent模式，包含Agent、Plan、Debug、Ask（2）模型，支持国外的主流编程模型：Composer
-1、Opus 4.5、Sonnet 4.5、GPT-5.1 Codex Max、GPT-5.2、Gemini 3
-Flash、GPT-5.1 Codex Mini、Grok
-Code（3）支持mcp，但目前一般不自己配置mcp功能，而是直接使用模型自带的mcp功能</td>
-<td>（1）贵，会员分多个等级，最低级的Pro会员是20美元/月，如果指定模型消耗完20美元的token后在当月只能使用auto模型（2）对中国大陆与香港等禁用，需要翻墙使用</td>
-<td>IDE</td>
-<td></td>
+<td><strong>评估目标</strong></td>
+<td>衡量模型<strong>乱编（幻觉）</strong>的程度。</td>
+<td>衡量模型<strong>遗漏（漏题）</strong>的程度。</td>
 </tr>
 <tr>
-<td>3</td>
-<td>Claude Code</td>
-<td>同美国公司Anthropic推出，使用方式多样。</td>
-<td>（1）可用插件与IDE，也可以在命令行与网页上使用，插件可在vscode类编辑器中、JetBrains中使用。（2）编程能力、写文档的能力是真的强，画图能力也可（3）每天针对Sonnet4.5、Haiku4.5模型有少量共享免费token额度可用，大约有30-50条消息的额度限制<根据消息长度和复杂度调整>超额需要付费</td>
-<td>（1）贵（2）对中国大陆与香港禁用，需要翻墙使用（3）包括Anthropic推出的多个模型及版本如Opus/Sonnect/Haiku，但也只能使用这些模型，无法使用自定义模型（4）要全面使用其全部功能的话，上手难</td>
-<td>IDE、扩展插件、命令行、网页</td>
-<td></td>
+<td><strong>数学逻辑</strong></td>
+<td>生成正确的 / 总生成的</td>
+<td>生成正确的 / 标准答案总数</td>
 </tr>
 <tr>
-<td>4</td>
-<td>Kiro</td>
-<td>亚马逊推出的专为AI Agent设计的集成开发环境</td>
-<td>（1）模型，目前只能使用Claude Sonnet 4、Claude Sonnet 4.5、Claude
-Haiku 4.5、Claude Opus 4.5 这4个模型</td>
-<td>（1）对中国大陆与香港禁用，需要翻墙使用（2）无模式可选</td>
-<td>IDE</td>
-<td></td>
+<td><strong>极端情况 1</strong></td>
+<td>模型只说一句话且绝对正确：<strong>100%</strong></td>
+<td>虽然这句话对了，但漏了其他 99%：<strong>极低</strong></td>
 </tr>
 <tr>
-<td>5</td>
-<td>AntiGravity</td>
-<td>是由Google开发的人工智能驱动的整合式开发环境。</td>
-<td>（1）谷歌推出，目前个人可以免费使用Antigravity，但有每五小时刷新一次的速率限制（2）会话模式：包括Fast与Planning，后者适合复杂尝试任务（3）模型，能够使用多个国外主流模型：Gemini
-3 Pro (High)、Gemini 3 Pro (Low)、Gemini 3 Flash New、Claude Sonnet
-4.5、Claude Sonnet 4.5 (Thinking)、Claude Opus 4.5 (Thinking)、GPT-OSS
-120B (Medium)</td>
-<td>（1）对中国大陆与香港禁用，需要翻墙使用</td>
-<td>IDE</td>
-<td></td>
+<td><strong>极端情况 2</strong></td>
+<td>模型背下了整部百科全书：<strong>极低</strong> (废话太多)</td>
+<td>成功覆盖了所有知识点：<strong>100%</strong></td>
 </tr>
 <tr>
-<td>6</td>
-<td>CodeGeex</td>
-<td>CodeGeex本身是清华和智谱AI联合打造的一个基于AI大模型的辅助编程工具</td>
-<td>（1）目前以插件形式在多个编辑器如vscode、JetBrains等中使用，支持多语言（Python、Java、C++
-等）（2）目前可免费无限使用</td>
-<td>（1）只能以插件形式使用，可补全、解释代码</td>
-<td>扩展插件</td>
-<td></td>
+<td><strong>追求的目标</strong></td>
+<td><strong>不骗人</strong>（宁愿不说，也不乱说）</td>
+<td><strong>不漏人</strong>（宁愿错杀，也不放过）</td>
 </tr>
 <tr>
-<td>7</td>
-<td>Lingma</td>
-<td>一款由阿里云提供支持的AI
-编程助手，提供代码补全、代码解释与代码辅助编写等功能</td>
-<td>（1）阿里云推出的智能编码助手，背后使用的是Qwen模型，目前能以IDE与插件形式使用。（2）分为多个版本功能各有差异，个人基础版免费无限使用（3）支持有模式有：智能问答、文件编辑、智能体（4）支持的模型有：qwen3-coder、qwen3-thinking、qwen2.5-max，都是国产大模型与AI编程工具的优秀代表，对中文编程环境支持良好</td>
-<td>（1）上下文窗口较小，仅支持8K。（2）目前不支持添加自定义模型（3）大文件处理时延迟明显，多轮对话后存在约10%的卡顿现象。（4）虽然整体准确率较高，但在某些场景下生成的代码存在语法错误。</td>
-<td>扩展插件</td>
-<td></td>
-</tr>
-<tr>
-<td>8</td>
-<td>Cline</td>
-<td>由美国 Cline公司 推出的开源AI编程助手</td>
-<td></td>
-<td></td>
-<td>扩展插件</td>
-<td></td>
-</tr>
-<tr>
-<td>9</td>
-<td>CoPilot</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>10</td>
-<td>CodeBuddy</td>
-<td></td>
-<td></td>
-<td></td>
-<td>IDE、扩展插件、CLI</td>
-<td></td>
-</tr>
-<tr>
-<td>11</td>
-<td>Qoder</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td><strong>在 GPT-5 中的意义</strong></td>
+<td>减少 AI 的“一本正经胡说八道”。</td>
+<td>确保 AI 遵循了所有的指令细节。</td>
 </tr>
 </tbody>
 </table>
+<p>以下使用一个简单的比喻和对比来彻底分清 <strong>Precision</strong> 和
+<strong>Recall</strong> ：</p>
+<hr />
+<h1 id="二深度拆解precision-vs.-recall">二、深度拆解：Precision vs.
+Recall</h1>
+<p>假设参考文本（标准答案）是：<strong>“苹果是一种红色的、甜的水果。”</strong>。下面以两个极端的例子来帮忙记忆与理解这两个概念。</p>
+<h2 id="场景-aprecision-高recall-低"><strong>场景 A：Precision
+高，Recall 低</strong></h2>
+<ul>
+<li><strong>模型生成：</strong> “苹果是红色的。”</li>
+<li><strong>分析：</strong> *
+模型说出的每一句话都在标准答案里（它是<strong>精确</strong>的）。
+<ul>
+<li>但它说得不够完整，漏掉了“甜”和“水果”这两个信息。</li>
+<li><strong>结论：</strong> Precision 极高（100%），Recall 较低。</li>
+</ul></li>
+</ul>
+<h2 id="场景-bprecision-低recall-高"><strong>场景 B：Precision
+低，Recall 高</strong></h2>
+<ul>
+<li><strong>模型生成：</strong>
+“苹果是一种红色的、甜的水果，它产自山东，长在树上，很好吃。”</li>
+<li><strong>分析：</strong>
+<ul>
+<li>模型涵盖了标准答案里的所有点（<strong>召回</strong>了所有信息）。</li>
+<li>但它说了很多标准答案里没有的“额外信息”（产地、生长方式、主观评价）。</li>
+<li>由于“额外信息”摊薄了“标准信息”的占比， <strong>Precision
+变低了</strong> 。</li>
+<li><strong>结论：</strong> Recall 极高（100%），Precision 较低。</li>
+</ul></li>
+</ul>
+<hr />
+<h1 id="三为什么在-gpt-5-时代-precision-很重要">三、为什么在 GPT-5 时代
+Precision 很重要？</h1>
+<p>在评价大模型时，Precision
+通常被视为<strong>“抗幻觉”</strong>的指标。</p>
+<ul>
+<li><strong>高 Precision：</strong>
+意味着模型非常“稳重”，它说出来的东西几乎都有据可查，不乱编。</li>
+<li><strong>低 Precision：</strong>
+意味着模型可能在“一本正经地胡说八道”。即使它回答得很长、涵盖了所有要点，但由于掺杂了太多未经证实的冗余信息，其实际准确度（Precision）是下降的。</li>
+</ul>
+<hr />
+<h1 id="四评估时的平衡-f1-score">四、评估时的平衡 (F1 Score)</h1>
+<p>我们通常不单纯看精确率与召回率，还会着重看 <strong>F1 Score</strong>
+，它是 Precision 和 Recall 的调和平均。它的计算公式如下： <span
+class="math display">\[
+F1=2× \frac {Precision+Recall} {Precision×Recall}
+\]</span>
+其中Precision、Recall分别代表精确率与召回率，所以计算F1之前需要先计算这两个值。</p>
+<ul>
+<li>如果一个模型只会复读一个词（Precision 高但 Recall
+极低），或者把整个维基百科背一遍（Recall 高但 Precision 极低），它的 F1
+分数都会很差。</li>
+<li><strong>GPT-5 的目标</strong>就是在保持极高
+Recall（回答全面）的同时，通过强大的逻辑自检能力维持极高的
+Precision（不乱说话）。</li>
+</ul>
+<h1 id="五相关程序示例">五、相关程序示例</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 安装 bert-score 以及支持它的 transformers 库</span><br><span class="hljs-comment"># pip install bert-score torch</span><br><span class="hljs-keyword">from</span> bert_score <span class="hljs-keyword">import</span> score<br><br><span class="hljs-comment"># 1. 准备数据</span><br><span class="hljs-comment"># 候选文本 (模型生成的回答)</span><br>candiates = [<br>    <span class="hljs-string">&quot;苹果是红色的。&quot;</span>,<br>    <span class="hljs-string">&quot;苹果是一种红色的、甜的水果，它产自山东，长在树上，很好吃。&quot;</span><br>]<br><br><span class="hljs-comment"># 参考文本 (标准答案)</span><br>references = [<br>    <span class="hljs-string">&quot;苹果是一种红色的、甜的水果。&quot;</span>,<br>    <span class="hljs-string">&quot;苹果是一种红色的、甜的水果。&quot;</span>,<br>]<br><br><span class="hljs-comment"># 2. 计算 BERTScore</span><br><span class="hljs-comment"># lang=&quot;zh&quot; 指定中文，会自动调用中文 BERT 模型 (如 bert-base-chinese)</span><br><span class="hljs-comment"># rescale_with_baseline=True 可以让得分更符合人的直觉（通常在 0-1 之间分布更广）</span><br>P, R, F1 = score(candiates, references, lang=<span class="hljs-string">&quot;zh&quot;</span>, verbose=<span class="hljs-literal">True</span>)<br><br><span class="hljs-comment"># 3. 打印结果</span><br><span class="hljs-comment"># P: Precision (精确率), R: Recall (召回率), F1: F1分数</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Precision: <span class="hljs-subst">&#123;P.mean().item():<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Recall: <span class="hljs-subst">&#123;R.mean().item():<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;F1 Score: <span class="hljs-subst">&#123;F1.mean().item():<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">done in 0.14 seconds, 14.41 sentences/sec</span><br><span class="hljs-string">Precision: 0.8451</span><br><span class="hljs-string">Recall: 0.8785</span><br><span class="hljs-string">F1 Score: 0.8541</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">for</span> i, p <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(P):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;句子 <span class="hljs-subst">&#123;i+<span class="hljs-number">1</span>&#125;</span> 的 P 得分: <span class="hljs-subst">&#123;p.item():<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">句子 1 的 P 得分: 0.9077</span><br><span class="hljs-string">句子 2 的 P 得分: 0.7825</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">for</span> i, r <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(R):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;句子 <span class="hljs-subst">&#123;i+<span class="hljs-number">1</span>&#125;</span> 的 R 得分: <span class="hljs-subst">&#123;r.item():<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">句子 1 的 R 得分: 0.7813</span><br><span class="hljs-string">句子 2 的 R 得分: 0.9757</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-comment"># 如果你想看每一个句子的具体得分</span><br><span class="hljs-keyword">for</span> i, f1 <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(F1):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;句子 <span class="hljs-subst">&#123;i+<span class="hljs-number">1</span>&#125;</span> 的 F1 得分: <span class="hljs-subst">&#123;f1.item():<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">句子 1 的 F1 得分: 0.8398</span><br><span class="hljs-string">句子 2 的 F1 得分: 0.8685</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">3. 关键参数解析</span><br><span class="hljs-string">lang=&quot;zh&quot;: 库会自动为你选择最适合中文的预训练模型。如果你想手动指定模型（比如使用更强大的 RoBERTa），可以使用 model_type=&quot;hfl/chinese-roberta-wwm-ext&quot;。</span><br><span class="hljs-string">P (Precision): 衡量生成文本中有多少语义被参考文本覆盖。</span><br><span class="hljs-string">R (Recall): 衡量参考文本中有多少核心意思被模型捕捉到了。</span><br><span class="hljs-string">F1 Score: 两者的调和平均数，通常是最核心的评价指标。</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string">4. 为什么 BERTScore 比 BLEU 好？</span><br><span class="hljs-string">如图所示，BERTScore 不要求词汇完全一致：</span><br><span class="hljs-string">它将每个词转换成高维向量。</span><br><span class="hljs-string"></span><br><span class="hljs-string">计算两个句子向量矩阵之间的余弦相似度。</span><br><span class="hljs-string">即使你把“AI”写成“人工智能”，在向量空间里它们非常接近，BERTScore 依然会给高分，而 BLEU 会直接给 0 分。</span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+<h1 id="section"></h1>
 
                 
               </div>
@@ -465,7 +434,7 @@ Haiku 4.5、Claude Opus 4.5 这4个模型</td>
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%B7%A5%E5%85%B7%E4%B8%8E%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/" class="category-chain-item">工具与奇技淫巧</a>
+  <a href="/categories/AIGC/" class="category-chain-item">AIGC</a>
   
   
 
@@ -480,7 +449,7 @@ Haiku 4.5、Claude Opus 4.5 这4个模型</td>
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%B7%A5%E5%85%B7%E4%B8%8E%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/" class="print-no-link">#工具与奇技淫巧</a>
+        <a href="/tags/AIGC/" class="print-no-link">#AIGC</a>
       
     </div>
   
@@ -492,8 +461,8 @@ Haiku 4.5、Claude Opus 4.5 这4个模型</td>
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>常用AI IDE记录</div>
-      <div>https://jiangsanyin.github.io/2026/01/04/常用AI-IDE记录/</div>
+      <div>理解精确率与召回率</div>
+      <div>https://jiangsanyin.github.io/2026/03/08/理解精确率与召回率/</div>
     </div>
     <div class="license-meta">
       
@@ -505,7 +474,7 @@ Haiku 4.5、Claude Opus 4.5 这4个模型</td>
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年1月4日</div>
+          <div>2026年3月8日</div>
         </div>
       
       
@@ -537,18 +506,12 @@ Haiku 4.5、Claude Opus 4.5 这4个模型</td>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/03/08/%E7%90%86%E8%A7%A3%E7%B2%BE%E7%A1%AE%E7%8E%87%E4%B8%8E%E5%8F%AC%E5%9B%9E%E7%8E%87/" title="理解精确率与召回率">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">理解精确率与召回率</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/10/27/LoRA%E5%BE%AE%E8%B0%83%E5%8E%9F%E7%90%86/" title="LoRA微调原理">
-                        <span class="hidden-mobile">LoRA微调原理</span>
+                      <a href="/2026/01/04/%E5%B8%B8%E7%94%A8AI-IDE%E8%AE%B0%E5%BD%95/" title="常用AI IDE记录">
+                        <span class="hidden-mobile">常用AI IDE记录</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
