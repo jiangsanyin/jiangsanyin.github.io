@@ -19,22 +19,22 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、概念介绍与直观对比 精确率（Precision）和召回率（Recall）是机器学习和信息检索领域中的核心概念，目前在评测RAG应用时经常用到。 Precision（精确率）衡量的是生成文本中有多少内容是“正确且必要”的（即被参考文本支持的）。用通俗的话来说，它是：生成文本中包含的“有效信息”占“生成总信息量”的比例。 Recall（召回率） 衡量的是参考文本（标准答案）中包含的所有关键">
+    <meta name="description" content="一、书籍 1.1 免费电子书下载网站  https:&#x2F;&#x2F;www.gutenberg.org&#x2F;  二、牛人博客  Jay Alammar：https:&#x2F;&#x2F;jalammar.github.io&#x2F;illustrated-gpt2&#x2F; 斯坦福大学博士Haoyi Duan：https:&#x2F;&#x2F;haoyi-duan.github.io&#x2F;publications.html   三、机器学习与深">
 <meta property="og:type" content="article">
-<meta property="og:title" content="理解精确率与召回率">
-<meta property="og:url" content="https://jiangsanyin.github.io/2026/03/08/%E7%90%86%E8%A7%A3%E7%B2%BE%E7%A1%AE%E7%8E%87%E4%B8%8E%E5%8F%AC%E5%9B%9E%E7%8E%87/index.html">
+<meta property="og:title" content="常用互联网资源记录">
+<meta property="og:url" content="https://jiangsanyin.github.io/2026/03/09/%E5%B8%B8%E7%94%A8%E4%BA%92%E8%81%94%E7%BD%91%E8%B5%84%E6%BA%90%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、概念介绍与直观对比 精确率（Precision）和召回率（Recall）是机器学习和信息检索领域中的核心概念，目前在评测RAG应用时经常用到。 Precision（精确率）衡量的是生成文本中有多少内容是“正确且必要”的（即被参考文本支持的）。用通俗的话来说，它是：生成文本中包含的“有效信息”占“生成总信息量”的比例。 Recall（召回率） 衡量的是参考文本（标准答案）中包含的所有关键">
+<meta property="og:description" content="一、书籍 1.1 免费电子书下载网站  https:&#x2F;&#x2F;www.gutenberg.org&#x2F;  二、牛人博客  Jay Alammar：https:&#x2F;&#x2F;jalammar.github.io&#x2F;illustrated-gpt2&#x2F; 斯坦福大学博士Haoyi Duan：https:&#x2F;&#x2F;haoyi-duan.github.io&#x2F;publications.html   三、机器学习与深">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-03-08T09:29:36.000Z">
-<meta property="article:modified_time" content="2026-03-08T09:40:02.000Z">
+<meta property="article:published_time" content="2026-03-09T03:24:14.000Z">
+<meta property="article:modified_time" content="2026-03-09T03:32:20.000Z">
 <meta property="article:author" content="sanyinjiang">
-<meta property="article:tag" content="AIGC">
+<meta property="article:tag" content="资源记录">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>理解精确率与召回率 - sanyinjiang</title>
+  <title>常用互联网资源记录 - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -213,7 +213,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">理解精确率与召回率</span>
+            <span id="subtitle">常用互联网资源记录</span>
           
         </div>
 
@@ -224,8 +224,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-03-08 17:29" pubdate>
-          2026年3月8日 下午
+        <time datetime="2026-03-09 11:24" pubdate>
+          2026年3月9日 上午
         </time>
       </span>
     
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          68 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          14 分钟
+          1 分钟
         
       </span>
     
@@ -293,129 +293,27 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">理解精确率与召回率</h1>
+            <h1 id="seo-header">常用互联网资源记录</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="一概念介绍与直观对比">一、概念介绍与直观对比</h1>
-<p>精确率（Precision）和召回率（Recall）是机器学习和信息检索领域中的核心概念，目前在评测RAG应用时经常用到。</p>
-<p><strong>Precision（精确率）</strong>衡量的是生成文本中有多少内容是“正确且必要”的（即被参考文本支持的）。用通俗的话来说，它是：生成文本中包含的“有效信息”占“生成总信息量”的比例。</p>
-<p><strong>Recall（召回率）</strong>
-衡量的是参考文本（标准答案）中包含的所有关键信息，有多少比例被模型成功地生成了出来。用通俗的话来说就是：参考文本中的“核心要点”被模型“捕捉到”的比例。</p>
-<table>
-
-<thead>
-<tr>
-<th><strong>特性维度</strong></th>
-<th><strong>精确率 (Precision)</strong></th>
-<th><strong>召回率 (Recall)</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>核心关注点</strong></td>
-<td><strong>准确性 / 质量</strong> (Quality)</td>
-<td><strong>完整性 / 数量</strong> (Quantity)</td>
-</tr>
-<tr>
-<td><strong>通俗的问法</strong></td>
-<td>“你说的这些话里，有多少是真的？”</td>
-<td>“标准答案里要求的，你漏掉了多少？”</td>
-</tr>
-<tr>
-<td><strong>评估目标</strong></td>
-<td>衡量模型<strong>乱编（幻觉）</strong>的程度。</td>
-<td>衡量模型<strong>遗漏（漏题）</strong>的程度。</td>
-</tr>
-<tr>
-<td><strong>数学逻辑</strong></td>
-<td>生成正确的 / 总生成的</td>
-<td>生成正确的 / 标准答案总数</td>
-</tr>
-<tr>
-<td><strong>极端情况 1</strong></td>
-<td>模型只说一句话且绝对正确：<strong>100%</strong></td>
-<td>虽然这句话对了，但漏了其他 99%：<strong>极低</strong></td>
-</tr>
-<tr>
-<td><strong>极端情况 2</strong></td>
-<td>模型背下了整部百科全书：<strong>极低</strong> (废话太多)</td>
-<td>成功覆盖了所有知识点：<strong>100%</strong></td>
-</tr>
-<tr>
-<td><strong>追求的目标</strong></td>
-<td><strong>不骗人</strong>（宁愿不说，也不乱说）</td>
-<td><strong>不漏人</strong>（宁愿错杀，也不放过）</td>
-</tr>
-<tr>
-<td><strong>在 GPT-5 中的意义</strong></td>
-<td>减少 AI 的“一本正经胡说八道”。</td>
-<td>确保 AI 遵循了所有的指令细节。</td>
-</tr>
-</tbody>
-</table>
-<p>以下使用一个简单的比喻和对比来彻底分清 <strong>Precision</strong> 和
-<strong>Recall</strong> ：</p>
-<hr />
-<h1 id="二深度拆解precision-vs.-recall">二、深度拆解：Precision vs.
-Recall</h1>
-<p>假设参考文本（标准答案）是：<strong>“苹果是一种红色的、甜的水果。”</strong>。下面以两个极端的例子来帮忙记忆与理解这两个概念。</p>
-<h2 id="场景-aprecision-高recall-低"><strong>场景 A：Precision
-高，Recall 低</strong></h2>
+                <h1 id="一书籍">一、书籍</h1>
+<h2 id="免费电子书下载网站">1.1 免费电子书下载网站</h2>
 <ul>
-<li><strong>模型生成：</strong> “苹果是红色的。”</li>
-<li><strong>分析：</strong> *
-模型说出的每一句话都在标准答案里（它是<strong>精确</strong>的）。
-<ul>
-<li>但它说得不够完整，漏掉了“甜”和“水果”这两个信息。</li>
-<li><strong>结论：</strong> Precision 极高（100%），Recall 较低。</li>
-</ul></li>
+<li>https://www.gutenberg.org/</li>
 </ul>
-<h2 id="场景-bprecision-低recall-高"><strong>场景 B：Precision
-低，Recall 高</strong></h2>
-<ul>
-<li><strong>模型生成：</strong>
-“苹果是一种红色的、甜的水果，它产自山东，长在树上，很好吃。”</li>
-<li><strong>分析：</strong>
-<ul>
-<li>模型涵盖了标准答案里的所有点（<strong>召回</strong>了所有信息）。</li>
-<li>但它说了很多标准答案里没有的“额外信息”（产地、生长方式、主观评价）。</li>
-<li>由于“额外信息”摊薄了“标准信息”的占比， <strong>Precision
-变低了</strong> 。</li>
-<li><strong>结论：</strong> Recall 极高（100%），Precision 较低。</li>
-</ul></li>
-</ul>
-<hr />
-<h1 id="三为什么在-gpt-5-时代-precision-很重要">三、为什么在 GPT-5 时代
-Precision 很重要？</h1>
-<p>在评价大模型时，Precision
-通常被视为<strong>“抗幻觉”</strong>的指标。</p>
-<ul>
-<li><strong>高 Precision：</strong>
-意味着模型非常“稳重”，它说出来的东西几乎都有据可查，不乱编。</li>
-<li><strong>低 Precision：</strong>
-意味着模型可能在“一本正经地胡说八道”。即使它回答得很长、涵盖了所有要点，但由于掺杂了太多未经证实的冗余信息，其实际准确度（Precision）是下降的。</li>
-</ul>
-<hr />
-<h1 id="四评估时的平衡-f1-score">四、评估时的平衡 (F1 Score)</h1>
-<p>我们通常不单纯看精确率与召回率，还会着重看 <strong>F1 Score</strong>
-，它是 Precision 和 Recall 的调和平均。它的计算公式如下： <span
-class="math display">\[
-F1=2× \frac {Precision+Recall} {Precision×Recall}
-\]</span>
-其中Precision、Recall分别代表精确率与召回率，所以计算F1之前需要先计算这两个值。</p>
-<ul>
-<li>如果一个模型只会复读一个词（Precision 高但 Recall
-极低），或者把整个维基百科背一遍（Recall 高但 Precision 极低），它的 F1
-分数都会很差。</li>
-<li><strong>GPT-5 的目标</strong>就是在保持极高
-Recall（回答全面）的同时，通过强大的逻辑自检能力维持极高的
-Precision（不乱说话）。</li>
-</ul>
-<h1 id="五相关程序示例">五、相关程序示例</h1>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 安装 bert-score 以及支持它的 transformers 库</span><br><span class="hljs-comment"># pip install bert-score torch</span><br><span class="hljs-keyword">from</span> bert_score <span class="hljs-keyword">import</span> score<br><br><span class="hljs-comment"># 1. 准备数据</span><br><span class="hljs-comment"># 候选文本 (模型生成的回答)</span><br>candiates = [<br>    <span class="hljs-string">&quot;苹果是红色的。&quot;</span>,<br>    <span class="hljs-string">&quot;苹果是一种红色的、甜的水果，它产自山东，长在树上，很好吃。&quot;</span><br>]<br><br><span class="hljs-comment"># 参考文本 (标准答案)</span><br>references = [<br>    <span class="hljs-string">&quot;苹果是一种红色的、甜的水果。&quot;</span>,<br>    <span class="hljs-string">&quot;苹果是一种红色的、甜的水果。&quot;</span>,<br>]<br><br><span class="hljs-comment"># 2. 计算 BERTScore</span><br><span class="hljs-comment"># lang=&quot;zh&quot; 指定中文，会自动调用中文 BERT 模型 (如 bert-base-chinese)</span><br><span class="hljs-comment"># rescale_with_baseline=True 可以让得分更符合人的直觉（通常在 0-1 之间分布更广）</span><br>P, R, F1 = score(candiates, references, lang=<span class="hljs-string">&quot;zh&quot;</span>, verbose=<span class="hljs-literal">True</span>)<br><br><span class="hljs-comment"># 3. 打印结果</span><br><span class="hljs-comment"># P: Precision (精确率), R: Recall (召回率), F1: F1分数</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Precision: <span class="hljs-subst">&#123;P.mean().item():<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Recall: <span class="hljs-subst">&#123;R.mean().item():<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;F1 Score: <span class="hljs-subst">&#123;F1.mean().item():<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">done in 0.14 seconds, 14.41 sentences/sec</span><br><span class="hljs-string">Precision: 0.8451</span><br><span class="hljs-string">Recall: 0.8785</span><br><span class="hljs-string">F1 Score: 0.8541</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">for</span> i, p <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(P):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;句子 <span class="hljs-subst">&#123;i+<span class="hljs-number">1</span>&#125;</span> 的 P 得分: <span class="hljs-subst">&#123;p.item():<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">句子 1 的 P 得分: 0.9077</span><br><span class="hljs-string">句子 2 的 P 得分: 0.7825</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">for</span> i, r <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(R):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;句子 <span class="hljs-subst">&#123;i+<span class="hljs-number">1</span>&#125;</span> 的 R 得分: <span class="hljs-subst">&#123;r.item():<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">句子 1 的 R 得分: 0.7813</span><br><span class="hljs-string">句子 2 的 R 得分: 0.9757</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-comment"># 如果你想看每一个句子的具体得分</span><br><span class="hljs-keyword">for</span> i, f1 <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(F1):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;句子 <span class="hljs-subst">&#123;i+<span class="hljs-number">1</span>&#125;</span> 的 F1 得分: <span class="hljs-subst">&#123;f1.item():<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">句子 1 的 F1 得分: 0.8398</span><br><span class="hljs-string">句子 2 的 F1 得分: 0.8685</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">3. 关键参数解析</span><br><span class="hljs-string">lang=&quot;zh&quot;: 库会自动为你选择最适合中文的预训练模型。如果你想手动指定模型（比如使用更强大的 RoBERTa），可以使用 model_type=&quot;hfl/chinese-roberta-wwm-ext&quot;。</span><br><span class="hljs-string">P (Precision): 衡量生成文本中有多少语义被参考文本覆盖。</span><br><span class="hljs-string">R (Recall): 衡量参考文本中有多少核心意思被模型捕捉到了。</span><br><span class="hljs-string">F1 Score: 两者的调和平均数，通常是最核心的评价指标。</span><br><span class="hljs-string"></span><br><span class="hljs-string"></span><br><span class="hljs-string">4. 为什么 BERTScore 比 BLEU 好？</span><br><span class="hljs-string">如图所示，BERTScore 不要求词汇完全一致：</span><br><span class="hljs-string">它将每个词转换成高维向量。</span><br><span class="hljs-string"></span><br><span class="hljs-string">计算两个句子向量矩阵之间的余弦相似度。</span><br><span class="hljs-string">即使你把“AI”写成“人工智能”，在向量空间里它们非常接近，BERTScore 依然会给高分，而 BLEU 会直接给 0 分。</span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br></code></pre></td></tr></table></figure>
-<h1 id="section"></h1>
+<h1 id="二牛人博客">二、牛人博客</h1>
+<ol type="1">
+<li>Jay Alammar：https://jalammar.github.io/illustrated-gpt2/</li>
+<li>斯坦福大学博士Haoyi
+Duan：https://haoyi-duan.github.io/publications.html</li>
+<li></li>
+</ol>
+<h1 id="三机器学习与深度学习网站">三、机器学习与深度学习网站</h1>
+<ol type="1">
+<li>PaddleEdu即PP飞桨：https://paddlepedia.readthedocs.io/en/latest/index.html</li>
+</ol>
 
                 
               </div>
@@ -434,7 +332,7 @@ Precision（不乱说话）。</li>
     
       <span class="category-chain">
         
-  <a href="/categories/AIGC/" class="category-chain-item">AIGC</a>
+  <a href="/categories/%E8%B5%84%E6%BA%90%E8%AE%B0%E5%BD%95/" class="category-chain-item">资源记录</a>
   
   
 
@@ -449,7 +347,7 @@ Precision（不乱说话）。</li>
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/AIGC/" class="print-no-link">#AIGC</a>
+        <a href="/tags/%E8%B5%84%E6%BA%90%E8%AE%B0%E5%BD%95/" class="print-no-link">#资源记录</a>
       
     </div>
   
@@ -461,8 +359,8 @@ Precision（不乱说话）。</li>
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>理解精确率与召回率</div>
-      <div>https://jiangsanyin.github.io/2026/03/08/理解精确率与召回率/</div>
+      <div>常用互联网资源记录</div>
+      <div>https://jiangsanyin.github.io/2026/03/09/常用互联网资源记录/</div>
     </div>
     <div class="license-meta">
       
@@ -474,7 +372,7 @@ Precision（不乱说话）。</li>
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年3月8日</div>
+          <div>2026年3月9日</div>
         </div>
       
       
@@ -506,18 +404,12 @@ Precision（不乱说话）。</li>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/03/09/%E5%B8%B8%E7%94%A8%E4%BA%92%E8%81%94%E7%BD%91%E8%B5%84%E6%BA%90%E8%AE%B0%E5%BD%95/" title="常用互联网资源记录">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">常用互联网资源记录</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/01/04/%E5%B8%B8%E7%94%A8AI-IDE%E8%AE%B0%E5%BD%95/" title="常用AI IDE记录">
-                        <span class="hidden-mobile">常用AI IDE记录</span>
+                      <a href="/2026/03/08/%E7%90%86%E8%A7%A3%E7%B2%BE%E7%A1%AE%E7%8E%87%E4%B8%8E%E5%8F%AC%E5%9B%9E%E7%8E%87/" title="理解精确率与召回率">
+                        <span class="hidden-mobile">理解精确率与召回率</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
