@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>PPO算法从入门到放弃-1探</title>
+    <link href="/2026/05/04/PPO%E7%AE%97%E6%B3%95%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-1%E6%8E%A2/"/>
+    <url>/2026/05/04/PPO%E7%AE%97%E6%B3%95%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E6%94%BE%E5%BC%83-1%E6%8E%A2/</url>
+    
+    <content type="html"><![CDATA[<p>最近自己断断续续学习了PPO算法，其在大模型的后训练时用到。其中内容挺多，学习过程中目前是通过手写笔记记录的，目前是第1次探索学习其大概，后续想通过更多几次更深入学习其实现与某些具体细节，有收获再记录下来。</p><h1 id="一一些概念">一、一些概念</h1><p>ActionSpace 动作空间，表示可选择的动作,比如{left,right,up,down}</p><p>Policy策略函数，输入State（简写为s）,输出Action（简写为a）的概率，用符号 <spanclass="math inline">\(\pi\)</span> 表示，策略函数 <spanclass="math inline">\(\pi\)</span> 一般是通过神经网络来描述。如 <spanclass="math inline">\(\pi\)</span>{a|s}=0.3，表示在状态s下执行动作a的概率是0.3。</p><p>Trajectory轨迹，用τ表示,表示一连串状态和动作的序列。也称为Episode,Rollout。表示为{s<sub>0</sub>,a<sub>0</sub>,s<sub>1</sub>,a<sub>1</sub>,..}</p><p>Return回报，从当前时间点到游戏（比如魂斗罗、越级玛丽）或整个事件结束的Reward的总和</p><h1 id="二ppo算法大致过程">二、PPO算法大致过程</h1><p>PPO（Proximal PolicyOptimization）是一种同策略（On-Policy）算法，其核心逻辑是在保证策略更新平稳的前提下，通过不断迭代提升模型的回报。其运行过程主要分为以下四个阶段的循环：</p><h3 id="采样阶段-data-collection">1. 采样阶段 (Data Collection)</h3><ul><li><strong>交互采样</strong>：使用当前的策略神经网络 <spanclass="math inline">\(\pi_{\theta_{old}}\)</span>（即旧策略）与环境进行交互。<br /></li><li><strong>记录轨迹</strong>：收集并记录一系列轨迹数据 <spanclass="math inline">\(\tau\)</span>，包括状态 <spanclass="math inline">\(s\)</span>、动作 <spanclass="math inline">\(a\)</span>、奖励 <spanclass="math inline">\(r\)</span> 以及对应的动作概率 <spanclass="math inline">\(P_{\theta&#39;}(a|s)\)</span>。</li></ul><h3 id="评价与优势估计-advantage-estimation">2. 评价与优势估计(Advantage Estimation)</h3><ul><li><strong>计算回报</strong>：基于采集到的奖励，计算每个时间步的长期累积回报（Return）。<br /></li><li><strong>估计优势</strong>：利用价值网络计算<strong>优势函数 <spanclass="math inline">\(A^{GAE}\)</span></strong>。<ul><li><strong><span class="math inline">\(A &gt;0\)</span></strong>：表示当前动作比平均表现好，模型后续会增加该动作的概率。</li><li><strong><span class="math inline">\(A &lt;0\)</span></strong>：表示当前动作表现较差，模型后续会抑制该动作的概率。</li></ul></li></ul><h3 id="策略优化与裁剪-optimization-with-clipping">3. 策略优化与裁剪(Optimization with Clipping)</h3><p>这是 PPO 最核心的步骤，通过梯度上升（Gradient Ascent）更新参数 <spanclass="math inline">\(\theta\)</span>：</p><ul><li><strong>计算概率比率 (Ratio)</strong>：计算新策略与旧策略的概率比值<span class="math inline">\(r_t(\theta) =\frac{P_{\theta}(a|s)}{P_{\theta&#39;}(a|s)}\)</span>。<br /></li><li><strong>引入裁剪机制 (Clipping)</strong>：将比率限制在 <spanclass="math inline">\([1-\epsilon, 1+\epsilon]\)</span> 之间。<ul><li><strong>目的</strong>：防止新旧策略之间<strong>散度过大</strong>导致模型学习崩溃（类似于防止学习率过大导致的震荡）。<br /></li><li><strong>逻辑</strong>：通过 <spanclass="math inline">\(\min\)</span>函数实现“悲观限制”，确保策略在安全的信任区域内小步改进。</li></ul></li></ul><h3 id="模型更新与更迭-model-update">4. 模型更新与更迭 (ModelUpdate)</h3><ul><li><strong>参数同步</strong>：在完成多轮 Epoch 的参数微调后，当前的<span class="math inline">\(\pi_{\theta}\)</span>成为新的参考基准。<br /></li><li><strong>清空重采</strong>：清空已过期的旧轨迹数据，使用更新后的策略重新进入环境采集数据，开始下一轮迭代。</li></ul><p><strong>总结：</strong> PPO算法通过在更新过程中引入裁剪机制（Clipping）来限制新旧策略的差异，确保模型在与环境互动的循环中能够以“小步快跑”的方式稳健地最大化累积回报值。</p><h1 id="三ppo算法概览">三、PPO算法概览</h1><figure><imgsrc="https://files.seeusercontent.com/2026/05/04/b9Pe/image-20260504220346785.png"alt="image-20260504220346785" /><figcaption aria-hidden="true">image-20260504220346785</figcaption></figure><figure><imgsrc="https://files.seeusercontent.com/2026/05/04/9Pfq/image-20260504220509736.png"alt="image-20260504220509736" /><figcaption aria-hidden="true">image-20260504220509736</figcaption></figure><figure><imgsrc="https://files.seeusercontent.com/2026/05/04/gO2u/image-20260504220526347.png"alt="image-20260504220526347" /><figcaption aria-hidden="true">image-20260504220526347</figcaption></figure><figure><imgsrc="https://files.seeusercontent.com/2026/05/04/6jiT/image-20260504220539848.png"alt="image-20260504220539848" /><figcaption aria-hidden="true">image-20260504220539848</figcaption></figure><figure><imgsrc="https://files.seeusercontent.com/2026/05/04/Tbt9/image-20260504220603344.png"alt="image-20260504220603344" /><figcaption aria-hidden="true">image-20260504220603344</figcaption></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>强化学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>PPO算法</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>FP32表达的数字范围及由来</title>
     <link href="/2026/03/19/FP32%E8%A1%A8%E8%BE%BE%E7%9A%84%E6%95%B0%E5%AD%97%E8%8C%83%E5%9B%B4%E5%8F%8A%E7%94%B1%E6%9D%A5/"/>
     <url>/2026/03/19/FP32%E8%A1%A8%E8%BE%BE%E7%9A%84%E6%95%B0%E5%AD%97%E8%8C%83%E5%9B%B4%E5%8F%8A%E7%94%B1%E6%9D%A5/</url>
