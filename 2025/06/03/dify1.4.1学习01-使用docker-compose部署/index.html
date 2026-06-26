@@ -1,0 +1,778 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、参考文档  官方部署文档：  https:&#x2F;&#x2F;docs.dify.ai&#x2F;en&#x2F;getting-started&#x2F;install-self-hosted&#x2F;docker-compose   二、环境信息  服务器信息：      主机名 IP 操作系统 规格 GPU情况 备注     g406011748489384920 10.11.15.190">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dify1.4.1学习01-使用docker-compose部署">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/06/03/dify1.4.1%E5%AD%A6%E4%B9%A001-%E4%BD%BF%E7%94%A8docker-compose%E9%83%A8%E7%BD%B2/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、参考文档  官方部署文档：  https:&#x2F;&#x2F;docs.dify.ai&#x2F;en&#x2F;getting-started&#x2F;install-self-hosted&#x2F;docker-compose   二、环境信息  服务器信息：      主机名 IP 操作系统 规格 GPU情况 备注     g406011748489384920 10.11.15.190">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/06/03/uWIpoUAhLK1bJya.png">
+<meta property="og:image" content="https://s2.loli.net/2025/06/03/Wgn4Lmu6jiGNhzq.png">
+<meta property="article:published_time" content="2025-06-03T02:23:05.000Z">
+<meta property="article:modified_time" content="2025-06-05T07:05:38.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="AIGC">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/06/03/uWIpoUAhLK1bJya.png">
+  
+  
+  
+  <title>dify1.4.1学习01-使用docker-compose部署 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">dify1.4.1学习01-使用docker-compose部署</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-03 10:23" pubdate>
+          2025年6月3日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          10 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">dify1.4.1学习01-使用docker-compose部署</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一参考文档">一、参考文档</h1>
+<ul>
+<li>官方部署文档：
+<ul>
+<li>https://docs.dify.ai/en/getting-started/install-self-hosted/docker-compose</li>
+</ul></li>
+</ul>
+<h1 id="二环境信息">二、环境信息</h1>
+<ul>
+<li><p>服务器信息：</p>
+<ul>
+<li><table>
+
+<thead>
+<tr>
+<th>主机名</th>
+<th>IP</th>
+<th>操作系统</th>
+<th>规格</th>
+<th>GPU情况</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>g406011748489384920</td>
+<td>10.11.15.190(VPC)<br />10.251.19.46(浮动IP)</td>
+<td>Ubuntu 22.04.5 LTS</td>
+<td>12c20g+100G</td>
+<td>NVIDIA GeForce RTX 4060*1</td>
+<td></td>
+</tr>
+</tbody>
+</table></li>
+</ul></li>
+</ul>
+<p>此文档使用docker-compose的方式来部署dify。</p>
+<h1 id="三部署操作">三、部署操作</h1>
+<h2 id="下载安装源码">3.1 下载安装源码</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">current latest version is 1.4.1</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果太慢或一直拉取失败就先导入到gitee中再拉取（https://gitee.com/sy-jiang/dify.git）</span><br>(llamafactory) root@g406011748489384920:/opt/code_repos# git clone https://github.com/langgenius/dify.git --branch 1.4.1<br></code></pre></td></tr></table></figure>
+<h2 id="安装docker">3.2 安装Docker</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装依赖组件</span><br>root@g406011748489384920:~# apt install apt-transport-https ca-certificates curl gnupg lsb-release<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果有弹出窗口提示哪些服务或守护进程要重启，保持默认即可。</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">从阿里云镜像站下载 Docker CE 的 GPG 密钥，并将其添加到系统的 APT 密钥链中</span><br>root@g406011748489384920:~# curl -fsSL http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo apt-key add -<br><span class="hljs-meta prompt_">#</span><span class="language-bash">添加阿里云的docker-ce安装源，比默认使用的官方安装源要快些</span><br>root@g406011748489384920:~# add-apt-repository &quot;deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable&quot;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">执行安装docker-ce</span><br>root@g406011748489384920:~# apt install docker-ce docker-ce-cli containerd.io<br><span class="hljs-meta prompt_">#</span><span class="language-bash">如果有弹出窗口提示哪些服务或守护进程要重启，保持默认即可。</span><br><br>root@g406011748489384920:~# vi /etc/docker/daemon.json<br>&#123;<br>    &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],<br>    &quot;dns&quot;: [<br>        &quot;223.5.5.5&quot;,<br>        &quot;223.6.6.6&quot;,<br>        &quot;8.8.8.8&quot;<br>    ],<br>    &quot;log-opts&quot;: &#123;<br>        &quot;max-file&quot;: &quot;5&quot;,<br>        &quot;max-size&quot;: &quot;50m&quot;<br>    &#125;,<br>    &quot;registry-mirrors&quot;: [<br>        &quot;https://hub.rat.dev&quot;,<br>        &quot;https://registry.aliyuncs.com&quot;,<br>        &quot;https://registry.docker-cn.com&quot;,<br>        &quot;https://docker.chenby.cn&quot;,<br>        &quot;https://docker.registry.cyou&quot;,<br>        &quot;https://docker-cf.registry.cyou&quot;,<br>        &quot;https://dockercf.jsdelivr.fyi&quot;,<br>        &quot;https://docker.jsdelivr.fyi&quot;,<br>        &quot;https://dockertest.jsdelivr.fyi&quot;,<br>        &quot;https://dockerproxy.com&quot;,<br>        &quot;https://docker.m.daocloud.io&quot;,<br>        &quot;https://docker.nju.edu.cn&quot;,<br>        &quot;https://docker.mirrors.sjtug.sjtu.edu.cn&quot;,<br>        &quot;https://docker.mirrors.ustc.edu.cn&quot;,<br>        &quot;https://mirror.iscas.ac.cn&quot;,<br>        &quot;https://docker.rainbond.cc&quot;<br>    ]<br>&#125;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">重启docker</span><br>root@g406011748489384920:~# systemctl daemon-reload<br>root@g406011748489384920:~# systemctl restart docker<br></code></pre></td></tr></table></figure>
+<h2 id="安装docker-compose">3.3 安装docker-compose</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">root@g406011748489384920:/opt# mkdir /opt/instakkPkgs<br>root@g406011748489384920:/opt# cd /opt/instakkPkgs/<br><span class="hljs-meta prompt_">#</span><span class="language-bash">直接下载二进制可执行文件</span><br>root@g406011748489384920:/opt/instakkPkgs# curl -L &quot;https://github.com/docker/compose/releases/download/v2.34.0/docker-compose-linux-$(uname -m)&quot; -o /usr/local/bin/docker-compose<br><span class="hljs-meta prompt_">#</span><span class="language-bash">赋予可执行权限</span><br>root@g406011748489384920:/opt/instakkPkgs# chmod +x /usr/local/bin/docker-compose<br></code></pre></td></tr></table></figure>
+<h2 id="执行部署相关命令">3.4 执行部署相关命令</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">备份相关文件</span><br>root@g406011748489384920:/opt/code_repos/dify/docker# cp .env.example .env &amp;&amp; cp docker-compose.yaml docker-compose.yaml.bak<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改.<span class="hljs-built_in">env</span>文件</span><br>root@g406011748489384920:/opt/code_repos/dify/docker# vi .env<br>PLUGIN_PYTHON_ENV_INIT_TIMEOUT=120   ---&gt;   PLUGIN_PYTHON_ENV_INIT_TIMEOUT=600<br>PIP_MIRROR_URL=                      ---&gt;   PIP_MIRROR_URL=https://pypi.tuna.tsinghua.edu.cn/simple<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">修改docker-compose.yaml文件（这个是自己OpenStack虚拟机的特殊配置，此虚拟机创建时使用的是vxlan网络，此vxlan网络在Openstack中对应一个vxlan类型</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">网络条目，此vxlan类型网络条目有一个mtu属性，其默认值是1450，创建虚拟机时使用此vxlan网络，然后虚拟机被分配得到一个网卡ens3，其对应的IP是</span> <br><span class="hljs-meta prompt_"># </span><span class="language-bash">10.11.15.190，然后虚拟机操作系统上有一个文件值即“/sys/class/net/ens3/mtu”也继承Openstack此vxlan类型网络条目的mtu属性值。但使用docker</span> <br><span class="hljs-meta prompt_"># </span><span class="language-bash">network create创建容器网络时如果没有明确声明mtu值，其默认值却是1500。虚拟机上mtu值与容器网络的mtu值不一致，就会出现网络通信问题，此时在创建容器</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">网络时要明确指定其mtu值，保持二者相同。）</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">1）在docker-compose.yaml文件中的network块下添加如下内容</span><br>root@g406011748489384920:/opt/code_repos/dify/docker# vi docker-compose.yaml<br>networks:<br><span class="hljs-meta prompt_">  # </span><span class="language-bash">create a network between sandbox, api and ssrf_proxy, and can not access outside.</span><br>  default:<br>    driver: bridge<br>    driver_opts:<br>      com.docker.network.driver.mtu: &quot;1450&quot;<br>  milvus:<br>    driver: bridge<br>    driver_opts:<br>      com.docker.network.driver.mtu: &quot;1450&quot;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">2）db、plugin_daemon、nginx、weaviate、web、worker、redis下添加一个networks: docker_default ，即如下：（此操作可省）</span><br>  plugin_daemon:<br>    image: langgenius/dify-plugin-daemon:0.1.1-local<br>    networks:<br>      - default<br>    ...<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">启动dify服务</span><br>root@g406011748489384920:/opt/code_repos/dify/docker# docker-compose up -d<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">查看所有容器的状态</span><br>(llamafactory) root@g406011748489384920:/opt/code_repos/dify/docker# docker-compose ps<br>NAME                     IMAGE                                       COMMAND                  SERVICE         CREATED          STATUS                    PORTS<br>docker-api-1             langgenius/dify-api:1.4.1                   &quot;/bin/bash /entrypoi…&quot;   api             32 seconds ago   Up 29 seconds             5001/tcp<br>docker-db-1              postgres:15-alpine                          &quot;docker-entrypoint.s…&quot;   db              38 seconds ago   Up 32 seconds (healthy)   5432/tcp<br>docker-nginx-1           nginx:latest                                &quot;sh -c &#x27;cp /docker-e…&quot;   nginx           32 seconds ago   Up 28 seconds             0.0.0.0:80-&gt;80/tcp, [::]:80-&gt;80/tcp, 0.0.0.0:443-&gt;443/tcp, [::]:443-&gt;443/tcp<br>docker-plugin_daemon-1   langgenius/dify-plugin-daemon:0.1.1-local   &quot;/bin/bash -c /app/e…&quot;   plugin_daemon   32 seconds ago   Up 29 seconds             0.0.0.0:5003-&gt;5003/tcp, [::]:5003-&gt;5003/tcp<br>docker-redis-1           redis:6-alpine                              &quot;docker-entrypoint.s…&quot;   redis           38 seconds ago   Up 32 seconds (healthy)   6379/tcp<br>docker-sandbox-1         langgenius/dify-sandbox:0.2.12              &quot;/main&quot;                  sandbox         38 seconds ago   Up 32 seconds (healthy)   <br>docker-ssrf_proxy-1      ubuntu/squid:latest                         &quot;sh -c &#x27;cp /docker-e…&quot;   ssrf_proxy      38 seconds ago   Up 32 seconds             3128/tcp<br>docker-weaviate-1        semitechnologies/weaviate:1.19.0            &quot;/bin/weaviate --hos…&quot;   weaviate        38 seconds ago   Up 32 seconds             <br>docker-web-1             langgenius/dify-web:1.4.1                   &quot;/bin/sh ./entrypoin…&quot;   web             38 seconds ago   Up 32 seconds             3000/tcp<br>docker-worker-1          langgenius/dify-api:1.4.1                   &quot;/bin/bash /entrypoi…&quot;   worker          32 seconds ago   Up 29 seconds             5001/tcp<br><br></code></pre></td></tr></table></figure>
+<h2 id="登录web界面继续部署">3.5 登录web界面继续部署</h2>
+<p>浏览器访问：http://10.251.19.46/install
+，输入管理员的相关信息后，点击设置</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/03/uWIpoUAhLK1bJya.png" srcset="/img/loading.gif" lazyload
+alt="image-20250603143953358" />
+<figcaption aria-hidden="true">image-20250603143953358</figcaption>
+</figure>
+<p>然后使用上述管理员信息登录，即可看到dify1.4.1如下界面：</p>
+<figure>
+<img src="https://s2.loli.net/2025/06/03/Wgn4Lmu6jiGNhzq.png" srcset="/img/loading.gif" lazyload
+alt="image-20250603144140386" />
+<figcaption aria-hidden="true">image-20250603144140386</figcaption>
+</figure>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/AIGC/" class="category-chain-item">AIGC</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/AIGC/" class="print-no-link">#AIGC</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>dify1.4.1学习01-使用docker-compose部署</div>
+      <div>https://jiangsanyin.github.io/2025/06/03/dify1.4.1学习01-使用docker-compose部署/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月3日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - sanyinjiang">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/06/03/dify1.4.1%E5%AD%A6%E4%B9%A002-%E8%BF%9B%E8%A1%8C%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/" title="dify1.4.1学习02-进行基础配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">dify1.4.1学习02-进行基础配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/02/%E5%AD%A6%E4%B9%A0%E3%80%902025%E5%B9%B4%E4%B8%AD%E5%9B%BDAIGC%E5%BA%94%E7%94%A8%E5%85%A8%E6%99%AF%E5%9B%BE%E8%B0%B1%E6%8A%A5%E5%91%8A%E6%80%BB%E7%BB%93%E3%80%91/" title="学习【2025年中国AIGC应用全景图谱报告总结】">
+                        <span class="hidden-mobile">学习【2025年中国AIGC应用全景图谱报告总结】</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

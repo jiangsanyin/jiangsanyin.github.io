@@ -1,0 +1,927 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="第3章 线性模型 参考：《机械学习第1版第47次印刷-周志华著》、https:&#x2F;&#x2F;www.datawhale.cn&#x2F;learn&#x2F;content&#x2F;2&#x2F;65 西瓜书代码实战：https:&#x2F;&#x2F;github.com&#x2F;datawhalechina&#x2F;machine-learning-toy-code&#x2F;blob&#x2F;main&#x2F;%E8%A5%BF%E7%93%9C%E4%B9%A6%E4%BB%A3%E7%A0%">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习入门-03线性模型">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/07/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-03%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="第3章 线性模型 参考：《机械学习第1版第47次印刷-周志华著》、https:&#x2F;&#x2F;www.datawhale.cn&#x2F;learn&#x2F;content&#x2F;2&#x2F;65 西瓜书代码实战：https:&#x2F;&#x2F;github.com&#x2F;datawhalechina&#x2F;machine-learning-toy-code&#x2F;blob&#x2F;main&#x2F;%E8%A5%BF%E7%93%9C%E4%B9%A6%E4%BB%A3%E7%A0%">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/07/23/vV1D7Mymj6kq9gC.png">
+<meta property="og:image" content="https://s2.loli.net/2025/07/20/ZYTKx9RDXygBEuc.png">
+<meta property="og:image" content="https://s2.loli.net/2025/07/26/ouejK2kJdy3SCN5.png">
+<meta property="og:image" content="https://s2.loli.net/2025/07/26/H9KouiRF26eqh1v.png">
+<meta property="og:image" content="https://s2.loli.net/2025/07/26/OVmYvZRTkisNtAz.png">
+<meta property="article:published_time" content="2025-07-19T08:19:12.000Z">
+<meta property="article:modified_time" content="2025-07-25T16:13:14.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="西瓜书与南瓜书">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/07/23/vV1D7Mymj6kq9gC.png">
+  
+  
+  
+  <title>机器学习入门-03线性模型 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">机器学习入门-03线性模型</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-07-19 16:19" pubdate>
+          2025年7月19日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">机器学习入门-03线性模型</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="第3章-线性模型">第3章 线性模型</h1>
+<p>参考：《机械学习第1版第47次印刷-周志华著》、https://www.datawhale.cn/learn/content/2/65</p>
+<p>西瓜书代码实战：https://github.com/datawhalechina/machine-learning-toy-code/blob/main/%E8%A5%BF%E7%93%9C%E4%B9%A6%E4%BB%A3%E7%A0%81%E5%AE%9E%E6%88%98.md</p>
+<p>自己记录与总结常见矩阵：https://jiangsanyin.github.io/2025/07/17/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-%E5%B8%B8%E8%A7%81%E7%9F%A9%E9%98%B5/</p>
+<p>自己记录与总结二次型：https://jiangsanyin.github.io/2025/07/22/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-09-%E4%BA%8C%E6%AC%A1%E5%9E%8B/</p>
+<h2 id="基本形式">3.1 基本形式</h2>
+<p>以下内容如无特别说明，向量都是列向量。即<strong>w</strong>=(<em>w</em><sub>1</sub>;<em>w</em><sub>2</sub>;...;<em>w</em><sub><em>d</em></sub>)和<strong>x</strong>=(<em>x</em><sub>1</sub>;<em>x</em><sub>2</sub>;...;<em>x</em><sub><em>d</em></sub>)均为<em>d</em>行1列的列向量。</p>
+<h2 id="线性回归">3.2 线性回归</h2>
+<p>给定数据集D={(x<sub>1</sub>,y<sub>1</sub>),
+(x<sub>2</sub>,y<sub>2</sub>), ... ,
+(x<sub>m</sub>,y<sub>m</sub>)}，其中xi=(x<sub>i1</sub>, x<sub>i2</sub>,
+..., x<sub>id</sub>)，y<sub>i</sub>∈R。</p>
+<p>线性回归（linear
+regression）就是要觉得一个线性模型以尽可能准确地预测实值输出标记。</p>
+<p>线性回归经常用到的一类算法就是最小二乘法，但最小二乘法不仅限于线性回归。</p>
+<p>如果要将线性回归模型的的预测值逼近真实值y的衍生物，比如㏑<sup>y</sup>
+，此时即有㏑<sup>y</sup> =
+<strong>w</strong><sup>T</sup><strong>x</strong>+b，此模型称为对数线性回归。</p>
+<p>更一般地情况，对于连续可微函数g(·)，令y=g<sup>-1</sup>(<strong>w</strong><sup>T</sup><strong>x</strong>+b)，此时得到的模型称为广义线性模型，其中函数g(·)称为联系函数。可以知道，对数线性回归模型就是广义线性模型在g(·)=㏑(·)时特例。</p>
+<p>（3.7）式与（3.8）式的求解过程如下：</p>
+<figure>
+<img src="https://s2.loli.net/2025/07/23/vV1D7Mymj6kq9gC.png" srcset="/img/loading.gif" lazyload
+alt="image-20250723170217784" />
+<figcaption aria-hidden="true">image-20250723170217784</figcaption>
+</figure>
+<h2 id="对数几率回归">3.3 对数几率回归</h2>
+<p>对数几率函数： <span class="math display">\[
+y=\frac{1}{1+e^{-z}}
+\]</span> 对数几率模型： <span class="math display">\[
+y=\frac{1}{1+e^{-(\mathbf{w}^T\mathbf{x}+b)}}\\
+\]</span> 对数几率： <span class="math display">\[
+y=\ln{\frac{y}{1-y}}
+\]</span></p>
+<hr />
+<p>对率回归最大化“对数似然”，表达式变化的相关推导（其中相关说明在图片之前进行了说明）：
+<span class="math display">\[
+\begin{aligned}
+\mathbf{β}=(\mathbf{w};b) \\
+\mathbf{\hat{x}}=(\mathbf{x};1) \\
+\text{这样，就可以将}\mathbf{w}^T\mathbf{x}+b
+\text{改写成}\mathbf{β^T}\mathbf{\hat{x}} \\
+\end{aligned}
+\]</span> <img src="https://s2.loli.net/2025/07/20/ZYTKx9RDXygBEuc.png" srcset="/img/loading.gif" lazyload
+alt="image-20250720004825761" /></p>
+<h2 id="线性差别分析">3.4 线性差别分析</h2>
+<h3 id="均值向量">均值向量</h3>
+<p><strong>定义</strong>：均值向量（Mean
+Vector）提供了数据集中每个特征的平均值。对于 <span
+class="math display">\[
+\begin{flalign*}
+μ=[μ_1,μ_2,...,μ_m] \\
+其中μ_j=\frac{1}{n}\sum_{i = 1} ^m(x_{ij}) \\
+μ_j是第j个特征的均值。 \\
+x_{ij}是第i个观测的第j个特征值。\\
+n是观测值的数量。
+\end{flalign*}
+\]</span> ​ 举例如下： <span class="math display">\[
+\begin{flalign*}
+考虑身高和体重的数据集，包含4个观测值：\\
+身高: [160,165,170,175]\\
+体重: [55,60,65,70]\\
+平均身高: μ_{\text{身高}} = \frac{160 + 165 + 170 + 175}{4} = 167.5 \\
+平均体重: μ_{\text{体重}} = \frac{55 + 60 + 65 + 70}{4} = 62.5 \\
+因此，均值向量为: μ = [167.5, 62.5]
+\end{flalign*}
+\]</span></p>
+<h3 id="协方差矩阵">协方差矩阵：</h3>
+<p><strong>定义</strong>：协方差矩阵（Covariance
+Matrix）描述了数据集中特征间的相互变化趋势。它不仅展示了单个特征的变异性（通过方差），还显示了特征之间的协方差。</p>
+<p>对于<em>m</em>个特征，协方差矩阵是一个<em>m×m</em>矩阵，其中元素定义为:
+<span class="math display">\[
+\begin{flalign*}
+∑_{jk}=\frac{1}{n-1}\sum_{i = 1} ^n(x_{ij}-μ_j)(x_{ik}-μ_k) \\
+其中：Σ_{jk}是特征j和特征k之间的协方差。\\
+μ_j和μ_k分别是特征j和k的均值。\\
+n是观测值的数量。\\
+\end{flalign*}
+\]</span> ​ 举例：使用上述身高和体重数据计算协方差矩阵。 <span
+class="math display">\[
+\begin{flalign*}
+\text{首先，我们已知:}\\
+μ_{\text{身高}} = 167.5\\
+μ_{\text{体重}} = 62.5\\
+\\
+\text{计算方差和协方差:}\\
+\text{方差(身高): 使用公式计算得} \Sigma_{11} \\
+\text{方差(体重): 使用公式计算得} \Sigma_{22} \\
+\text{协方差(身高, 体重): 使用公式计算得} \Sigma_{12}、\Sigma_{21} \\
+\\
+\text{数据集：}
+\text{X=}\left[
+\begin{matrix}
+   160 &amp; 55 \\
+   165 &amp; 60 \\
+   170 &amp; 65 \\
+   175 &amp; 70
+  \end{matrix}
+\right] \\\\
+\end{flalign*}
+\]</span></p>
+<p><span class="math display">\[
+\begin{flalign*}
+&amp;(1)当j=1、k=1时,\Sigma_{11}=\frac{1}{4-1}[(160-167.5)^2+(165-167.5)^2+(170-167.5)^2+(175-167.5)^2]=\frac{125}{3}=41.67\\
+&amp;(2)当j=1、k=2时,\Sigma_{12}=\frac{1}{4-1}[(160-167.5)(160-62.5)+(165-167.5)(165-62.5)+(170-167.5)(170-62.5)+(175-167.5)(175-62.5)]=\frac{125}{3}=41.67\\
+&amp;(3)当j=2、k=1时,\Sigma_{21}=\frac{1}{4-1}[(55-62.5)(55-167.5)+(60-62.5)(60167.5)+(65-62.5)(65-167.5)+(70-62.5)(70-167.5)]=\frac{125}{3}=41.67\\
+&amp;(4)当j=2、k=2时,\Sigma_{22}=\frac{1}{4-1}[(55-62.5)^2+(60-62.5)^2+(65-62.5)^2+(70-62.5)^2]=\frac{125}{3}=41.67\\
+\end{flalign*}
+\]</span></p>
+<p><span class="math display">\[
+\begin{flalign*}
+经过上述计算，得到协方差矩阵如下：\\
+C=\left[
+\begin{matrix}
+   41.67 &amp; 41.67 \\
+   41.67 &amp; 41.67
+  \end{matrix}
+\right]\\
+\end{flalign*}
+\]</span></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#也可以使用python代码实现均值向量与协方差矩阵的计算，如下：</span><br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><br><span class="hljs-comment"># 数据</span><br>heights = np.array([<span class="hljs-number">160</span>, <span class="hljs-number">165</span>, <span class="hljs-number">170</span>, <span class="hljs-number">175</span>])<br>weights = np.array([<span class="hljs-number">55</span>, <span class="hljs-number">60</span>, <span class="hljs-number">65</span>, <span class="hljs-number">70</span>])<br><br><span class="hljs-comment"># 计算均值</span><br>mean_height = np.mean(heights)<br>mean_weight = np.mean(weights)<br><br><span class="hljs-comment"># 计算方差和协方差</span><br>variance_height = np.var(heights, ddof=<span class="hljs-number">1</span>)<br>variance_weight = np.var(weights, ddof=<span class="hljs-number">1</span>)<br>covariance_height_weight = np.cov(heights, weights)[<span class="hljs-number">0</span>, <span class="hljs-number">1</span>]<br><br><span class="hljs-comment"># 构造协方差矩阵</span><br>covariance_matrix = np.array([[variance_height, covariance_height_weight],<br>                              [covariance_height_weight, variance_weight]])<br><br><span class="hljs-comment">#打印到均值向量</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;均值向量: (<span class="hljs-subst">&#123;mean_height&#125;</span>, <span class="hljs-subst">&#123;mean_weight&#125;</span>)\n&quot;</span>)<br><span class="hljs-comment">#打印协方差矩阵</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;协方差矩阵: <span class="hljs-subst">&#123;covariance_matrix&#125;</span>\n&quot;</span>)<br><br><br><span class="hljs-comment">###输出如下（可见使用python中相关科学计算库，可以极大地简化我们的计算工作）：</span><br>均值向量: (<span class="hljs-number">167.5</span>, <span class="hljs-number">62.5</span>)<br>协方差矩阵: [[<span class="hljs-number">41.66666667</span> <span class="hljs-number">41.66666667</span>]<br> [<span class="hljs-number">41.66666667</span> <span class="hljs-number">41.66666667</span>]]<br></code></pre></td></tr></table></figure>
+<h3 id="线性判别分析过程">线性判别分析过程</h3>
+<hr />
+<p><img src="https://s2.loli.net/2025/07/26/ouejK2kJdy3SCN5.png" srcset="/img/loading.gif" lazyload
+alt="image-20250726000614787" /> <span class="math display">\[
+\begin{aligned}
+&amp; 给定数据集D=\{(x_i, y_i)\}_{i=1}^m, 其中y_i∈\{0,1\} \\
+&amp;
+令X_i、μ_i、Σ_i分别表示第i∈\{0,1\}类示例的集合、均值向量、协方差矩阵。\\
+&amp;
+若将数据投影到直线ω上，则两类样本的中心在直线上的投影分别为ω^Tμ_0和ω^Tμ_1；\\
+&amp;
+若将所有样本点都投影到直线上，则两类样本的协方差分别为ω^TΣ_0ω和ω^TΣ_1ω。
+\\
+&amp;
+且由于直线是一维空间，所以ω^Tμ_0、ω^Tμ_1、ω^TΣ_0ω和ω^TΣ_1ω均为实数。
+\end{aligned}
+\]</span> <img src="https://s2.loli.net/2025/07/26/H9KouiRF26eqh1v.png" srcset="/img/loading.gif" lazyload
+alt="image-20250726000639637" /></p>
+<figure>
+<img src="https://s2.loli.net/2025/07/26/OVmYvZRTkisNtAz.png" srcset="/img/loading.gif" lazyload
+alt="image-20250726000658411" />
+<figcaption aria-hidden="true">image-20250726000658411</figcaption>
+</figure>
+<h3 id="问题">问题</h3>
+<p>（1）<strong>如何证明矩阵S<sub>ω</sub>
+一定可逆？或可构造何条件使其可逆？</strong></p>
+<p>（自己暂不知道证明！）</p>
+<p>（2）暂时不理解类内散度矩阵、类间散度矩阵的意义</p>
+<h2 id="多分类学习">3.5 多分类学习</h2>
+<p>一般情况下，我们可以利用二分类学习器来解决多分类问题。</p>
+<p>一般地，如果有N个分类：C<sub>1</sub>,C<sub>2</sub>, ...,
+C<sub>N</sub>，多分类
+学习的基础思路是拆解法，即将多分类任务拆成若干个二分类任务进行求解。即训练时，对问题进行拆分，然后为拆分的每个二分类任务训练得到一个分类器；在测试时，这前面得到的多个分类器的预测结果进行综合与集成
+，获取最终的多分类结果。
+此处的关键在于如何对多分类任务进行拆分、如何对多个分类器的结果进行集成。</p>
+<p>常用的拆分策略有三种：一对一（One vs. One，简称OvO）、一对其余（One
+vs. Rest，简称OvR）、多对多（Many vs. Many，简称MvM）</p>
+<h2 id="类别不平衡问题">3.6 类别不平衡问题</h2>
+<p>在类别不平衡时，常规的训练与测试方法已经失效或无意义，此时常采用《机械学习第1版第47次印刷-周志华著》2.3节中的查准率、查全率和F1来度量学习器的性能。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8/" class="category-chain-item">机器学习入门</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%A5%BF%E7%93%9C%E4%B9%A6%E4%B8%8E%E5%8D%97%E7%93%9C%E4%B9%A6/" class="print-no-link">#西瓜书与南瓜书</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>机器学习入门-03线性模型</div>
+      <div>https://jiangsanyin.github.io/2025/07/19/机器学习入门-03线性模型/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年7月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - sanyinjiang">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/07/21/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-01-%E8%A1%8C%E5%88%97%E5%BC%8F%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E8%AE%A1%E7%AE%97/" title="线性代数-01-行列式的基本概念与计算">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">线性代数-01-行列式的基本概念与计算</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/07/17/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-%E5%B8%B8%E8%A7%81%E7%9F%A9%E9%98%B5/" title="线性代数-常见矩阵">
+                        <span class="hidden-mobile">线性代数-常见矩阵</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

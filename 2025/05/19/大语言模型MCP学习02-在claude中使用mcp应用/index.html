@@ -1,0 +1,831 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、实施步骤 1.1 需要的工具或软件 安装 Claude Desktop（需要魔法） Python 3.10+ 环境（下述步骤中会安装） Python MCP SDK 1.2.0+（下述步骤中会安装） 1.2 配置应用环境 12345678910#安装uv，查看其github官方网址“https:&#x2F;&#x2F;github.com&#x2F;astral-sh&#x2F;uv”# 在Windows上，执行如下命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大语言模型MCP学习02-在claude中使用mcp应用">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/05/19/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BMCP%E5%AD%A6%E4%B9%A002-%E5%9C%A8claude%E4%B8%AD%E4%BD%BF%E7%94%A8mcp%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、实施步骤 1.1 需要的工具或软件 安装 Claude Desktop（需要魔法） Python 3.10+ 环境（下述步骤中会安装） Python MCP SDK 1.2.0+（下述步骤中会安装） 1.2 配置应用环境 12345678910#安装uv，查看其github官方网址“https:&#x2F;&#x2F;github.com&#x2F;astral-sh&#x2F;uv”# 在Windows上，执行如下命令">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2025/05/18/xNwq3vBSitjgEnQ.png">
+<meta property="og:image" content="https://s2.loli.net/2025/05/18/QAO2mWicbdBZ8KN.png">
+<meta property="og:image" content="https://s2.loli.net/2025/05/19/HtEJS1zcvypXC7N.png">
+<meta property="og:image" content="https://s2.loli.net/2025/05/19/dxRVezcthLrpA3I.png">
+<meta property="og:image" content="https://s2.loli.net/2025/05/19/DUM3b1gAjGHiEFm.png">
+<meta property="og:image" content="https://s2.loli.net/2025/05/19/jIo5t1ONRkmAL3r.png">
+<meta property="og:image" content="https://s2.loli.net/2025/05/19/vOrIAEsjZaLh9J6.png">
+<meta property="og:image" content="https://s2.loli.net/2025/05/19/qyaElu4SsFUQkOR.png">
+<meta property="og:image" content="https://s2.loli.net/2025/05/19/wnRjq2yztZ8NV1b.png">
+<meta property="article:published_time" content="2025-05-19T07:34:47.000Z">
+<meta property="article:modified_time" content="2025-05-23T08:07:36.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="大模型">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2025/05/18/xNwq3vBSitjgEnQ.png">
+  
+  
+  
+  <title>大语言模型MCP学习02-在claude中使用mcp应用 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">大语言模型MCP学习02-在claude中使用mcp应用</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-05-19 15:34" pubdate>
+          2025年5月19日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          21 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">大语言模型MCP学习02-在claude中使用mcp应用</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一实施步骤">一、实施步骤</h1>
+<h2 id="需要的工具或软件">1.1 需要的工具或软件</h2>
+<p>安装 Claude Desktop（需要魔法）</p>
+<p>Python 3.10+ 环境（下述步骤中会安装）</p>
+<p>Python MCP SDK 1.2.0+（下述步骤中会安装）</p>
+<h2 id="配置应用环境">1.2 配置应用环境</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装uv，查看其github官方网址“https://github.com/astral-sh/uv”</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">在Windows上，执行如下命令</span><br>powershell -ExecutionPolicy ByPass -c &quot;irm https://astral.sh/uv/install.ps1 | iex&quot;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">管理员模式打开cmd窗口中执行如下命令。</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建项目目录</span><br>E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\try02&gt;uv init scan_kantu<br>Initialized project `scan-kantu` at `E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\try02\scan_kantu`<br><br>E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\try02&gt;cd scan_kantu<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">使用uv创建虚拟python环境并激活（这里默认就是使用CPython3.11.12）</span><br>E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\try02\scan_kantu&gt;uv venv<br>Using CPython 3.11.12<br>Creating virtual environment at: .venv<br>Activate with: .venv\Scripts\activate<br><span class="hljs-meta prompt_">#</span><span class="language-bash">此时在当前目录下，可以看到一个名为“.python-version”的文件，里面内容包含“3.11”</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">(1)如果不明确指定使用的python版本，uv会默认有自己的机制去决定使用哪个python版本</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">使用<span class="hljs-string">&quot;uv python list&quot;</span>可以看到uv当前能看到与使用的python环境与版本(而且uv自己会维护跟自己版本匹配的python环境)，后续如果不给uv命令加--python参数指定python版本，它会首选在自己维护的python环境列表中查找一个已经安装了的、最匹配的python版本（从下面内容可知，它从自己维护的python3.10.16与python3.11.12 两个python版本中，选择了后者），整个过程通过“uv init xxx --verbose”可以看得更清楚</span><br>E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\try01\add_numbers&gt;uv python list<br>cpython-3.14.0a6-windows-x86_64-none                 &lt;download available&gt;<br>cpython-3.14.0a6+freethreaded-windows-x86_64-none    &lt;download available&gt;<br>cpython-3.13.3-windows-x86_64-none                   C:\Python313\python.exe<br>cpython-3.13.3-windows-x86_64-none                   C:\ProgramData\chocolatey\bin\python3.13.exe<br>cpython-3.13.3-windows-x86_64-none                   &lt;download available&gt;<br>cpython-3.13.3+freethreaded-windows-x86_64-none      &lt;download available&gt;<br>cpython-3.12.10-windows-x86_64-none                  &lt;download available&gt;<br>cpython-3.12.7-windows-x86_64-none                   D:\ProgramData\anaconda3\python.exe<br>cpython-3.11.12-windows-x86_64-none                  C:\Users\jiangsanyin\AppData\Roaming\uv\python\cpython-3.11.12-windows-x86_64-none\python.exe<br>cpython-3.10.17-windows-x86_64-none                  &lt;download available&gt;<br>cpython-3.10.16-windows-x86_64-none                  C:\Users\jiangsanyin\AppData\Roaming\uv\python\cpython-3.10.16-windows-x86_64-none\python.exe<br>cpython-3.9.22-windows-x86_64-none                   &lt;download available&gt;<br>cpython-3.8.20-windows-x86_64-none                   &lt;download available&gt;<br>cpython-3.7.9-windows-x86_64-none                    &lt;download available&gt;<br><span class="hljs-meta prompt_">#</span><span class="language-bash">(2)也可以在使用uv init xxx命令时，明确指定要使用的python版本</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">比如：“uv init scan_kantu --python 3.12”</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">此时，scan_kantu 目录会自动创建一个.python-version文件，其中的内容是 3.12</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">然后执行“uv venv”时将会初始化这个虚拟python环境，如果uv维护的python环境没有此版本，将会使用上述python列表中匹配python版本(但不会使用同一个python可执行文件，而是会新创建一个)</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-comment">#解除禁止运行脚本的限制（在powershell窗口中执行。其余未说明的就是在cmd窗口中执行）</span><br>E:\Hdisk\学习\<span class="hljs-number">06</span>_AI学习\<span class="hljs-number">13</span>_LatestTechKnowledge\<span class="hljs-number">01</span>_MCP\try02\scan_kantu&gt;<span class="hljs-built_in">set-ExecutionPolicy</span> RemoteSigned<br></code></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">激活</span><br>E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\try02\scan_kantu&gt;.venv\Scripts\activate<br>(scan_kantu) E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\try02\scan_kantu&gt;python -V<br>Python 3.11.12<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">安装依赖</span><br>(scan_kantu) E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\try02\scan_kantu&gt;uv add &quot;mcp[cli]&quot; httpx<br></code></pre></td></tr></table></figure>
+<h2 id="编写提示词">1.3 编写提示词</h2>
+<p>在 windows
+上进行开发测试，使用如下提示词，以让LLM为我们自动生成mcp服务端文件（我以看图王这个软件为例，是因为其总是试图修改我电脑上打开pdf或图片的默认软件，让我觉得比较烦，想干掉它。当然有其他可行的方法完全将其卸载，此处不探讨）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">打造一个 MCP 服务器，它能够：<br>- 功能：<br>    - 统计当前桌面上的是否存在名称中包含“看图”的快捷方式<br>    - 获取对应快捷方式的名字<br><br>- 要求：<br>    - 你可以假设我的桌面路径为 C:\Users\&#123;username&#125;\Desktop<br></code></pre></td></tr></table></figure>
+<p>或者，如果我们对其他类型文件比如.py、.java等感兴趣，可以编写如下提示词：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell">打造一个 MCP 服务器，它能够：<br>- 功能：<br>    - 检查当前桌面上的是否存在python源码文件<br>    - 获取python源码文件的名字<br>    - 解读python源码文件的内容<br><br>- 要求：<br>    - 你可以假设我的桌面路径为 C:\Users\&#123;username&#125;\Desktop<br></code></pre></td></tr></table></figure>
+<p>或者，如果我们对其他类型文件（或快捷方式）比如操作数据库的客户端软件感兴趣，可以编写如下提示词：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs markdown">打造一个 MCP 服务器，它能够：<br><span class="hljs-bullet">-</span> 功能：<br><span class="hljs-bullet">    -</span> 检查当前桌面上的是否存在“连接与操作数据库的客户端软件”的快捷方式或工具<br><span class="hljs-bullet">    -</span> 获取这类快捷方式或工具的名字<br><br><span class="hljs-bullet">-</span> 要求：<br><span class="hljs-bullet">    -</span> 你可以假设我的桌面路径为 C:\Users\&#123;username&#125;\Desktop<br></code></pre></td></tr></table></figure>
+<h2 id="编写mcp服务端文件">1.4 编写mcp服务端文件</h2>
+<p>使用 Claude 3.7
+大模型直接生成相关代码（输出类似如下图。记得根据开发环境操作系统使用不同的提示词）。</p>
+<p>输入提示词前，还需要上传一个README.md文件（这个文件在此处叫做Domain
+Knowledge），下载自如下链接：
+https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/refs/heads/main/README.md</p>
+<figure>
+<img src="https://s2.loli.net/2025/05/18/xNwq3vBSitjgEnQ.png" srcset="/img/loading.gif" lazyload
+alt="image-20250518223140526" />
+<figcaption aria-hidden="true">image-20250518223140526</figcaption>
+</figure>
+<p>可以直接保存为“E:\06_AI学习\13_LatestTechKnowledge\01_MCP_kantu_kantu.py”，作为mcp服务端文件。（本来这个文件的内容是需要开发人员手动编写的，现使用claude帮忙生成）</p>
+<figure>
+<img src="https://s2.loli.net/2025/05/18/QAO2mWicbdBZ8KN.png" srcset="/img/loading.gif" lazyload
+alt="image-20250518223241719" />
+<figcaption aria-hidden="true">image-20250518223241719</figcaption>
+</figure>
+<p>如下是在win11上经过验证好的内容（某些情况下如果有需要，可能需要对LLM生成的代码再修改）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">import</span> glob<br><span class="hljs-keyword">import</span> win32com.client<br><span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path<br><span class="hljs-keyword">from</span> mcp.server.fastmcp <span class="hljs-keyword">import</span> FastMCP, Context<br><br><span class="hljs-comment"># 创建 MCP 服务器</span><br>mcp = FastMCP(<span class="hljs-string">&quot;桌面快捷方式扫描器&quot;</span>)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_desktop_path</span>():<br>    <span class="hljs-string">&quot;&quot;&quot;获取当前用户的桌面路径&quot;&quot;&quot;</span><br>    username = os.environ.get(<span class="hljs-string">&quot;USERNAME&quot;</span>)<br>    <span class="hljs-keyword">return</span> os.path.join(<span class="hljs-string">&quot;C:&quot;</span>, <span class="hljs-string">&quot;Users&quot;</span>, username, <span class="hljs-string">&quot;Desktop&quot;</span>)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_shortcut_target</span>(<span class="hljs-params">shortcut_path</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;获取快捷方式的目标路径&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">try</span>:<br>        shell = win32com.client.Dispatch(<span class="hljs-string">&quot;WScript.Shell&quot;</span>)<br>        shortcut = shell.CreateShortCut(shortcut_path)<br>        <span class="hljs-keyword">return</span> shortcut.TargetPath<br>    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;无法获取目标: <span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(e)&#125;</span>&quot;</span><br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">find_shortcuts_with_keyword</span>(<span class="hljs-params">keyword=<span class="hljs-string">&quot;看图&quot;</span></span>):<br>    <span class="hljs-string">&quot;&quot;&quot;查找包含特定关键词的快捷方式&quot;&quot;&quot;</span><br>    desktop_path = get_desktop_path()<br>    shortcuts = []<br>    <br>    <span class="hljs-comment"># 查找所有 .lnk 文件 (Windows 快捷方式)</span><br>    shortcut_files = glob.glob(os.path.join(desktop_path, <span class="hljs-string">&quot;*.lnk&quot;</span>))<br>    <br>    <span class="hljs-keyword">for</span> shortcut_path <span class="hljs-keyword">in</span> shortcut_files:<br>        filename = os.path.basename(shortcut_path)<br>        <span class="hljs-comment"># 检查文件名是否包含关键词</span><br>        <span class="hljs-keyword">if</span> keyword <span class="hljs-keyword">in</span> filename:<br>            target = get_shortcut_target(shortcut_path)<br>            shortcuts.append(&#123;<br>                <span class="hljs-string">&quot;name&quot;</span>: filename,<br>                <span class="hljs-string">&quot;path&quot;</span>: shortcut_path,<br>                <span class="hljs-string">&quot;target&quot;</span>: target<br>            &#125;)<br>    <br>    <span class="hljs-keyword">return</span> shortcuts<br><br><br><span class="hljs-meta">@mcp.tool()</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">count_image_viewers</span>(<span class="hljs-params">ctx: Context</span>) -&gt; <span class="hljs-built_in">int</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;统计桌面上名称包含&#x27;看图&#x27;的快捷方式数量&quot;&quot;&quot;</span><br>    shortcuts = find_shortcuts_with_keyword(<span class="hljs-string">&quot;看图&quot;</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">len</span>(shortcuts)<br><br><br><span class="hljs-meta">@mcp.tool()</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_image_viewer_names</span>() -&gt; <span class="hljs-built_in">list</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;获取桌面上所有名称包含&#x27;看图&#x27;的快捷方式名称列表&quot;&quot;&quot;</span><br>    shortcuts = find_shortcuts_with_keyword(<span class="hljs-string">&quot;看图&quot;</span>)<br>    <span class="hljs-keyword">return</span> [shortcut[<span class="hljs-string">&quot;name&quot;</span>] <span class="hljs-keyword">for</span> shortcut <span class="hljs-keyword">in</span> shortcuts]<br><br><br><span class="hljs-meta">@mcp.tool()</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_image_viewer_details</span>() -&gt; <span class="hljs-built_in">list</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;获取桌面上所有名称包含&#x27;看图&#x27;的快捷方式详细信息&quot;&quot;&quot;</span><br>    shortcuts = find_shortcuts_with_keyword(<span class="hljs-string">&quot;看图&quot;</span>)<br>    <span class="hljs-keyword">return</span> shortcuts<br><br><br><span class="hljs-meta">@mcp.resource(<span class="hljs-params"><span class="hljs-string">&quot;desktop://viewers&quot;</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_viewers_resource</span>() -&gt; <span class="hljs-built_in">str</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;获取桌面上的图片查看器资源信息&quot;&quot;&quot;</span><br>    shortcuts = find_shortcuts_with_keyword(<span class="hljs-string">&quot;看图&quot;</span>)<br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> shortcuts:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;桌面上未找到包含&#x27;看图&#x27;的快捷方式。&quot;</span><br>    <br>    result = <span class="hljs-string">&quot;桌面上找到以下包含&#x27;看图&#x27;的快捷方式：\n\n&quot;</span><br>    <span class="hljs-keyword">for</span> i, shortcut <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(shortcuts, <span class="hljs-number">1</span>):<br>        result += <span class="hljs-string">f&quot;<span class="hljs-subst">&#123;i&#125;</span>. 名称: <span class="hljs-subst">&#123;shortcut[<span class="hljs-string">&#x27;name&#x27;</span>]&#125;</span>\n&quot;</span><br>        result += <span class="hljs-string">f&quot;   路径: <span class="hljs-subst">&#123;shortcut[<span class="hljs-string">&#x27;path&#x27;</span>]&#125;</span>\n&quot;</span><br>        result += <span class="hljs-string">f&quot;   目标: <span class="hljs-subst">&#123;shortcut[<span class="hljs-string">&#x27;target&#x27;</span>]&#125;</span>\n\n&quot;</span><br>    <br>    <span class="hljs-keyword">return</span> result<br><br><br><span class="hljs-meta">@mcp.prompt()</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">how_to_use</span>() -&gt; <span class="hljs-built_in">str</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;提供如何使用此服务器的说明&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">我是桌面快捷方式扫描器，可以帮助您检查桌面上是否存在包含&quot;看图&quot;的快捷方式。</span><br><span class="hljs-string"></span><br><span class="hljs-string">您可以使用以下工具：</span><br><span class="hljs-string">1. count_image_viewers - 计算桌面上包含&quot;看图&quot;的快捷方式数量</span><br><span class="hljs-string">2. get_image_viewer_names - 获取所有包含&quot;看图&quot;的快捷方式名称</span><br><span class="hljs-string">3. get_image_viewer_details - 获取所有包含&quot;看图&quot;的快捷方式的详细信息</span><br><span class="hljs-string"></span><br><span class="hljs-string">您也可以访问以下资源：</span><br><span class="hljs-string">- desktop://viewers - 获取所有包含&quot;看图&quot;的快捷方式的详细信息</span><br><span class="hljs-string"></span><br><span class="hljs-string">请问您想了解哪方面的信息？</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    mcp.run()<br></code></pre></td></tr></table></figure>
+<p>上述内容保存成<code>E:\Hdisk\学习\06_AI学习\13_LatestTechKnowledge\01_MCP\try02\scan_kantu\scan_kantu.py</code></p>
+<h2 id="测试mcp应用">1.5. 测试MCP应用</h2>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-comment">#安装pywin32 python库</span><br>(scan_kantu) E:\Hdisk\学习\<span class="hljs-number">06</span>_AI学习\<span class="hljs-number">13</span>_LatestTechKnowledge\<span class="hljs-number">01</span>_MCP\try02\scan_kantu&gt;uv add pywin32<br><br>(scan_kantu) E:\Hdisk\学习\<span class="hljs-number">06</span>_AI学习\<span class="hljs-number">13</span>_LatestTechKnowledge\<span class="hljs-number">01</span>_MCP\try02\scan_kantu&gt;mcp dev scan_kantu.py<br>Need to install the following packages:<br>@modelcontextprotocol/inspector@<span class="hljs-number">0.12</span>.<span class="hljs-number">0</span><br>Ok to proceed? (y) y<br><br>Starting MCP inspector...<br>🔍 MCP Inspector is up and running at http://<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">6274</span> 🚀<br>⚙️ Proxy server listening on port <span class="hljs-number">6277</span><br></code></pre></td></tr></table></figure>
+<p>在自己win11的chrome浏览器中访问上述地址<code>http://127.0.0.1:6274</code>，将看到如下内容：</p>
+<figure>
+<img src="https://s2.loli.net/2025/05/19/HtEJS1zcvypXC7N.png" srcset="/img/loading.gif" lazyload
+alt="image-20250518224358340" />
+<figcaption aria-hidden="true">image-20250518224358340</figcaption>
+</figure>
+<hr />
+<figure>
+<img src="https://s2.loli.net/2025/05/19/dxRVezcthLrpA3I.png" srcset="/img/loading.gif" lazyload
+alt="image-20250519143105848" />
+<figcaption aria-hidden="true">image-20250519143105848</figcaption>
+</figure>
+<hr />
+<figure>
+<img src="https://s2.loli.net/2025/05/19/DUM3b1gAjGHiEFm.png" srcset="/img/loading.gif" lazyload
+alt="image-20250519144333266" />
+<figcaption aria-hidden="true">image-20250519144333266</figcaption>
+</figure>
+<p>其他的工具如“count_image_viewers”、“get_image_viewer_details”也可以在此界面上进行测试</p>
+<h2 id="mcp应用集成到claude">1.6 MCP应用集成到claude</h2>
+<p>将上述编写的scan_kantu.py文件（此处是使用claude3.7大模型生成的）接入到Claude
+Desktop中。需要编辑Claude
+Desktop的<code>claude_desktop_config.json</code>文件，按照如下方式打开：File-&gt;Settings-&gt;Developer-&gt;"Edit
+Config"，编辑后的<code>claude_desktop_config.json</code>文件内容可能如下：</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs nix">&#123;<br>  <span class="hljs-string">&quot;mcpServers&quot;</span>: &#123;<br>    <span class="hljs-string">&quot;scan_kantu&quot;</span>: &#123;<br>      <span class="hljs-string">&quot;command&quot;</span>: <span class="hljs-string">&quot;C:<span class="hljs-char escape_">\\</span>Users<span class="hljs-char escape_">\\</span>jiangsanyin<span class="hljs-char escape_">\\</span>.local<span class="hljs-char escape_">\\</span>bin<span class="hljs-char escape_">\\</span>uv.exe&quot;</span>,<br>      <span class="hljs-string">&quot;args&quot;</span>: [<br>        <span class="hljs-string">&quot;--directory&quot;</span>,<br>        <span class="hljs-string">&quot;E:<span class="hljs-char escape_">\\</span>Hdisk<span class="hljs-char escape_">\\</span>学习<span class="hljs-char escape_">\\</span>06_AI学习<span class="hljs-char escape_">\\</span>13_LatestTechKnowledge<span class="hljs-char escape_">\\</span>01_MCP<span class="hljs-char escape_">\\</span>try02<span class="hljs-char escape_">\\</span>scan_kantu&quot;</span>,<br>        <span class="hljs-string">&quot;run&quot;</span>,<br>        <span class="hljs-string">&quot;scan_kantu.py&quot;</span><br>      ]<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>然后重启 Claude Desktop（是先Exit而不是Close，再重新打开Claude
+Desktop）。此时就可以看到有几个MCP tools可用了。</p>
+<figure>
+<img src="https://s2.loli.net/2025/05/19/jIo5t1ONRkmAL3r.png" srcset="/img/loading.gif" lazyload
+alt="image-20250519150226210" />
+<figcaption aria-hidden="true">image-20250519150226210</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2025/05/19/vOrIAEsjZaLh9J6.png" srcset="/img/loading.gif" lazyload
+alt="image-20250519150239800" />
+<figcaption aria-hidden="true">image-20250519150239800</figcaption>
+</figure>
+<h2 id="在claude中使用mcp应用">1.7 在claude中使用mcp应用</h2>
+<p>使用一个简单的 prompt 来进行实际测试：“能推测我当前桌面上 txt
+文件名的含义吗？”</p>
+<figure>
+<img src="https://s2.loli.net/2025/05/19/qyaElu4SsFUQkOR.png" srcset="/img/loading.gif" lazyload
+alt="image-20250519150417991" />
+<figcaption aria-hidden="true">image-20250519150417991</figcaption>
+</figure>
+<p>执行结果正确，情况如下：</p>
+<figure>
+<img src="https://s2.loli.net/2025/05/19/wnRjq2yztZ8NV1b.png" srcset="/img/loading.gif" lazyload
+alt="image-20250519150612965" />
+<figcaption aria-hidden="true">image-20250519150612965</figcaption>
+</figure>
+<h2 id="mcp应用工作流程">1.8 MCP应用工作流程</h2>
+<ol type="1">
+<li>MCP客户端将请求发送给Claude LLM</li>
+<li>Claude LLM分析可用的工具、决定使用哪个（些）工具</li>
+<li>MCP客户端通过MCP服务端执行LLM决定使用的那些工具</li>
+<li>工具执行后的结果被返回给Claude LLM</li>
+<li>Claude
+LLM根据历史会话消息与工具执行后返回的结果，生成结果并组织成流畅可读的自然语言形式的回复</li>
+<li>这些回复最终被展示在用户（你）的面前</li>
+</ol>
+<h1 id="二相关文档">二、相关文档</h1>
+<ul>
+<li>For Server
+Developers：https://modelcontextprotocol.io/quickstart/server</li>
+<li>Example Servers：https://modelcontextprotocol.io/examples</li>
+<li>quickstart-resources：https://github.com/modelcontextprotocol/quickstart-resources/tree/main</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" class="category-chain-item">大模型</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" class="print-no-link">#大模型</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>大语言模型MCP学习02-在claude中使用mcp应用</div>
+      <div>https://jiangsanyin.github.io/2025/05/19/大语言模型MCP学习02-在claude中使用mcp应用/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年5月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - sanyinjiang">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/05/22/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8BMCP%E5%AD%A6%E4%B9%A003-MCP%E5%AE%9E%E7%8E%B0%E5%AF%B9MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%93%8D%E4%BD%9C/" title="大语言模型MCP学习03-MCP实现对MySQL数据库的操作">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">大语言模型MCP学习03-MCP实现对MySQL数据库的操作</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/05/15/%E5%AE%B9%E5%99%A8%E7%89%88dify-v0-15-3%E5%8D%87%E7%BA%A7%E5%88%B0v1-3-1/" title="容器版dify-v0.15.3升级到v1.3.1">
+                        <span class="hidden-mobile">容器版dify-v0.15.3升级到v1.3.1</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

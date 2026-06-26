@@ -1,0 +1,916 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="线性代数参考文档 https:&#x2F;&#x2F;zh.d2l.ai&#x2F;chapter_preliminaries&#x2F;linear-algebra.html#id5 https:&#x2F;&#x2F;machine-learning-from-scratch.readthedocs.io&#x2F;zh-cn&#x2F;latest&#x2F;%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0.html 单元矩阵 单位矩阵（Ident">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线性代数-常见矩阵">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/07/17/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-%E5%B8%B8%E8%A7%81%E7%9F%A9%E9%98%B5/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="线性代数参考文档 https:&#x2F;&#x2F;zh.d2l.ai&#x2F;chapter_preliminaries&#x2F;linear-algebra.html#id5 https:&#x2F;&#x2F;machine-learning-from-scratch.readthedocs.io&#x2F;zh-cn&#x2F;latest&#x2F;%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0.html 单元矩阵 单位矩阵（Ident">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-17T08:39:19.000Z">
+<meta property="article:modified_time" content="2025-07-24T08:27:10.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="线性代数">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>线性代数-常见矩阵 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">线性代数-常见矩阵</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-07-17 16:39" pubdate>
+          2025年7月17日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">线性代数-常见矩阵</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="线性代数参考文档">线性代数参考文档</h1>
+<p>https://zh.d2l.ai/chapter_preliminaries/linear-algebra.html#id5</p>
+<p>https://machine-learning-from-scratch.readthedocs.io/zh-cn/latest/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0.html</p>
+<h1 id="单元矩阵">单元矩阵</h1>
+<p>单位矩阵（Identity matrix），也称为恒等矩阵（Identity
+matrix）或标准矩阵（unit
+matrix），是一种特殊的方阵，其主对角线上的元素全为1，其余元素全为0。单位矩阵通常用字母
+"I" 或 "E"
+表示，其大小由行数（或列数）决定。单位矩阵在矩阵运算中具有类似于数字中的
+1 的作用。</p>
+<p>3阶单位矩阵示例如下： <span class="math display">\[
+\left[
+\begin{matrix}
+   1 &amp; 0 &amp; 0 \\
+   0 &amp; 1 &amp; 0 \\
+   0 &amp; 0 &amp; 1
+  \end{matrix}
+\right]
+\]</span></p>
+<h1 id="满轶矩阵">满轶矩阵</h1>
+<p>若矩阵秩等于行数，称为行满秩；若矩阵秩等于列数，称为列满秩。</p>
+<p>既是行满秩又是列满秩则为n阶矩阵即n阶方阵（可用反证法证明，列满轶时与行满轶时矩阵的轶是同一个数值）。</p>
+<p>行满秩矩阵就是行向量线性无关，列满秩矩阵就是列向量线性无关；所以如果是方阵,行满秩矩阵与列满秩矩阵是等价的。</p>
+<hr />
+<p>矩阵的轶定义：设<em>A</em>是m×n矩阵，<em>A</em>中的最大的不为零的子行列式的阶数称为矩阵<em>A</em>的轶，记为r(<em>A</em>)。或这样定义：若存在k阶子式不为零，而任意k+1阶子式全为零（如果有的话），则k为矩阵A的轶，记作r(<em>A</em>)=k。</p>
+<p>显然如果一个n阶方阵的轶为n，则可知：
+<strong><em>r(A<sub>n×n</sub>)=n</em></strong> &lt;=&gt;
+<strong>|<em>A</em>|≠0</strong> &lt;=&gt;
+<strong><em>A</em>可逆</strong> <span class="math display">\[
+\text{简单举例：如下对3×3对角矩阵A的轶为3} \\
+A=\left[
+\begin{matrix}
+   1 &amp; 0 &amp; 0 \\
+   0 &amp; 4 &amp; 0 \\
+   0 &amp; 0 &amp; 6
+  \end{matrix}
+\right]
+\]</span></p>
+<h1 id="对称矩阵">对称矩阵</h1>
+<p>在<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/線性代數">线性代数</a>中，<strong>对称矩阵</strong>（英语：symmetric
+matrix）指<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/轉置矩陣">转置矩阵</a>和自身相等<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/方形矩陣">方形矩阵</a>。 <span
+class="math display">\[
+A^T=A
+\]</span> 对称矩阵中的右上至左下方向元素以<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/主對角線">主对角线</a>（左上至右下）为轴进行对称。若将其写作<img
+src="https://wikimedia.org/api/rest_v1/media/math/render/svg/296ad42d9541f8285979ce822ccb661da56111ca" srcset="/img/loading.gif" lazyload
+alt="{A=(a_{ij})}" />，则对所有的<em>i</em>和<em>j</em>，<img
+src="https://wikimedia.org/api/rest_v1/media/math/render/svg/345ee164a8ed5ddbfaf43a3dabb821bcbed54324" srcset="/img/loading.gif" lazyload
+alt="{a_{ij}=a_{ji} !}" /></p>
+<p>对称矩阵示例： <span class="math display">\[
+\left[
+\begin{matrix}
+   1 &amp; 2 &amp; 3 \\
+   2 &amp; 4 &amp; -5 \\
+   3 &amp; -5 &amp; 6
+  \end{matrix}
+\right]
+\]</span></p>
+<h1 id="正交矩阵">正交矩阵</h1>
+<p>在<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/矩阵论">矩阵论</a>中，<strong>正交矩阵</strong>（英语：orthogonal
+matrix），又称<strong>直交矩阵</strong>，是一个<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/方块矩阵">方块矩阵</a>Q<img
+src="https://wikimedia.org/api/rest_v1/media/math/render/svg/8752c7023b4b3286800fe3238271bbca681219ed" srcset="/img/loading.gif" lazyload
+alt="{Q}" />，其元素为<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/实数">实数</a>，而且行向量与列向量皆为<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/正交">正交</a>的<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/单位向量">单位向量</a> （即
+所有行向量两两正交，且每个行向量的模长为1；所有列向量两两正交，且每个列向量的模长为1），使得该矩阵的<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/转置矩阵">转置矩阵</a>为其<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/逆矩阵">逆矩阵</a>： <span
+class="math display">\[
+Q^T=Q^{-1}\quad \text{&lt;=&gt;} \quad Q^TQ=Q^{-1}Q=E\\
+\]</span> 其中，<img
+src="https://wikimedia.org/api/rest_v1/media/math/render/svg/535ea7fc4134a31cbe2251d9d3511374bc41be9f" srcset="/img/loading.gif" lazyload
+alt="{I}" />为<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/單位矩陣">单位矩阵</a>。正交矩阵的<a
+target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/行列式">行列式</a>值必定为+1或−1，因为：</p>
+<p><img
+src="https://wikimedia.org/api/rest_v1/media/math/render/svg/41f274be35b34c2014242e553c49bc8f1373faef" srcset="/img/loading.gif" lazyload
+alt="{=det(I)=det(Q{T}Q)=det(Q{T})det(Q)=(det(Q))^{2}det(Q)=}" /> <span
+class="math display">\[
+1=det(E)=det(Q^TQ)=det(Q^T)det(Q)=det(Q)det(Q)=[det(Q)]^2 \quad =&gt;
+\quad def(Q)=±1
+\]</span></p>
+<h1 id="正定矩阵">正定矩阵</h1>
+<p>参考：张宇线性代数9讲第9章二次型、https://basics.sjtu.edu.cn/~yangqizhe/pdf/la2024s/slides/LALec13-handout-zh.pdf</p>
+<h2 id="定义">定义</h2>
+<ul>
+<li><p>广义定义</p>
+<ul>
+<li>设M是n阶方阵，如果对任何非零向量z，都有 z'Mz &gt; 0，其中z'
+表示z的转置，就称M正定矩阵。
+例如：B为n阶矩阵，E为单位矩阵，a为正实数。aE+B在a充分大时，aE+B为正定矩阵。（B必须为对称阵）</li>
+</ul></li>
+<li><p><strong>狭义定义</strong></p>
+<ul>
+<li>定义描述1（来自张宇线性代数9讲第9章二次型）：n元二次型f(x<sub>1</sub>,x<sub>2</sub>,...,x<sub>n</sub>)=<strong><em>x</em></strong><sup>T</sup><strong><em>Ax</em></strong>，对于任意的<strong><em>x</em></strong>=[x<sub>1</sub>,x<sub>2</sub>,...,x<sub>n</sub>]<sup>T</sup>≠<strong><em>0</em></strong>，均有<strong><em>x</em></strong><sup>T</sup><strong><em>Ax</em></strong>
+&gt; 0，则称f为正定二次型，称二次型的对应矩阵A为正定矩阵。</li>
+<li>定义描述2：一个n阶的实对称矩阵M是正定的当且仅当对于所有的非零实系数向量z，都有z'Mz&gt;
+0。其中z'表示z的转置。</li>
+</ul>
+<p>一个对称矩阵 S 被称为是正定矩阵，如果其所有的特征值 λ 都满足 λ &gt;
+0。</p></li>
+</ul>
+<h2 id="二次型正定的充要条件">二次型正定的充要条件</h2>
+<p>n元二次型f(x<sub>1</sub>,x<sub>2</sub>,...,x<sub>n</sub>)=<strong><em>x</em></strong><sup>T</sup><strong><em>Ax</em></strong>
+正定，&lt;=&gt;
+对任意的<strong><em>x</em></strong>=[x<sub>1</sub>,x<sub>2</sub>,...,x<sub>n</sub>]<sup>T</sup>≠<strong><em>0</em></strong>，均有<strong><em>x</em></strong><sup>T</sup><strong><em>Ax</em></strong>
+&gt; 0 （定义）</p>
+<p>&lt;=&gt;f的正惯性指定p=n</p>
+<p>&lt;=&gt;存在可逆矩阵<strong><em>D</em></strong>，使用<strong><em>A</em></strong>=<strong><em>D<sup>T</sup>D</em></strong></p>
+<p>&lt;=&gt;A与E合同</p>
+<p>&lt;=&gt;A的特征值λ<sub>i</sub> &gt; 0（i=1,2,...,n）</p>
+<p>&lt;=&gt;A的全部顺序主子式均大于0</p>
+<h2 id="二次型正定的必要条件">二次型正定的必要条件</h2>
+<p>（1）a<sub>ii</sub> &gt;0 （i=1,2,...,n）
+（可由<strong><em>x</em></strong>取特定的值来证明，如e<sub>1</sub>,e<sub>2</sub>,...,e<sub>n</sub>）</p>
+<p>（2）|<strong><em>A</em></strong>|&gt;0 (<em>|A|=
+|</em><strong><em>D<sup>T</sup>D</em></strong>|=
+|<strong><em>D<sup>T</sup></em></strong>||<strong><em>D</em></strong>|=
+[|<strong><em>D</em></strong>|]<sup>2</sup>&gt; 0
+恒成功，因为矩阵<strong><em>D</em></strong>是可逆的)</p>
+<h1 id="矩阵变换">矩阵变换</h1>
+<p>在<a
+target="_blank" rel="noopener" href="https://baike.baidu.com/item/线性代数/800?fromModule=lemma_inlink">线性代数</a>中，<a
+target="_blank" rel="noopener" href="https://baike.baidu.com/item/矩阵/18069?fromModule=lemma_inlink">矩阵</a>的初等行变换是指以下三种变换类型
+：</p>
+<ol type="1">
+<li><p>交换矩阵的两行（对调i,j，两行记为r<sub>i</sub>，r<sub>j</sub>）；</p></li>
+<li><p>以一个非零数k乘矩阵的某一行所有元素（第i行乘以k记为r<sub>i</sub>
+× k）；</p></li>
+<li><p>把矩阵的某一行所有元素乘以一个数k后加到另一行对应的元素(第j行乘以k加到第i行记为r<sub>i</sub>
++ k × r<sub>j</sub>)。 <span class="math display">\[
+A=\left[
+\begin{matrix}
+   1 &amp; 2 &amp; 3 \\
+   0 &amp; 4 &amp; 5 \\
+   0 &amp; 0 &amp; 6 \\
+  \end{matrix} \\
+\right]
+，经过矩阵初等变换后，矩阵A可以转换成右侧形式，
+B=\left[
+  \begin{matrix}
+   1 &amp; 2 &amp; 3 \\
+   0 &amp; 4 &amp; 5 \\
+   0 &amp; 0 &amp; 6 \\
+  \end{matrix} \\
+\right]
+\]</span></p></li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" class="category-chain-item">线性代数</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" class="print-no-link">#线性代数</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>线性代数-常见矩阵</div>
+      <div>https://jiangsanyin.github.io/2025/07/17/线性代数-常见矩阵/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年7月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - sanyinjiang">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/07/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-03%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/" title="机器学习入门-03线性模型">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">机器学习入门-03线性模型</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/07/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-02%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0/" title="机器学习入门-02模型评估">
+                        <span class="hidden-mobile">机器学习入门-02模型评估</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

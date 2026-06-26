@@ -1,0 +1,862 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、常用AI 插件或IDE汇总  Trae：字节跳动推出，https:&#x2F;&#x2F;www.trae.ai&#x2F;（国际版）、https:&#x2F;&#x2F;www.trae.cn&#x2F;（国内版） Cursor：Anysphere公司推出 Claude Code：Anthropics推出 Kiro：亚马逊推出 AntiGravity：谷歌推出，使用谷歌账号登录（要求谷歌账号关联的地区在此IDE可用区域内如新加坡，http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用AI IDE记录">
+<meta property="og:url" content="https://jiangsanyin.github.io/2026/01/04/%E5%B8%B8%E7%94%A8AI-IDE%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、常用AI 插件或IDE汇总  Trae：字节跳动推出，https:&#x2F;&#x2F;www.trae.ai&#x2F;（国际版）、https:&#x2F;&#x2F;www.trae.cn&#x2F;（国内版） Cursor：Anysphere公司推出 Claude Code：Anthropics推出 Kiro：亚马逊推出 AntiGravity：谷歌推出，使用谷歌账号登录（要求谷歌账号关联的地区在此IDE可用区域内如新加坡，http">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-01-04T02:41:54.000Z">
+<meta property="article:modified_time" content="2026-01-06T07:10:02.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="工具与奇技淫巧">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>常用AI IDE记录 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">常用AI IDE记录</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-01-04 10:41" pubdate>
+          2026年1月4日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">常用AI IDE记录</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一常用ai-插件或ide汇总">一、常用AI 插件或IDE汇总</h1>
+<ul>
+<li>Trae：字节跳动推出，https://www.trae.ai/（国际版）、https://www.trae.cn/（国内版）</li>
+<li>Cursor：Anysphere公司推出</li>
+<li>Claude Code：Anthropics推出</li>
+<li>Kiro：亚马逊推出</li>
+<li>AntiGravity：谷歌推出，使用谷歌账号登录（要求谷歌账号关联的地区在此IDE可用区域内如新加坡，https://policies.google.com/country-association-form）</li>
+<li>CodeGeex：https://codegeex.cn/</li>
+<li>Lingma：https://lingma.aliyun.com/</li>
+<li>Cline：https://cline.bot/</li>
+<li>CoPilot：有两个版本，微软版与github版：https://copilot.microsoft.com/、https://github.com/features/copilot</li>
+<li>CodeBuddy：https://www.codebuddy.ai/</li>
+<li>Qoder：https://qoder.com/</li>
+</ul>
+<h1 id="二大致介绍与特点说明">二、大致介绍与特点说明</h1>
+<table style="width:100%;">
+
+<thead>
+<tr>
+<th>序号</th>
+<th>插件或IDE名称</th>
+<th>介绍</th>
+<th>优势</th>
+<th>劣势</th>
+<th>更多操作插件或IDE</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>vscode</td>
+<td>由微软开发且跨平台的免费源代码编辑器，插件市场中有大量插件可安装，可极大地扩展其功能</td>
+<td>（1）IDE本身开源免费（2）本身不带AI功能，但可安装各种插件以丰富与增强其AI功能</td>
+<td>（1）很多功能需要自行组装配置，上手有难度，此劣势在其他IDE或编辑器如Trae、Cursor中都不同程度存在</td>
+<td>IDE</td>
+<td>https://vscode.cool/</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Trae</td>
+<td>字节跳动公司推出的AI原生编程工具</td>
+<td>（1）费用相对国外同类产品要便宜（2）能够使用国内主流编程模型如豆包、DeepSeek、智谱清言的模型，根据官网https://docs.trae.cn/ide/models包括：Doubao-Seed-1.8、Doubao-Seed-Code、GLM-4.7、GLM-4.6、MiniMax-M2.1、MiniMax-M2、DeepSeek-V3.1-Terminus、Kimi-K2-0905、Qwen-3-Coder
+（3）可添加自定义模型</td>
+<td>（1）能力只能说基本可用，比国外领先的模型Claude的文档编写与图表绘制能力要差些，对此有严格要求或良好体验的建议用Cursor等国外产品（2）从20251104开始不再可用claude模型，劝退了很多用户包含自己</td>
+<td>IDE</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Cursor</td>
+<td>由美国Anysphere 公司开发一款基于人工智能的现代代码编辑器</td>
+<td>（1）agent模式，包含Agent、Plan、Debug、Ask（2）模型，支持国外的主流编程模型：Composer
+1、Opus 4.5、Sonnet 4.5、GPT-5.1 Codex Max、GPT-5.2、Gemini 3
+Flash、GPT-5.1 Codex Mini、Grok
+Code（3）支持mcp，但目前一般不自己配置mcp功能，而是直接使用模型自带的mcp功能</td>
+<td>（1）贵，会员分多个等级，最低级的Pro会员是20美元/月，如果指定模型消耗完20美元的token后在当月只能使用auto模型（2）对中国大陆与香港等禁用，需要翻墙使用</td>
+<td>IDE</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Claude Code</td>
+<td>同美国公司Anthropic推出，使用方式多样。</td>
+<td>（1）可用插件与IDE，也可以在命令行与网页上使用，插件可在vscode类编辑器中、JetBrains中使用。（2）编程能力、写文档的能力是真的强，画图能力也可（3）每天针对Sonnet4.5、Haiku4.5模型有少量共享免费token额度可用，大约有30-50条消息的额度限制<根据消息长度和复杂度调整>超额需要付费</td>
+<td>（1）贵（2）对中国大陆与香港禁用，需要翻墙使用（3）包括Anthropic推出的多个模型及版本如Opus/Sonnect/Haiku，但也只能使用这些模型，无法使用自定义模型（4）要全面使用其全部功能的话，上手难</td>
+<td>IDE、扩展插件、命令行、网页</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Kiro</td>
+<td>亚马逊推出的专为AI Agent设计的集成开发环境</td>
+<td>（1）模型，目前只能使用Claude Sonnet 4、Claude Sonnet 4.5、Claude
+Haiku 4.5、Claude Opus 4.5 这4个模型</td>
+<td>（1）对中国大陆与香港禁用，需要翻墙使用（2）无模式可选</td>
+<td>IDE</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>AntiGravity</td>
+<td>是由Google开发的人工智能驱动的整合式开发环境。</td>
+<td>（1）谷歌推出，目前个人可以免费使用Antigravity，但有每五小时刷新一次的速率限制（2）会话模式：包括Fast与Planning，后者适合复杂尝试任务（3）模型，能够使用多个国外主流模型：Gemini
+3 Pro (High)、Gemini 3 Pro (Low)、Gemini 3 Flash New、Claude Sonnet
+4.5、Claude Sonnet 4.5 (Thinking)、Claude Opus 4.5 (Thinking)、GPT-OSS
+120B (Medium)</td>
+<td>（1）对中国大陆与香港禁用，需要翻墙使用</td>
+<td>IDE</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>CodeGeex</td>
+<td>CodeGeex本身是清华和智谱AI联合打造的一个基于AI大模型的辅助编程工具</td>
+<td>（1）目前以插件形式在多个编辑器如vscode、JetBrains等中使用，支持多语言（Python、Java、C++
+等）（2）目前可免费无限使用</td>
+<td>（1）只能以插件形式使用，可补全、解释代码</td>
+<td>扩展插件</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Lingma</td>
+<td>一款由阿里云提供支持的AI
+编程助手，提供代码补全、代码解释与代码辅助编写等功能</td>
+<td>（1）阿里云推出的智能编码助手，背后使用的是Qwen模型，目前能以IDE与插件形式使用。（2）分为多个版本功能各有差异，个人基础版免费无限使用（3）支持有模式有：智能问答、文件编辑、智能体（4）支持的模型有：qwen3-coder、qwen3-thinking、qwen2.5-max，都是国产大模型与AI编程工具的优秀代表，对中文编程环境支持良好</td>
+<td>（1）上下文窗口较小，仅支持8K。（2）目前不支持添加自定义模型（3）大文件处理时延迟明显，多轮对话后存在约10%的卡顿现象。（4）虽然整体准确率较高，但在某些场景下生成的代码存在语法错误。</td>
+<td>扩展插件</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Cline</td>
+<td>由美国 Cline公司 推出的开源AI编程助手</td>
+<td></td>
+<td></td>
+<td>扩展插件</td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>CoPilot</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>10</td>
+<td>CodeBuddy</td>
+<td></td>
+<td></td>
+<td></td>
+<td>IDE、扩展插件、CLI</td>
+<td></td>
+</tr>
+<tr>
+<td>11</td>
+<td>Qoder</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E5%85%B7%E4%B8%8E%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/" class="category-chain-item">工具与奇技淫巧</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%B7%A5%E5%85%B7%E4%B8%8E%E5%A5%87%E6%8A%80%E6%B7%AB%E5%B7%A7/" class="print-no-link">#工具与奇技淫巧</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>常用AI IDE记录</div>
+      <div>https://jiangsanyin.github.io/2026/01/04/常用AI-IDE记录/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年1月4日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - sanyinjiang">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/03/08/%E7%90%86%E8%A7%A3%E7%B2%BE%E7%A1%AE%E7%8E%87%E4%B8%8E%E5%8F%AC%E5%9B%9E%E7%8E%87/" title="理解精确率与召回率">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">理解精确率与召回率</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/10/27/LoRA%E5%BE%AE%E8%B0%83%E5%8E%9F%E7%90%86/" title="LoRA微调原理">
+                        <span class="hidden-mobile">LoRA微调原理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

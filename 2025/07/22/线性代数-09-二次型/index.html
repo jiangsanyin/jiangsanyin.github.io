@@ -1,0 +1,950 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、二次型的定义及其矩阵表达式 \[ \text{二项式定理：}\\ (a+b)^n&#x3D;\sum_{i &#x3D; 0}^{n} C_n^ia^ib^{n-i}&#x3D;\sum_{i &#x3D; 0}^{n} C_n^ia^{n-i}b^i \] n元变量x1,x2,...,xn的二次齐次多项式（其中二次的意思是：每一项中所有变量的指数之和为2；齐次的意思是：指多项式中所有项的次数相同，对于二次齐次多项式，所">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线性代数-09-二次型">
+<meta property="og:url" content="https://jiangsanyin.github.io/2025/07/22/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-09-%E4%BA%8C%E6%AC%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、二次型的定义及其矩阵表达式 \[ \text{二项式定理：}\\ (a+b)^n&#x3D;\sum_{i &#x3D; 0}^{n} C_n^ia^ib^{n-i}&#x3D;\sum_{i &#x3D; 0}^{n} C_n^ia^{n-i}b^i \] n元变量x1,x2,...,xn的二次齐次多项式（其中二次的意思是：每一项中所有变量的指数之和为2；齐次的意思是：指多项式中所有项的次数相同，对于二次齐次多项式，所">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-22T06:43:38.000Z">
+<meta property="article:modified_time" content="2025-07-24T09:59:58.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="线性代数">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>线性代数-09-二次型 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">线性代数-09-二次型</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-07-22 14:43" pubdate>
+          2025年7月22日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          13 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">线性代数-09-二次型</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1
+id="一二次型的定义及其矩阵表达式">一、二次型的定义及其矩阵表达式</h1>
+<p><span class="math display">\[
+\text{二项式定理：}\\
+(a+b)^n=\sum_{i = 0}^{n} C_n^ia^ib^{n-i}=\sum_{i = 0}^{n}
+C_n^ia^{n-i}b^i
+\]</span></p>
+n元变量x<sub>1</sub>,x<sub>2</sub>,...,x<sub>n</sub>的二次齐次多项式（其中<strong>二次</strong>的意思是：每一项中所有变量的指数之和为2；<strong>齐次</strong>的意思是：指多项式中所有项的次数相同，对于二次齐次多项式，所有项的次数必须均为2）：
+$$
+<span class="math display">\[\begin{aligned}
+f(x_1,x_2,...,x_n)=a_{11}x_1^2+2a_{12}x_1x_2+...+2a_{1n}x_1x_n\\
++a_{22}x_2^2\,\,\,\,\,\,\,\,\, +...+2a_{2n}x_2x_n\\
++...\quad\quad\quad\quad\quad \\
++a_{nn}x_{nn}^2\\\\
+
+\text{以上表达式称为n元二次型，简称二次型。}
+\end{aligned}\]</span>
+<p>$$
+一般情况下（中国大陆考研、常规科研），我们只研究系数a<sub>ij</sub>∈R
+的情况，称此二次型f为实二次型。</p>
+<p>因为x<sub>i</sub>x<sub>j</sub>=x<sub>j</sub>x<sub>i</sub>，此时若令a<sub>ij</sub>=a<sub>ji</sub>（很容易让我们想到对称矩阵），则有2a<sub>ij</sub>x<sub>i</sub>x<sub>j</sub>=a<sub>ij</sub>x<sub>i</sub>x<sub>j</sub>+a<sub>ji</sub>x<sub>j</sub>x<sub>i</sub>，这样上述二次型表达式可表述如下：
+<span class="math display">\[
+\begin{aligned}
+f(x_1,x_2,...,x_n)=a_{11}x_1^2+2a_{12}x_1x_2+...+2a_{1n}x_1x_n\\
++a_{21}x_2x_1+a_{22}x_2^2+...+2a_{2n}x_2x_n\\
++...\quad\quad\quad\quad\quad \\
++a_{n1}x_nx_1+a_{n2}x_nx_2+...+a_{nn}x_{nn}^2 \quad①\\      
+=\sum_{i=1}^{n}\sum_{j=1}^{n}a_{ij}x_iX_j\quad②\\
+\text{其中①式称为完全展开式，②称为和式。}
+\end{aligned}
+\\
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp; \text{若令}\\
+&amp; A=\begin{vmatrix}
+a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1n} \\
+a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2n} \\
+\vdots &amp; \ddots &amp;        &amp; \vdots \\
+a_{n1} &amp; a_{n2} &amp; \cdots &amp; a_{nn} \\
+\end{vmatrix},x=\begin{vmatrix}
+&amp; x_1 \\
+&amp; x_2 \\
+&amp; \vdots \\
+&amp; x_n \\
+\end{vmatrix}\\
+&amp; \text{则二次型即①或②可表述如下：}\\
+&amp; f(x)=\mathbf{x}^T\mathbf{A}\mathbf{x} \quad③\\
+&amp;
+\text{其中③式称为二次型}f(x_1,x_2,...,x_n)\text{的矩阵表达式，实对阵矩阵}\mathbf{A}称为二次型f(\mathbf{x})\text{的矩阵}
+\\
+&amp;
+\text{它是一个唯一的对称矩阵。如果不限制为实对称矩阵，则这样的矩阵可能有多个}
+\end{aligned}
+\]</span></p>
+$$
+<span class="math display">\[\begin{aligned}
+&amp; \text{举例：写出三元二次齐次多项式即如下三元二次型}\\
+&amp;
+f(x_1,x_2,x_3)=2x_1^2+2x_2^2+2x_3^2-2x_1x_2-2x_2x_3+2x_1x_3的二次型矩阵A
+\\\\
+
+&amp;
+方法1：A的对角线元素a_{ii}是平方项x_{ii}^2的系统，a_{ij}是混合项x_ix_j的系数的一半\\
+&amp; 故：A=\begin{vmatrix}
+2 &amp; -1 &amp; 1 \\
+-1 &amp; 2 &amp; -1 \\
+1 &amp; -1 &amp; 2 \\
+\end{vmatrix}
+\\\\
+&amp;
+方法2：利用矩阵乘法按照x^TAx的形式将二次型f表达出来，即可得到矩阵A。\\
+&amp; 显然，方法2更加繁琐，方法1 更加简便
+\end{aligned}\]</span>
+<p>$$</p>
+<h1
+id="二合同变换二次型的合同酷标准形与规范形">二、合同变换，二次型的合同酷标准形与规范形</h1>
+<h2 id="线性变换的定义">线性变换的定义</h2>
+$$
+<span class="math display">\[\begin{aligned}
+\text{对于n元二次型}f(x_1,x_2,...,x_n)，若令\\
+\begin{cases}
+x_1=c_{11}y_1+c_{12}y_2+...+c_{1n}y_n \\
+x_2=c_{21}y_1+c_{22}y_2+...+c_{2n}y_n \\
+\ldots \\
+x_n=c_{n1}y_1+c_{n2}y_2+...+c_{nn}y_n  \\
+\end{cases} \\\\
+
+\text{记} \\ \mathbf{x}=\left[\begin{matrix}
+x_1 \\
+x_2 \\
+\vdots \\
+x_n \\
+\end{matrix}
+\right],
+
+\mathbf{C}=\left[\begin{matrix}
+c_{11} &amp; c_{12} &amp; \cdots &amp; c_{1n} \\
+c_{21} &amp; c_{22} &amp; \cdots &amp; c_{2n} \\
+\vdots &amp; \ddots &amp;        &amp; \vdots \\
+c_{n1} &amp; c_{n2} &amp; \cdots &amp; c_{nn} \\
+\end{matrix}
+\right],
+
+\mathbf{y}=\left[\begin{matrix}
+y_1 \\
+y_2 \\
+\vdots \\
+y_n \\
+\end{matrix}
+\right]
+\end{aligned}\]</span>
+<p>$$</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{则上述大括号整体表述的表达式可写为：}\mathbf{x}=\mathbf{C}\mathbf{y}
+\end{aligned}
+\]</span></p>
+<p>上式称为从y<sub>1</sub>,y<sub>2</sub>,...,y<sub>n</sub>到x<sub>1</sub>,x<sub>2</sub>,...,x<sub>n</sub>的线性变换。若线性变换的系数矩阵<strong><em>C</em></strong>可逆，即|<strong><em>C</em></strong>|≠0，则称为可逆线性变换。</p>
+<p>若有二次型f(<strong><em>x</em></strong>)=<strong><em>x</em></strong><sup>T</sup><strong><em>Ax</em></strong>，又<strong><em>x</em></strong>=<strong><em>Cy</em></strong>，则有：
+<span class="math display">\[
+\begin{aligned}
+&amp;
+f(\mathbf{x})=\mathbf{x}^TA\mathbf{x}=\mathbf{(Cy)}^TA\mathbf{(Cy)}=\mathbf{y}^T(\mathbf{C}^T\mathbf{A}\mathbf{C})\mathbf{y}
+\\
+&amp; \text{记}\mathbf{B}=\mathbf{C}^T\mathbf{A}\mathbf{C}，则有：\\
+&amp; f(\mathbf{x})=\mathbf{y}^T\mathbf{B}\mathbf{y} = g(\mathbf{y})
+，\text{二次型从矩阵x的函数变成矩阵y的函数。}\\
+&amp;
+此时，二次型f(\mathbf{x})=\mathbf{x}^TA\mathbf{x}通过线性变换\mathbf{x}=\mathbf{C}\mathbf{y}得到一个新二次型g(\mathbf{y})=\mathbf{y}^TB\mathbf{y}
+\end{aligned}
+\]</span></p>
+<h2 id="矩阵合同的定义与性质">矩阵合同的定义与性质</h2>
+<p>可以看到二次型f(<strong><em>x</em></strong>)与g(<strong><em>x</em></strong>)的矩阵A与B有如下关系：
+<span class="math display">\[
+\begin{aligned}
+\mathbf{B}=\mathbf{C}^T\mathbf{A}\mathbf{C}
+\end{aligned}
+\]</span> 矩阵合同的定义：设A、B为n阶实对称矩阵，若存在可逆矩阵C使得：
+<span class="math display">\[
+\begin{aligned}
+&amp; \mathbf{C}^T\mathbf{A}\mathbf{C}=\mathbf{B}
+\end{aligned}
+\]</span>
+则称矩阵A与矩阵B合同，记作（其实教科书中合同符号是横置s下面加一个横线，但这个符号在markdown公式中书写不出来，暂用如下符号表示）：
+<span class="math display">\[
+\begin{aligned}
+&amp; \mathbf{A}\cong\mathbf{B} \\
+&amp; \text{或者，我看到还有些书中或网上文章中用如下符号表示：}\\
+&amp; A \sim_c B
+\end{aligned}
+\]</span>
+此时，称f(<strong><em>x</em></strong>)与g(<strong><em>x</em></strong>)为合同二次型。</p>
+<hr />
+<p>可知，在二次型中，矩阵A与矩阵B的合同，就是指同一个二次型在可逆线性变换下的两个不同状态的联系。
+<span class="math display">\[
+\begin{aligned}
+&amp; \text{合同有如下3个性质：} \\
+&amp; (1)\mathbf{A}\cong\mathbf{A} ，称为反身性\\
+&amp; (2)若\mathbf{A}\cong\mathbf{B}，则\mathbf{B}\cong\mathbf{A}
+，称为对称性\\
+&amp;
+(3)若\mathbf{A}\cong\mathbf{B}，且\mathbf{B}\cong\mathbf{C}，则\mathbf{A}\cong\mathbf{C}
+，称为传递性\\
+\end{aligned}
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp; 注：关于可逆矩阵的两个性质：\\
+&amp;
+(1)对于任意可逆矩阵\mathbf{C}，有(\mathbf{C}^{-1})^\mathrm{T}=(\mathbf{C}^\mathrm{T})^{-1}
+\\\\
+&amp;
+(2)可逆线性变换不会改变二次型的轶。即对于矩阵\mathbf{A}，若\mathbf{Q}可逆，则有r(\mathbf{Q}\mathbf{A})=r(\mathbf{A}\mathbf{Q})=r(\mathbf{A})\\
+&amp; 证明如下：\\
+&amp;
+设\mathbf{A}是m×n矩阵，\mathbf{P}与\mathbf{Q}分别是m阶可逆方阵、n阶可逆方阵。\\
+&amp;
+故有r(\mathbf{A})=r(\mathbf{P}^{-1}\mathbf{P}\mathbf{A})≤r(\mathbf{P}\mathbf{A})≤r(\mathbf{A})，即有
+r(\mathbf{A})≤r(\mathbf{P}\mathbf{A})≤r(\mathbf{A})\\
+&amp; 故：r(\mathbf{P}\mathbf{A})=r(\mathbf{A})\\
+&amp; 同理，有r(\mathbf{A})≤r(\mathbf{A}\mathbf{Q})≤r(\mathbf{A})\\
+&amp; 故：r(\mathbf{A}\mathbf{Q})=r(\mathbf{A})\\
+\end{aligned}
+\]</span></p>
+<h2 id="二次型的标准形与规范形">二次型的标准形与规范形</h2>
+<h1 id="三惯性定理">三、惯性定理</h1>
+<h1 id="四正定二次型及其判别">四、正定二次型及其判别</h1>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" class="category-chain-item">线性代数</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" class="print-no-link">#线性代数</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>线性代数-09-二次型</div>
+      <div>https://jiangsanyin.github.io/2025/07/22/线性代数-09-二次型/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年7月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - sanyinjiang">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/07/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8-04-%E5%86%B3%E7%AD%96%E6%A0%91/" title="机器学习入门-04-决策树">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">机器学习入门-04-决策树</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/07/21/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0-04-%E4%BC%B4%E9%9A%8F%E7%9F%A9%E9%98%B5%E3%80%81%E5%88%9D%E7%AD%89%E7%9F%A9%E9%98%B5%E4%B8%8E%E7%9F%A9%E9%98%B5%E6%96%B9%E7%A8%8B/" title="线性代数-04-伴随矩阵、初等矩阵与矩阵方程">
+                        <span class="hidden-mobile">线性代数-04-伴随矩阵、初等矩阵与矩阵方程</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
