@@ -27,7 +27,7 @@
 <meta property="og:description" content="一、章节脉络 本章的目标在于快速理解并上手以 Nano-Banana Pro 为代表（但有提到阿里云开发的Qwen-image-2.0模型及使用）的核心模型，并补齐在完整科研绘图流程中，生成前准备与生成后处理阶段可能会用到的关键工具，为后续学习方法论与动手实践做好铺垫。 细化点，本章主要内容是如下：  了解 Nano-Banana Pro 的多种官方及第三方接入方式 掌握 Gemin">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-06-28T12:58:22.000Z">
-<meta property="article:modified_time" content="2026-06-28T15:39:12.000Z">
+<meta property="article:modified_time" content="2026-06-30T13:52:46.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="AIGC HappyFigure AI绘图">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4k 字
+          4.1k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          34 分钟
+          35 分钟
         
       </span>
     
@@ -492,11 +492,20 @@ alt="image-20260628230953436" />
 </ul>
 <p>跟Google AI
 Studio中试用时使用的是相同的英文提示词。此处模型也能理解中文提示词，但建议配英文关键词效果更好。</p>
+<p>示例1：</p>
 <figure>
 <img
 src="https://files.seeusercontent.com/2026/06/28/rLr1/image-20260628231125165.png" srcset="/img/loading.gif" lazyload
 alt="image-20260628231125165" />
 <figcaption aria-hidden="true">image-20260628231125165</figcaption>
+</figure>
+<p>示例2（完整的 Transformer 架构）：</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver">A comprehensive <span class="hljs-keyword">and</span> professional academic infographic diagram <span class="hljs-keyword">of</span> <span class="hljs-keyword">the</span> complete Transformer architecture, vector illustration style, clean white background. <br>The layout is divided <span class="hljs-keyword">into</span> <span class="hljs-literal">two</span> main vertical blocks symmetrically, <span class="hljs-keyword">with</span> accurate English <span class="hljs-keyword">text</span> labels <span class="hljs-keyword">and</span> sharp typography:<br><br><span class="hljs-number">1.</span> LEFT BLOCK (Encoder):<br>- At <span class="hljs-keyword">the</span> bottom: <span class="hljs-string">&quot;Input Embedding&quot;</span> + <span class="hljs-string">&quot;Positional Encoding&quot;</span> connected <span class="hljs-keyword">by</span> <span class="hljs-keyword">a</span> <span class="hljs-string">&quot;+&quot;</span> sign.<br>- Above them, <span class="hljs-keyword">a</span> repetitive vertical stack labeled <span class="hljs-string">&quot;Encoder Layer (xN)&quot;</span>.<br>- Inside <span class="hljs-keyword">the</span> Encoder stack: <span class="hljs-string">&quot;Multi-Head Attention&quot;</span> <span class="hljs-keyword">at</span> <span class="hljs-keyword">the</span> bottom, followed <span class="hljs-keyword">by</span> <span class="hljs-string">&quot;Feed Forward&quot;</span> <span class="hljs-keyword">at</span> <span class="hljs-keyword">the</span> top.<br>- Each sub-layer is wrapped <span class="hljs-keyword">by</span> <span class="hljs-string">&quot;Add &amp; Norm&quot;</span> boxes <span class="hljs-keyword">with</span> curved residual connection arrows.<br>- An arrow exits <span class="hljs-keyword">the</span> top <span class="hljs-keyword">of</span> <span class="hljs-keyword">the</span> Encoder stack <span class="hljs-keyword">and</span> directs towards <span class="hljs-keyword">the</span> <span class="hljs-keyword">middle</span> <span class="hljs-keyword">of</span> <span class="hljs-keyword">the</span> Decoder.<br><br><span class="hljs-number">2.</span> <span class="hljs-literal">RIGHT</span> BLOCK (Decoder):<br>- At <span class="hljs-keyword">the</span> bottom: <span class="hljs-string">&quot;Output Embedding&quot;</span> + <span class="hljs-string">&quot;Positional Encoding&quot;</span> connected <span class="hljs-keyword">by</span> <span class="hljs-keyword">a</span> <span class="hljs-string">&quot;+&quot;</span> sign.<br>- Above them, <span class="hljs-keyword">a</span> vertical stack labeled <span class="hljs-string">&quot;Decoder Layer (xN)&quot;</span>.<br>- Inside <span class="hljs-keyword">the</span> Decoder stack (<span class="hljs-built_in">from</span> bottom <span class="hljs-built_in">to</span> top): <br>  <span class="hljs-keyword">a</span>. <span class="hljs-string">&quot;Masked Multi-Head Attention&quot;</span> <br>  b. <span class="hljs-string">&quot;Multi-Head Attention&quot;</span> (receives <span class="hljs-keyword">the</span> directional arrow coming <span class="hljs-built_in">from</span> <span class="hljs-keyword">the</span> Left Encoder Block)<br>  c. <span class="hljs-string">&quot;Feed Forward&quot;</span><br>- Each <span class="hljs-keyword">of</span> these <span class="hljs-literal">three</span> sub-layers is wrapped <span class="hljs-keyword">by</span> <span class="hljs-string">&quot;Add &amp; Norm&quot;</span> boxes <span class="hljs-keyword">with</span> residual connection loops.<br><br><span class="hljs-number">3.</span> TOP OUTPUT:<br>- An arrow <span class="hljs-built_in">from</span> <span class="hljs-keyword">the</span> top <span class="hljs-keyword">of</span> <span class="hljs-keyword">the</span> Decoder leads <span class="hljs-built_in">to</span> <span class="hljs-keyword">a</span> <span class="hljs-string">&quot;Linear&quot;</span> box, <span class="hljs-keyword">then</span> <span class="hljs-built_in">to</span> <span class="hljs-keyword">a</span> <span class="hljs-string">&quot;Softmax&quot;</span> box, ending <span class="hljs-keyword">at</span> <span class="hljs-string">&quot;Output Probabilities&quot;</span>.<br><br>Minimalist flat design, clean <span class="hljs-keyword">lines</span>, sharp color contrast <span class="hljs-keyword">using</span> slate blue, teal, <span class="hljs-keyword">and</span> charcoal gray, technical flowchart, highly <span class="hljs-keyword">detailed</span>, <span class="hljs-number">4</span>k resolution.<br></code></pre></td></tr></table></figure>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/06/30/8Kpb/image-20260630215227973.png" srcset="/img/loading.gif" lazyload
+alt="image-20260630215227973" />
+<figcaption aria-hidden="true">image-20260630215227973</figcaption>
 </figure>
 <h4 id="第三方渠道">2.1.1.2 第三方渠道</h4>
 <p>许多人受限于网络环境稳定性、跨境支付门槛或官方配额策略。针对这一需求，市场上衍生出了多种第三方解决方案（方式）。它们在易用性和成本上各有侧重，但也伴随着不同程度的风险。</p>
@@ -743,6 +752,12 @@ style="text-align: left;"><strong>完全可控化：</strong>针对规则性较�
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2026/06/30/HappyFigure-Chp03-%E8%BF%9B%E9%98%B6%E6%8E%A7%E5%9B%BE%E7%AD%96%E7%95%A5%E4%B8%8E%E7%9F%A2%E9%87%8F%E5%8C%96%E6%96%B9%E6%B3%95/" title="HappyFigure-Chp03-进阶控图策略与矢量化方法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">HappyFigure-Chp03-进阶控图策略与矢量化方法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
