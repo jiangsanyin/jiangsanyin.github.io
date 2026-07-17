@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Datawhale2026年夏令营语音技术方向学习记录</title>
+    <link href="/2026/07/17/Datawhale%E5%A4%8F%E4%BB%A4%E8%90%A5%E8%AF%AD%E9%9F%B3%E6%8A%80%E6%9C%AF%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/"/>
+    <url>/2026/07/17/Datawhale%E5%A4%8F%E4%BB%A4%E8%90%A5%E8%AF%AD%E9%9F%B3%E6%8A%80%E6%9C%AF%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</url>
+    
+    <content type="html"><![CDATA[<h2 id="一赛事背景介绍">一、赛事背景介绍</h2><p>赛事（基于用户注册信息的关键词检测挑战赛）由<strong>科大讯飞</strong>发起，<strong>中国信息协会</strong>联合主办。此次AI夏令营活动“https://ailc.datawhale.cn/hall/group/100000933/task/100000792”由Datawhale主办，个人理解此夏令营活动像是正式赛事的非正式预赛，用于推广赛事、帮忙感兴趣人员了解与深入探讨赛事、为正式赛事选拔人才。活动介绍如下。</p><ol type="1"><li><strong>赛事与赛题背景</strong></li></ol><p>​ • <strong>技术领域</strong>：属于语音技术领域。</p><p>​ •<strong>赛题核心</strong>：构建一个能根据用户注册语音自适应识别关键词的AI 模型，解决零样本泛化、强噪声（-10dB）及相似发音干扰等难点，推动语音唤醒从“厂家定制”走向“用户定制”。</p><p>​ • <strong>赛道奖励</strong>：现金奖一等奖 5000 元、二等奖 3000元、三等奖 2000 元。前三名受邀决赛答辩（成绩占比：作品分 70% + 答辩分30%）。Top 团队可获得讯飞 AI资源包、创业扶持及绿色就业/实习面试通道。</p><ol start="2" type="1"><li><strong>夏令营任务日程安排</strong></li></ol><p>​ • <strong>Day 0</strong>：完成报名并解锁实践项目。</p><p>​ • <strong>Day 1-2</strong>（截至 7月17日24:00）：80分钟跑通 Baseline代码并拿下首分。*可获得魔搭社区免费算力与限时<strong>48</strong>小时的<strong>“</strong>破壁人徽章**”*。</p><p>​ • <strong>Day3-7</strong>（截至7月22日24:00）：根据八个提分方向进行进阶挑战，参加技术交流会。<em>可获得</em><em>AI</em> <em>夏令营徽章及</em> <em>Datawhale</em><em>官方结营证书</em>。</p><p>​ • <strong>Day 7-9</strong>：持续上分并冲刺复赛入围名额。</p><ol start="3" type="1"><li><strong>学习者激励与证书获取</strong></li></ol><p>​ •<strong>结营证书</strong>：需满足“完成全部任务学习打卡”以及“提交符合要求的赛事作品”两个条件，由Datawhale 颁发。</p><p>​ • <strong>社会实践证明</strong>：需至少获得 2026 年夏令营的 2个不同方向的结营证书。</p><p>​ • <strong>优秀学习者证书</strong>：每个班级群最多评选 3个。通过输出高质量学习笔记/经验总结、群内活跃度或答疑等表现综合评选。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>AI竞赛</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>AIGC</tag>
+      
+      <tag>AI竞赛</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>python绘图库-matplotlib</title>
     <link href="/2026/07/12/python%E7%BB%98%E5%9B%BE%E5%BA%93-matplotlib/"/>
     <url>/2026/07/12/python%E7%BB%98%E5%9B%BE%E5%BA%93-matplotlib/</url>
