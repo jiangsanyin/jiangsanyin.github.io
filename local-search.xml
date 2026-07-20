@@ -4,6 +4,56 @@
   
   
   <entry>
+    <title>conda-Python3环境搭建</title>
+    <link href="/2026/07/20/conda-Python3%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
+    <url>/2026/07/20/conda-Python3%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+    
+    <content type="html"><![CDATA[<h1 id="ubuntu20.04-lts环境下">Ubuntu20.04 LTS环境下</h1><p>参考<ahref="https://jiangsanyin.github.io/2025/02/13/%E6%9C%AC%E5%9C%B0%E5%BE%AE%E8%B0%83DeepSeek-R1-8b%E6%A8%A1%E5%9E%8B/">《本地微调DeepSeek-R1-8b模型.md》</a>中章节“3.2准备jupyter环境”</p><h1 id="win11环境下">Win11环境下</h1><p>我安装了<ahref="https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2021.04-Windows-x86.exe">Anaconda3-2021.04-Windows-x86.exe</a>，具体安装步骤参考（其实也无需怎么参考）：https://zhuanlan.zhihu.com/p/339736966</p><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">C:\Users\syjiang&gt;conda create <span class="hljs-literal">-n</span> py312 python=<span class="hljs-number">3.12</span><br></code></pre></td></tr></table></figure><p>在anaconda navigator中安装“application”：</p><figure><img src="https://s2.loli.net/2025/02/19/soWHNADmIdtO6Gk.png"alt="image-20250219142432677" /><figcaption aria-hidden="true">image-20250219142432677</figcaption></figure><h2 id="配置jupyterlab">配置JupyterLab</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs powershell">(base) C:\Users\syjiang&gt;conda env list<br><span class="hljs-comment"># conda environments:</span><br><span class="hljs-comment">#</span><br>base                  *  D:\ProgramData\Anaconda3<br>                         D:\ProgramData\miniconda3<br>                         D:\ProgramData\miniconda3\envs\py3.<span class="hljs-number">8.0</span><br>                         D:\ProgramData\miniconda3\envs\py312<br><br><br>(base) C:\Users\syjiang&gt;<br>(base) C:\Users\syjiang&gt;conda activate D:\ProgramData\miniconda3\envs\py312<br><br>(py312) C:\Users\syjiang&gt;jupyter lab <span class="hljs-literal">--generate-config</span><br>Writing default config to: C:\Users\syjiang\.jupyter\jupyter_lab_config.py<br></code></pre></td></tr></table></figure><p>用编辑器打开<code>C:\Users\syjiang\.jupyter\jupyter_lab_config.py</code>，修改如下选项</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">## The directory to use for notebooks and kernels.</span><br><span class="hljs-comment">#  Default: &#x27;&#x27;</span><br>c.ServerApp.root_dir = <span class="hljs-string">&#x27;D:\\study_codes\\pyprojects&#x27;</span><br></code></pre></td></tr></table></figure><p>此配置项是打开jupyterlab时的默认工作目录。</p><h2 id="使用jupyterlab">使用JupyterLab</h2><figure><img src="https://s2.loli.net/2025/02/19/YhkeOFZ7zsoPDVB.png"alt="image-20250219143421110" /><figcaption aria-hidden="true">image-20250219143421110</figcaption></figure><p>创建一个notebook</p><figure><img src="https://s2.loli.net/2025/02/19/1ClUnkuvb8dz9rD.png"alt="image-20250219145309252" /><figcaption aria-hidden="true">image-20250219145309252</figcaption></figure><figure><img src="https://s2.loli.net/2025/02/19/QoeITLcXMxBZSg6.png"alt="image-20250219145432801" /><figcaption aria-hidden="true">image-20250219145432801</figcaption></figure><p>使用组合键“ctrl+s”保存当前.ipynb文件，可以触发为此文件重命名：</p><figure><img src="https://s2.loli.net/2025/02/19/9BThCHpje3ScRDW.png"alt="image-20250219145535990" /><figcaption aria-hidden="true">image-20250219145535990</figcaption></figure><p>也可以使用如下方式重命名文件：</p><figure><img src="https://s2.loli.net/2025/02/19/UFwRQXk9OWIg4TD.png"alt="image-20250219145632853" /><figcaption aria-hidden="true">image-20250219145632853</figcaption></figure><figure><img src="https://s2.loli.net/2025/02/19/ajXbuvT75GMmZcp.png"alt="image-20250219153533825" /><figcaption aria-hidden="true">image-20250219153533825</figcaption></figure><p>可以看到<code>D:\study_codes\pyprojects</code>目录下有了一个文件<code>test01.py</code>，它就是上面创建的文件。</p><figure><img src="https://s2.loli.net/2025/02/19/XUxy8IhReZ7OkLc.png"alt="image-20250219153630516" /><figcaption aria-hidden="true">image-20250219153630516</figcaption></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>python</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>python</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Pandas常用核心知识补习</title>
+    <link href="/2026/07/20/Pandas%E5%B8%B8%E7%94%A8%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E8%A1%A5%E4%B9%A0/"/>
+    <url>/2026/07/20/Pandas%E5%B8%B8%E7%94%A8%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E8%A1%A5%E4%B9%A0/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    <categories>
+      
+      <category>类别</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>标签</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Datawhale2026年夏令营语音技术方向学习记录</title>
     <link href="/2026/07/17/Datawhale%E5%A4%8F%E4%BB%A4%E8%90%A5%E8%AF%AD%E9%9F%B3%E6%8A%80%E6%9C%AF%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/"/>
     <url>/2026/07/17/Datawhale%E5%A4%8F%E4%BB%A4%E8%90%A5%E8%AF%AD%E9%9F%B3%E6%8A%80%E6%9C%AF%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</url>

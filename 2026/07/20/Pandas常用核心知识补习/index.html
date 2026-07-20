@@ -19,23 +19,20 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、赛事背景介绍 赛事（基于用户注册信息的关键词检测挑战赛&quot;https:&#x2F;&#x2F;challenge.xfyun.cn&#x2F;h5&#x2F;detail?type&#x3D;KDBURI&amp;ch&#x3D;2026dsDW2&quot;）由科大讯飞发起，中国信息协会联合主办。此次 AI 夏令营活动“https:&#x2F;&#x2F;ailc.datawhale.cn&#x2F;hall&#x2F;group&#x2F;100000933&#x2F;task&#x2F;100000792”由Datawh">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Datawhale2026年夏令营语音技术方向学习记录">
-<meta property="og:url" content="https://jiangsanyin.github.io/2026/07/17/Datawhale%E5%A4%8F%E4%BB%A4%E8%90%A5%E8%AF%AD%E9%9F%B3%E6%8A%80%E6%9C%AF%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/index.html">
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Pandas常用核心知识补习">
+<meta property="og:url" content="https://jiangsanyin.github.io/2026/07/20/Pandas%E5%B8%B8%E7%94%A8%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E8%A1%A5%E4%B9%A0/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、赛事背景介绍 赛事（基于用户注册信息的关键词检测挑战赛&quot;https:&#x2F;&#x2F;challenge.xfyun.cn&#x2F;h5&#x2F;detail?type&#x3D;KDBURI&amp;ch&#x3D;2026dsDW2&quot;）由科大讯飞发起，中国信息协会联合主办。此次 AI 夏令营活动“https:&#x2F;&#x2F;ailc.datawhale.cn&#x2F;hall&#x2F;group&#x2F;100000933&#x2F;task&#x2F;100000792”由Datawh">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-07-17T13:40:17.000Z">
-<meta property="article:modified_time" content="2026-07-17T14:41:52.000Z">
+<meta property="article:published_time" content="2026-07-20T13:36:42.000Z">
+<meta property="article:modified_time" content="2026-07-20T13:36:44.000Z">
 <meta property="article:author" content="sanyinjiang">
-<meta property="article:tag" content="AIGC">
-<meta property="article:tag" content="AI竞赛">
+<meta property="article:tag" content="标签">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Datawhale2026年夏令营语音技术方向学习记录 - sanyinjiang</title>
+  <title>Pandas常用核心知识补习 - sanyinjiang</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -214,7 +211,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Datawhale2026年夏令营语音技术方向学习记录</span>
+            <span id="subtitle">Pandas常用核心知识补习</span>
           
         </div>
 
@@ -225,8 +222,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-07-17 21:40" pubdate>
-          2026年7月17日 晚上
+        <time datetime="2026-07-20 21:36" pubdate>
+          2026年7月20日 晚上
         </time>
       </span>
     
@@ -237,7 +234,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          639 字
+          0 字
         
       </span>
     
@@ -248,7 +245,7 @@
         
         
         
-          6 分钟
+          1 分钟
         
       </span>
     
@@ -294,69 +291,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Datawhale2026年夏令营语音技术方向学习记录</h1>
+            <h1 id="seo-header">Pandas常用核心知识补习</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="一赛事背景介绍">一、赛事背景介绍</h2>
-<p>赛事（基于用户注册信息的关键词检测挑战赛"https://challenge.xfyun.cn/h5/detail?type=KDBURI&amp;ch=2026dsDW2"）由<strong>科大讯飞</strong>发起，<strong>中国信息协会</strong>联合主办。此次
-AI
-夏令营活动“https://ailc.datawhale.cn/hall/group/100000933/task/100000792”由Datawhale主办，个人理解此夏令营活动像是正式赛事的非正式预赛，用于推广赛事、帮忙感兴趣人员了解与深入探讨赛事、为正式赛事选拔人才。活动介绍如下。</p>
-<ol type="1">
-<li><strong>赛事与赛题背景</strong></li>
-</ol>
-<p>​ • <strong>技术领域</strong>：属于语音技术领域。</p>
-<p>​ •
-<strong>赛题核心</strong>：构建一个能根据用户注册语音自适应识别关键词的
-AI 模型，解决零样本泛化、强噪声（-10
-dB）及相似发音干扰等难点，推动语音唤醒从“厂家定制”走向“用户定制”。</p>
-<p>​ • <strong>赛道奖励</strong>：现金奖一等奖 5000 元、二等奖 3000
-元、三等奖 2000 元。前三名受邀决赛答辩（成绩占比：作品分 70% + 答辩分
-30%）。Top 团队可获得讯飞 AI
-资源包、创业扶持及绿色就业/实习面试通道。</p>
-<ol start="2" type="1">
-<li><strong>夏令营任务日程安排</strong></li>
-</ol>
-<p>​ • <strong>Day 0</strong>：完成报名并解锁实践项目。</p>
-<p>​ • <strong>Day 1-2</strong>（截至 7月17日24:00）：80分钟跑通 Baseline
-代码并拿下首分。*可获得魔搭社区免费算力与限时<strong>48</strong>小时的<strong>“</strong>破壁人徽章**”*。</p>
-<p>​ • <strong>Day
-3-7</strong>（截至7月22日24:00）：根据八个提分方向进行进阶挑战，参加技术交流会。<em>可获得</em>
-<em>AI</em> <em>夏令营徽章及</em> <em>Datawhale</em>
-<em>官方结营证书</em>。</p>
-<p>​ • <strong>Day 7-9</strong>：持续上分并冲刺复赛入围名额。</p>
-<ol start="3" type="1">
-<li><strong>学习者激励与证书获取</strong></li>
-</ol>
-<p>​ •
-<strong>结营证书</strong>：需满足“完成全部任务学习打卡”以及“提交符合要求的赛事作品”两个条件，由
-Datawhale 颁发。</p>
-<p>​ • <strong>社会实践证明</strong>：需至少获得 2026 年夏令营的 2
-个不同方向的结营证书。</p>
-<p>​ • <strong>优秀学习者证书</strong>：每个班级群最多评选 3
-个。通过输出高质量学习笔记/经验总结、群内活跃度或答疑等表现综合评选。</p>
-<h1 id="二具体任务">二、具体任务</h1>
-<h2 id="task01">2.1 Task01</h2>
-<p><strong>Day 1-2</strong>（截至 7月17日24:00）：80分钟跑通 Baseline
-代码并拿下首分。提交任务后，可获得魔搭社区免费算力与限时<strong>48</strong>小时的“破壁人徽章"。</p>
-<figure>
-<img
-src="https://files.seeusercontent.com/2026/07/17/Jbc6/image-20260717224132963.png" srcset="/img/loading.gif" lazyload
-alt="image-20260717224132963" />
-<figcaption aria-hidden="true">image-20260717224132963</figcaption>
-</figure>
-<h2 id="task02">2.2 Task02</h2>
-<p><strong>Day
-3-7</strong>（截至7月22日24:00）：根据八个提分方向进行进阶挑战，参加技术交流会。<em>可获得</em>
-<em>AI</em> <em>夏令营徽章及</em> <em>Datawhale</em>
-<em>官方结营证书</em>。</p>
-<figure>
-<img
-src="https://files.seeusercontent.com/2026/07/17/r7xS/image-20260717224019815.png" srcset="/img/loading.gif" lazyload
-alt="image-20260717224019815" />
-<figcaption aria-hidden="true">image-20260717224019815</figcaption>
-</figure>
+                
 
                 
               </div>
@@ -375,7 +315,7 @@ alt="image-20260717224019815" />
     
       <span class="category-chain">
         
-  <a href="/categories/AI%E7%AB%9E%E8%B5%9B/" class="category-chain-item">AI竞赛</a>
+  <a href="/categories/%E7%B1%BB%E5%88%AB/" class="category-chain-item">类别</a>
   
   
 
@@ -390,9 +330,7 @@ alt="image-20260717224019815" />
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/AIGC/" class="print-no-link">#AIGC</a>
-      
-        <a href="/tags/AI%E7%AB%9E%E8%B5%9B/" class="print-no-link">#AI竞赛</a>
+        <a href="/tags/%E6%A0%87%E7%AD%BE/" class="print-no-link">#标签</a>
       
     </div>
   
@@ -404,8 +342,8 @@ alt="image-20260717224019815" />
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Datawhale2026年夏令营语音技术方向学习记录</div>
-      <div>https://jiangsanyin.github.io/2026/07/17/Datawhale夏令营语音技术方向学习记录/</div>
+      <div>Pandas常用核心知识补习</div>
+      <div>https://jiangsanyin.github.io/2026/07/20/Pandas常用核心知识补习/</div>
     </div>
     <div class="license-meta">
       
@@ -417,7 +355,7 @@ alt="image-20260717224019815" />
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年7月17日</div>
+          <div>2026年7月20日</div>
         </div>
       
       
@@ -449,9 +387,9 @@ alt="image-20260717224019815" />
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/07/20/Pandas%E5%B8%B8%E7%94%A8%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E8%A1%A5%E4%B9%A0/" title="Pandas常用核心知识补习">
+                      <a href="/2026/07/20/conda-Python3%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" title="conda-Python3环境搭建">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Pandas常用核心知识补习</span>
+                        <span class="hidden-mobile">conda-Python3环境搭建</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -459,8 +397,8 @@ alt="image-20260717224019815" />
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/07/12/python%E7%BB%98%E5%9B%BE%E5%BA%93-matplotlib/" title="python绘图库-matplotlib">
-                        <span class="hidden-mobile">python绘图库-matplotlib</span>
+                      <a href="/2026/07/17/Datawhale%E5%A4%8F%E4%BB%A4%E8%90%A5%E8%AF%AD%E9%9F%B3%E6%8A%80%E6%9C%AF%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" title="Datawhale2026年夏令营语音技术方向学习记录">
+                        <span class="hidden-mobile">Datawhale2026年夏令营语音技术方向学习记录</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
