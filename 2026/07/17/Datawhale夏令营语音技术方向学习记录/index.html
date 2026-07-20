@@ -27,7 +27,7 @@
 <meta property="og:description" content="一、赛事背景介绍 赛事（基于用户注册信息的关键词检测挑战赛&quot;https:&#x2F;&#x2F;challenge.xfyun.cn&#x2F;h5&#x2F;detail?type&#x3D;KDBURI&amp;ch&#x3D;2026dsDW2&quot;）由科大讯飞发起，中国信息协会联合主办。此次 AI 夏令营活动“https:&#x2F;&#x2F;ailc.datawhale.cn&#x2F;hall&#x2F;group&#x2F;100000933&#x2F;task&#x2F;100000792”由Datawh">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-17T13:40:17.000Z">
-<meta property="article:modified_time" content="2026-07-17T14:41:52.000Z">
+<meta property="article:modified_time" content="2026-07-19T14:33:08.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="AIGC">
 <meta property="article:tag" content="AI竞赛">
@@ -237,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          639 字
+          1.2k 字
         
       </span>
     
@@ -248,7 +248,7 @@
         
         
         
-          6 分钟
+          11 分钟
         
       </span>
     
@@ -357,6 +357,45 @@ src="https://files.seeusercontent.com/2026/07/17/r7xS/image-20260717224019815.pn
 alt="image-20260717224019815" />
 <figcaption aria-hidden="true">image-20260717224019815</figcaption>
 </figure>
+<h3 id="提分笔记">2.2.1 提分笔记</h3>
+<p>我将此keywork_detect 代码仓库下载到一个Ubuntu 20.04.3
+LTS服务器上，并解压相关文件。使用conda创建虚拟python
+3.12.13环境。服务器上安装有一个NVIDIA
+A40，安装的驱动与CUDA版本分别是：550.54.15、12.4。先使用代码仓库自带的requirements.txt安装了一些依赖的python组件，运行时发现提示CUDA无法使用，相关排查命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash">(py31213) root@controller01:/opt/code_repos/keyword_detect/baseline# python<br>Python 3.12.13 | packaged by Anaconda, Inc. | (main, Jul  9 2026, 14:38:16) [GCC 14.3.0] on linux<br>Type <span class="hljs-string">&quot;help&quot;</span>, <span class="hljs-string">&quot;copyright&quot;</span>, <span class="hljs-string">&quot;credits&quot;</span> or <span class="hljs-string">&quot;license&quot;</span> <span class="hljs-keyword">for</span> more information.<br>&gt;&gt;&gt; import torch<br>&gt;&gt;&gt; torch.cuda.is_available()<br>/root/anaconda3/envs/py31213/lib/python3.12/site-packages/torch/cuda/__init__.py:188: UserWarning: CUDA initialization: The NVIDIA driver on your system is too old (found version 12040). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver. (Triggered internally at /__w/pytorch/pytorch/c10/cuda/CUDAFunctions.cpp:119.)<br>  <span class="hljs-built_in">return</span> torch._C._cuda_getDeviceCount() &gt; 0<br>False<br>...<br><br>(py31213) root@controller01:/opt/code_repos/keyword_detect/baseline# python -c <span class="hljs-string">&quot;import torch; print(torch.__version__); print(torch.version.cuda)&quot;</span><br>2.13.0+cu130<br>13.0<br></code></pre></td></tr></table></figure>
+<p>由此可以知道：此服务器上安装的 PyTorch 2.13.0+cu130 是 <strong>CUDA
+13.0 编译版</strong>，但此服务器上的 NVIDIA 驱动最高只支持 CUDA
+<strong>12.4</strong>。PyTorch 在初始化时检测到驱动提供的 CUDA Driver
+API 版本（12.4）低于它自身编译所需的版本（13.0），于是拒绝使用 GPU。</p>
+<p>解决办法是：降级 PyTorch 到 CUDA 12.4 版本。具体操作如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 先卸载当前的 PyTorch</span><br>pip uninstall torch torchvision torchaudio -y<br><br><span class="hljs-comment"># 安装 CUDA 12.4 版本的 PyTorch</span><br>pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124<br><br><span class="hljs-comment"># 验证</span><br>(py31213) root@controller01:/opt/code_repos/keyword_detect/baseline# python -c <span class="hljs-string">&quot;import torch; print(torch.__version__); print(torch.version.cuda); print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0))&quot;</span><br>2.6.0+cu124<br>12.4<br>True<br>NVIDIA A40<br></code></pre></td></tr></table></figure>
+<h4 id="训练尝试1-不改动任何代码">2.2.1.1 训练尝试1-不改动任何代码</h4>
+<p>不改动任何代码直接执行训练</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">(py31213) root@controller01:/opt/code_repos/keyword_detect/baseline# python train.py<br>...<br>[epoch 9] seen=0.5974 unseen=0.5019 mean=0.5497 (18s)<br>  saved -&gt; /opt/code_repos/keyword_detect/baseline/checkpoints/best.pt<br>  ep10 100/390 loss=0.9226<br>  ep10 200/390 loss=0.9132<br>  ep10 300/390 loss=0.9098<br>[epoch 10] seen=0.5960 unseen=0.4977 mean=0.5468 (18s)<br><span class="hljs-keyword">done</span>. best dev mean AUC = 0.5497<br></code></pre></td></tr></table></figure>
+<p>训练过程中可以看到GPU显存与利用率占用并不高：</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/07/19/Tae4/image-20260719221801163.png" srcset="/img/loading.gif" lazyload
+alt="image-20260719221801163" />
+<figcaption aria-hidden="true">image-20260719221801163</figcaption>
+</figure>
+<p>训练完成后，执行推理：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">(py31213) root@controller01:/opt/code_repos/keyword_detect/baseline# python infer.py <br>loaded /opt/code_repos/keyword_detect/baseline/checkpoints/best.pt (dev mean AUC=0.5496893333333333)<br>total: 100000 rows<br>wrote /opt/code_repos/keyword_detect/baseline/submission.csv<br>(py31213) root@controller01:/opt/code_repos/keyword_detect/baseline# <span class="hljs-built_in">mv</span> submission.csv submission02.csv <br></code></pre></td></tr></table></figure>
+<p>推理过程中GPU显存与利用率情况：</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/07/19/W4mw/image-20260719221916602.png" srcset="/img/loading.gif" lazyload
+alt="image-20260719221916602" />
+<figcaption aria-hidden="true">image-20260719221916602</figcaption>
+</figure>
+<p>将上述得到的 submission02.csv 文件上传到讯飞官网后，得分为：0.633</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/07/19/nV0t/image-20260719223217768.png" srcset="/img/loading.gif" lazyload
+alt="image-20260719223217768" />
+<figcaption aria-hidden="true">image-20260719223217768</figcaption>
+</figure>
+<h4 id="训练尝试2-改动点">2.2.1.2 训练尝试2-改动点</h4>
 
                 
               </div>
