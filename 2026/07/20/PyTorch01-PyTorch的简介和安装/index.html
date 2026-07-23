@@ -1,0 +1,776 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="一、Anaconda的安装与配置 1.1 Anaconda的安装 Ubuntu 20.04.3 LTS下：安装anaconda ；win11下：略。  1.2 Anaconda中常用配置 虚拟python环境与包 1234567891011121314#1. 默认会创建一个base的虚拟python环境不一定符合需要。自定义创建虚拟python环境：conda create -n 环">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PyTorch01-PyTorch的简介和安装">
+<meta property="og:url" content="https://jiangsanyin.github.io/2026/07/20/PyTorch01-PyTorch%E7%9A%84%E7%AE%80%E4%BB%8B%E5%92%8C%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="一、Anaconda的安装与配置 1.1 Anaconda的安装 Ubuntu 20.04.3 LTS下：安装anaconda ；win11下：略。  1.2 Anaconda中常用配置 虚拟python环境与包 1234567891011121314#1. 默认会创建一个base的虚拟python环境不一定符合需要。自定义创建虚拟python环境：conda create -n 环">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-20T13:29:05.000Z">
+<meta property="article:modified_time" content="2026-07-23T15:19:42.000Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="PyTorch">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>PyTorch01-PyTorch的简介和安装 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">PyTorch01-PyTorch的简介和安装</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-20 21:29" pubdate>
+          2026年7月20日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          13 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">PyTorch01-PyTorch的简介和安装</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="一anaconda的安装与配置">一、Anaconda的安装与配置</h1>
+<h2 id="anaconda的安装">1.1 Anaconda的安装</h2>
+<p>Ubuntu 20.04.3 LTS下：<a
+href="https://jiangsanyin.github.io/2025/03/14/4%E2%9C%968%E2%9C%96A800%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2%E6%BB%A1%E8%A1%80%E7%89%88DeepSeek-R1-671B%E6%AD%A5%E9%AA%A4/#%E6%A8%A1%E5%9E%8B%E6%96%87%E4%BB%B6%E5%87%86%E5%A4%87">安装anaconda</a>
+；win11下：略。</p>
+<hr />
+<h2 id="anaconda中常用配置">1.2 Anaconda中常用配置</h2>
+<h3 id="虚拟python环境与包">虚拟python环境与包</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#1. 默认会创建一个base的虚拟python环境不一定符合需要。自定义创建虚拟python环境：conda create -n 环境名称 python==python版本</span><br>conda create -n py31213 python==3.12.13<br><span class="hljs-comment">#2. 显示所有通过conda管理的已安装包（每个虚拟python环境都有自己的一套包，默认显示的是base环境中的包）</span><br>conda list<br><span class="hljs-comment">#3. 安装包</span><br>conda install xxx<br><span class="hljs-comment">#4. 卸载包</span><br>conda remove xxx<br><span class="hljs-comment">#5. 删除虚拟python环境</span><br>conda remove -n 环境名称 --all <br><span class="hljs-comment">#6. 激活环境</span><br>conda activate 环境名称<br><span class="hljs-comment">#7. 去激活（在处于某已激活的虚拟python环境下执行）</span><br>conda deactivate<br></code></pre></td></tr></table></figure>
+<p>我创建了一个py31213环境来使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">root@controller01:/opt# conda create -n py31213 python==3.12.13<br>(base) root@controller01:/opt# conda activate py31213<br></code></pre></td></tr></table></figure>
+<h3 id="conda源">Conda源</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 看当前生效的源列表。如果输出多行，按从上到下=优先级从高到低排列</span><br>root@controller01:/opt# conda config --show channels<br>channels:<br>  - defaults<br><br><span class="hljs-comment"># 看配置来自哪个文件</span><br>root@controller01:/opt# conda config --show-sources<br>==&gt; /root/.condarc &lt;==<br>channels:<br>  - defaults<br>custom_channels:<br>  conda-forge: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud<br>  pytorch: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud<br>default_channels:<br>  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main<br>  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/r<br>  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/msys2<br>show_channel_urls: True<br><span class="hljs-comment"># 1. channels 块配置了默认搜索频道列表以及它们的优先级顺序（按从上到下=优先级从高到低排列）</span><br><span class="hljs-comment">#	现在只有一个defaults，它表示官方默认库</span><br><span class="hljs-comment"># 2. default_channels 块配置了defaults频道具体。default_channels 块里配置的所有镜像地址，完全且仅针对 channels 块中的 - defaults 这个官方默认频道起重定向（映射）作用。当前的配置中， Conda 默认只会从官方默认库里找包，只要找到包，它就会自动映射到 default_channels 中配置的清华源 pkgs/main 等国内网址去下载。</span><br><span class="hljs-comment"># 3. 想安装 custom_channels 块下某频道中的包，要么将对应的频道名添加到 channels 块中去，要么在使用命令安装某包加上“-c conda-forge”这样的参数。否则 Conda 不会主动去搜索它的（即使已经在 custom_channels 里配置了它）。</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 看环境概况（在输出的 channels 段里也能看到当前源，但信息比 --show channels 杂，适合顺手看 Python 版本、平台、base 环境路径等）</span><br>root@controller01:/opt# conda info<br><br><span class="hljs-comment"># 可以直接编辑对应的.condarc文件来修改Conda源（当然命令也行），修改后应该使用如下命令清除索引缓存，保证用的是修改后频道的索引</span><br>root@controller01:/opt# conda clean -i<br>root@controller01:/opt# conda install pytorch -c 频道名称<br></code></pre></td></tr></table></figure>
+<p>以下分别是清华与科大的Conda源（使用时将它们配置在default_channels块下）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs yaml"> <span class="hljs-comment"># 清华的Conda源</span><br> <span class="hljs-attr">default_channels:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">https://mirrors.ustc.edu.cn/anaconda/pkgs/main/</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">https://mirrors.ustc.edu.cn/anaconda/pkgs/free/</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">https://mirrors.ustc.edu.cn/anaconda/cloud/conda-forge/</span><br><br><span class="hljs-comment"># 科大的Conda源</span><br><span class="hljs-attr">default_channels:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">https://mirrors.ustc.edu.cn/anaconda/pkgs/main/</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">https://mirrors.ustc.edu.cn/anaconda/pkgs/free/</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">https://mirrors.ustc.edu.cn/anaconda/cloud/conda-forge/</span><br></code></pre></td></tr></table></figure>
+<h1 id="二pytorch的安装">二、PyTorch的安装</h1>
+<p>我当前使用的环境如下：</p>
+<ul>
+<li>OS：Ubuntu20.04.3LTS</li>
+<li>Python环境：Conda创建的 Python 3.12.13</li>
+<li>GPU：NVIDIA A40 * 1</li>
+<li>NVIDIA驱动：550.54.15</li>
+<li>CUDA：12.4</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs bash">(py31213) root@controller01:/opt# nvidia-smi <br>Thu Jul 23 21:38:48 2026       <br>+-----------------------------------------------------------------------------------------+<br>| NVIDIA-SMI 550.54.15              Driver Version: 550.54.15      CUDA Version: 12.4     |<br>|-----------------------------------------+------------------------+----------------------+<br>| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |<br>| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |<br>|                                         |                        |               MIG M. |<br>|=========================================+========================+======================|<br>|   0  NVIDIA A40                     Off |   00000000:41:00.0 Off |                    0 |<br>|  0%   51C    P0             78W /  300W |       0MiB /  46068MiB |      5%      Default |<br>|                                         |                        |                  N/A |<br>+-----------------------------------------+------------------------+----------------------+<br>                                                                                         <br>+-----------------------------------------------------------------------------------------+<br>| Processes:                                                                              |<br>|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |<br>|        ID   ID                                                               Usage      |<br>|=========================================================================================|<br>|  No running processes found                                                             |<br>+-----------------------------------------------------------------------------------------+<br></code></pre></td></tr></table></figure>
+<p>去<a
+target="_blank" rel="noopener" href="https://pytorch.org/get-started/previous-versions/">PyTorch历史发行版本安装</a>
+此网页下载符合已安装CUDA的PyTorch版本对应的安装命令，当然对Python版本也有要求，具体PyTorch与Python、CUDA、c++、ROCm之间的兼容性矩阵表如<a
+target="_blank" rel="noopener" href="https://github.com/pytorch/pytorch/blob/main/RELEASE.md#release-compatibility-matrix">PyTorch兼容性矩阵</a>
+）：</p>
+<p>因为我的环境有NVIDIA GPU，我这里安装的是PyTorch2.6.0+cu124。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 安装 CUDA 12.4 版本的 PyTorch</span><br>(py31213) root@controller01:/opt# pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu124<br></code></pre></td></tr></table></figure>
+<p>如下是一个<code>requirements.txt</code>文件的内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs bash">cffi==2.1.0<br>cuda-bindings==13.3.1<br>cuda-pathfinder==1.5.6<br>cuda-toolkit==13.0.3.0<br>filelock==3.31.0<br>fsspec==2026.6.0<br>Jinja2==3.1.6<br>joblib==1.5.3<br>MarkupSafe==3.0.3<br>mpmath==1.3.0<br>narwhals==2.24.0<br>networkx==3.6.1<br>numpy==2.5.1<br>nvidia-cublas==13.1.1.3<br>nvidia-cublas-cu12==12.4.5.8<br>nvidia-cuda-cupti==13.0.85<br>nvidia-cuda-cupti-cu12==12.4.127<br>nvidia-cuda-nvrtc==13.0.88<br>nvidia-cuda-nvrtc-cu12==12.4.127<br>nvidia-cuda-runtime==13.0.96<br>nvidia-cuda-runtime-cu12==12.4.127<br>nvidia-cudnn-cu12==9.1.0.70<br>nvidia-cudnn-cu13==9.20.0.48<br>nvidia-cufft==12.0.0.61<br>nvidia-cufft-cu12==11.2.1.3<br>nvidia-cufile==1.15.1.6<br>nvidia-curand==10.4.0.35<br>nvidia-curand-cu12==10.3.5.147<br>nvidia-cusolver==12.0.4.66<br>nvidia-cusolver-cu12==11.6.1.9<br>nvidia-cusparse==12.6.3.3<br>nvidia-cusparse-cu12==12.3.1.170<br>nvidia-cusparselt-cu12==0.6.2<br>nvidia-cusparselt-cu13==0.8.1<br>nvidia-nccl-cu12==2.21.5<br>nvidia-nccl-cu13==2.29.7<br>nvidia-nvjitlink==13.3.33<br>nvidia-nvjitlink-cu12==12.4.127<br>nvidia-nvshmem-cu13==3.4.5<br>nvidia-nvtx==13.0.85<br>nvidia-nvtx-cu12==12.4.127<br>packaging==26.0<br>pillow==12.2.0<br>pycparser==3.0<br>scikit-learn==1.9.0<br>scipy==1.18.0<br>setuptools==83.0.0<br>soundfile==0.14.0<br>sympy==1.13.1<br>threadpoolctl==3.6.0<br>torch==2.6.0+cu124<br>torchaudio==2.6.0+cu124<br>torchvision==0.21.0+cu124<br>triton==3.2.0<br>typing_extensions==4.16.0<br>wheel==0.47.0<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 在此python环境中安装上述 requirements.txt 文件中指定的python组件</span><br>(py31213) root@controller01:/opt# pip install -r requirements.txt<br></code></pre></td></tr></table></figure>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript"><span class="hljs-comment"># 检验是否安装成功</span><br>(py31213) root@controller01:/opt<span class="hljs-comment"># python</span><br><span class="hljs-comment"># 然后执行如下命令</span><br><span class="hljs-keyword">import</span> torch<br><span class="hljs-built_in">print</span>(torch.__version__)      <span class="hljs-comment"># PyTorch 的版本号。应输出 2.4.0+cu124</span><br><span class="hljs-built_in">print</span>(torch.version.cuda)   <span class="hljs-comment"># PyTorch 编译时使用的 CUDA 版本（即 PyTorch 期望的 CUDA Runtime 版本）。应输出 12.4</span><br><span class="hljs-built_in">print</span>(torch.cuda.is_available())  <span class="hljs-comment"># 检查 PyTorch 能否访问到 NVIDIA GPU。应输出 True</span><br><span class="hljs-built_in">print</span>(torch.cuda.get_device_name(<span class="hljs-number">0</span>))  <span class="hljs-comment"># 打印 第 0 号 GPU 的设备名称。应输出 NVIDIA A40</span><br></code></pre></td></tr></table></figure>
+<h1 id="三pytorch资源">三、PyTorch资源</h1>
+<ol type="1">
+<li><a
+target="_blank" rel="noopener" href="https://github.com/bharathgs/Awesome-pytorch-list">Awesome-pytorch-list</a>：目前已获12K
+Star，包含了NLP,CV,常见库，论文实现以及Pytorch的其他项目。</li>
+<li><a
+target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/index.html">PyTorch官方文档</a>：官方发布的文档，十分丰富。</li>
+<li><a
+target="_blank" rel="noopener" href="https://github.com/zergtant/pytorch-handbook">Pytorch-handbook</a>：GitHub上已经收获14.8K，pytorch手中书。</li>
+<li><a
+target="_blank" rel="noopener" href="https://discuss.pytorch.org/">PyTorch官方社区</a>：PyTorch拥有一个活跃的社区，在这里你可以和开发pytorch的人们进行交流。</li>
+<li><a
+target="_blank" rel="noopener" href="https://pytorch.org/tutorials/">PyTorch官方tutorials</a>：官方编写的tutorials，可以结合colab边动手边学习</li>
+<li><a
+target="_blank" rel="noopener" href="https://zh.d2l.ai/">动手学深度学习</a>：动手学深度学习是由李沐老师主讲的一门深度学习入门课，拥有成熟的书籍资源和课程资源，在B站，Youtube均有回放。</li>
+<li><a
+target="_blank" rel="noopener" href="https://github.com/INTERMT/Awesome-PyTorch-Chinese">Awesome-PyTorch-Chinese</a>：常见的中文优质PyTorch资源</li>
+<li><a
+target="_blank" rel="noopener" href="https://github.com/labmlai/annotated_deep_learning_paper_implementations">labml.ai
+Deep Learning Paper Implementations</a>：手把手实现经典网络代码</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/yandexdataschool/nlp_course">YSDA course
+in Natural Language Processing</a>:YSDA course in Natural Language
+Processing</li>
+<li><a target="_blank" rel="noopener" href="https://huggingface.co/">huggingface</a>:hugging face</li>
+<li><a target="_blank" rel="noopener" href="https://modelscope.cn/models">ModelScope</a>: 魔搭社区</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/PyTorch/" class="category-chain-item">PyTorch</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/PyTorch/" class="print-no-link">#PyTorch</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>PyTorch01-PyTorch的简介和安装</div>
+      <div>https://jiangsanyin.github.io/2026/07/20/PyTorch01-PyTorch的简介和安装/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月20日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - sanyinjiang">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/20/Pandas%E5%B8%B8%E7%94%A8%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E8%A1%A5%E4%B9%A0/" title="Pandas常用核心知识补习">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Pandas常用核心知识补习</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/17/Datawhale%E5%A4%8F%E4%BB%A4%E8%90%A5%E8%AF%AD%E9%9F%B3%E6%8A%80%E6%9C%AF%E6%96%B9%E5%90%91%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" title="Datawhale2026年夏令营语音技术方向学习记录">
+                        <span class="hidden-mobile">Datawhale2026年夏令营语音技术方向学习记录</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
