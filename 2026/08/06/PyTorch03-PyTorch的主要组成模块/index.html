@@ -27,7 +27,7 @@
 <meta property="og:description" content="三、PyTorch的主要组成模块 3.1 深度学习流程及与机器学习差异 一项机器学习任务的整体流程如下：  数据准备与划分：对原始数据进行清洗、格式统一与特征变换，并划分为训练集、验证集和测试集（如采用随机切分或 K 折交叉，可以使用sklearn带的test_train_split函数、kfold来实现）。 模型与算法配置：选择合适的网络架构，指定衡量误差的损失函数、更新参数的优化">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-08-06T04:45:50.000Z">
-<meta property="article:modified_time" content="2026-08-13T02:41:02.000Z">
+<meta property="article:modified_time" content="2026-08-16T14:52:26.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          14k 字
+          26k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          113 分钟
+          214 分钟
         
       </span>
     
@@ -1147,6 +1147,1242 @@ PyTorch 的 <strong><code>net.apply(init_weights)</code></strong>
 执行一次。</li>
 </ul>
 <h2 id="损失函数">3.6 损失函数</h2>
+<p>损失函数（loss
+function，也常称代价函数）用一个可微的数值衡量模型预测与目标之间的差异。训练时，模型先前向计算得到预测，再计算损失，随后调用
+<code>loss.backward()</code>
+自动求导；优化器据此更新模型参数，使训练集上的损失趋于减小。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 一个训练批次中损失函数所处的位置</span><br>logits = model(inputs)            <span class="hljs-comment"># 模型原始输出</span><br>loss = criterion(logits, labels)  <span class="hljs-comment"># 预测与目标的差异</span><br>optimizer.zero_grad()             <span class="hljs-comment"># 清除上一个批次累计的梯度</span><br>loss.backward()                   <span class="hljs-comment"># 反向传播，计算各参数的梯度</span><br>optimizer.step()                  <span class="hljs-comment"># 根据梯度更新参数</span><br></code></pre></td></tr></table></figure>
+<p>本节以 PyTorch 2.6 的 API 为准。旧教程中的 <code>size_average</code>
+与 <code>reduce</code> 已废弃，实际使用时统一通过 <code>reduction</code>
+控制聚合方式：</p>
+<ul>
+<li><code>reduction='mean'</code>：默认值，返回所有损失元素的平均值；</li>
+<li><code>reduction='sum'</code>：返回所有损失元素之和；</li>
+<li><code>reduction='none'</code>：不聚合，保留每个样本（或元素）的损失，适合自行加权或排查异常样本。</li>
+</ul>
+<p>选择损失函数时，首先要看任务和模型输出的含义：分类模型通常直接输出
+<strong>logits</strong>（未经过 <code>sigmoid</code> 或
+<code>softmax</code>
+的实数）；回归模型输出连续数值；序列、排序和度量学习有各自专用的损失函数。</p>
+<h3 id="二分类bcewithlogitsloss-与-bceloss">3.6.1
+二分类：<code>BCEWithLogitsLoss</code> 与 <code>BCELoss</code></h3>
+<p>二分类中每个样本只有“是/否”两种结果，标签通常为 <code>0.0</code> 或
+<code>1.0</code>。<code>BCEWithLogitsLoss</code> 接收
+logits，<code>BCELoss</code> 接收已经转换到 <code>[0, 1]</code>
+的概率。新训练代码通常优先使用前者，以获得更好的数值稳定性。</p>
+<h4 id="bcewithlogitsloss"><code>BCEWithLogitsLoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.BCEWithLogitsLoss(weight=<span class="hljs-literal">None</span>, size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>,<br>                           reduction=<span class="hljs-string">&#x27;mean&#x27;</span>, pos_weight=<span class="hljs-literal">None</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：计算二分类或多标签分类的二元交叉熵，并在内部完成
+sigmoid，适合直接接收模型 logits。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>weight</code>：按元素或按样本缩放损失；</li>
+<li><code>size_average</code>：<strong>已废弃</strong>。旧代码中
+<code>True</code> 表示平均、<code>False</code> 表示求和；请改用
+<code>reduction</code>；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>。旧代码中
+<code>False</code> 表示不聚合；请改用
+<code>reduction='none'</code>；</li>
+<li><code>reduction</code>：<code>'none'</code>、<code>'mean'</code> 或
+<code>'sum'</code>；</li>
+<li><code>pos_weight</code>：按类别增加正样本权重，常用于正样本稀少的情况。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：对一个元素，设 <span
+class="math inline">\(x\)</span> 为 logits、<span
+class="math inline">\(y\in\{0,1\}\)</span> 为目标、<span
+class="math inline">\(p=\sigma(x)\)</span> 为预测为正类的概率，则：</p>
+<p><span class="math display">\[
+\ell(x,y)=-[y\log p+(1-y)\log(1-p)]
+\]</span></p>
+<p><code>BCEWithLogitsLoss</code> 在数值上以稳定方式直接由 <span
+class="math inline">\(x\)</span> 计算上式，不需要先显式求 <span
+class="math inline">\(p\)</span>。设置 <code>pos_weight</code>
+后，正样本项会乘以该权重；批量损失再按 <code>reduction</code>
+做逐元素保留、平均或求和。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># logits 是模型尚未经过 sigmoid 的原始输出，形状为 [4]</span><br>logits = torch.tensor([<span class="hljs-number">1.2</span>, -<span class="hljs-number">0.7</span>, <span class="hljs-number">0.3</span>, -<span class="hljs-number">1.5</span>], requires_grad=<span class="hljs-literal">True</span>)<br><span class="hljs-comment"># 目标必须是与 logits 同形状的 float，值为 0 或 1</span><br>targets = torch.tensor([<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>])<br><br>loss = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([<span class="hljs-number">2.0</span>]))(logits, targets)<br>loss.backward()  <span class="hljs-comment"># 为 logits 及其上游模型参数计算梯度</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;BCEWithLogitsLoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>logits = torch.tensor([...], requires_grad=True)</code></strong>：创建形状为
+<code>[4]</code> 的浮点张量，可理解为一个批次中的 4 个样本各自输出 1
+个二分类原始得分。它们不是概率，因此可以小于 0 或大于
+1。<code>requires_grad=True</code> 会要求 Autograd
+从此张量开始记录后续运算；在真实训练中，logits
+通常来自模型最后一层，梯度会继续传回模型参数。</li>
+<li><strong><code>targets = torch.tensor([1.0, 0.0, 1.0, 0.0])</code></strong>：创建与
+logits 完全同形状的真实标签。BCE 系列要求标签是浮点张量而不是
+<code>long</code>，<code>1.0</code> 表示正类、<code>0.0</code>
+表示负类。形状不一致会导致错误或不符合预期的广播计算。</li>
+<li><strong><code>nn.BCEWithLogitsLoss(...)</code></strong>：实例化损失函数。这里的
+<code>pos_weight=torch.tensor([2.0])</code>
+表示发生正样本错误时，正类损失项按 2
+倍计入；它适用于正样本比负样本少得多的场景。未显式传入
+<code>reduction</code>，所以使用默认的 <code>'mean'</code>。</li>
+<li><strong><code>...(logits, targets)</code></strong>：调用损失模块完成前向传播。内部不会先暴露一个实际的
+sigmoid 张量再计算对数，而是采用更稳定的等价公式直接从 logits
+得到损失；因此模型最后一层不应再手动加 <code>sigmoid</code>。</li>
+<li><strong><code>loss.backward()</code></strong>：<code>loss</code>
+是一个标量，调用它会从损失节点沿计算图反向求导。此例的梯度保存在
+<code>logits.grad</code>；真实训练循环通常接着调用
+<code>optimizer.step()</code>，用这些梯度更新模型权重。</li>
+<li><strong><code>print(...)</code></strong>：用 <code>.item()</code>
+把单元素损失张量转换成普通 Python
+浮点数，便于打印或记录。不要对非标量损失直接
+<code>backward()</code>，除非提供对应的外部梯度。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：</p>
+<ul>
+<li><code>logits = [1.2, -0.7, 0.3, -1.5]</code>；</li>
+<li><code>targets = [1, 0, 1, 0]</code>；</li>
+<li><code>pos_weight = 2</code>，<code>reduction='mean'</code>。</li>
+</ul>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>将 logits
+转为概率（仅用于理解；实际函数内部以稳定方式完成）</strong>：</p>
+<p><span
+class="math display">\[p_i=\sigma(x_i)=\frac{1}{1+e^{-x_i}}\]</span></p>
+<p><span class="math display">\[p\approx[0.7685,\ 0.3318,\ 0.5744,\
+0.1824]\]</span></p></li>
+<li><p><strong>逐样本计算加权二元交叉熵</strong>：正类项乘以
+<code>pos_weight=2</code>。</p>
+<p><span
+class="math display">\[l_i=-[2y_i\log(p_i)+(1-y_i)\log(1-p_i)]\]</span></p>
+<ul>
+<li><span
+class="math inline">\(l_1=-2\log(0.7685)\approx0.5266\)</span>；</li>
+<li><span
+class="math inline">\(l_2=-\log(1-0.3318)\approx0.4032\)</span>；</li>
+<li><span
+class="math inline">\(l_3=-2\log(0.5744)\approx1.1090\)</span>；</li>
+<li><span
+class="math inline">\(l_4=-\log(1-0.1824)\approx0.2014\)</span>。</li>
+</ul></li>
+<li><p><strong>得到最终输出</strong>：默认取平均值。</p>
+<p><span
+class="math display">\[loss=\frac{l_1+l_2+l_3+l_4}{4}\approx0.5601\]</span></p></li>
+</ol>
+<p><strong>梯度含义</strong>：未加权时梯度方向与 <span
+class="math inline">\(\sigma(x_i)-y_i\)</span> 一致；正样本的梯度会被
+<code>pos_weight</code> 放大，使模型更重视漏判的正样本。</p>
+<h4 id="bceloss"><code>BCELoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.BCELoss(weight=<span class="hljs-literal">None</span>, size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：计算二分类的二元交叉熵。与
+<code>BCEWithLogitsLoss</code> 不同，输入必须已经是范围在
+<code>[0, 1]</code> 内的概率。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>weight</code>：为各损失元素设置手动缩放权重；</li>
+<li><code>size_average</code>：<strong>已废弃</strong>。旧代码中的平均/求和开关，应改为
+<code>reduction='mean'</code> 或 <code>'sum'</code>；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>。旧代码中关闭它相当于使用
+<code>reduction='none'</code>；</li>
+<li><code>reduction</code>：指定不聚合、平均或求和。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：公式与二元交叉熵相同： <span
+class="math display">\[
+\ell(p,y)=-[y\log p+(1-y)\log(1-p)]
+\]</span></p>
+<p>此公式中取对数时的底数是自然数e。此处输入 <span
+class="math inline">\(p\)</span> 已经是概率，必须满足 <span
+class="math inline">\(0\leq p\leq1\)</span>；而
+<code>BCEWithLogitsLoss</code> 的输入是
+logits。两者的数学目标相同，区别主要在输入形式和数值稳定性。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># 先将 logits 转为概率；实际训练中通常改用 BCEWithLogitsLoss 更稳定</span><br>logits = torch.tensor([<span class="hljs-number">1.2</span>, -<span class="hljs-number">0.7</span>, <span class="hljs-number">0.3</span>], requires_grad=<span class="hljs-literal">True</span>)<br>probabilities = torch.sigmoid(logits)<br>targets = torch.tensor([<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>])<br><br>loss = nn.BCELoss()(probabilities, targets)<br>loss.backward()  <span class="hljs-comment"># 梯度会经由 sigmoid 继续传回 logits</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;BCELoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>logits = ... requires_grad=True</code></strong>：这 3
+个值仍是模拟模型输出的原始得分。即使后面先经过
+sigmoid，梯度链路仍会保留，因为 sigmoid 的输出依赖于
+<code>logits</code>。</li>
+<li><strong><code>probabilities = torch.sigmoid(logits)</code></strong>：逐元素应用
+<span
+class="math inline">\(\sigma(x)=1/(1+e^{-x})\)</span>，将任意实数映射到
+<code>(0,1)</code>。这一步是 <code>BCELoss</code> 的前置条件；若误把
+logits 直接传给
+<code>BCELoss</code>，输入不一定是合法概率，训练结果会不正确。</li>
+<li><strong><code>targets = ...</code></strong>：标签与
+<code>probabilities</code> 同为 <code>[3]</code>，且必须是 0/1
+浮点数。<code>BCELoss</code>
+会将每个位置视作彼此独立的一次伯努利事件。</li>
+<li><strong><code>loss = nn.BCELoss()(probabilities, targets)</code></strong>：先创建默认
+<code>reduction='mean'</code> 的
+BCELoss，再立即调用。它逐元素计算交叉熵，最后返回一个标量平均损失。</li>
+<li><strong><code>loss.backward()</code></strong>：梯度先从平均损失传给
+<code>probabilities</code>，再通过 sigmoid 的导数 <span
+class="math inline">\(p(1-p)\)</span> 传回 <code>logits</code>。因此
+<code>logits.grad</code> 可用，而 <code>probabilities.grad</code>
+默认不保存，因为它不是叶子张量。</li>
+<li><strong><code>print(...)</code></strong>：打印当前批次的平均交叉熵；训练中该数值可用于观察模型是否在学习，但不能单独代表准确率。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：</p>
+<ul>
+<li><code>logits = [1.2, -0.7, 0.3]</code>；</li>
+<li><code>targets = [1, 0, 1]</code>；</li>
+<li><code>reduction='mean'</code>。</li>
+</ul>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>Sigmoid 将 logits 转为 BCELoss 所需概率</strong>：</p>
+<p><span class="math display">\[p=\sigma(logits)\approx[0.7685,\
+0.3318,\ 0.5744]\]</span></p></li>
+<li><p><strong>逐样本计算交叉熵</strong>：</p>
+<p><span
+class="math display">\[l_i=-[y_i\log(p_i)+(1-y_i)\log(1-p_i)]\]</span></p>
+<ul>
+<li><span
+class="math inline">\(l_1=-\log(0.7685)\approx0.2633\)</span>；</li>
+<li><span
+class="math inline">\(l_2=-\log(1-0.3318)\approx0.4032\)</span>；</li>
+<li><span
+class="math inline">\(l_3=-\log(0.5744)\approx0.5544\)</span>。</li>
+</ul></li>
+<li><p><strong>得到最终输出</strong>：</p>
+<p><span
+class="math display">\[loss=\frac{0.2633+0.4032+0.5544}{3}\approx0.4070\]</span></p></li>
+</ol>
+<p><strong>梯度含义</strong>：<code>backward()</code>
+先计算损失对概率的导数，再乘 sigmoid 导数 <span
+class="math inline">\(p(1-p)\)</span> 回传到
+logits；预测正类概率不足时，梯度下降会增大对应 logits。</p>
+<p>设：</p>
+<p><span class="math display">\[
+p=\sigma(x)
+\]</span></p>
+<p>其中：</p>
+<ul>
+<li><span class="math inline">\(x\)</span>：模型输出的 logits；</li>
+<li><span class="math inline">\(p\)</span>：经过 sigmoid
+后的预测为正类的概率；</li>
+<li><span class="math inline">\(y\in\{0,1\}\)</span>：真实标签。</li>
+</ul>
+<p>以单个样本为例，二元交叉熵损失为：</p>
+<p><span class="math display">\[
+\ell=-\left[y\ln p+(1-y)\ln(1-p)\right]
+\]</span></p>
+<p><code>BCELoss</code> 接收的是概率 <span
+class="math inline">\(p\)</span>，所以反向传播先得到：</p>
+<p><span class="math display">\[
+\frac{\partial \ell}{\partial p}
+=
+\frac{p-y}{p(1-p)}
+\]</span></p>
+<p>但模型真正需要更新的是产生 logits <span
+class="math inline">\(x\)</span> 的网络参数，而不是概率 <span
+class="math inline">\(p\)</span>。由于：</p>
+<p><span class="math display">\[
+p=\sigma(x)
+\]</span></p>
+<p>且：</p>
+<p><span class="math display">\[
+\frac{\partial p}{\partial x}=p(1-p)
+\]</span></p>
+<p>根据链式法则：</p>
+<p><span class="math display">\[
+\frac{\partial \ell}{\partial x}
+=
+\frac{\partial \ell}{\partial p}
+\frac{\partial p}{\partial x}
+=
+\frac{p-y}{p(1-p)}\cdot p(1-p)
+=
+p-y
+\]</span></p>
+<p>如果损失按批量平均（默认 <code>reduction='mean'</code>），批量大小为
+<span class="math inline">\(n\)</span>，则：</p>
+<p><span class="math display">\[
+\frac{\partial L}{\partial x_i}
+=
+\frac{p_i-y_i}{n}
+\]</span></p>
+<p>“预测正类概率不足时，梯度下降会增大对应 logits”的含义是：</p>
+<ul>
+<li><p>若真实标签 <span class="math inline">\(y=1\)</span>，但预测概率
+<span class="math inline">\(p=0.3\)</span>，则：</p>
+<p><span class="math display">\[
+p-y=0.3-1=-0.7
+\]</span></p>
+<p>此时梯度为负。</p></li>
+<li><p>梯度下降的更新形式是：</p>
+<p><span class="math display">\[
+x\leftarrow x-\eta\frac{\partial L}{\partial x}
+\]</span></p>
+<p>减去负数等于增加，所以 logits <span class="math inline">\(x\)</span>
+会变大。</p></li>
+<li><p>sigmoid 是单调递增函数；<span class="math inline">\(x\)</span>
+变大后，<span class="math inline">\(p=\sigma(x)\)</span>
+也会变大，模型就更倾向预测正类。</p></li>
+</ul>
+<p>反过来，若 <span class="math inline">\(y=0\)</span> 但模型预测的
+<span class="math inline">\(p\)</span> 很大，则 <span
+class="math inline">\(p-y&gt;0\)</span>。梯度下降会减小 logits，使
+sigmoid 输出的概率下降。</p>
+<h3 id="单标签多分类crossentropyloss">3.6.2
+单标签多分类：<code>CrossEntropyLoss</code></h3>
+<p>单标签多分类中，每个样本只属于一个类别。模型输出每个类别的
+logits，目标是对应的类别索引。</p>
+<h4 id="crossentropyloss"><code>CrossEntropyLoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.CrossEntropyLoss(weight=<span class="hljs-literal">None</span>, size_average=<span class="hljs-literal">None</span>, ignore_index=-<span class="hljs-number">100</span>,<br>                          reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>, label_smoothing=<span class="hljs-number">0.0</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：计算单标签多分类交叉熵，内部等价于
+<code>LogSoftmax + NLLLoss</code>。输入为 <code>[N, C]</code> 的
+logits，目标通常为 <code>[N]</code> 的类别索引。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>weight</code>：长度为类别数 <code>C</code>
+的权重，用于类别不平衡；</li>
+<li><code>size_average</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>ignore_index</code>：忽略指定类别索引的损失，常用于序列填充；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduction</code>：损失聚合方式；</li>
+<li><code>label_smoothing</code>：标签平滑系数，默认
+<code>0.0</code>。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：设第 <span
+class="math inline">\(n\)</span> 个样本的 logits 为 <span
+class="math inline">\(x_n\in\mathbb{R}^{C}\)</span>，正确类别索引为
+<span class="math inline">\(y_n\)</span>，则无标签平滑时：</p>
+<p><span class="math display">\[
+\ell_n=-\log\frac{\exp(x_{n,y_n})}{\sum_{c=1}^{C}\exp(x_{n,c})}
+\]</span></p>
+<p>它会提高正确类别的得分、压低其他类别的相对得分。<code>label_smoothing&gt;0</code>
+时，不再把全部目标概率放在正确类别上，而会向其他类别分配少量概率，从而减轻模型过度自信。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># 3 个样本、4 个类别；不要先对 logits 做 softmax</span><br>logits = torch.tensor([[<span class="hljs-number">2.0</span>, <span class="hljs-number">0.1</span>, -<span class="hljs-number">1.0</span>, <span class="hljs-number">0.3</span>],<br>                       [<span class="hljs-number">0.2</span>, <span class="hljs-number">1.4</span>, <span class="hljs-number">0.5</span>, -<span class="hljs-number">0.2</span>],<br>                       [-<span class="hljs-number">0.5</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">0.4</span>, <span class="hljs-number">1.8</span>]], requires_grad=<span class="hljs-literal">True</span>)<br><span class="hljs-comment"># 每个值是正确类别的索引，必须为 long，不是 one-hot 向量</span><br>targets = torch.tensor([<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>], dtype=torch.long)<br><br>loss = nn.CrossEntropyLoss(label_smoothing=<span class="hljs-number">0.1</span>)(logits, targets)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;CrossEntropyLoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>logits = torch.tensor([[...], ...], requires_grad=True)</code></strong>：创建形状
+<code>[3,4]</code> 的张量：第 0 维是 3 个样本，第 1 维是 4
+个类别。每行的值只是相对得分，不是概率，因此每行不要求和为 1。</li>
+<li><strong><code>targets = torch.tensor([0, 1, 3], dtype=torch.long)</code></strong>：为每个样本保存一个正确类别的索引。<code>CrossEntropyLoss</code>
+的类别索引目标必须是 <code>long</code>；这里不应传入
+<code>[1,0,0,0]</code> 形式的 one-hot 向量。</li>
+<li><strong><code>nn.CrossEntropyLoss(label_smoothing=0.1)</code></strong>：实例化交叉熵。默认
+<code>reduction='mean'</code>；<code>label_smoothing=0.1</code>
+让训练目标不再是绝对 one-hot，从而避免模型被过度鼓励给正确类输出概率
+1。</li>
+<li><strong><code>loss = criterion(logits, targets)</code></strong>：前向计算时，对每一行
+logits 独立做
+<code>log_softmax</code>，再取对应目标类别（或平滑后目标分布）的负对数似然；不需要、也不应该在此之前手工
+<code>softmax</code>。</li>
+<li><strong><code>loss.backward()</code></strong>：将 3
+个样本平均后的标量损失反向传播。对每一行，正确类别的梯度倾向于使其得分上升，其他类别的梯度倾向于使其得分下降；标签平滑会减弱这个推动力度。</li>
+<li><strong><code>argmax(dim=1)</code></strong>：若用于推理，取每行最大
+logits 的索引即可得到预测类。由于 softmax 是单调变换，先 softmax 再
+argmax 得到的索引相同。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：第一行 logits 为
+<code>[2.0, 0.1, -1.0, 0.3]</code>，正确类别为 <code>0</code>；共有
+<span class="math inline">\(C=4\)</span>
+类，<code>label_smoothing=0.1</code>。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>对第一行执行 softmax</strong>：</p>
+<p><span class="math display">\[p_c=\frac{e^{x_c}}{\sum_j
+e^{x_j}}\approx[0.7239,\ 0.1082,\ 0.0360,\ 0.1320]\]</span></p></li>
+<li><p><strong>构造平滑后的目标分布</strong>：</p>
+<p><span class="math display">\[q_0=1-0.1+\frac{0.1}{4}=0.925,\qquad
+q_1=q_2=q_3=\frac{0.1}{4}=0.025\]</span></p></li>
+<li><p><strong>计算该样本交叉熵</strong>：</p>
+<p><span class="math display">\[l_1=-\sum_{c=0}^{3}q_c\log
+p_c\]</span></p>
+<p>正确类 <span class="math inline">\(p_0\)</span>
+贡献最大，其他类的少量目标概率用于抑制过度自信。第二、三行分别使用标签
+1、3 重复此过程。</p></li>
+<li><p><strong>得到最终输出</strong>：将三个样本损失按默认方式平均。</p>
+<p><span
+class="math display">\[loss=\frac{l_1+l_2+l_3}{3}\]</span></p></li>
+</ol>
+<p><strong>梯度含义</strong>：每类的梯度近似为 <span
+class="math inline">\((p_c-q_c)/3\)</span>；正确类概率不足时提高正确类
+logits，预测过高的错误类 logits 被压低。</p>
+<h3 id="回归l1lossmseloss-与-smoothl1loss">3.6.3
+回归：<code>L1Loss</code>、<code>MSELoss</code> 与
+<code>SmoothL1Loss</code></h3>
+<p>回归任务预测连续数值；三种损失函数的主要差异在于对大误差和异常值的惩罚方式。</p>
+<h4 id="l1loss"><code>L1Loss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.L1Loss(size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：计算预测值和目标值的平均绝对误差（MAE），即
+<span class="math inline">\(|x-y|\)</span>，对异常值比 MSE
+更不敏感。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>size_average</code>：<strong>已废弃</strong>。旧代码中控制平均或求和，请改用
+<code>reduction</code>；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>。旧代码中关闭聚合，请改用
+<code>reduction='none'</code>；</li>
+<li><code>reduction</code>：逐元素返回、平均或求和。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：对第 <span
+class="math inline">\(n\)</span> 个元素：</p>
+<p><span class="math display">\[
+\ell_n=|x_n-y_n|
+\]</span></p>
+<p>绝对值使得误差增大时损失线性增长，因此相比
+MSE，个别很大的误差不会被额外平方放大。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br>prediction = torch.tensor([<span class="hljs-number">2.5</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">2.0</span>], requires_grad=<span class="hljs-literal">True</span>)<br>target = torch.tensor([<span class="hljs-number">3.0</span>, -<span class="hljs-number">0.5</span>, <span class="hljs-number">2.0</span>])  <span class="hljs-comment"># 形状与 prediction 对应</span><br><br>loss = nn.L1Loss(reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)(prediction, target)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;L1Loss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>prediction = ... requires_grad=True</code></strong>：创建
+3 个连续预测值，形状为
+<code>[3]</code>。在实际回归模型中它来自最后一层的输出，不需要 sigmoid
+或 softmax。</li>
+<li><strong><code>target = ...</code></strong>：给出每个预测位置对应的真实连续值，必须能与
+<code>prediction</code>
+一一对应；两者形状最好完全相同，避免无意的广播。</li>
+<li><strong><code>nn.L1Loss(reduction='mean')</code></strong>：明确指定按平均值返回标量。若改为
+<code>'none'</code>，会得到 <code>[0.5,0.5,0]</code>
+这类逐元素损失，便于检查哪个样本误差最大。</li>
+<li><strong><code>loss.backward()</code></strong>：将平均绝对误差对每个预测值求导。由于绝对值在零点不可导，PyTorch
+在该点采用子梯度规则；学习时一般不影响使用。</li>
+<li><strong><code>print(...)</code></strong>：打印平均
+MAE，其单位与目标值相同，因而通常比 MSE 更直观。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：<code>prediction = [2.5, 0.0, 2.0]</code>，<code>target = [3.0, -0.5, 2.0]</code>，<code>reduction='mean'</code>。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>计算逐元素误差</strong>：</p>
+<p><span class="math display">\[d=prediction-target=[-0.5,\ 0.5,\
+0]\]</span></p></li>
+<li><p><strong>取绝对值得到逐元素 L1 损失</strong>：</p>
+<p><span class="math display">\[l=|d|=[0.5,\ 0.5,\ 0]\]</span></p></li>
+<li><p><strong>得到最终输出</strong>：</p>
+<p><span
+class="math display">\[loss=\frac{0.5+0.5+0}{3}=\frac{1}{3}\approx0.3333\]</span></p></li>
+</ol>
+<p><strong>梯度含义</strong>：三个 prediction 的梯度方向分别为 <span
+class="math inline">\([-1/3,1/3,0]\)</span>（零点处取子梯度）。梯度下降会增加
+2.5、降低 0.0，而第三项无需调整。</p>
+<h4 id="mseloss"><code>MSELoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.MSELoss(size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：计算均方误差（MSE），即 <span
+class="math inline">\((x-y)^2\)</span>。大误差会被平方后放大，因此对离群点更敏感。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>size_average</code>：<strong>已废弃</strong>，请用
+<code>reduction</code> 表示平均或求和；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>，请用
+<code>reduction='none'</code> 保留各元素损失；</li>
+<li><code>reduction</code>：逐元素返回、平均或求和。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：对第 <span
+class="math inline">\(n\)</span> 个元素：</p>
+<p><span class="math display">\[
+\ell_n=(x_n-y_n)^2
+\]</span></p>
+<p>平方会使大误差的贡献急剧变大；因此它会更积极地修正大误差，但也更容易受离群点影响。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br>prediction = torch.tensor([<span class="hljs-number">2.5</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">8.0</span>], requires_grad=<span class="hljs-literal">True</span>)<br>target = torch.tensor([<span class="hljs-number">3.0</span>, -<span class="hljs-number">0.5</span>, <span class="hljs-number">3.0</span>])  <span class="hljs-comment"># 最后一项误差较大，会被平方放大</span><br><br>loss = nn.MSELoss()(prediction, target)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;MSELoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>prediction</code></strong>：三个回归预测中最后一个值为
+8，特意设置成明显偏离目标，用于观察平方惩罚的效果；它是需要求梯度的叶子张量。</li>
+<li><strong><code>target</code></strong>：对应真实值
+<code>[3.0,-0.5,3.0]</code>，与预测值逐元素配对。</li>
+<li><strong><code>nn.MSELoss()</code></strong>：默认
+<code>reduction='mean'</code>。前向传播先计算每个位置的误差，再平方，最后将
+3 个平方误差平均成一个标量。</li>
+<li><strong><code>loss.backward()</code></strong>：计算 <span
+class="math inline">\(L\)</span> 关于每个 prediction 的梯度并写入
+<code>prediction.grad</code>。平方使远离目标的预测得到更强的梯度修正。</li>
+<li><strong><code>print(...)</code></strong>：输出的 8.5
+是均方误差，不是原始单位下的平均偏差；因此它通常比 MAE
+更难直接解释。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：<code>prediction = [2.5, 0.0, 8.0]</code>，<code>target = [3.0, -0.5, 3.0]</code>，<code>reduction='mean'</code>。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>计算误差</strong>：</p>
+<p><span class="math display">\[d=[-0.5,\ 0.5,\ 5]\]</span></p></li>
+<li><p><strong>平方得到逐元素损失</strong>：</p>
+<p><span class="math display">\[l=d^2=[0.25,\ 0.25,\
+25]\]</span></p></li>
+<li><p><strong>得到最终输出</strong>：</p>
+<p><span
+class="math display">\[loss=\frac{0.25+0.25+25}{3}=8.5\]</span></p></li>
+</ol>
+<p><strong>梯度含义</strong>：</p>
+<p><span class="math display">\[\frac{\partial loss}{\partial
+prediction_i}=\frac{2(prediction_i-target_i)}{3}\approx[-0.333,\ 0.333,\
+3.333]\]</span></p>
+<p>第三项大误差的梯度远大于前两项，说明 MSE 会强烈惩罚离群误差。</p>
+<h4 id="smoothl1loss"><code>SmoothL1Loss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.SmoothL1Loss(size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>, beta=<span class="hljs-number">1.0</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：小误差区域使用平滑的二次函数，大误差区域近似
+L1 损失，兼顾 MSE 的平滑性与 L1 对异常值的鲁棒性。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>size_average</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduction</code>：逐元素返回、平均或求和；</li>
+<li><code>beta</code>：L1 与二次区域的分界阈值，默认
+<code>1.0</code>。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：令 <span
+class="math inline">\(d=x-y\)</span>，则：</p>
+<p><span class="math display">\[
+\ell(d)=
+\begin{cases}
+\dfrac{0.5d^2}{\beta}, &amp; |d|&lt;\beta\\
+|d|-0.5\beta, &amp; |d|\geq\beta
+\end{cases}
+\]</span></p>
+<p>误差较小时使用二次函数，梯度在零点附近更平滑；误差较大时使用线性增长，避免
+MSE 对异常值的过度惩罚。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br>prediction = torch.tensor([<span class="hljs-number">2.5</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">8.0</span>], requires_grad=<span class="hljs-literal">True</span>)<br>target = torch.tensor([<span class="hljs-number">3.0</span>, -<span class="hljs-number">0.5</span>, <span class="hljs-number">3.0</span>])<br><br><span class="hljs-comment"># beta=1.0：误差小于 1 时平滑，大于等于 1 时近似 L1</span><br>loss = nn.SmoothL1Loss(beta=<span class="hljs-number">1.0</span>)(prediction, target)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;SmoothL1Loss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>prediction</code> 与
+<code>target</code></strong>：使用和 MSE
+示例相同的数据，使三种回归损失的数值差异只来自损失函数本身。</li>
+<li><strong><code>nn.SmoothL1Loss(beta=1.0)</code></strong>：创建 Huber
+风格的平滑 L1 损失。<code>beta</code>
+是从二次区域切换到线性区域的阈值，不是优化器的学习率。</li>
+<li><strong>前向调用</strong>：函数逐元素判断 <span
+class="math inline">\(|prediction-target|\)</span> 是否小于
+1，然后选用对应的分段公式；默认对所有元素平均。</li>
+<li><strong><code>backward()</code></strong>：小误差区域的梯度随误差线性变化且在
+0 处平滑；大误差区域的梯度幅度被限制，类似 L1，因此不会像 MSE
+一样被异常值主导。</li>
+<li><strong><code>print(...)</code></strong>：输出是三种分段损失的平均值，适合和
+MSE/L1 对照。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：<code>prediction = [2.5, 0.0, 8.0]</code>，<code>target = [3.0, -0.5, 3.0]</code>，<code>beta=1.0</code>。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>计算误差</strong>：</p>
+<p><span class="math display">\[d=[-0.5,\ 0.5,\ 5]\]</span></p></li>
+<li><p><strong>按 <span class="math inline">\(|d|\)</span> 与
+<code>beta</code> 的关系选择分段公式</strong>：</p>
+<ul>
+<li>前两项 <span class="math inline">\(|d|=0.5&lt;1\)</span>，<span
+class="math inline">\(l=0.5d^2=0.125\)</span>；</li>
+<li>第三项 <span class="math inline">\(|d|=5\ge1\)</span>，<span
+class="math inline">\(l=|d|-0.5=4.5\)</span>。</li>
+</ul></li>
+<li><p><strong>得到最终输出</strong>：</p>
+<p><span
+class="math display">\[loss=\frac{0.125+0.125+4.5}{3}\approx1.5833\]</span></p></li>
+</ol>
+<p><strong>梯度含义</strong>：小误差的梯度与误差成正比；第三项进入 L1
+区域，平均后的梯度幅度只有 <span
+class="math inline">\(1/3\)</span>，不会像 MSE 那样被大误差放大。</p>
+<h3 id="计数和概率分布poissonnllloss-与-kldivloss">3.6.4
+计数和概率分布：<code>PoissonNLLLoss</code> 与
+<code>KLDivLoss</code></h3>
+<p>这类损失分别用于非负计数建模，以及两个概率分布之间的匹配。</p>
+<h4 id="poissonnllloss"><code>PoissonNLLLoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.PoissonNLLLoss(log_input=<span class="hljs-literal">True</span>, full=<span class="hljs-literal">False</span>, size_average=<span class="hljs-literal">None</span>,<br>                        eps=<span class="hljs-number">1e-08</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：计算目标服从泊松分布时的负对数似然损失，适合预测非负计数，例如单位时间内的事件数量。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>log_input</code>：默认
+<code>True</code>，表示输入是预测率的对数；此时模型可输出任意实数；</li>
+<li><code>full</code>：是否加入 Stirling
+近似项以得到更完整的泊松负对数似然；</li>
+<li><code>size_average</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>eps</code>：当 <code>log_input=False</code> 时用于避免计算
+<code>log(0)</code>；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduction</code>：损失聚合方式。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：设目标计数为 <span
+class="math inline">\(y\)</span>。当 <code>log_input=True</code>
+时，输入 <span class="math inline">\(x=\log\lambda\)</span>，其中 <span
+class="math inline">\(\lambda\)</span> 是泊松分布的预测率：</p>
+<p><span class="math display">\[
+\ell(x,y)=\exp(x)-yx
+\]</span></p>
+<p>当 <code>log_input=False</code> 时，输入直接是 <span
+class="math inline">\(\lambda\)</span>，公式为 <span
+class="math inline">\(\ell(\lambda,y)=\lambda-y\log(\lambda+\varepsilon)\)</span>。<code>full=True</code>
+还会加入与 <span class="math inline">\(\log(y!)\)</span>
+有关的近似项，使损失更接近完整负对数似然。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># log_rate 是模型预测的 log(lambda)；内部会计算 exp(log_rate) 得到正的率</span><br>log_rate = torch.tensor([<span class="hljs-number">0.0</span>, <span class="hljs-number">0.7</span>, <span class="hljs-number">1.2</span>], requires_grad=<span class="hljs-literal">True</span>)<br><span class="hljs-comment"># 泊松目标为非负计数，使用 float 张量传入</span><br>counts = torch.tensor([<span class="hljs-number">1.0</span>, <span class="hljs-number">3.0</span>, <span class="hljs-number">2.0</span>])<br><br>loss = nn.PoissonNLLLoss(log_input=<span class="hljs-literal">True</span>, full=<span class="hljs-literal">True</span>)(log_rate, counts)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;PoissonNLLLoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>log_rate = ... requires_grad=True</code></strong>：三个值表示模型输出的
+<span
+class="math inline">\(\log\lambda\)</span>，不是直接的计数，也不是概率。这样模型可以输出任意实数，内部指数运算会保证预测率
+<span class="math inline">\(\lambda\)</span> 始终为正。</li>
+<li><strong><code>counts = ...</code></strong>：真实观察计数为
+<code>[1,3,2]</code>。虽然逻辑上是整数计数，PyTorch
+损失计算时使用浮点张量以参与连续的自动求导。</li>
+<li><strong><code>nn.PoissonNLLLoss(log_input=True, full=True)</code></strong>：<code>log_input=True</code>
+告诉函数调用 <span class="math inline">\(\exp(log\_rate)\)</span>
+恢复率；<code>full=True</code>
+加入关于阶乘项的近似，使不同计数的损失比较更接近完整的泊松负对数似然。默认仍按平均返回。</li>
+<li><strong><code>loss.backward()</code></strong>：梯度会作用于
+<code>log_rate</code>。若当前预测率低于实际计数，梯度下降会倾向增大
+log-rate；反之则降低它。</li>
+<li><strong><code>print(...)</code></strong>：输出为三个计数样本的平均负对数似然，而非“预测计数的平均误差”。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：<code>log_rate = [0.0, 0.7, 1.2]</code>，<code>counts = [1,3,2]</code>；<code>log_input=True</code>、<code>full=True</code>。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>恢复每个样本的泊松预测率</strong>：</p>
+<p><span class="math display">\[\lambda=e^{log\_rate}\approx[1.0000,\
+2.0138,\ 3.3201]\]</span></p></li>
+<li><p><strong>计算核心负对数似然项</strong>：</p>
+<p><span
+class="math display">\[l_i^{core}=\lambda_i-y_i\log\lambda_i=\lambda_i-y_i\cdot
+log\_rate_i\]</span></p>
+<p>得到 <span class="math inline">\([1.0000,\ -0.0862,\
+0.9201]\)</span>。由于 <code>full=True</code>，对计数大于 1
+的后两项还会加入 <span class="math inline">\(\log(y_i!)\)</span> 的
+Stirling 近似项。</p></li>
+<li><p><strong>得到最终输出</strong>：对完整的三个逐元素 NLL 按默认
+<code>mean</code> 求平均。</p></li>
+</ol>
+<p><strong>梯度含义</strong>：核心梯度为 <span
+class="math inline">\(\lambda_i-y_i\)</span>。第二项约为 <span
+class="math inline">\(-0.9862\)</span>，梯度下降会增大其
+<code>log_rate</code>，从而把预测率从 2.01 推向真实计数 3。</p>
+<h4 id="kldivloss"><code>KLDivLoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.KLDivLoss(size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>, log_target=<span class="hljs-literal">False</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：计算两个概率分布之间的 KL
+散度。默认时第一个输入是对数概率，第二个输入是普通概率，常用于知识蒸馏和分布匹配。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>size_average</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduction</code>：可取
+<code>'none'</code>、<code>'sum'</code>、<code>'mean'</code> 或
+<code>'batchmean'</code>；常用 <code>'batchmean'</code>，与 KL
+散度的标准批量定义一致；</li>
+<li><code>log_target</code>：为 <code>False</code>（默认）时
+<code>target</code> 是普通概率；为 <code>True</code> 时
+<code>target</code> 也必须是对数概率。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：令目标分布为 <span
+class="math inline">\(P\)</span>，模型分布为 <span
+class="math inline">\(Q\)</span>，则：</p>
+<p><span class="math display">\[
+D_{\mathrm{KL}}(P\|Q)=\sum_i P(i)\log\frac{P(i)}{Q(i)}
+\]</span></p>
+<p>默认 <code>log_target=False</code> 时，<code>input</code> 传入 <span
+class="math inline">\(\log Q(i)\)</span>，<code>target</code> 传入 <span
+class="math inline">\(P(i)\)</span>。KL 散度不对称，衡量的是“用 <span
+class="math inline">\(Q\)</span> 近似 <span
+class="math inline">\(P\)</span>”时的差异；<code>batchmean</code>
+会先对每个样本求和，再除以批量大小。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># 2 个样本、3 个类别的模型 logits</span><br>student_logits = torch.tensor([[<span class="hljs-number">1.0</span>, <span class="hljs-number">0.2</span>, -<span class="hljs-number">0.5</span>], [<span class="hljs-number">0.1</span>, <span class="hljs-number">0.8</span>, <span class="hljs-number">0.3</span>]], requires_grad=<span class="hljs-literal">True</span>)<br><span class="hljs-comment"># 每行是和为 1 的目标概率分布，例如教师模型输出</span><br>target_probs = torch.tensor([[<span class="hljs-number">0.7</span>, <span class="hljs-number">0.2</span>, <span class="hljs-number">0.1</span>], [<span class="hljs-number">0.1</span>, <span class="hljs-number">0.6</span>, <span class="hljs-number">0.3</span>]])<br><br>log_probs = F.log_softmax(student_logits, dim=<span class="hljs-number">1</span>)  <span class="hljs-comment"># KLDivLoss 的 input 必须为对数概率</span><br>loss = nn.KLDivLoss(reduction=<span class="hljs-string">&#x27;batchmean&#x27;</span>)(log_probs, target_probs)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;KLDivLoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>student_logits</code></strong>：形状为
+<code>[2,3]</code>，两行是两个样本，三列是类别得分。它模拟待训练模型的输出，因此设置
+<code>requires_grad=True</code>。</li>
+<li><strong><code>target_probs</code></strong>：也是
+<code>[2,3]</code>，每行都是合法概率分布，必须非负且和为
+1；它可以来自教师模型、软标签或人工设定的目标分布。</li>
+<li><strong><code>F.log_softmax(student_logits, dim=1)</code></strong>：沿类别维计算对数
+softmax，直接得到 <span class="math inline">\(\log
+Q\)</span>。不能传普通 logits 给默认的 <code>KLDivLoss</code>，也不要传
+<code>softmax</code> 后的普通概率作为 input。</li>
+<li><strong><code>nn.KLDivLoss(reduction='batchmean')</code></strong>：默认
+<code>log_target=False</code>，因此第二个参数被视为普通概率 <span
+class="math inline">\(P\)</span>。<code>batchmean</code>
+是把所有类别损失求和后只除以批量大小 2，而不是再除以类别数。</li>
+<li><strong><code>backward()</code></strong>：让每行学生分布 <span
+class="math inline">\(Q\)</span> 接近目标 <span
+class="math inline">\(P\)</span>；目标分布默认不要求梯度，只有 student
+logits 会收到梯度。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：第一行学生 logits 为
+<code>[1.0,0.2,-0.5]</code>，目标分布为
+<code>[0.7,0.2,0.1]</code>；<code>reduction='batchmean'</code>。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>将 logits 归一化为学生分布</strong>：</p>
+<p><span
+class="math display">\[Q=softmax([1.0,0.2,-0.5])\approx[0.5979,\
+0.2687,\ 0.1334]\]</span></p></li>
+<li><p><strong>计算每个类别的 KL 项</strong>：</p>
+<p><span class="math display">\[t_i=P_i(\log P_i-\log
+Q_i)=P_i\log\frac{P_i}{Q_i}\]</span></p>
+<p>分别代入 <span class="math inline">\(P=[0.7,0.2,0.1]\)</span>
+后再求和，得到第一样本的 <span
+class="math inline">\(KL_1\)</span>。</p></li>
+<li><p><strong>得到最终输出</strong>：第二行同样得到 <span
+class="math inline">\(KL_2\)</span>，随后：</p>
+<p><span
+class="math display">\[loss=\frac{KL_1+KL_2}{2}\]</span></p></li>
+</ol>
+<p><strong>梯度含义</strong>：目标概率高于学生概率的类别会被提高
+logits，反之被压低；KL 是有方向的 <span
+class="math inline">\(D_{KL}(P\|Q)\)</span>，交换两者不会得到同一数值。</p>
+<h3 id="排序边界与度量学习损失">3.6.5 排序、边界与度量学习损失</h3>
+<p>这类损失约束样本之间的排序关系、类别间隔、距离或嵌入向量的相似度，而非直接进行常规单标签分类。</p>
+<h4 id="marginrankingloss"><code>MarginRankingLoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.MarginRankingLoss(margin=<span class="hljs-number">0.0</span>, size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>,<br>                           reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：比较两个输入得分的相对大小。目标为
+<code>1</code> 时希望 <code>input1 &gt; input2</code>，目标为
+<code>-1</code> 时希望
+<code>input1 &lt; input2</code>，常用于排序任务。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>margin</code>：两个得分之间要求满足的最小间隔；</li>
+<li><code>size_average</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduction</code>：损失聚合方式。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：设 <span
+class="math inline">\(y\in\{-1,1\}\)</span>，则单个样本的损失为：</p>
+<p><span class="math display">\[
+\ell(x_1,x_2,y)=\max(0,-y(x_1-x_2)+\text{margin})
+\]</span></p>
+<p>当 <span class="math inline">\(y=1\)</span> 时，只有在 <span
+class="math inline">\(x_1\)</span> 没有比 <span
+class="math inline">\(x_2\)</span> 至少大 <code>margin</code>
+时才产生损失；当 <span class="math inline">\(y=-1\)</span>
+时，约束方向相反。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># 第一个样本希望 input1 大于 input2；第二个样本希望 input1 小于 input2</span><br>input1 = torch.tensor([<span class="hljs-number">2.0</span>, <span class="hljs-number">0.2</span>], requires_grad=<span class="hljs-literal">True</span>)<br>input2 = torch.tensor([<span class="hljs-number">1.0</span>, <span class="hljs-number">0.8</span>], requires_grad=<span class="hljs-literal">True</span>)<br>targets = torch.tensor([<span class="hljs-number">1.0</span>, -<span class="hljs-number">1.0</span>])  <span class="hljs-comment"># 只能取 1 或 -1</span><br><br>loss = nn.MarginRankingLoss(margin=<span class="hljs-number">0.5</span>)(input1, input2, targets)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;MarginRankingLoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>input1</code> 与
+<code>input2</code></strong>：各有两个元素，索引相同的位置构成一对待排序得分；两者均开启梯度，以便观察违反约束时两个分数如何被同时调整。</li>
+<li><strong><code>targets = [1.0,-1.0]</code></strong>：这是排序方向标签而不是类别编号。第一个
+1 要求 <span
+class="math inline">\(input1[0]&gt;input2[0]\)</span>；第二个 -1 要求
+$input1[1]&lt;input2[1]`。</li>
+<li><strong><code>MarginRankingLoss(margin=0.5)</code></strong>：要求满足方向还不够，两个得分的间隔至少为
+0.5。默认将两个样本损失取平均。</li>
+<li><strong>前向与 <code>backward()</code></strong>：函数逐位置计算
+hinge
+损失。只有某对未达到指定间隔时才产生梯度；已经正确且间隔足够的对不再被继续拉开。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：<code>input1=[2.0,0.2]</code>，<code>input2=[1.0,0.8]</code>，<code>targets=[1,-1]</code>，<code>margin=0.5</code>。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>第一对（目标为 1）</strong>：要求 <span
+class="math inline">\(input1-input2\ge0.5\)</span>。</p>
+<p><span
+class="math display">\[l_1=\max(0,-1(2.0-1.0)+0.5)=0\]</span></p></li>
+<li><p><strong>第二对（目标为 -1）</strong>：要求 <span
+class="math inline">\(input2-input1\ge0.5\)</span>。</p>
+<p><span
+class="math display">\[l_2=\max(0,-(-1)(0.2-0.8)+0.5)=0\]</span></p></li>
+<li><p><strong>得到最终输出</strong>：</p>
+<p><span class="math display">\[loss=(l_1+l_2)/2=0\]</span></p></li>
+</ol>
+<p><strong>梯度含义</strong>：两对都已满足间隔，因此梯度均为
+0。若第一对的 <code>input1</code> 低于 1.5，就会产生正损失，并推动
+input1 上升、input2 下降。</p>
+<h4 id="multilabelmarginloss"><code>MultiLabelMarginLoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.MultiLabelMarginLoss(size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：计算多标签分类的边界损失。目标中列出一个样本所属的多个类别索引，其余位置用
+<code>-1</code> 填充。对于现代多标签分类通常更推荐
+<code>BCEWithLogitsLoss</code>。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>size_average</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduction</code>：损失聚合方式。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：对一个样本，设正标签集合为 <span
+class="math inline">\(Y\)</span>，所有类别得分为 <span
+class="math inline">\(x_i\)</span>，该损失对每个正标签 <span
+class="math inline">\(j\in Y\)</span> 与每个非正标签 <span
+class="math inline">\(i\notin Y\)</span> 计算：</p>
+<p><span class="math display">\[
+\ell=\frac{1}{C}\sum_{j\in Y}\sum_{i\notin Y}\max(0,1-x_j+x_i)
+\]</span></p>
+<p>它要求每个正标签得分至少比非正标签高 1。目标张量用 <code>-1</code>
+表示“正标签列表到此结束”。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># 1 个样本、4 个类别的得分</span><br>scores = torch.tensor([[<span class="hljs-number">0.2</span>, <span class="hljs-number">0.8</span>, <span class="hljs-number">0.1</span>, <span class="hljs-number">0.9</span>]], requires_grad=<span class="hljs-literal">True</span>)<br><span class="hljs-comment"># 正确标签是类别 1 和 3；后续位置必须以 -1 填充</span><br>targets = torch.tensor([[<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>]], dtype=torch.long)<br><br>loss = nn.MultiLabelMarginLoss()(scores, targets)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;MultiLabelMarginLoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>scores</code></strong>：形状为
+<code>[1,4]</code>，第一个维度表示一个样本，4 列是该样本对 4
+个类别的分数。它不是 softmax 概率，各类别分数可以独立增减。</li>
+<li><strong><code>targets</code></strong>：与 scores 同形状且类型为
+<code>long</code>。前两个位置列出正标签类别 1、3；第一个 <code>-1</code>
+表示标签列表结束，后面的值不再参与。</li>
+<li><strong><code>MultiLabelMarginLoss()</code></strong>：对“每个正类 ×
+每个负类”计算间隔项，要求每个正类得分都至少高出负类
+1；它默认对批量求平均。</li>
+<li><strong><code>backward()</code></strong>：违反约束的正类会获得提升分数的梯度，相关负类会获得降低分数的梯度；已满足间隔的配对梯度为
+0。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：<code>scores=[0.2,0.8,0.1,0.9]</code>；<code>targets=[1,3,-1,-1]</code>，所以正类为
+1、3，非正类为 0、2。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>取出正、负类别得分</strong>：正类得分为 <span
+class="math inline">\(0.8,0.9\)</span>，负类得分为 <span
+class="math inline">\(0.2,0.1\)</span>。</p></li>
+<li><p><strong>计算所有正负配对的间隔项</strong>：</p>
+<p><span class="math display">\[\max(0,1-x_j+x_i)\]</span></p>
+<p>得到 <span
+class="math inline">\(0.4,0.3,0.3,0.2\)</span>，分别对应正类 1/3 与负类
+0/2 的 4 个组合。</p></li>
+<li><p><strong>得到最终输出</strong>：函数将这些正损失项按类别数进行内部归一化，再按默认方式聚合为单个样本损失。</p></li>
+</ol>
+<p><strong>梯度含义</strong>：每个正项都会提升对应正类得分并降低对应负类得分，直到所有正类至少比负类高
+1。</p>
+<h4 id="softmarginloss"><code>SoftMarginLoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.SoftMarginLoss(size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：计算以 <code>-1</code> 和 <code>1</code>
+为标签的逐元素二分类 logistic 损失。若数据集标签为
+<code>0/1</code>，一般应使用 <code>BCEWithLogitsLoss</code>。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>size_average</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduction</code>：损失聚合方式。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：标签 <span
+class="math inline">\(y\)</span> 必须为 <span
+class="math inline">\(-1\)</span> 或 <span
+class="math inline">\(1\)</span>，单个元素损失为：</p>
+<p><span class="math display">\[
+\ell(x,y)=\log(1+\exp(-yx))
+\]</span></p>
+<p>当 <span class="math inline">\(y=1\)</span> 时，增大 <span
+class="math inline">\(x\)</span> 能减小损失；当 <span
+class="math inline">\(y=-1\)</span> 时，减小 <span
+class="math inline">\(x\)</span> 能减小损失。这与
+<code>BCEWithLogitsLoss</code> 的标签编码不同。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># 输入是任意实数得分；标签必须与输入同形状，且值为 -1 或 1</span><br>scores = torch.tensor([<span class="hljs-number">0.8</span>, -<span class="hljs-number">0.4</span>, <span class="hljs-number">1.2</span>], requires_grad=<span class="hljs-literal">True</span>)<br>targets = torch.tensor([<span class="hljs-number">1.0</span>, -<span class="hljs-number">1.0</span>, <span class="hljs-number">1.0</span>])<br><br>loss = nn.SoftMarginLoss()(scores, targets)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;SoftMarginLoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>scores</code></strong>：形状 <code>[3]</code>
+的任意实数得分，分别代表三次独立二元判别的 raw score；不需要预先做
+sigmoid。</li>
+<li><strong><code>targets</code></strong>：必须和 scores
+同形状，但标签编码是 <span class="math inline">\(+1/-1\)</span>，这与
+BCE 使用 <span class="math inline">\(1/0\)</span> 的编码不同。</li>
+<li><strong><code>nn.SoftMarginLoss()</code></strong>：内部把每一项写为
+<span class="math inline">\(\log(1+e^{-yx})\)</span>
+并使用默认平均聚合；当 <span class="math inline">\(yx\)</span>
+越大，表示预测方向越正确且越自信，损失越小。</li>
+<li><strong><code>backward()</code></strong>：对正标签推动分数向正无穷方向移动，对负标签推动分数向负无穷方向移动；梯度会随间隔变大而逐渐减小。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：<code>scores=[0.8,-0.4,1.2]</code>，<code>targets=[1,-1,1]</code>，默认
+<code>reduction='mean'</code>。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>先计算分类方向乘积</strong>：</p>
+<p><span class="math display">\[y\cdot x=[0.8,\ 0.4,\ 1.2]\]</span></p>
+<p>第二项虽然 score 为负，但目标也是 -1，因此方向正确。</p></li>
+<li><p><strong>逐元素计算 logistic 损失</strong>：</p>
+<p><span class="math display">\[l_i=\log(1+e^{-y_ix_i})\approx[0.3711,\
+0.5130,\ 0.2633]\]</span></p></li>
+<li><p><strong>得到最终输出</strong>：</p>
+<p><span
+class="math display">\[loss=(0.3711+0.5130+0.2633)/3\approx0.3825\]</span></p></li>
+</ol>
+<p><strong>梯度含义</strong>：<span
+class="math inline">\(y_ix_i\)</span> 越大，损失越接近
+0；梯度下降会使正样本 score 变大、负样本 score 变小。</p>
+<h4 id="multimarginloss"><code>MultiMarginLoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.MultiMarginLoss(p=<span class="hljs-number">1</span>, margin=<span class="hljs-number">1.0</span>, weight=<span class="hljs-literal">None</span>, size_average=<span class="hljs-literal">None</span>,<br>                         reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：计算单标签多分类的 hinge
+损失。实际多分类任务中，<code>CrossEntropyLoss</code> 往往更常用。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>p</code>：间隔惩罚的指数，只能取 <code>1</code> 或
+<code>2</code>；</li>
+<li><code>margin</code>：正确类别得分相对其他类别要求满足的最小间隔；</li>
+<li><code>weight</code>：按类别设置的权重；</li>
+<li><code>size_average</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduction</code>：损失聚合方式。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：设正确类别为 <span
+class="math inline">\(y\)</span>，类别数为 <span
+class="math inline">\(C\)</span>，则：</p>
+<p><span class="math display">\[
+\ell(x,y)=\frac{1}{C}\sum_{i\ne y}\max(0,\text{margin}-x_y+x_i)^p
+\]</span></p>
+<p>若正确类别得分 <span class="math inline">\(x_y\)</span>
+已比每个其他类别至少高 <code>margin</code>，对应项为 0；<code>p</code>
+决定对违反间隔的惩罚是线性还是平方。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># 2 个样本、3 个类别的得分，目标是每个样本的正确类别索引</span><br>scores = torch.tensor([[<span class="hljs-number">0.2</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">0.1</span>], [<span class="hljs-number">0.9</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.5</span>]], requires_grad=<span class="hljs-literal">True</span>)<br>targets = torch.tensor([<span class="hljs-number">1</span>, <span class="hljs-number">0</span>], dtype=torch.long)<br><br>loss = nn.MultiMarginLoss(p=<span class="hljs-number">1</span>, margin=<span class="hljs-number">1.0</span>)(scores, targets)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;MultiMarginLoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>scores</code></strong>：形状
+<code>[2,3]</code>，第一维是两个样本，第二维是三个类别的得分。每行可看作一个多分类模型的输出，但此处训练目标采用
+hinge 间隔而非 softmax 交叉熵。</li>
+<li><strong><code>targets</code></strong>：<code>[1,0]</code>
+是两个正确类别索引，类型为 <code>long</code>。第一行要让第 1
+类得分最高，第二行要让第 0 类得分最高。</li>
+<li><strong><code>MultiMarginLoss(p=1, margin=1.0)</code></strong>：对正确类与每个错误类构造
+<span class="math inline">\(\max(0,1-x_y+x_i)\)</span>。<code>p=1</code>
+是线性 hinge；若设为 2，违反间隔的项会被平方。</li>
+<li><strong>前向调用与
+<code>backward()</code></strong>：所有违反间隔的错误类都会推高损失。反向传播提升正确类得分，并降低发生违反的错误类得分；已经满足间隔的类别不产生梯度。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：两行 scores 为
+<code>[[0.2,1.0,0.1],[0.9,0.3,0.5]]</code>，正确类别
+<code>targets=[1,0]</code>，<code>margin=1</code>、<code>p=1</code>。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>第一样本，正确类为 1</strong>：</p>
+<p><span
+class="math display">\[\max(0,1-1.0+0.2)=0.2,\qquad\max(0,1-1.0+0.1)=0.1\]</span></p></li>
+<li><p><strong>第二样本，正确类为 0</strong>：</p>
+<p><span
+class="math display">\[\max(0,1-0.9+0.3)=0.4,\qquad\max(0,1-0.9+0.5)=0.6\]</span></p></li>
+<li><p><strong>得到最终输出</strong>：函数将每行错误类别对应的项按类别数归一化，再对两个样本按默认
+<code>mean</code> 聚合。</p></li>
+</ol>
+<p><strong>梯度含义</strong>：4 个项都违反间隔，因此各正确类 logits
+会被提高，4 个对应错误类 logits 会被压低。</p>
+<h4 id="tripletmarginloss"><code>TripletMarginLoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.TripletMarginLoss(margin=<span class="hljs-number">1.0</span>, p=<span class="hljs-number">2.0</span>, eps=<span class="hljs-number">1e-06</span>, swap=<span class="hljs-literal">False</span>,<br>                           size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：计算三元组损失。它让锚点 <code>anchor</code>
+与同类样本 <code>positive</code> 的距离，小于锚点与异类样本
+<code>negative</code> 的距离，并至少相差一个 <code>margin</code>。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>margin</code>：正负样本距离之间要求的最小间隔；</li>
+<li><code>p</code>：距离使用的 <span class="math inline">\(p\)</span>
+范数，默认 <code>2.0</code> 即欧氏距离；</li>
+<li><code>eps</code>：数值稳定项；</li>
+<li><code>swap</code>：为 <code>True</code>
+时，额外比较正样本与负样本的距离，取更难的负例距离；</li>
+<li><code>size_average</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduction</code>：损失聚合方式。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：令 <span
+class="math inline">\(a\)</span>、<span
+class="math inline">\(p\)</span>、<span class="math inline">\(n\)</span>
+分别表示 anchor、positive、negative，距离函数为 <span
+class="math inline">\(d(\cdot,\cdot)\)</span>，则：</p>
+<p><span class="math display">\[
+\ell(a,p,n)=\max(0,d(a,p)-d(a,n)+\text{margin})
+\]</span></p>
+<p>只有当锚点离正样本不够近，或离负样本不够远时，损失才大于 0。默认使用
+<span class="math inline">\(p=2\)</span> 的欧氏距离。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># 每行是一个样本的嵌入向量；三组张量形状必须相同</span><br>anchor = torch.tensor([[<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>], [<span class="hljs-number">1.0</span>, <span class="hljs-number">1.0</span>]], requires_grad=<span class="hljs-literal">True</span>)<br>positive = torch.tensor([[<span class="hljs-number">0.1</span>, <span class="hljs-number">0.0</span>], [<span class="hljs-number">1.1</span>, <span class="hljs-number">1.0</span>]])  <span class="hljs-comment"># 同类样本，应接近 anchor</span><br>negative = torch.tensor([[<span class="hljs-number">2.0</span>, <span class="hljs-number">2.0</span>], [-<span class="hljs-number">1.0</span>, -<span class="hljs-number">1.0</span>]])  <span class="hljs-comment"># 异类样本，应远离 anchor</span><br><br>loss = nn.TripletMarginLoss(margin=<span class="hljs-number">0.5</span>, p=<span class="hljs-number">2</span>)(anchor, positive, negative)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;TripletMarginLoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>anchor</code></strong>：形状
+<code>[2,2]</code>，两个锚点样本，每个样本是 2 维嵌入向量；设置
+<code>requires_grad=True</code>，代表其通常由待训练模型产生。</li>
+<li><strong><code>positive</code> 和
+<code>negative</code></strong>：形状必须与 anchor
+一致。相同行组成一个三元组：positive 应与 anchor 同类，negative 应与
+anchor 异类。本例将 positive 设在 anchor 附近、negative 设得很远。</li>
+<li><strong><code>TripletMarginLoss(margin=0.5,p=2)</code></strong>：使用
+<span class="math inline">\(L_2\)</span>
+欧氏距离。它并不是直接最小化正样本距离，而是要求“负距离 - 正距离”至少为
+0.5。</li>
+<li><strong>前向调用</strong>：逐行分别计算 <span
+class="math inline">\(d(a,p)\)</span>、<span
+class="math inline">\(d(a,n)\)</span> 和 hinge
+项，默认把两个三元组的损失平均。</li>
+<li><strong><code>backward()</code></strong>：只有损失为正的困难三元组会产生梯度。此例已经满足约束，loss
+可能为 0，梯度也为 0；这不是出错，而是 margin 已被满足。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：第一组三元组为 <span
+class="math inline">\(a=[0,0]\)</span>、<span
+class="math inline">\(p=[0.1,0]\)</span>、<span
+class="math inline">\(n=[2,2]\)</span>，<code>margin=0.5</code>、<span
+class="math inline">\(p=2\)</span>（欧氏距离）。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>计算 anchor 与正样本距离</strong>：</p>
+<p><span
+class="math display">\[d(a,p)=\sqrt{(0-0.1)^2+(0-0)^2}=0.1\]</span></p></li>
+<li><p><strong>计算 anchor 与负样本距离</strong>：</p>
+<p><span
+class="math display">\[d(a,n)=\sqrt{(0-2)^2+(0-2)^2}=\sqrt8\approx2.828\]</span></p></li>
+<li><p><strong>计算三元组损失</strong>：</p>
+<p><span class="math display">\[l_1=\max(0,0.1-2.828+0.5)=0\]</span></p>
+<p>第二组三元组也满足相同间隔，因此 <span
+class="math inline">\(l_2=0\)</span>；最终平均
+<code>loss=0</code>。</p></li>
+</ol>
+<p><strong>梯度含义</strong>：本例没有困难三元组，梯度为 0。若负样本改为
+<code>[0.2,0]</code>，则损失为 <span
+class="math inline">\(0.4\)</span>，反向传播会拉近 anchor/positive
+并推远 negative。</p>
+<h4 id="hingeembeddingloss"><code>HingeEmbeddingLoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.HingeEmbeddingLoss(margin=<span class="hljs-number">1.0</span>, size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>,<br>                            reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：对距离或相异度进行约束。目标为 <code>1</code>
+时希望输入距离小；目标为 <code>-1</code> 时希望输入距离至少达到
+<code>margin</code>。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>margin</code>：负样本（目标为
+<code>-1</code>）要求达到的最小距离；</li>
+<li><code>size_average</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduction</code>：损失聚合方式。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：设输入 <span
+class="math inline">\(x\)</span> 是距离或相异度，标签 <span
+class="math inline">\(y\in\{-1,1\}\)</span>，则：</p>
+<p><span class="math display">\[
+\ell(x,y)=
+\begin{cases}
+x, &amp; y=1\\
+\max(0,\text{margin}-x), &amp; y=-1
+\end{cases}
+\]</span></p>
+<p>相似样本对（<span
+class="math inline">\(y=1\)</span>）的距离越小越好；不相似样本对（<span
+class="math inline">\(y=-1\)</span>）只要距离达到
+<code>margin</code>，便不再产生损失。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># 输入通常是两个样本的距离，因而应为非负值</span><br>distances = torch.tensor([<span class="hljs-number">0.2</span>, <span class="hljs-number">1.5</span>, <span class="hljs-number">0.8</span>], requires_grad=<span class="hljs-literal">True</span>)<br><span class="hljs-comment"># 1 表示相似对，-1 表示不相似对</span><br>targets = torch.tensor([<span class="hljs-number">1.0</span>, -<span class="hljs-number">1.0</span>, -<span class="hljs-number">1.0</span>])<br><br>loss = nn.HingeEmbeddingLoss(margin=<span class="hljs-number">1.0</span>)(distances, targets)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;HingeEmbeddingLoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>distances</code></strong>：输入不是两组向量，而是已经计算好的三对样本距离或相异度，形状为
+<code>[3]</code>。这里开启梯度只是为了观察损失怎样对距离施加优化信号。</li>
+<li><strong><code>targets=[1,-1,-1]</code></strong>：第一个是相似对，目标
+1 要求距离尽可能小；后两个是不相似对，目标 -1 要求距离至少达到
+margin。</li>
+<li><strong><code>HingeEmbeddingLoss(margin=1.0)</code></strong>：对正对直接使用距离作为损失；对负对只惩罚那些距离小于
+1 的样本。默认按 3 个元素平均。</li>
+<li><strong><code>backward()</code></strong>：相似对总会有把距离变小的驱动力；负对仅在距离不足
+margin 时产生把距离增大的驱动力，达到 margin 后梯度为 0。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：<code>distances=[0.2,1.5,0.8]</code>，<code>targets=[1,-1,-1]</code>，<code>margin=1</code>。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>相似对（标签 1）</strong>：直接使用距离作为损失：</p>
+<p><span class="math display">\[l_1=0.2\]</span></p></li>
+<li><p><strong>第一个不相似对（标签 -1）</strong>：</p>
+<p><span class="math display">\[l_2=\max(0,1-1.5)=0\]</span></p></li>
+<li><p><strong>第二个不相似对（标签 -1）</strong>：</p>
+<p><span class="math display">\[l_3=\max(0,1-0.8)=0.2\]</span></p></li>
+<li><p><strong>得到最终输出</strong>：</p>
+<p><span
+class="math display">\[loss=(0.2+0+0.2)/3\approx0.1333\]</span></p></li>
+</ol>
+<p><strong>梯度含义</strong>：第一个距离被推动变小，第三个距离被推动变大，第二个距离已超过
+margin 因而没有梯度。</p>
+<h4 id="cosineembeddingloss"><code>CosineEmbeddingLoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.CosineEmbeddingLoss(margin=<span class="hljs-number">0.0</span>, size_average=<span class="hljs-literal">None</span>, reduce=<span class="hljs-literal">None</span>,<br>                             reduction=<span class="hljs-string">&#x27;mean&#x27;</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：根据余弦相似度约束两组向量。目标为
+<code>1</code> 时鼓励向量方向相同；目标为 <code>-1</code>
+时要求余弦相似度不超过 <code>margin</code>。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>margin</code>：负样本允许的最大余弦相似度，通常取
+<code>[0, 0.5]</code>；</li>
+<li><code>size_average</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduce</code>：<strong>已废弃</strong>，请用
+<code>reduction</code>；</li>
+<li><code>reduction</code>：损失聚合方式。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：设余弦相似度为：</p>
+<p><span class="math display">\[
+\cos(x_1,x_2)=\frac{x_1\cdot x_2}{\|x_1\|_2\|x_2\|_2}
+\]</span></p>
+<p>标签 <span class="math inline">\(y=1\)</span> 时，损失为 <span
+class="math inline">\(1-\cos(x_1,x_2)\)</span>；标签 <span
+class="math inline">\(y=-1\)</span> 时，损失为 <span
+class="math inline">\(\max(0,\cos(x_1,x_2)-\text{margin})\)</span>。因此它主要约束向量方向，而不是向量长度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># 每行是一对待比较的向量，两个输入张量形状必须相同</span><br>vector1 = torch.tensor([[<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>], [<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>]], requires_grad=<span class="hljs-literal">True</span>)<br>vector2 = torch.tensor([[<span class="hljs-number">0.9</span>, <span class="hljs-number">0.1</span>], [-<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>]])<br><span class="hljs-comment"># 第一对相似，第二对不相似</span><br>targets = torch.tensor([<span class="hljs-number">1.0</span>, -<span class="hljs-number">1.0</span>])<br><br>loss = nn.CosineEmbeddingLoss(margin=<span class="hljs-number">0.0</span>)(vector1, vector2, targets)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;CosineEmbeddingLoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>vector1</code></strong>：形状
+<code>[2,2]</code>，两行分别是两对样本中的第一个嵌入向量；它开启梯度追踪，代表模型输出的待学习表示。</li>
+<li><strong><code>vector2</code></strong>：与 vector1
+同形状，是每对的比较对象。这里未开启梯度，仅作为固定参照；真实的双塔网络中，两个分支都可以要求梯度。</li>
+<li><strong><code>targets=[1,-1]</code></strong>：第一对标签 1
+表示相似，目标是余弦相似度接近 1；第二对标签 -1
+表示不相似，目标是相似度不高于 margin。</li>
+<li><strong><code>CosineEmbeddingLoss(margin=0.0)</code></strong>：逐行计算点积除以两向量
+L2 范数的乘积。<code>margin=0</code> 表示负对的余弦相似度只要不大于 0
+就不再受惩罚。</li>
+<li><strong><code>backward()</code></strong>：将梯度写入
+<code>vector1.grad</code>，主要调整向量方向。余弦相似度已对长度归一化，所以它不像
+L2 距离那样直接鼓励缩短向量长度。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：第一对为 <span
+class="math inline">\([1,0]\)</span> 与 <span
+class="math inline">\([0.9,0.1]\)</span>、标签 1；第二对为 <span
+class="math inline">\([1,0]\)</span> 与 <span
+class="math inline">\([-1,0]\)</span>、标签
+-1；<code>margin=0</code>。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>第一对计算余弦相似度</strong>：</p>
+<p><span
+class="math display">\[cos=\frac{0.9}{1\times\sqrt{0.9^2+0.1^2}}\approx0.9939\]</span></p>
+<p>正对损失为 <span
+class="math inline">\(l_1=1-0.9939\approx0.0061\)</span>。</p></li>
+<li><p><strong>第二对计算余弦相似度</strong>：</p>
+<p><span class="math display">\[cos=-1,\qquad
+l_2=\max(0,-1-0)=0\]</span></p></li>
+<li><p><strong>得到最终输出</strong>：</p>
+<p><span
+class="math display">\[loss=(0.0061+0)/2\approx0.00305\]</span></p></li>
+</ol>
+<p><strong>梯度含义</strong>：第一对仍会被轻微推动到完全同向；第二对已满足“相似度不大于
+0”的负对约束，梯度为 0。</p>
+<h3 id="序列对齐ctcloss">3.6.6 序列对齐：<code>CTCLoss</code></h3>
+<p>CTC
+用于输入序列与目标序列长度不同、且逐时间步对齐关系未知的任务，例如语音识别和手写文字识别。</p>
+<h4 id="ctcloss"><code>CTCLoss</code></h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.nn.CTCLoss(blank=<span class="hljs-number">0</span>, reduction=<span class="hljs-string">&#x27;mean&#x27;</span>, zero_infinity=<span class="hljs-literal">False</span>)<br></code></pre></td></tr></table></figure>
+<p><strong>功能</strong>：计算连接时序分类（CTC）损失，适合输入序列和目标序列长度不同、且不知道逐时间步对齐方式的任务，例如语音识别与手写文字识别。</p>
+<p><strong>主要参数</strong>：</p>
+<ul>
+<li><code>blank</code>：blank 类别的索引，默认
+<code>0</code>；目标序列中不能出现该索引；</li>
+<li><code>reduction</code>：<code>'none'</code>、<code>'mean'</code> 或
+<code>'sum'</code>；</li>
+<li><code>zero_infinity</code>：为 <code>True</code>
+时，将无法对齐导致的无穷损失及梯度置零，避免无穷值传播。</li>
+</ul>
+<p><strong>计算公式与说明</strong>：设模型在 <span
+class="math inline">\(T\)</span> 个时间步上输出对数概率，目标标签序列为
+<span class="math inline">\(y\)</span>。CTC 会枚举所有“压缩后等于 <span
+class="math inline">\(y\)</span>”的合法路径 <span
+class="math inline">\(\pi\)</span>：先合并连续重复标签，再删除 blank
+标签。损失是这些路径总概率的负对数：</p>
+<p><span class="math display">\[
+\ell_{\mathrm{CTC}}=-\log\sum_{\pi\in\mathcal{B}^{-1}(y)}\prod_{t=1}^{T}P(\pi_t\mid
+t)
+\]</span></p>
+<p>其中 <span class="math inline">\(\mathcal{B}\)</span>
+表示“合并重复并删除 blank”的映射。CTC
+不要求事先知道每个目标字符对应哪个时间步，但要求输入序列有足够长度容纳目标及必要的
+blank/重复标签。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br>T, N, C = <span class="hljs-number">6</span>, <span class="hljs-number">2</span>, <span class="hljs-number">5</span>  <span class="hljs-comment"># 时间步数、批量大小、类别数；类别 0 预留为 blank</span><br><span class="hljs-comment"># 模型在每一个时间步都输出 C 个类别的 logits，形状为 [T, N, C]</span><br>logits = torch.randn(T, N, C, requires_grad=<span class="hljs-literal">True</span>)<br>log_probs = F.log_softmax(logits, dim=<span class="hljs-number">2</span>)  <span class="hljs-comment"># CTCLoss 的输入必须是对数概率</span><br><br><span class="hljs-comment"># 两个目标序列拼接：样本 1 为 [1, 2]，样本 2 为 [3, 1, 2]</span><br>targets = torch.tensor([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>], dtype=torch.long)<br>input_lengths = torch.tensor([<span class="hljs-number">6</span>, <span class="hljs-number">6</span>], dtype=torch.long)  <span class="hljs-comment"># 各输入序列真实长度</span><br>target_lengths = torch.tensor([<span class="hljs-number">2</span>, <span class="hljs-number">3</span>], dtype=torch.long)  <span class="hljs-comment"># 各目标序列真实长度</span><br><br>loss = nn.CTCLoss(blank=<span class="hljs-number">0</span>, zero_infinity=<span class="hljs-literal">True</span>)(<br>    log_probs, targets, input_lengths, target_lengths<br>)<br>loss.backward()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;CTCLoss:&#x27;</span>, loss.item())<br></code></pre></td></tr></table></figure>
+<p><strong>代码逐行解释</strong>：</p>
+<ol type="1">
+<li><strong><code>T, N, C = 6, 2, 5</code></strong>：定义输入时间步数、批量大小和类别数。类别索引
+0 被保留为 blank，真正可输出的目标标签是 1 到 4；因此 targets 中不能出现
+0。</li>
+<li><strong><code>logits = torch.randn(T,N,C,requires_grad=True)</code></strong>：模拟序列模型（如
+RNN/Transformer）在每个时间步为每个样本输出 5 类原始得分，形状严格为
+<code>[时间步, 批量, 类别]</code>。注意它与很多
+<code>batch_first=True</code> 的模型输出不同，需要留意维度顺序。</li>
+<li><strong><code>log_probs = F.log_softmax(logits, dim=2)</code></strong>：只在类别维
+<code>C</code> 上归一化，使每个 <code>(t,n)</code> 位置的类别概率和为
+1，再取对数。CTCLoss
+接收对数概率，用它可以将一条路径上的概率连乘转为对数域的稳定求和。</li>
+<li><strong><code>targets = [1,2,3,1,2]</code></strong>：采用“拼接的一维目标”表示两个不等长标签序列。它不含
+blank：前 2 个属于第一个样本 <code>[1,2]</code>，后 3 个属于第二个样本
+<code>[3,1,2]</code>。</li>
+<li><strong><code>input_lengths</code> 与
+<code>target_lengths</code></strong>：前者指出两个输入都有效到第 6
+个时间步；后者是 <code>[2,3]</code>，让 CTCLoss 能从拼接 targets
+中正确切分目标。真实的变长批次中，input_lengths 常常小于最大的 T。</li>
+<li><strong><code>nn.CTCLoss(blank=0, zero_infinity=True)</code></strong>：指定
+blank 类，默认
+<code>reduction='mean'</code>。<code>zero_infinity=True</code>
+在输入长度无法容纳目标序列等异常对齐时把无穷损失/梯度置零，但不替代对数据长度的检查。</li>
+<li><strong>调用、<code>backward()</code>
+和打印</strong>：函数用动态规划累加所有合法路径的概率，得到单个标量损失。反向传播为
+<code>[T,N,C]</code> 的每个 logits
+给出梯度，训练模型在正确时间步上增加目标字符或 blank 的概率。</li>
+</ol>
+<p><strong>内部计算过程</strong>：</p>
+<p><strong>示例数据</strong>：<code>T=6</code>、<code>N=2</code>、<code>C=5</code>；blank
+类为 0。第一个目标为 <code>[1,2]</code>，第二个目标为
+<code>[3,1,2]</code>。<code>logits</code>
+是随机生成的，因此不假设其具体类别概率。</p>
+<p><strong>计算步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>每个时间步归一化</strong>：对每个 <code>(t,n)</code> 的 5
+个 logits 执行 <code>log_softmax</code>，得到 <span
+class="math inline">\(\log P(c\mid
+t,n)\)</span>；每个时间步的普通概率在类别维相加为 1。</p></li>
+<li><p><strong>枚举第一个目标的合法路径</strong>：例如路径
+<code>[0,1,1,0,2,0]</code> 先合并重复项得到
+<code>[0,1,0,2,0]</code>，再删除 blank 得到
+<code>[1,2]</code>，因此合法；所有压缩结果不为 <code>[1,2]</code>
+的路径不计入。</p></li>
+<li><p><strong>聚合路径概率</strong>：每条合法路径的概率是各时间步对应类别概率的连乘，例如：</p>
+<p><span class="math display">\[P(0\mid t_1)P(1\mid t_2)P(1\mid
+t_3)P(0\mid t_4)P(2\mid t_5)P(0\mid t_6)\]</span></p>
+<p>将所有合法路径相加后取负对数得到第一个样本损失；第二个目标
+<code>[3,1,2]</code> 同样处理。</p></li>
+<li><p><strong>得到最终输出</strong>：默认 <code>reduction='mean'</code>
+会先按每个目标序列长度归一化两个样本损失，再取批量平均。</p></li>
+</ol>
+<p><strong>梯度含义</strong>：梯度并不强制某个固定时间步输出某个标签，而是提高所有能组成正确目标的路径总概率；这正是
+CTC 能处理未知对齐的原因。</p>
+<h3 id="小结常见选择与易错点">3.6.7 小结：常见选择与易错点</h3>
+<table>
+
+<thead>
+<tr>
+<th>任务</th>
+<th>推荐损失函数</th>
+<th>模型输出</th>
+<th>目标格式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单标签二分类</td>
+<td><code>BCEWithLogitsLoss</code></td>
+<td><code>[N]</code> 或 <code>[N, 1]</code> logits</td>
+<td>同形状的 <code>float</code>，值为 0/1</td>
+</tr>
+<tr>
+<td>单标签多分类</td>
+<td><code>CrossEntropyLoss</code></td>
+<td><code>[N, C]</code> logits</td>
+<td><code>[N]</code> 的 <code>long</code> 类别索引</td>
+</tr>
+<tr>
+<td>多标签分类</td>
+<td><code>BCEWithLogitsLoss</code></td>
+<td><code>[N, C]</code> logits</td>
+<td><code>[N, C]</code> 的 <code>float</code> 0/1 矩阵</td>
+</tr>
+<tr>
+<td>连续值回归</td>
+<td><code>MSELoss</code> / <code>L1Loss</code> /
+<code>SmoothL1Loss</code></td>
+<td>连续预测值</td>
+<td>与输出形状一致的 <code>float</code></td>
+</tr>
+<tr>
+<td>序列无对齐标注</td>
+<td><code>CTCLoss</code></td>
+<td><code>[T, N, C]</code> 对数概率</td>
+<td>标签序列与各自长度</td>
+</tr>
+</tbody>
+</table>
+<p>最常见的错误是“对 logits 重复做激活”：<code>CrossEntropyLoss</code>
+前不要手动 <code>softmax</code>，<code>BCEWithLogitsLoss</code>
+前不要手动 <code>sigmoid</code>。只有使用 <code>BCELoss</code>
+时才应传入 sigmoid
+后的概率。调用损失函数前，也应先检查输出形状、目标形状、目标数据类型和标签取值范围是否匹配。</p>
 <h2 id="训练与评估">3.7 训练与评估</h2>
 <h2 id="可视化">3.8 可视化</h2>
 <h2 id="pytorch优化器">3.9 PyTorch优化器</h2>
