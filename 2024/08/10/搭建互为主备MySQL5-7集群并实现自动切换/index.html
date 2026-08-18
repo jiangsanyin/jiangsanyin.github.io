@@ -19,12 +19,12 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一、背景 服务器：两个x86服务器（本文使用的是两个OpenStack虚拟机） MySQL版本信息：mysql-5.7.36-linux-glibc2.12-x86_64 其中，两个服务器及操作系统的信息如下：     主机名 IP 用途 规格 磁盘空间 操作系统     ztmonitor01 172.20.180.44 互为主从数据库中的节点1 4c1">
+    <meta name="description" content="一、背景 服务器：两个x86服务器（本文使用的是两个OpenStack虚拟机） MySQL版本信息：mysql-5.7.36-linux-glibc2.12-x86_64 其中，两个服务器及操作系统的信息如下：     主机名 IP 用途 规格 磁盘空间 操作系统     ztmonitor01 172.20.180.44 互为主从数据库中的节点1 4c16g 500G Centos7.9-amd">
 <meta property="og:type" content="article">
 <meta property="og:title" content="搭建互为主备MySQL5.7集群并实现自动切换">
 <meta property="og:url" content="https://jiangsanyin.github.io/2024/08/10/%E6%90%AD%E5%BB%BA%E4%BA%92%E4%B8%BA%E4%B8%BB%E5%A4%87MySQL5-7%E9%9B%86%E7%BE%A4%E5%B9%B6%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="一、背景 服务器：两个x86服务器（本文使用的是两个OpenStack虚拟机） MySQL版本信息：mysql-5.7.36-linux-glibc2.12-x86_64 其中，两个服务器及操作系统的信息如下：     主机名 IP 用途 规格 磁盘空间 操作系统     ztmonitor01 172.20.180.44 互为主从数据库中的节点1 4c1">
+<meta property="og:description" content="一、背景 服务器：两个x86服务器（本文使用的是两个OpenStack虚拟机） MySQL版本信息：mysql-5.7.36-linux-glibc2.12-x86_64 其中，两个服务器及操作系统的信息如下：     主机名 IP 用途 规格 磁盘空间 操作系统     ztmonitor01 172.20.180.44 互为主从数据库中的节点1 4c16g 500G Centos7.9-amd">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2024/08/10/Gc35WMoYOBq1VdN.png">
 <meta property="og:image" content="https://s2.loli.net/2024/08/10/xhAfS13TQPMV8CX.png">
