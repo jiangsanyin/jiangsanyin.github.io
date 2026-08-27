@@ -27,7 +27,7 @@
 <meta property="og:description" content="三、PyTorch的主要组成模块 3.1 深度学习流程及与机器学习差异 一项机器学习任务的整体流程如下：  数据准备与划分：对原始数据进行清洗、格式统一与特征变换，并划分为训练集、验证集和测试集（如采用随机切分或 K 折交叉，可以使用sklearn带的test_train_split函数、kfold来实现）。 模型与算法配置：选择合适的网络架构，指定衡量误差的损失函数、更新参数的优化器以及相关超参">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-08-06T04:45:50.000Z">
-<meta property="article:modified_time" content="2026-08-16T14:52:26.000Z">
+<meta property="article:modified_time" content="2026-08-27T10:21:35.260Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          26k 字
+          34k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          214 分钟
+          281 分钟
         
       </span>
     
@@ -1346,78 +1346,6 @@ class="math display">\[loss=\frac{0.2633+0.4032+0.5544}{3}\approx0.4070\]</span>
 先计算损失对概率的导数，再乘 sigmoid 导数 <span
 class="math inline">\(p(1-p)\)</span> 回传到
 logits；预测正类概率不足时，梯度下降会增大对应 logits。</p>
-<p>设：</p>
-<p><span class="math display">\[
-p=\sigma(x)
-\]</span></p>
-<p>其中：</p>
-<ul>
-<li><span class="math inline">\(x\)</span>：模型输出的 logits；</li>
-<li><span class="math inline">\(p\)</span>：经过 sigmoid
-后的预测为正类的概率；</li>
-<li><span class="math inline">\(y\in\{0,1\}\)</span>：真实标签。</li>
-</ul>
-<p>以单个样本为例，二元交叉熵损失为：</p>
-<p><span class="math display">\[
-\ell=-\left[y\ln p+(1-y)\ln(1-p)\right]
-\]</span></p>
-<p><code>BCELoss</code> 接收的是概率 <span
-class="math inline">\(p\)</span>，所以反向传播先得到：</p>
-<p><span class="math display">\[
-\frac{\partial \ell}{\partial p}
-=
-\frac{p-y}{p(1-p)}
-\]</span></p>
-<p>但模型真正需要更新的是产生 logits <span
-class="math inline">\(x\)</span> 的网络参数，而不是概率 <span
-class="math inline">\(p\)</span>。由于：</p>
-<p><span class="math display">\[
-p=\sigma(x)
-\]</span></p>
-<p>且：</p>
-<p><span class="math display">\[
-\frac{\partial p}{\partial x}=p(1-p)
-\]</span></p>
-<p>根据链式法则：</p>
-<p><span class="math display">\[
-\frac{\partial \ell}{\partial x}
-=
-\frac{\partial \ell}{\partial p}
-\frac{\partial p}{\partial x}
-=
-\frac{p-y}{p(1-p)}\cdot p(1-p)
-=
-p-y
-\]</span></p>
-<p>如果损失按批量平均（默认 <code>reduction='mean'</code>），批量大小为
-<span class="math inline">\(n\)</span>，则：</p>
-<p><span class="math display">\[
-\frac{\partial L}{\partial x_i}
-=
-\frac{p_i-y_i}{n}
-\]</span></p>
-<p>“预测正类概率不足时，梯度下降会增大对应 logits”的含义是：</p>
-<ul>
-<li><p>若真实标签 <span class="math inline">\(y=1\)</span>，但预测概率
-<span class="math inline">\(p=0.3\)</span>，则：</p>
-<p><span class="math display">\[
-p-y=0.3-1=-0.7
-\]</span></p>
-<p>此时梯度为负。</p></li>
-<li><p>梯度下降的更新形式是：</p>
-<p><span class="math display">\[
-x\leftarrow x-\eta\frac{\partial L}{\partial x}
-\]</span></p>
-<p>减去负数等于增加，所以 logits <span class="math inline">\(x\)</span>
-会变大。</p></li>
-<li><p>sigmoid 是单调递增函数；<span class="math inline">\(x\)</span>
-变大后，<span class="math inline">\(p=\sigma(x)\)</span>
-也会变大，模型就更倾向预测正类。</p></li>
-</ul>
-<p>反过来，若 <span class="math inline">\(y=0\)</span> 但模型预测的
-<span class="math inline">\(p\)</span> 很大，则 <span
-class="math inline">\(p-y&gt;0\)</span>。梯度下降会减小 logits，使
-sigmoid 输出的概率下降。</p>
 <h3 id="单标签多分类crossentropyloss">3.6.2
 单标签多分类：<code>CrossEntropyLoss</code></h3>
 <p>单标签多分类中，每个样本只属于一个类别。模型输出每个类别的
@@ -2384,8 +2312,460 @@ CTC 能处理未知对齐的原因。</p>
 时才应传入 sigmoid
 后的概率。调用损失函数前，也应先检查输出形状、目标形状、目标数据类型和标签取值范围是否匹配。</p>
 <h2 id="训练与评估">3.7 训练与评估</h2>
+<p>本节学习的内容饮包含：PyTorch中模型训练/评估模型的开启、完整的训练/评估流程。</p>
+<h3 id="泛化能力强与不拟拿区别与联系">3.7.1
+泛化能力强与不拟拿区别与联系</h3>
+<p>为了更清晰、直观地厘清两者之间的界限，以下从概念定义、评判标准、逻辑关系以及典型表现等维度进行集中对比：</p>
+<h4 id="泛化能力强-vs-不过拟合">泛化能力强 vs 不过拟合</h4>
+<table>
+
+<thead>
+<tr>
+<th><strong>比较维度</strong></th>
+<th><strong>泛化能力强（Good Generalization）</strong></th>
+<th><strong>不过拟合（No Overfitting）</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>本质定义</strong></td>
+<td>模型在<strong>未见过的全新数据</strong>（真实场景/测试集）上取得优异预测效果的能力。</td>
+<td>模型<strong>没有过度依赖</strong>训练集的特定噪声或局部特例，保持了适度泛化空间的状态。</td>
+</tr>
+<tr>
+<td><strong>核心视角</strong></td>
+<td><strong>积极/结果导向</strong>（追求上限：模型在未知数据上到底有多强）。</td>
+<td><strong>防御/状态导向</strong>（排除病态：模型是否出现了死记硬背的倾向）。</td>
+</tr>
+<tr>
+<td><strong>评估标准</strong></td>
+<td>依赖测试集/验证集的<strong>绝对指标</strong>（如测试集准确率 <span
+class="math inline">\(95\%\)</span>、测试集 Loss 极低）。</td>
+<td>依赖训练集与测试集之间的<strong>相对差距</strong>（即 <span
+class="math inline">\(\text{Loss}_{\text{test}} -
+\text{Loss}_{\text{train}}\)</span> 保持较小或合理）。</td>
+</tr>
+<tr>
+<td><strong>出现欠拟合时</strong></td>
+<td>❌ <strong>表现极差</strong>（对未知数据预测不准）。</td>
+<td>✅ <strong>依然成立</strong>（训练集和测试集表现都很差，但两者几乎无
+Gap）。</td>
+</tr>
+<tr>
+<td><strong>出现轻微 Gap 时</strong></td>
+<td>✅ <strong>依然成立</strong>（若训练集 <span
+class="math inline">\(99.9\%\)</span>、测试集 <span
+class="math inline">\(95\%\)</span>，尽管有 <span
+class="math inline">\(4.9\%\)</span> 的 Gap，泛化依然极强）。</td>
+<td>⚠️
+<strong>存在微弱过拟合</strong>（从严格统计学定义看，存在表现落差）。</td>
+</tr>
+<tr>
+<td><strong>核心优化目标</strong></td>
+<td>提升模型学习通用特征规律的能力（如通过更好的架构、优质数据、预训练等）。</td>
+<td>约束模型容量，防止对训练集的过分拟合（如使用 Dropout、L2
+正则化、早停等）。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="两者之间的核心联系">两者之间的核心联系</h4>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs">                  ┌──────────────────┐<br>                  │   泛化能力强     │<br>                  └────────┬─────────┘<br>                           │<br>            ┌──────────────┴──────────────┐<br>            ▼                             ▼<br>【充分条件】能泛化必然掌握了规律       【必要条件】避免严重过拟合是<br>（故不可能存在严重的有害过拟合）        良好泛化的前提（但还需排除欠拟合）<br>            ▲                             ▲<br>            └──────────────┬──────────────┘<br>                           │<br>                  ┌────────┴─────────┐<br>                  │    不过拟合      │<br>                  └──────────────────┘<br></code></pre></td></tr></table></figure>
+<ol type="1">
+<li><strong>“不过拟合”是“泛化能力强”的必要非充分条件</strong>：
+<ul>
+<li><strong>必要性</strong>：如果一个模型严重过拟合，它在测试集上的表现必定崩溃，绝不可能拥有强泛化能力。</li>
+<li><strong>非充分性</strong>：如果模型处于<strong>欠拟合</strong>状态，它虽然完全没有过拟合，但泛化能力依然极差。</li>
+</ul></li>
+<li><strong>“泛化能力强”是“不过拟合”在有效拟合前提下的自然结果</strong>：
+<ul>
+<li>当模型在训练集上已经拟合得很好（排除了欠拟合），此时只要成功<strong>控制住过拟合</strong>，模型就会顺理成章地获得<strong>强泛化能力</strong>。</li>
+</ul></li>
+</ol>
+<h3 id="训练与评估的大致过程">3.7.2 训练与评估的大致过程</h3>
+<p>在完成模型的训练后，需要在验证集/测试集分别完成模型的验证与测试，以确保最终得到的模型是具有泛化能力的/不会出现严重过拟合现象的。</p>
+<h4 id="训练的流程">3.7.2.1 训练的流程</h4>
+<p>PyTorch中，模型训练与评估/测试的最显著区别在于：模型训练需要将模型设置为训练状态，模型的参数要支持反向传播与优化器更新；
+而模型验证/评估时，需要将模型设置为验证/测试状态，不要进行损失的反向传播与/更新模型参数。</p>
+<p>一个完整的图像分类的训练过程如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">train</span>(<span class="hljs-params">epoch</span>):<br>    <span class="hljs-comment"># 1. 将模型切换为训练状态（开启 Dropout、允许 BatchNorm 更新全局统计量）</span><br>    model.train()<br>    train_loss = <span class="hljs-number">0</span><br>    <span class="hljs-comment"># 2. 利用 DataLoader 批量迭代读取训练数据及其对应标签</span><br>    <span class="hljs-keyword">for</span> data, label <span class="hljs-keyword">in</span> train_loader:<br>        <span class="hljs-comment"># 将数据及标签加载到GPU上</span><br>        data, label = data.cuda(), label.cuda()<br>        <span class="hljs-comment"># 使用每批读取到的训练数据前，先将优化器的梯度置零，防止梯度累加影响当前更新</span><br>        optimizer.zero_grad()<br>        <span class="hljs-comment"># 前向传播：将输入数据送入模型计算预测输出</span><br>        output = model(data)<br>        <span class="hljs-comment"># 结合预测输出和真实标签，调用损失函数计算当前 Batch 的平均损失</span><br>        loss = criterion(output, label)<br>        <span class="hljs-comment"># 反向传播：根据计算图自动求导，计算 Loss 关于各参数的梯度</span><br>        loss.backward()<br>        <span class="hljs-comment"># 优化器根据计算出的梯度，按既定算法（如 SGD/Adam）更新模型权重参数</span><br>        optimizer.step()<br>        <span class="hljs-comment"># loss.item() 为单样本平均损失，乘以当前 Batch 实际样本数 data.size(0) 得到该 Batch 的损失总和并累加</span><br>        train_loss += loss.item()*data.size(<span class="hljs-number">0</span>)<br>    <span class="hljs-comment"># 计算整个 Epoch 在所有数据集样本上的平均损失</span><br>    train_loss = train_loss/<span class="hljs-built_in">len</span>(train_loader.dataset)<br>    <span class="hljs-comment"># 格式化打印当前 Epoch 的平均训练损失</span><br>		<span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Epoch: &#123;&#125; \tTraining Loss: &#123;:.6f&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(epoch, train_loss))<br></code></pre></td></tr></table></figure>
+<h4 id="验证评估的流程">3.7.2.2 验证/评估的流程</h4>
+<h5 id="pytorch-原生评估-api">3.7.2.2.1 PyTorch 原生评估 API</h5>
+<p>验证/测试的流程基本与训练过程一致，不同点在于：</p>
+<ul>
+<li>需要预先设置torch.no_grad，以及将model调至eval模式</li>
+<li>不需要将优化器的梯度置零</li>
+<li>不需要将loss反向回传到网络</li>
+<li>不需要更新optimizer</li>
+</ul>
+<p>一个完整图像分类的验证过程如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">val</span>(<span class="hljs-params">epoch</span>):       <br>    <span class="hljs-comment"># 1. 将模型切换为评估/测试状态（关闭 Dropout、冻结 BatchNorm 均值和方差更新）</span><br>    model.<span class="hljs-built_in">eval</span>()<br>    <br>    val_loss = <span class="hljs-number">0.0</span><br>    running_accu = <span class="hljs-number">0</span>  <span class="hljs-comment"># 必须先初始化正确预测的样本计数器，避免变量未定义报错</span><br>    <br>    <span class="hljs-comment"># 2. 禁用 Autograd 梯度计算引擎，节省 GPU 显存并加速推理过程</span><br>    <span class="hljs-keyword">with</span> torch.no_grad():<br>        <span class="hljs-comment"># 3. 利用 DataLoader 批量迭代读取验证集数据及其标签</span><br>        <span class="hljs-keyword">for</span> data, label <span class="hljs-keyword">in</span> val_loader:<br>            <span class="hljs-comment"># 将验证数据与标签传输到 GPU 显存中</span><br>            data, label = data.cuda(), label.cuda()<br>            <br>            <span class="hljs-comment"># 前向传播：计算模型的预测 Logits/概率分布（只做推理，不构建计算图）</span><br>            output = model(data)<br>            <br>            <span class="hljs-comment"># 获取每个样本预测概率最大的类别索引（dim=1 表示沿着类别维度取最大值的索引）</span><br>            preds = torch.argmax(output, dim=<span class="hljs-number">1</span>)<br>            <br>            <span class="hljs-comment"># 计算当前 Batch 的平均验证损失</span><br>            loss = criterion(output, label)<br>            <br>            <span class="hljs-comment"># 累加当前 Batch 的损失总和（单样本平均损失 * 当前 Batch 样本数）</span><br>            val_loss += loss.item() * data.size(<span class="hljs-number">0</span>)<br>            <br>            <span class="hljs-comment"># 统计当前 Batch 中预测正确的样本总数，并累加到 running_accu</span><br>            running_accu += torch.<span class="hljs-built_in">sum</span>(preds == label).item()<br><br>    <span class="hljs-comment"># 4. 计算整个验证集上的平均损失与准确率</span><br>    val_loss = val_loss / <span class="hljs-built_in">len</span>(val_loader.dataset)<br>    val_acc = running_accu / <span class="hljs-built_in">len</span>(val_loader.dataset)  <span class="hljs-comment"># 计算整体验证准确率</span><br>    <br>    <span class="hljs-comment"># 5. 格式化打印当前 Epoch 的验证损失与准确率</span><br>    <span class="hljs-comment"># 【修正】将原来的 &#x27;Training Loss&#x27; 修正为 &#x27;Validation Loss&#x27;</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Epoch: &#123;&#125; \tValidation Loss: &#123;:.6f&#125; \tAcc: &#123;:.4f&#125;&#x27;</span>.<span class="hljs-built_in">format</span>(epoch, val_loss, val_acc))<br></code></pre></td></tr></table></figure>
+<h5 id="sklearn.metrics">3.7.2.2.2 <code>sklearn.metrics</code></h5>
+<p>对于图像分类任务，还可以使用sklearn.metrics中的classification_report函数来计算模型的准确率、召回率、F1值等指标，如下所示：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> classification_report<br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">将下方代码的labels和preds替换为模型预测出来的所有label和preds，</span><br><span class="hljs-string">target_names替换为类别名称，</span><br><span class="hljs-string">既可得到模型的分类报告</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-built_in">print</span>(classification_report(<br>    labels.cpu().numpy(), <span class="hljs-comment"># 需确保将 PyTorch Tensor 转为 NumPy 数组</span><br>    preds.cpu().numpy(), <br>    target_names=class_names<br>))<br></code></pre></td></tr></table></figure>
+<h5 id="torcheval或torchmetric">3.7.2.2.3
+<code>torcheval</code>或<code>torchmetric</code></h5>
+<p>此外，还可以使用<code>torcheval</code>或<code>torchmetric</code>来对模型进行评估。</p>
+<h6 id="两大-pytorch-评估库核心区别">（1）两大 PyTorch
+评估库核心区别</h6>
+<table>
+
+<thead>
+<tr>
+<th><strong>库名</strong></th>
+<th><strong>核心特点</strong></th>
+<th><strong>适用场景</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TorchMetrics</strong></td>
+<td>社区最主流（PyTorch Lightning 官方维护），支持 GPU
+累加计算、分布式通信与可视化，指标最全面。</td>
+<td><strong>绝大多数 PyTorch 项目首选</strong></td>
+</tr>
+<tr>
+<td><strong>TorchEval</strong></td>
+<td>Meta 官方维护，极简轻量，语法契合 PyTorch 原生生态。</td>
+<td>追求轻量化或 Meta 生态集成项目</td>
+</tr>
+</tbody>
+</table>
+<h6 id="核心示例代码">（2）核心示例代码</h6>
+<p>两者均采用 <strong><code>update()</code>（逐 Batch 收集）-&gt;
+<code>compute()</code>（跨 Batch 整体计算）</strong>
+的流式评估模式，<strong>无需</strong>像 <code>sklearn</code>
+那样把所有数据 <code>.cpu().numpy()</code>
+拼接成大数组，更加节省显存。</p>
+<p>① 使用 TorchMetrics（最常用）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torchmetrics<br><br><span class="hljs-comment"># 1. 初始化多分类评估指标对象（假设 10 分类，在 GPU 上计算）</span><br>metric = torchmetrics.Accuracy(task=<span class="hljs-string">&quot;multiclass&quot;</span>, num_classes=<span class="hljs-number">10</span>).cuda()<br><br><span class="hljs-comment"># 2. 在验证循环的每个 Batch 中累加结果</span><br><span class="hljs-keyword">for</span> data, label <span class="hljs-keyword">in</span> val_loader:<br>    data, label = data.cuda(), label.cuda()<br>    output = model(data)<br>    preds = torch.argmax(output, dim=<span class="hljs-number">1</span>)<br>    <br>    metric.update(preds, label) <span class="hljs-comment"># 自动累计预测结果</span><br><br><span class="hljs-comment"># 3. 整个 Epoch 结束后计算最终准确率，并重置状态</span><br>total_acc = metric.compute()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Validation Accuracy: <span class="hljs-subst">&#123;total_acc:<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br>metric.reset() <span class="hljs-comment"># 为下一个 Epoch 训练清空缓存</span><br></code></pre></td></tr></table></figure>
+<p>② 使用 TorchEval（Meta 官方）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torcheval.metrics <span class="hljs-keyword">import</span> MulticlassAccuracy<br><br><span class="hljs-comment"># 1. 初始化指标对象</span><br>metric = MulticlassAccuracy(num_classes=<span class="hljs-number">10</span>).to(<span class="hljs-string">&quot;cuda&quot;</span>)<br><br><span class="hljs-comment"># 2. 在验证循环中累加</span><br><span class="hljs-keyword">for</span> data, label <span class="hljs-keyword">in</span> val_loader:<br>    data, label = data.cuda(), label.cuda()<br>    preds = torch.argmax(model(data), dim=<span class="hljs-number">1</span>)<br>    metric.update(preds, label)<br><br><span class="hljs-comment"># 3. 计算并重置</span><br>total_acc = metric.compute()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Validation Accuracy: <span class="hljs-subst">&#123;total_acc:<span class="hljs-number">.4</span>f&#125;</span>&quot;</span>)<br>metric.reset()<br></code></pre></td></tr></table></figure>
 <h2 id="可视化">3.8 可视化</h2>
+<p>在 PyTorch
+中，可视化贯穿于模型开发的全生命周期（数据准备、训练监控、效果评估与可解释性分析）。它既包含训练过程中对损失和指标变化的实时监控，也包含对不同阶段、不同模型（如蒸馏/微调前后）效果的对比分析，以及对模型内部特征与决策依据的可解释性展示。</p>
 <h2 id="pytorch优化器">3.9 PyTorch优化器</h2>
+<p>本小节学习的内容饮包含：了解PyTorch的优化器、学会使用PyTorch提供的优化器进行优化、优化器的属性和构造、优化器的对比。</p>
+<hr />
+<p>深度学习的目标是通过多轮的迭代不断改变模型的网络参数，使得模型能够对输入做各种非线性变换、使得输出尽可能的拟合标签。这个过程本质上就是一个复杂函数求最优解的过程，在深度学习模型中这个最优解是一个大矩阵，如何快速求得这个最优解是深度学习中的一个研究重点与难点。比如以经典的resnet-50模型为例，其中大约有2000万个系数需要进行计算，那么如何计算出这么多系数，有以下两种方法：</p>
+<ol type="1">
+<li>第一种是直接暴力穷举一遍参数，这种方法从理论上行得通，但是实施上可能性基本为0，因为参数量过于庞大。</li>
+<li>第二种方法：为了使求解参数过程更快，人们提出了BP+优化器逼近求解。</li>
+</ol>
+<p>在这个第二种方法中，优化器就是根据网络反向传播的梯度信息来不断更新模型的网络参数，降低损失函数计算值，最终使得模型输出更加接近真实标签。</p>
+<h3 id="pytorch提供的优化器">3.9.1 PyTorch提供的优化器</h3>
+<p>PyTorch中有一个优化器包<code>torch.optim</code>，其下预置了多个优化器实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.optim.SGD<br>torch.optim.ASGD<br>torch.optim.Adadelta<br>torch.optim.Adagrad<br>torch.optim.Adam<br>torch.optim.AdamW<br>torch.optim.Adamax<br>torch.optim.RAdam<br>torch.optim.NAdam<br>torch.optim.SparseAdam<br>torch.optim.LBFGS<br>torch.optim.RMSprop<br>torch.optim.Rprop<br></code></pre></td></tr></table></figure>
+<p>上述这些优化器都继承于<code>torch.optim.Optimizer</code>，以下是<code>torch.optim.Optimizer</code>的<code>__init__</code>方法中几个关键属性，PyTorch2.6.0中针对此类的此方法中还有一些其他属性，但不是此次解释的重点。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Optimizer</span>:<br>	<span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, params: ParamsT, defaults: <span class="hljs-type">Dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-type">Any</span>]</span>) -&gt; <span class="hljs-literal">None</span>:<br>		<span class="hljs-variable language_">self</span>.defaults = defaults<br>		<span class="hljs-variable language_">self</span>.state: DefaultDict[torch.Tensor, <span class="hljs-type">Any</span>] = defaultdict(<span class="hljs-built_in">dict</span>)<br>    <span class="hljs-variable language_">self</span>.param_groups: <span class="hljs-type">List</span>[<span class="hljs-type">Dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-type">Any</span>]] = []<br>    ...<br>    <br>	...<br></code></pre></td></tr></table></figure>
+<h4 id="optimizer类中三个核心属性详解">3.9.1.1
+Optimizer类中三个核心属性详解</h4>
+<hr />
+<h5 id="self.defaults-超参数默认值字典">1. <code>self.defaults</code> —
+超参数默认值字典</h5>
+<p>存储优化器的<strong>全局默认超参数</strong>，当某个参数组没有单独指定某个超参数时，就使用这里的默认值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><br>params = [torch.randn(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">3</span>)]  <span class="hljs-comment"># 3个参数张量</span><br><br><span class="hljs-comment"># 创建 SGD 优化器</span><br>optimizer = torch.optim.SGD(params, lr=<span class="hljs-number">0.01</span>, momentum=<span class="hljs-number">0.9</span>, weight_decay=<span class="hljs-number">1e-4</span>)<br><br><span class="hljs-built_in">print</span>(optimizer.defaults)<br></code></pre></td></tr></table></figure>
+<p>输出： <figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arcade">&#123;<span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">0.01</span>, <span class="hljs-string">&#x27;momentum&#x27;</span>: <span class="hljs-number">0.9</span>, <span class="hljs-string">&#x27;dampening&#x27;</span>: <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;weight_decay&#x27;</span>: <span class="hljs-number">0.0001</span>, <span class="hljs-string">&#x27;nesterov&#x27;</span>: <span class="hljs-literal">False</span>, <span class="hljs-string">&#x27;maximize&#x27;</span>: <span class="hljs-literal">False</span>, <span class="hljs-string">&#x27;foreach&#x27;</span>: <span class="hljs-built_in">None</span>, <span class="hljs-string">&#x27;differentiable&#x27;</span>: <span class="hljs-literal">False</span>, <span class="hljs-string">&#x27;fused&#x27;</span>: <span class="hljs-built_in">None</span>&#125;<br></code></pre></td></tr></table></figure></p>
+<p>optimizer.defaults完整解释如下：</p>
+<table>
+
+<thead>
+<tr>
+<th>参数</th>
+<th>默认值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lr</code></td>
+<td><code>0.01</code></td>
+<td><strong>学习率（Learning
+Rate）</strong>。每次更新时参数沿梯度方向移动的步长大小。</td>
+</tr>
+<tr>
+<td><code>momentum</code></td>
+<td><code>0.9</code></td>
+<td><strong>动量系数</strong>。引入历史梯度的指数移动平均，加速收敛并减少震荡。公式：<code>v = momentum * v + grad</code></td>
+</tr>
+<tr>
+<td><code>dampening</code></td>
+<td><code>0</code></td>
+<td><strong>动量阻尼</strong>。用于抑制动量项，防止动量过大。公式：<code>v = momentum * v + (1 - dampening) * grad</code>。设为
+0 表示不抑制。</td>
+</tr>
+<tr>
+<td><code>weight_decay</code></td>
+<td><code>0.0001</code></td>
+<td><strong>权重衰减（L2 正则化）</strong>。在梯度上加上
+<code>weight_decay * param</code>，等效于损失函数加 L2
+正则项，防止过拟合。</td>
+</tr>
+<tr>
+<td><code>nesterov</code></td>
+<td><code>False</code></td>
+<td><strong>Nesterov 动量</strong>。若为 <code>True</code>，使用
+Nesterov 加速梯度（NAG），比普通动量"看得更远"，收敛更平滑。要求
+<code>momentum &gt; 0</code> 且 <code>dampening == 0</code>。</td>
+</tr>
+<tr>
+<td><code>maximize</code></td>
+<td><code>False</code></td>
+<td><strong>是否最大化目标</strong>。若为
+<code>True</code>，则沿梯度<strong>上升</strong>方向更新（用于最大化问题），而非默认的梯度下降。</td>
+</tr>
+<tr>
+<td><code>foreach</code></td>
+<td><code>None</code></td>
+<td><strong>是否使用 foreach 内核</strong>。<code>None</code>
+表示自动决定；<code>True</code> 强制使用批量 foreach
+内核（对多参数并行处理更快）；<code>False</code> 强制不使用。</td>
+</tr>
+<tr>
+<td><code>differentiable</code></td>
+<td><code>False</code></td>
+<td><strong>是否可微分</strong>。若为
+<code>True</code>，<code>step()</code>
+操作本身保留计算图，允许对优化器步骤求导（用于元学习等场景）。</td>
+</tr>
+<tr>
+<td><code>fused</code></td>
+<td><code>None</code></td>
+<td><strong>是否使用 fused 内核</strong>。<code>None</code>
+表示自动决定；<code>True</code> 强制使用融合 CUDA
+内核（将所有参数的更新合并为一次 kernel
+launch，减少显存带宽压力，速度更快）。要求 GPU 且不支持
+<code>differentiable=True</code>。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h5 id="self.state-每个参数的优化器状态">2. <code>self.state</code> —
+每个参数的优化器状态</h5>
+<p>这是一个
+<code>defaultdict(dict)</code>，键是<strong>参数张量本身</strong>（tensor
+对象），值是一个字典，存储该参数对应的<strong>优化过程中累积的状态</strong>（如动量缓冲、步数计数等）。</p>
+<p>以 SGD + momentum 为例，每次 <code>step()</code>
+后会为每个参数记录动量缓冲：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><br><span class="hljs-comment"># 一个简单的可优化参数</span><br>w = torch.tensor([<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>], requires_grad=<span class="hljs-literal">True</span>)<br><br>optimizer = torch.optim.SGD([w], lr=<span class="hljs-number">0.1</span>, momentum=<span class="hljs-number">0.9</span>)<br><br><span class="hljs-comment"># 训练前：state 为空</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;训练前 state:&quot;</span>, <span class="hljs-built_in">dict</span>(optimizer.state))<br><span class="hljs-comment"># 输出: &#123;&#125;</span><br><br><span class="hljs-comment"># 模拟一次前向 + 反向</span><br>loss = w.<span class="hljs-built_in">sum</span>()<br>loss.backward()<br><br><span class="hljs-comment"># 第一次 step</span><br>optimizer.step()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n第1次 step 后 state:&quot;</span>)<br><span class="hljs-keyword">for</span> param, state <span class="hljs-keyword">in</span> optimizer.state.items():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;  参数: <span class="hljs-subst">&#123;param.tolist()&#125;</span>&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;  状态: <span class="hljs-subst">&#123;state&#125;</span>&quot;</span>)<br><span class="hljs-comment"># 输出:</span><br><span class="hljs-comment">#   参数: [1.0, 2.0, 3.0]</span><br><span class="hljs-comment">#   状态: &#123;&#x27;momentum_buffer&#x27;: tensor([-0.1000, -0.1000, -0.1000])&#125;</span><br><br><span class="hljs-comment"># 第二次 step</span><br>w.grad = torch.tensor([<span class="hljs-number">1.0</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">1.0</span>])<br>optimizer.step()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n第2次 step 后 state:&quot;</span>)<br><span class="hljs-keyword">for</span> param, state <span class="hljs-keyword">in</span> optimizer.state.items():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;  参数: <span class="hljs-subst">&#123;param.tolist()&#125;</span>&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;  状态: <span class="hljs-subst">&#123;state&#125;</span>&quot;</span>)<br><span class="hljs-comment"># 输出:</span><br><span class="hljs-comment">#   参数: [0.9, 1.9, 2.9]</span><br><span class="hljs-comment">#   状态: &#123;&#x27;momentum_buffer&#x27;: tensor([-0.1900, -0.1900, -0.1900])&#125;</span><br><span class="hljs-comment">#  动量缓冲 = 0.9 * 旧缓冲(-0.1) + 梯度(0.1) = -0.09 + -0.1 = -0.19</span><br></code></pre></td></tr></table></figure>
+<p>以 Adam 为例，状态更丰富（包含一阶矩、二阶矩、步数）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python">optimizer = torch.optim.Adam([w], lr=<span class="hljs-number">0.001</span>, betas=(<span class="hljs-number">0.9</span>, <span class="hljs-number">0.999</span>))<br>loss = w.<span class="hljs-built_in">sum</span>()<br>loss.backward()<br>optimizer.step()<br><br><span class="hljs-keyword">for</span> param, state <span class="hljs-keyword">in</span> optimizer.state.items():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;  参数: <span class="hljs-subst">&#123;param.tolist()&#125;</span>&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;  状态: <span class="hljs-subst">&#123;state&#125;</span>&quot;</span>)<br><span class="hljs-comment"># 输出:</span><br><span class="hljs-comment">#   参数: [...]</span><br><span class="hljs-comment">#   状态: &#123;</span><br><span class="hljs-comment">#     &#x27;step&#x27;: tensor(1.),           ← 已执行步数</span><br><span class="hljs-comment">#     &#x27;exp_avg&#x27;: tensor([...]),     ← 一阶矩估计（梯度均值的指数移动平均）</span><br><span class="hljs-comment">#     &#x27;exp_avg_sq&#x27;: tensor([...])   ← 二阶矩估计（梯度平方均值的指数移动平均）</span><br><span class="hljs-comment">#   &#125;</span><br></code></pre></td></tr></table></figure>
+<hr />
+<h5 id="self.param_groups-参数分组列表">3.
+<code>self.param_groups</code> — 参数分组列表</h5>
+<p>存储<strong>参数组列表</strong>，每个参数组是一个字典，包含该组的参数张量和对应的超参数。这样不同参数组可以使用<strong>不同的学习率</strong>等超参数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><br>model = nn.Sequential(<br>    nn.Linear(<span class="hljs-number">4</span>, <span class="hljs-number">8</span>),   <span class="hljs-comment"># 第1层</span><br>    nn.Linear(<span class="hljs-number">8</span>, <span class="hljs-number">2</span>),   <span class="hljs-comment"># 第2层</span><br>)<br><br><span class="hljs-comment"># 对不同层设置不同的学习率</span><br>optimizer = torch.optim.SGD([<br>    &#123;<span class="hljs-string">&#x27;params&#x27;</span>: model[<span class="hljs-number">0</span>].parameters(), <span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">0.01</span>, <span class="hljs-string">&#x27;momentum&#x27;</span>: <span class="hljs-number">0.9</span>&#125;,<br>    &#123;<span class="hljs-string">&#x27;params&#x27;</span>: model[<span class="hljs-number">1</span>].parameters(), <span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">0.001</span>&#125;,  <span class="hljs-comment"># 未指定 momentum，使用 defaults 中的值</span><br>], lr=<span class="hljs-number">0.1</span>)  <span class="hljs-comment"># 全局默认 lr（会被各组的 lr 覆盖）</span><br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;参数组数量: <span class="hljs-subst">&#123;<span class="hljs-built_in">len</span>(optimizer.param_groups)&#125;</span>&quot;</span>)<br><span class="hljs-keyword">for</span> i, group <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(optimizer.param_groups):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;\n--- 参数组 <span class="hljs-subst">&#123;i&#125;</span> ---&quot;</span>)<br>    <span class="hljs-keyword">for</span> key, value <span class="hljs-keyword">in</span> group.items():<br>        <span class="hljs-keyword">if</span> key == <span class="hljs-string">&#x27;params&#x27;</span>:<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;  params: <span class="hljs-subst">&#123;<span class="hljs-built_in">len</span>(<span class="hljs-built_in">list</span>(value))&#125;</span> 个参数张量&quot;</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;  <span class="hljs-subst">&#123;key&#125;</span>: <span class="hljs-subst">&#123;value&#125;</span>&quot;</span>)<br></code></pre></td></tr></table></figure>
+<p>输出： <figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">参数组数量</span><span class="hljs-punctuation">:</span> <span class="hljs-string">2</span><br><br><span class="hljs-attribute">--- 参数组 0 ---</span><br><span class="hljs-attribute">  params</span><span class="hljs-punctuation">:</span> <span class="hljs-string">2 个参数张量    ← model[0] 的 weight 和 bias</span><br>  <span class="hljs-attribute">lr</span><span class="hljs-punctuation">:</span> <span class="hljs-string">0.01</span><br>  <span class="hljs-attribute">momentum</span><span class="hljs-punctuation">:</span> <span class="hljs-string">0.9</span><br><br><span class="hljs-attribute">--- 参数组 1 ---</span><br><span class="hljs-attribute">  params</span><span class="hljs-punctuation">:</span> <span class="hljs-string">2 个参数张量    ← model[1] 的 weight 和 bias</span><br>  <span class="hljs-attribute">lr</span><span class="hljs-punctuation">:</span> <span class="hljs-string">0.001</span><br>  <span class="hljs-attribute">momentum</span><span class="hljs-punctuation">:</span> <span class="hljs-string">0.9           ← 来自 defaults</span><br><br></code></pre></td></tr></table></figure></p>
+<hr />
+<h5 id="三者的关系总结">三者的关系总结</h5>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs nix">Optimizer<br>│<br>├── defaults <span class="hljs-operator">=</span> &#123;&#x27;<span class="hljs-params">lr&#x27;:</span> <span class="hljs-number">0.01</span>, &#x27;<span class="hljs-params">momentum&#x27;:</span> <span class="hljs-number">0.9</span>, ...&#125;<br>│       ↑ 全局默认值，当 param_groups 中某组没指定时，从这里取<br>│<br>├── param_groups <span class="hljs-operator">=</span> [<br>│       &#123;&#x27;<span class="hljs-params">params&#x27;:</span> [w1, b1], &#x27;<span class="hljs-params">lr&#x27;:</span> <span class="hljs-number">0.01</span>, &#x27;<span class="hljs-params">momentum&#x27;:</span> <span class="hljs-number">0.9</span>&#125;,   ← 第<span class="hljs-number">1</span>组<br>│       &#123;&#x27;<span class="hljs-params">params&#x27;:</span> [w2, b2], &#x27;<span class="hljs-params">lr&#x27;:</span> <span class="hljs-number">0.001</span>, &#x27;<span class="hljs-params">momentum&#x27;:</span> <span class="hljs-number">0.9</span>&#125;,  ← 第<span class="hljs-number">2</span>组（lr不同）<br>│   ]<br>│       ↑ 每个参数张量属于且仅属于一个组<br>│<br>└── state <span class="hljs-operator">=</span> &#123;<br>        <span class="hljs-params">w1:</span> &#123;&#x27;<span class="hljs-params">momentum_buffer&#x27;:</span> tensor(...)&#125;,   ← w1 的累积状态<br>        <span class="hljs-params">b1:</span> &#123;&#x27;<span class="hljs-params">momentum_buffer&#x27;:</span> tensor(...)&#125;,   ← b1 的累积状态<br>        <span class="hljs-params">w2:</span> &#123;&#x27;<span class="hljs-params">momentum_buffer&#x27;:</span> tensor(...)&#125;,   ← w2 的累积状态<br>        <span class="hljs-params">b2:</span> &#123;&#x27;<span class="hljs-params">momentum_buffer&#x27;:</span> tensor(...)&#125;,   ← b2 的累积状态<br>    &#125;<br>        ↑ 键是参数张量对象，值是该参数在优化过程中的历史状态<br></code></pre></td></tr></table></figure>
+<p>简单来说： -
+<strong><code>defaults</code></strong>：优化器的"全局配置" -
+<strong><code>param_groups</code></strong>：把参数分组，每组可以有"个性化配置"
+-
+<strong><code>state</code></strong>：记录每个参数在训练过程中累积的"历史记忆"（动量、步数等）</p>
+<h4 id="torch.optim.optimizer-重要方法一览">3.9.1.2
+<code>torch.optim.Optimizer</code> 重要方法一览</h4>
+<hr />
+<h5 id="核心方法">核心方法</h5>
+<table>
+
+<thead>
+<tr>
+<th>方法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__init__(params, defaults)</code></td>
+<td>初始化优化器，设置默认超参数、参数分组和状态容器</td>
+</tr>
+<tr>
+<td><code>step(closure=None)</code></td>
+<td><strong>执行一次参数更新</strong>。各子类（SGD、Adam
+等）各自实现具体更新逻辑</td>
+</tr>
+<tr>
+<td><code>zero_grad(set_to_none=True)</code></td>
+<td><strong>清零所有参数的梯度</strong>。<code>set_to_none=True</code>
+时将梯度设为 <code>None</code>（省内存），<code>False</code> 时设为
+<code>0</code></td>
+</tr>
+<tr>
+<td><code>state_dict()</code></td>
+<td>返回优化器当前状态的字典，包含
+<code>state</code>（各参数的累积状态）和
+<code>param_groups</code>（参数分组及超参数）</td>
+</tr>
+<tr>
+<td><code>load_state_dict(state_dict)</code></td>
+<td>从字典中加载优化器状态，恢复训练时的优化器状态</td>
+</tr>
+<tr>
+<td><code>add_param_group(param_group)</code></td>
+<td>动态添加一个新的参数组。常用于微调时把冻结层加入训练</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h5 id="钩子注册方法">钩子注册方法</h5>
+<table>
+
+<thead>
+<tr>
+<th>方法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>register_step_pre_hook(hook)</code></td>
+<td>注册一个在 <code>step()</code>
+<strong>执行前</strong>调用的钩子</td>
+</tr>
+<tr>
+<td><code>register_step_post_hook(hook)</code></td>
+<td>注册一个在 <code>step()</code>
+<strong>执行后</strong>调用的钩子</td>
+</tr>
+<tr>
+<td><code>register_state_dict_pre_hook(hook)</code></td>
+<td>注册一个在 <code>state_dict()</code>
+<strong>执行前</strong>调用的钩子</td>
+</tr>
+<tr>
+<td><code>register_state_dict_post_hook(hook)</code></td>
+<td>注册一个在 <code>state_dict()</code>
+<strong>执行后</strong>调用的钩子</td>
+</tr>
+<tr>
+<td><code>register_load_state_dict_pre_hook(hook)</code></td>
+<td>注册一个在 <code>load_state_dict()</code>
+<strong>执行前</strong>调用的钩子</td>
+</tr>
+<tr>
+<td><code>register_load_state_dict_post_hook(hook)</code></td>
+<td>注册一个在 <code>load_state_dict()</code>
+<strong>执行后</strong>调用的钩子</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h5 id="内部辅助方法">内部辅助方法</h5>
+<table>
+
+<thead>
+<tr>
+<th>方法</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_patch_step_function()</code></td>
+<td>将 <code>step()</code> 包装上 profiler 和钩子调用逻辑</td>
+</tr>
+<tr>
+<td><code>_cuda_graph_capture_health_check()</code></td>
+<td>检查 CUDA 图捕获是否安全可用</td>
+</tr>
+<tr>
+<td><code>_group_tensors_by_device_and_dtype()</code></td>
+<td>按设备和数据类型对张量列表分组，用于批量内核优化</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h5 id="典型使用流程">典型使用流程</h5>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python">optimizer = torch.optim.SGD(model.parameters(), lr=<span class="hljs-number">0.01</span>)<br><br><span class="hljs-comment"># 训练循环</span><br><span class="hljs-keyword">for</span> data, target <span class="hljs-keyword">in</span> dataloader:<br>    optimizer.zero_grad()        <span class="hljs-comment"># 1. 清零梯度</span><br>    loss = loss_fn(model(data), target)<br>    loss.backward()              <span class="hljs-comment"># 2. 反向传播计算梯度</span><br>    optimizer.step()             <span class="hljs-comment"># 3. 更新参数</span><br><br><span class="hljs-comment"># 保存/恢复</span><br>torch.save(optimizer.state_dict(), <span class="hljs-string">&quot;optim.pt&quot;</span>)<br>optimizer.load_state_dict(torch.load(<span class="hljs-string">&quot;optim.pt&quot;</span>))<br></code></pre></td></tr></table></figure>
+<h3 id="实际操作">3.9.2 实际操作</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os<br><span class="hljs-keyword">import</span> torch<br><br><span class="hljs-comment"># 设置权重，服从正态分布  --&gt; 2 x 2</span><br>weight = torch.randn((<span class="hljs-number">2</span>, <span class="hljs-number">2</span>), requires_grad=<span class="hljs-literal">True</span>)<br><span class="hljs-comment"># 设置梯度为全1矩阵  --&gt; 2 x 2</span><br>weight.grad = torch.ones((<span class="hljs-number">2</span>, <span class="hljs-number">2</span>))<br><span class="hljs-comment"># 输出现有的weight和data</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;The data of weight before step:\n&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(weight.data))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;The grad of weight before step:\n&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(weight.grad))<br><br><span class="hljs-comment"># 实例化优化器</span><br>optimizer = torch.optim.SGD([weight], lr=<span class="hljs-number">0.1</span>, momentum=<span class="hljs-number">0.9</span>)<br><span class="hljs-comment"># 进行一步操作</span><br>optimizer.step()<br><span class="hljs-comment"># 查看进行一步后的值，梯度</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;The data of weight after step:\n&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(weight.data))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;The grad of weight after step:\n&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(weight.grad))<br><br><span class="hljs-comment"># 权重清零</span><br>optimizer.zero_grad()<br><span class="hljs-comment"># 检验权重是否为0</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;The grad of weight after optimizer.zero_grad():\n&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(weight.grad))<br><span class="hljs-comment"># 输出参数</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;optimizer.params_group is \n&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(optimizer.param_groups))<br><span class="hljs-comment"># 查看参数位置，optimizer和weight的位置一样，我觉得这里可以参考Python是基于值管理</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;weight in optimizer:&#123;&#125;\nweight in weight:&#123;&#125;\n&quot;</span>.<span class="hljs-built_in">format</span>(<span class="hljs-built_in">id</span>(optimizer.param_groups[<span class="hljs-number">0</span>][<span class="hljs-string">&#x27;params&#x27;</span>][<span class="hljs-number">0</span>]), <span class="hljs-built_in">id</span>(weight)))<br><br><span class="hljs-comment"># 添加参数：weight2</span><br>weight2 = torch.randn((<span class="hljs-number">3</span>, <span class="hljs-number">3</span>), requires_grad=<span class="hljs-literal">True</span>)<br>optimizer.add_param_group(&#123;<span class="hljs-string">&quot;params&quot;</span>: weight2, <span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">0.0001</span>, <span class="hljs-string">&#x27;nesterov&#x27;</span>: <span class="hljs-literal">True</span>&#125;)<br><span class="hljs-comment"># 查看现有的参数</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;optimizer.param_groups is\n&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(optimizer.param_groups))<br><span class="hljs-comment"># 查看当前状态信息</span><br>opt_state_dict = optimizer.state_dict()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;state_dict before step:\n&quot;</span>, opt_state_dict)<br><span class="hljs-comment"># 进行5次step操作</span><br><span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">50</span>):<br>    optimizer.step()<br><br><span class="hljs-comment"># 输出现有状态信息</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;state_dict after step:\n&quot;</span>, optimizer.state_dict())<br><span class="hljs-comment"># 保存参数信息</span><br>torch.save(optimizer.state_dict(),os.path.join(<span class="hljs-string">r&quot;/Users/jsy/Dev/projects/python/PyTorch_study/Attention_Unet&quot;</span>, <span class="hljs-string">&quot;optimizer_state_dict.pkl&quot;</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;----------done-----------&quot;</span>)<br><span class="hljs-comment"># 加载参数信息</span><br>state_dict = torch.load(<span class="hljs-string">r&quot;/Users/jsy/Dev/projects/python/PyTorch_study/Attention_Unet/optimizer_state_dict.pkl&quot;</span>) <span class="hljs-comment"># 需要修改为你自己的路径</span><br>optimizer.load_state_dict(state_dict)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;load state_dict successfully\n&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(state_dict))<br><br><span class="hljs-comment"># 输出最后属性信息</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(optimizer.defaults))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(optimizer.state))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n&#123;&#125;&quot;</span>.<span class="hljs-built_in">format</span>(optimizer.param_groups))<br></code></pre></td></tr></table></figure>
+<h3 id="输出结果">3.9.3 输出结果</h3>
+<p><code>zero_grad()</code> 把梯度设为 <code>None</code> 后，后续 50 次
+<code>step()</code> 中 weight 的梯度为 <code>None</code>，SGD
+会<strong>跳过</strong>该参数（不更新动量缓冲和权重）。具体解释如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># ── 第9行: print(&quot;The data of weight before step:&quot;) ──</span><br><span class="hljs-comment"># weight 由 torch.randn 初始化的 2×2 随机正态分布张量</span><br>The data of weight before step:<br>tensor([[ <span class="hljs-number">0.3131</span>, -<span class="hljs-number">0.3519</span>],<br>        [-<span class="hljs-number">0.2580</span>,  <span class="hljs-number">0.8226</span>]])<br><br><span class="hljs-comment"># ── 第10行: print(&quot;The grad of weight before step:&quot;) ──</span><br><span class="hljs-comment"># 第7行手动设置的 weight.grad = torch.ones((2, 2))</span><br>The grad of weight before step:<br>tensor([[<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>],<br>        [<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>]])<br><br><span class="hljs-comment"># ── 第16行: print(&quot;The data of weight after step:&quot;) ──</span><br><span class="hljs-comment"># SGD更新: 第1步时 momentum_buffer = grad = ones(2,2)</span><br><span class="hljs-comment"># weight = weight - lr * buffer = weight - 0.1 * ones</span><br><span class="hljs-comment"># 例: 0.3131 - 0.1 = 0.2131, -0.3519 - 0.1 = -0.4519</span><br>The data of weight after step:<br>tensor([[ <span class="hljs-number">0.2131</span>, -<span class="hljs-number">0.4519</span>],<br>        [-<span class="hljs-number">0.3580</span>,  <span class="hljs-number">0.7226</span>]])<br><br><span class="hljs-comment"># ── 第17行: print(&quot;The grad of weight after step:&quot;) ──</span><br><span class="hljs-comment"># step() 不会修改梯度，梯度仍然是之前手动设置的 ones(2,2)</span><br>The grad of weight after step:<br>tensor([[<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>],<br>        [<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>]])<br><br><span class="hljs-comment"># ── 第21行: print(&quot;The grad of weight after optimizer.zero_grad():&quot;) ──</span><br><span class="hljs-comment"># PyTorch 2.6.0 中 zero_grad() 默认 set_to_none=True</span><br><span class="hljs-comment"># 所以梯度被设为 None（而非 tensor(0)）</span><br>The grad of weight after optimizer.zero_grad():<br><span class="hljs-literal">None</span><br><br><span class="hljs-comment"># ── 第23行: print(&quot;optimizer.params_group is&quot;) ──</span><br><span class="hljs-comment"># 此时只有一个参数组，包含 weight 张量和所有超参数</span><br><span class="hljs-comment"># lr=0.1, momentum=0.9 是用户指定的；其余为 SGD 默认值</span><br>optimizer.params_group <span class="hljs-keyword">is</span><br>[&#123;<span class="hljs-string">&#x27;params&#x27;</span>: [tensor([[ <span class="hljs-number">0.2131</span>, -<span class="hljs-number">0.4519</span>],<br>        [-<span class="hljs-number">0.3580</span>,  <span class="hljs-number">0.7226</span>]], requires_grad=<span class="hljs-literal">True</span>)],<br>  <span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">0.1</span>,                    <span class="hljs-comment"># 用户指定</span><br>  <span class="hljs-string">&#x27;momentum&#x27;</span>: <span class="hljs-number">0.9</span>,              <span class="hljs-comment"># 用户指定</span><br>  <span class="hljs-string">&#x27;dampening&#x27;</span>: <span class="hljs-number">0</span>,               <span class="hljs-comment"># SGD默认值</span><br>  <span class="hljs-string">&#x27;weight_decay&#x27;</span>: <span class="hljs-number">0</span>,            <span class="hljs-comment"># SGD默认值</span><br>  <span class="hljs-string">&#x27;nesterov&#x27;</span>: <span class="hljs-literal">False</span>,            <span class="hljs-comment"># SGD默认值</span><br>  <span class="hljs-string">&#x27;maximize&#x27;</span>: <span class="hljs-literal">False</span>,            <span class="hljs-comment"># SGD默认值（PyTorch 2.x 新增）</span><br>  <span class="hljs-string">&#x27;foreach&#x27;</span>: <span class="hljs-literal">None</span>,              <span class="hljs-comment"># SGD默认值（PyTorch 2.x 新增，None=自动选择）</span><br>  <span class="hljs-string">&#x27;differentiable&#x27;</span>: <span class="hljs-literal">False</span>,      <span class="hljs-comment"># SGD默认值（PyTorch 2.x 新增）</span><br>  <span class="hljs-string">&#x27;fused&#x27;</span>: <span class="hljs-literal">None</span>&#125;]               <span class="hljs-comment"># SGD默认值（PyTorch 2.x 新增）</span><br><br><span class="hljs-comment"># ── 第25行: 验证 optimizer 中存储的张量和 weight 是同一个对象 ──</span><br><span class="hljs-comment"># id 相同，说明 Python 传递的是对象引用（同一块内存地址）</span><br>weight <span class="hljs-keyword">in</span> optimizer:<span class="hljs-number">140119575836096</span><br>weight <span class="hljs-keyword">in</span> weight:<span class="hljs-number">140119575836096</span><br><br><span class="hljs-comment"># ── 第30行: print(&quot;optimizer.param_groups is&quot;) ──</span><br><span class="hljs-comment"># 第28行 add_param_group 添加了 weight2（3×3 张量）</span><br><span class="hljs-comment"># 指定了 lr=0.0001, nesterov=True；未指定的从 defaults 继承</span><br><span class="hljs-comment"># 例如 momentum=0.9 来自 defaults</span><br>optimizer.param_groups <span class="hljs-keyword">is</span><br>[<br>  <span class="hljs-comment"># ── 参数组0: weight（2×2）──</span><br>  &#123;<span class="hljs-string">&#x27;params&#x27;</span>: [tensor([[ <span class="hljs-number">0.2131</span>, -<span class="hljs-number">0.4519</span>],<br>        [-<span class="hljs-number">0.3580</span>,  <span class="hljs-number">0.7226</span>]], requires_grad=<span class="hljs-literal">True</span>)],<br>   <span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">0.1</span>, <span class="hljs-string">&#x27;nesterov&#x27;</span>: <span class="hljs-literal">False</span>, <span class="hljs-string">&#x27;momentum&#x27;</span>: <span class="hljs-number">0.9</span>, ...&#125;,<br><br>  <span class="hljs-comment"># ── 参数组1: weight2（3×3）──</span><br>  &#123;<span class="hljs-string">&#x27;params&#x27;</span>: [tensor([[ <span class="hljs-number">0.5283</span>, -<span class="hljs-number">1.6606</span>,  <span class="hljs-number">0.0100</span>],<br>        [ <span class="hljs-number">1.3674</span>, -<span class="hljs-number">0.9431</span>, -<span class="hljs-number">0.5353</span>],<br>        [-<span class="hljs-number">0.2398</span>,  <span class="hljs-number">0.0837</span>, -<span class="hljs-number">0.6382</span>]], requires_grad=<span class="hljs-literal">True</span>)],<br>   <span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">0.0001</span>,               <span class="hljs-comment"># 用户指定</span><br>   <span class="hljs-string">&#x27;nesterov&#x27;</span>: <span class="hljs-literal">True</span>,            <span class="hljs-comment"># 用户指定</span><br>   <span class="hljs-string">&#x27;momentum&#x27;</span>: <span class="hljs-number">0.9</span>,             <span class="hljs-comment"># 从 defaults 继承</span><br>   <span class="hljs-string">&#x27;dampening&#x27;</span>: <span class="hljs-number">0</span>,              <span class="hljs-comment"># 从 defaults 继承</span><br>   <span class="hljs-string">&#x27;weight_decay&#x27;</span>: <span class="hljs-number">0</span>,           <span class="hljs-comment"># 从 defaults 继承</span><br>   <span class="hljs-string">&#x27;maximize&#x27;</span>: <span class="hljs-literal">False</span>,           <span class="hljs-comment"># 从 defaults 继承</span><br>   <span class="hljs-string">&#x27;foreach&#x27;</span>: <span class="hljs-literal">None</span>,             <span class="hljs-comment"># 从 defaults 继承</span><br>   <span class="hljs-string">&#x27;differentiable&#x27;</span>: <span class="hljs-literal">False</span>,     <span class="hljs-comment"># 从 defaults 继承</span><br>   <span class="hljs-string">&#x27;fused&#x27;</span>: <span class="hljs-literal">None</span>&#125;               <span class="hljs-comment"># 从 defaults 继承</span><br>]<br><br><span class="hljs-comment"># ── 第33行: state_dict before step ──</span><br><span class="hljs-comment"># state: 只有参数组0的 weight 有 momentum_buffer（第14行 step() 时创建的）</span><br><span class="hljs-comment">#   值 = ones(2,2)，因为第1步时 buffer 初始化为梯度值</span><br><span class="hljs-comment"># weight2 没有 state，因为它从未被 step() 过（没有梯度）</span><br><span class="hljs-comment"># param_groups: params=[0] 和 params=[1] 是参数ID（不是索引），</span><br><span class="hljs-comment">#   用于将 state 中的键与 param_groups 关联起来</span><br>state_dict before step:<br> &#123;<span class="hljs-string">&#x27;state&#x27;</span>: &#123;<span class="hljs-number">0</span>: &#123;<span class="hljs-string">&#x27;momentum_buffer&#x27;</span>: tensor([[<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>],<br>        [<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>]])&#125;&#125;,<br>  <span class="hljs-string">&#x27;param_groups&#x27;</span>: [<br>    &#123;<span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">0.1</span>, ..., <span class="hljs-string">&#x27;params&#x27;</span>: [<span class="hljs-number">0</span>]&#125;,       ← 参数组<span class="hljs-number">0</span>，参数ID=<span class="hljs-number">0</span>（即weight）<br>    &#123;<span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">0.0001</span>, <span class="hljs-string">&#x27;nesterov&#x27;</span>: <span class="hljs-literal">True</span>, ..., <span class="hljs-string">&#x27;params&#x27;</span>: [<span class="hljs-number">1</span>]&#125;  ← 参数组<span class="hljs-number">1</span>，参数ID=<span class="hljs-number">1</span>（即weight2）<br>  ]&#125;<br><br><span class="hljs-comment"># ── 第38行: state_dict after 50 steps ──</span><br><span class="hljs-comment"># 关键: 第19行 zero_grad() 把 weight.grad 设为了 None</span><br><span class="hljs-comment"># 之后50次 step() 中，weight.grad 为 None → SGD 跳过该参数</span><br><span class="hljs-comment"># weight2.grad 也是 None → 同样被跳过</span><br><span class="hljs-comment"># 因此 state 完全不变，momentum_buffer 仍然是 ones(2,2)</span><br>state_dict after step:<br> &#123;<span class="hljs-string">&#x27;state&#x27;</span>: &#123;<span class="hljs-number">0</span>: &#123;<span class="hljs-string">&#x27;momentum_buffer&#x27;</span>: tensor([[<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>],<br>        [<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>]])&#125;&#125;,<br>  <span class="hljs-string">&#x27;param_groups&#x27;</span>: [...]&#125;  ← 与 before step 完全相同<br><br><span class="hljs-comment"># ── 第41行 ──</span><br><span class="hljs-comment"># 保存成功标记</span><br>----------done-----------<br><br><span class="hljs-comment"># ── 第45行: 加载并打印 state_dict ──</span><br><span class="hljs-comment"># 从文件加载的 state_dict 内容与保存时一致</span><br>load state_dict successfully<br>&#123;<span class="hljs-string">&#x27;state&#x27;</span>: &#123;<span class="hljs-number">0</span>: &#123;<span class="hljs-string">&#x27;momentum_buffer&#x27;</span>: tensor([[<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>],<br>        [<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>]])&#125;&#125;,<br> <span class="hljs-string">&#x27;param_groups&#x27;</span>: [...]&#125;<br><br><span class="hljs-comment"># ── 第47行: optimizer.defaults ──</span><br><span class="hljs-comment"># 优化器创建时传入的全局默认超参数</span><br>&#123;<span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">0.1</span>, <span class="hljs-string">&#x27;momentum&#x27;</span>: <span class="hljs-number">0.9</span>, <span class="hljs-string">&#x27;dampening&#x27;</span>: <span class="hljs-number">0</span>, <span class="hljs-string">&#x27;weight_decay&#x27;</span>: <span class="hljs-number">0</span>,<br> <span class="hljs-string">&#x27;nesterov&#x27;</span>: <span class="hljs-literal">False</span>, <span class="hljs-string">&#x27;maximize&#x27;</span>: <span class="hljs-literal">False</span>, <span class="hljs-string">&#x27;foreach&#x27;</span>: <span class="hljs-literal">None</span>,<br> <span class="hljs-string">&#x27;differentiable&#x27;</span>: <span class="hljs-literal">False</span>, <span class="hljs-string">&#x27;fused&#x27;</span>: <span class="hljs-literal">None</span>&#125;<br><br><span class="hljs-comment"># ── 第48行: optimizer.state ──</span><br><span class="hljs-comment"># 内部存储的优化器状态：</span><br><span class="hljs-comment"># 键 = weight 张量对象（内存地址作为key）</span><br><span class="hljs-comment"># 值 = 该张量的 momentum_buffer（ones(2,2)，因为50次step都被跳过了）</span><br>defaultdict(&lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;dict&#x27;</span>&gt;, &#123;<br>  tensor([[ <span class="hljs-number">0.2131</span>, -<span class="hljs-number">0.4519</span>],<br>        [-<span class="hljs-number">0.3580</span>,  <span class="hljs-number">0.7226</span>]], requires_grad=<span class="hljs-literal">True</span>):<br>    &#123;<span class="hljs-string">&#x27;momentum_buffer&#x27;</span>: tensor([[<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>],<br>        [<span class="hljs-number">1.</span>, <span class="hljs-number">1.</span>]])&#125;<br>&#125;)<br><br><span class="hljs-comment"># ── 第49行: optimizer.param_groups ──</span><br><span class="hljs-comment"># 与 state_dict 的 param_groups 类似，但 params 值显示的是实际张量</span><br><span class="hljs-comment"># （state_dict 中显示的是整数ID，这里显示的是张量数据）</span><br>[<br>  <span class="hljs-comment"># 参数组0: weight</span><br>  &#123;<span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">0.1</span>, ..., <span class="hljs-string">&#x27;params&#x27;</span>: [tensor([[ <span class="hljs-number">0.2131</span>, -<span class="hljs-number">0.4519</span>],<br>        [-<span class="hljs-number">0.3580</span>,  <span class="hljs-number">0.7226</span>]], requires_grad=<span class="hljs-literal">True</span>)]&#125;,<br>  <span class="hljs-comment"># 参数组1: weight2</span><br>  &#123;<span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">0.0001</span>, <span class="hljs-string">&#x27;nesterov&#x27;</span>: <span class="hljs-literal">True</span>, ..., <span class="hljs-string">&#x27;params&#x27;</span>: [tensor([[ <span class="hljs-number">0.5283</span>, -<span class="hljs-number">1.6606</span>,  <span class="hljs-number">0.0100</span>],<br>        [ <span class="hljs-number">1.3674</span>, -<span class="hljs-number">0.9431</span>, -<span class="hljs-number">0.5353</span>],<br>        [-<span class="hljs-number">0.2398</span>,  <span class="hljs-number">0.0837</span>, -<span class="hljs-number">0.6382</span>]], requires_grad=<span class="hljs-literal">True</span>)]&#125;<br>]<br></code></pre></td></tr></table></figure>
+<hr />
+<h4 id="梯度为none后不再更新权重">梯度为None后不再更新权重</h4>
+<p>50 次 <code>step()</code> 前后 <code>state_dict</code>
+完全相同，<strong>不是 bug</strong>，原因是：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus">第<span class="hljs-number">14</span>行: optimizer<span class="hljs-selector-class">.step</span>()     ← weight<span class="hljs-selector-class">.grad</span> = <span class="hljs-built_in">ones</span>(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>)，正常更新<br>第<span class="hljs-number">19</span>行: optimizer<span class="hljs-selector-class">.zero_grad</span>() ← weight<span class="hljs-selector-class">.grad</span> = None（PyTorch <span class="hljs-number">2.6</span>.<span class="hljs-number">0</span> 默认行为）<br>第<span class="hljs-number">35</span>行: <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">50</span>):<br>            optimizer<span class="hljs-selector-class">.step</span>()  ← weight<span class="hljs-selector-class">.grad</span> 为 None，SGD 跳过该参数<br></code></pre></td></tr></table></figure>
+<p>SGD 的 <a
+href="file:///opt/anaconda3/envs/ai_py312/lib/python3.12/site-packages/torch/optim/sgd.py#L82-L101">_init_group</a>
+方法中（第 86 行）有判断 <code>if p.grad is not None:</code>，梯度为
+<code>None</code> 时该参数不会被加入更新列表，动量缓冲也不会被修改。</p>
+<h4 id="梯度更新前一定要置零">梯度更新前一定要置零</h4>
+<p>optimizer在一个神经网络的epoch中需要实现下两个步骤：梯度置零、梯度更新。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><br><span class="hljs-comment"># 1. 优化器实例创建（绑定模型参数及超参数）</span><br>optimizer = torch.optim.SGD(net.parameters(), lr=<span class="hljs-number">1e-5</span>)<br><br><span class="hljs-comment"># 2. 外层：Epoch 循环（训练整份数据集的轮数）</span><br><span class="hljs-keyword">for</span> epoch <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(EPOCH):<br>    <br>    <span class="hljs-comment"># 3. 内层：Batch 循环（批量读取数据，进行多次梯度更新）</span><br>    <span class="hljs-comment"># 在深度学习中，梯度更新通常是每个 Batch（批次）执行一次</span><br>    <span class="hljs-keyword">for</span> inputs, labels <span class="hljs-keyword">in</span> train_loader:<br>        <br>        <span class="hljs-comment"># 步骤 A：清空上一个 Batch 的梯度</span><br>        optimizer.zero_grad()<br>        <br>        <span class="hljs-comment"># 步骤 B：前向传播 + 计算 Loss</span><br>        outputs = net(inputs)<br>        loss = criterion(outputs, labels)<br>        <br>        <span class="hljs-comment"># 步骤 C：反向传播，计算当前 Batch 的梯度</span><br>        loss.backward()<br>        <br>        <span class="hljs-comment"># 步骤 D：优化器根据梯度更新权重参数</span><br>        optimizer.step()<br></code></pre></td></tr></table></figure>
+<h4
+id="为网络中不同的层单独定制优化器参数">为网络中不同的层单独定制优化器参数</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> optim<br><span class="hljs-keyword">from</span> torchvision.models <span class="hljs-keyword">import</span> resnet18<br><br><span class="hljs-comment"># 1. 实例化 ResNet-18 模型</span><br>net = resnet18()<br><br><span class="hljs-comment"># 2. 为不同层组装参数列表（Param Groups）并创建优化器</span><br>optimizer = optim.SGD([<br>    <span class="hljs-comment"># 第一组：全连接层（fc），未单独指定 lr，因此继承全局默认的 lr=1e-5</span><br>    &#123;<span class="hljs-string">&#x27;params&#x27;</span>: net.fc.parameters()&#125;,<br>    <br>    <span class="hljs-comment"># 第二组：layer4 中第 0 个 BasicBlock 的 conv1 卷积层，单独指定 lr=1e-2</span><br>    &#123;<span class="hljs-string">&#x27;params&#x27;</span>: net.layer4[<span class="hljs-number">0</span>].conv1.parameters(), <span class="hljs-string">&#x27;lr&#x27;</span>: <span class="hljs-number">1e-2</span>&#125;<br>], lr=<span class="hljs-number">1e-5</span>)  <span class="hljs-comment"># 全局默认学习率</span><br><br><br><span class="hljs-comment">### 验证查看optimizer.param_groups</span><br><span class="hljs-comment"># 查看优化器中有几个参数组</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(optimizer.param_groups))  <span class="hljs-comment"># 输出: 2</span><br><span class="hljs-comment"># 打印各个参数组的学习率</span><br><span class="hljs-keyword">for</span> i, group <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(optimizer.param_groups):<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Group <span class="hljs-subst">&#123;i&#125;</span> Learning Rate: <span class="hljs-subst">&#123;group[<span class="hljs-string">&#x27;lr&#x27;</span>]&#125;</span>&quot;</span>)<br>    <span class="hljs-comment"># Group 0 Learning Rate: 1e-05</span><br>    <span class="hljs-comment"># Group 1 Learning Rate: 0.01</span><br></code></pre></td></tr></table></figure>
+<h3 id="实验">3.9.4 实验</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt<br><br><span class="hljs-comment"># ==========================================</span><br><span class="hljs-comment"># 1. 数据准备阶段 (构建带噪声的二次函数数据)</span><br><span class="hljs-comment"># ==========================================</span><br><span class="hljs-comment"># 固定随机种子，确保每次运行生成相同的随机数据，便于结果复现</span><br>torch.manual_seed(<span class="hljs-number">42</span>)<br><br><span class="hljs-comment"># 在 [-1, 1] 区间内均匀生成 200 个一维数据点</span><br><span class="hljs-comment"># unsqueeze(dim=1) 将形状从 [200] 升维为 [200, 1]，以符合 PyTorch 全连接层的输入格式 Requirement [Batch_size, Feature_dim]</span><br>x = torch.unsqueeze(torch.linspace(-<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">200</span>), dim=<span class="hljs-number">1</span>)<br><br><span class="hljs-comment"># 构建目标曲线 y = x^2，并叠加均值为 0、标准差为 0.1 的正态分布随机噪声，增加数据真实拟合难度</span><br>y = x.<span class="hljs-built_in">pow</span>(<span class="hljs-number">2</span>) + <span class="hljs-number">0.1</span> * torch.normal(torch.zeros(x.size()))<br><br><span class="hljs-comment"># 绘制原始数据分布散点图</span><br>fig, ax = plt.subplots()<br><span class="hljs-comment"># Tensor 需要转为 NumPy 数组或直接传入，scatter 用于绘制离散数据点</span><br>ax.scatter(x.numpy(), y.numpy())<br>plt.show()<br><br><span class="hljs-comment"># ==========================================</span><br><span class="hljs-comment"># 2. 网络结构定义 (简单的两层全连接神经网络)</span><br><span class="hljs-comment"># ==========================================</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Net</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>(Net, <span class="hljs-variable language_">self</span>).__init__()<br>        <span class="hljs-comment"># 隐藏层：输入维度 1，输出维度 20（将单维特征映射到 20 维隐空间）</span><br>        <span class="hljs-variable language_">self</span>.hidden = nn.Linear(<span class="hljs-number">1</span>, <span class="hljs-number">20</span>)<br>        <span class="hljs-comment"># 输出层（预测层）：输入维度 20，输出维度 1（将 20 维特征还原为 1 维标量预测值）</span><br>        <span class="hljs-variable language_">self</span>.predict = nn.Linear(<span class="hljs-number">20</span>, <span class="hljs-number">1</span>)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-comment"># 激活函数：使用 ReLU 引入非线性变换，使神经网络具备拟合二次曲线的能力</span><br>        x = F.relu(<span class="hljs-variable language_">self</span>.hidden(x))<br>        <span class="hljs-comment"># 线性输出：回归任务的最后一层通常不需要加激活函数</span><br>        x = <span class="hljs-variable language_">self</span>.predict(x)<br>        <span class="hljs-keyword">return</span> x<br><br><span class="hljs-comment"># ==========================================</span><br><span class="hljs-comment"># 3. 优化器配置与参数组初始化</span><br><span class="hljs-comment"># ==========================================</span><br><span class="hljs-comment"># 提取各类优化器的类构造函数引用（尚未实例化）</span><br>opt_SGD         = torch.optim.SGD<br><span class="hljs-comment"># 使用 lambda 匿名函数为 Momentum 额外指定动量参数 momentum=0.9</span><br>opt_Momentum    = <span class="hljs-keyword">lambda</span> params: torch.optim.SGD(params, lr=<span class="hljs-number">0.05</span>, momentum=<span class="hljs-number">0.9</span>)<br>opt_ASGD        = torch.optim.ASGD<br>opt_Adadelta    = torch.optim.Adadelta<br>opt_Adagrad     = torch.optim.Adagrad<br>opt_Adam        = torch.optim.Adam<br>opt_AdamW       = torch.optim.AdamW<br>opt_Adamax      = torch.optim.Adamax<br>opt_RMSprop     = torch.optim.RMSprop<br><br><span class="hljs-comment"># 配置待对比的优化器字典：&#123; 优化器名称: (优化器构造函数/lambda, 初始学习率 lr) &#125;</span><br><span class="hljs-comment"># 注意：Adadelta 的算法机制不同，不需要衰减学习率，通常默认使用较大的学习率 1.0</span><br>optimizers_cls = &#123;<br>    <span class="hljs-string">&#x27;SGD&#x27;</span>: (opt_SGD, <span class="hljs-number">0.05</span>),<br>    <span class="hljs-string">&#x27;ASGD&#x27;</span>: (opt_ASGD, <span class="hljs-number">0.05</span>),<br>    <span class="hljs-string">&#x27;Momentum&#x27;</span>: (opt_Momentum, <span class="hljs-number">0.05</span>),<br>    <span class="hljs-string">&#x27;Adadelta&#x27;</span>: (opt_Adadelta, <span class="hljs-number">1.0</span>),<br>    <span class="hljs-string">&#x27;Adagrad&#x27;</span>: (opt_Adagrad, <span class="hljs-number">0.05</span>),<br>    <span class="hljs-string">&#x27;Adam&#x27;</span>: (opt_Adam, <span class="hljs-number">0.05</span>),<br>    <span class="hljs-string">&#x27;AdamW&#x27;</span>: (opt_AdamW, <span class="hljs-number">0.05</span>),<br>    <span class="hljs-string">&#x27;Adamax&#x27;</span>: (opt_Adamax, <span class="hljs-number">0.05</span>),<br>    <span class="hljs-string">&#x27;RMSprop&#x27;</span>: (opt_RMSprop, <span class="hljs-number">0.05</span>),<br>&#125;<br><br><span class="hljs-comment"># ==========================================</span><br><span class="hljs-comment"># 4. 训练过程与 Loss 变化记录</span><br><span class="hljs-comment"># ==========================================</span><br><span class="hljs-comment"># 创建字典，用于存储每个优化器在训练过程中所有 Step 的 Loss 历史数值</span><br>losses_his = &#123;name: [] <span class="hljs-keyword">for</span> name <span class="hljs-keyword">in</span> optimizers_cls&#125;<br><br><span class="hljs-comment"># 损失函数选择：均方误差损失（MSE Loss），非常适合连续值的回归任务</span><br>loss_func = nn.MSELoss()<br><br><span class="hljs-comment"># 遍历每一个优化器，分别进行独立的训练测试</span><br><span class="hljs-keyword">for</span> name, (opt_cls, lr) <span class="hljs-keyword">in</span> optimizers_cls.items():<br>    <span class="hljs-comment"># 关键步骤：在每个优化器测试前重置随机种子并重新实例化 Net，保证所有优化器使用完全一致的初始权重参数</span><br>    torch.manual_seed(<span class="hljs-number">42</span>)<br>    net = Net()<br>    <br>    <span class="hljs-comment"># 实例化当前优化器，并将当前网络的参数绑定给优化器</span><br>    <span class="hljs-keyword">if</span> name == <span class="hljs-string">&#x27;Momentum&#x27;</span>:<br>        optimizer = opt_cls(net.parameters()) <span class="hljs-comment"># Momentum 已经在 lambda 中指定了 lr</span><br>    <span class="hljs-keyword">else</span>:<br>        optimizer = opt_cls(net.parameters(), lr=lr)<br>    <br>    <span class="hljs-comment"># 进行 200 个 Step (迭代步) 的训练</span><br>    <span class="hljs-keyword">for</span> step <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">200</span>):<br>        <span class="hljs-comment"># A. 前向传播：输入数据 x，计算模型预测值</span><br>        output = net(x)<br>        <span class="hljs-comment"># B. 计算损失：比较预测值 output 与真实标签 y 的均方误差</span><br>        loss = loss_func(output, y)<br>        <br>        <span class="hljs-comment"># C. 梯度置零：清空上一步累加的梯度，防止影响当前步计算</span><br>        optimizer.zero_grad()<br>        <span class="hljs-comment"># D. 反向传播：根据 Loss 自动求导计算网络各层参数的梯度</span><br>        loss.backward()<br>        <span class="hljs-comment"># E. 参数更新：优化器根据计算出的梯度按特定算法更新权重</span><br>        optimizer.step()<br>        <br>        <span class="hljs-comment"># 记录当前 Step 的 Loss 值（使用 .item() 提取标量数值，避免占用 PyTorch 计算图显存/内存）</span><br>        losses_his[name].append(loss.item())<br><br><span class="hljs-comment"># ==========================================</span><br><span class="hljs-comment"># 5. 可视化对比绘制</span><br><span class="hljs-comment"># ==========================================</span><br>plt.figure(figsize=(<span class="hljs-number">8</span>, <span class="hljs-number">6</span>))<br><br><span class="hljs-comment"># 遍历每个优化器的 Loss 历史数据，绘制折线图</span><br><span class="hljs-keyword">for</span> name, loss_list <span class="hljs-keyword">in</span> losses_his.items():<br>    plt.plot(loss_list, label=name)<br><br><span class="hljs-comment"># 添加图例，置于右上角</span><br>plt.legend(loc=<span class="hljs-string">&#x27;upper right&#x27;</span>)<br><span class="hljs-comment"># 设置坐标轴标签</span><br>plt.xlabel(<span class="hljs-string">&#x27;Steps&#x27;</span>)<br>plt.ylabel(<span class="hljs-string">&#x27;Loss&#x27;</span>)<br><span class="hljs-comment"># 截取 Y 轴显示区间 [0, 0.2]，过滤掉第 0 步过高的初始 Loss，重点观察中后期收敛过程</span><br>plt.ylim(<span class="hljs-number">0</span>, <span class="hljs-number">0.2</span>)<br>plt.show()<br></code></pre></td></tr></table></figure>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/08/27/U5sv/image-20260827175158989.png" srcset="/img/loading.gif" lazyload
+alt="image-20260827175158989" />
+<figcaption aria-hidden="true">image-20260827175158989</figcaption>
+</figure>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/08/27/5zQx/image-20260827175221529.png" srcset="/img/loading.gif" lazyload
+alt="image-20260827175221529" />
+<figcaption aria-hidden="true">image-20260827175221529</figcaption>
+</figure>
+<p>附图2展示了多种常用优化器在同一拟合任务上的收敛速度对比效果。</p>
+<p>所有 9 种优化器在 200 个 Step
+内都展现出了清晰的收敛特征。结合图中的实际数据曲线，详细解读如下：</p>
+<p><strong>1. 第一梯队：自适应学习率优化器（Adam, AdamW, Adamax,
+Adagrad）</strong></p>
+<ul>
+<li><strong>曲线表现</strong>：曲线在最左侧（前 0~25 个
+Steps）几乎呈<strong>垂直断崖式下跌</strong>，迅速将 Loss 从高位压制到
+0.025 以下，并在 25 个 Steps 左右就基本达到了全局最佳收敛点（Loss 近似
+0.01 左右）。</li>
+<li><strong>细节特征</strong>：在下跌初期有轻微的齿状震荡（例如粉色的
+AdamW 和灰色的
+Adamax），这是自适应一阶/二阶矩估计在快速调整梯度步伐时的正常波动，但收敛速度在所有优化器中是最快的。</li>
+</ul>
+<p><strong>2. 震荡收敛型：动量优化器（Momentum）</strong></p>
+<ul>
+<li><strong>曲线表现</strong>：绿色曲线在前 50 个 Steps
+表现出非常明显的<strong>锯齿状强烈震荡</strong>，随后震荡幅值逐渐减小，在
+75 个 Steps 后趋于平缓并稳定在低 Loss 区域。</li>
+<li><strong>现象成因</strong>：由于加入了动量（<code>momentum=0.9</code>），参数更新时继承了上一次的惯性。当学习率较高（<code>lr=0.05</code>）时，容易在损失函数的极小值点两侧“来回冲过头（Overshoot）”，形成剧烈抖动，直到惯性积累与反向梯度达到平衡后才稳定下来。</li>
+</ul>
+<p><strong>3. 平缓渐进型：基础与衰减系优化器（SGD, ASGD, Adadelta,
+RMSprop）</strong></p>
+<ul>
+<li><strong>SGD /
+ASGD</strong>：蓝色与橘色曲线几乎重合，下降趋势平缓顺滑，没有任何剧烈震荡。但由于没有加速机制，在
+200 个 Steps 结束时 Loss 仍处于约 0.015~0.020
+相对较高的位置，尚未完全收敛。</li>
+<li><strong>Adadelta</strong>：红色曲线前期下降较慢，在 50~125 个 Steps
+阶段才出现明显的加速下探，最终在 125 Steps 左右趋于稳定。</li>
+<li><strong>RMSprop</strong>：黄色曲线呈现非常平滑的指数衰减形态，没有像
+Adam 那样的剧烈抖动，最终在 75 Steps 左右平稳降至低点。</li>
+</ul>
+<p><strong>2. 核心结论与经验法则（“不存在绝对的好坏”）</strong></p>
+<ul>
+<li><strong>收敛效率</strong>：在本次的二次函数回归任务中，<strong>Adam
+/ AdamW / Adamax / Adagrad</strong> 展现出了极高的求解效率；而
+<strong>SGD / ASGD</strong> 在相同 Step 下收敛最慢。</li>
+<li><strong>稳定性对比</strong>：<strong>RMSprop</strong>
+兼顾了较快的收敛速度与极佳的曲线平滑度；而带大动量的
+<strong>Momentum</strong> 则表现出很强的冲动性（抖动大）。</li>
+<li><strong>选择策略</strong>：
+<ul>
+<li><strong>追求快速收敛与省心调参</strong>：优先选用
+<strong>AdamW</strong> 或 <strong>Adam</strong>。</li>
+<li><strong>需要平滑轨迹与防止剧烈震荡</strong>：选择带有自适应均方根控制的
+<strong>RMSprop</strong>。</li>
+<li><strong>传统模型精细调优</strong>：使用 <strong>Momentum</strong>
+时，如果发现如上图绿线的剧烈震荡，通常需要适当降低学习率或配合学习率衰减（Learning
+Rate Decay）策略。</li>
+</ul></li>
+</ul>
 
                 
               </div>
