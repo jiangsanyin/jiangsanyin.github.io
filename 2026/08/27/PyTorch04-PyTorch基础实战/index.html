@@ -1,0 +1,1167 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sanyinjiang">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="四、PyTorch的主要组成模块 4.1 ResNet 本节学习的内容有：  梯度消失&#x2F;爆炸的简介 代码里面为什么要设计BasicBlock和Bottleneck两种结构 代码里面的expansion作用  残差神经网络（ResNet）由 何恺明、张祥雨、任少卿、孙剑 等人在 2015 年（发表于 CVPR 2016）代表微软亚洲研究院（MSRA）团队提出。 核心解决的问题：网络深层化时的“退化问">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PyTorch04-PyTorch基础实战">
+<meta property="og:url" content="https://jiangsanyin.github.io/2026/08/27/PyTorch04-PyTorch%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98/index.html">
+<meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="四、PyTorch的主要组成模块 4.1 ResNet 本节学习的内容有：  梯度消失&#x2F;爆炸的简介 代码里面为什么要设计BasicBlock和Bottleneck两种结构 代码里面的expansion作用  残差神经网络（ResNet）由 何恺明、张祥雨、任少卿、孙剑 等人在 2015 年（发表于 CVPR 2016）代表微软亚洲研究院（MSRA）团队提出。 核心解决的问题：网络深层化时的“退化问">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-08-27T10:37:36.000Z">
+<meta property="article:modified_time" content="2026-08-31T08:46:25.100Z">
+<meta property="article:author" content="sanyinjiang">
+<meta property="article:tag" content="PyTorch">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>PyTorch04-PyTorch基础实战 - sanyinjiang</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"jiangsanyin.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","app_key":"0d6M8Wx7ZmYewOQqA20Nbqen","server_url":"https://lhgjnnon.lc-cn-n1-shared.com","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>sanyinjiang</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">PyTorch04-PyTorch基础实战</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-08-27 18:37" pubdate>
+          2026年8月27日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          41 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">PyTorch04-PyTorch基础实战</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="四pytorch的主要组成模块">四、PyTorch的主要组成模块</h1>
+<h2 id="resnet">4.1 ResNet</h2>
+<p>本节学习的内容有：</p>
+<ul>
+<li>梯度消失/爆炸的简介</li>
+<li>代码里面为什么要设计BasicBlock和Bottleneck两种结构</li>
+<li>代码里面的expansion作用</li>
+</ul>
+<p>残差神经网络（ResNet）由 何恺明、张祥雨、任少卿、孙剑 等人在 2015
+年（发表于 CVPR 2016）代表微软亚洲研究院（MSRA）团队提出。</p>
+<p><strong>核心解决的问题：网络深层化时的“退化问题”（Degradation
+Problem）</strong></p>
+<ul>
+<li><strong>背景痛点</strong>：在 ResNet 出现前，传统的神经网络（如
+AlexNet、VGG）虽然通过增加层数能提升特征提取能力，但当网络加深到一定程度（如
+20 层以上）时，训练集上的准确率反而开始下降。</li>
+<li><strong>现象本质</strong>：这种现象并非由过拟合引起（因为训练集误差也在增大），而是因为<strong>网络过深导致梯度在反向传播中难以有效传递</strong>，使得优化算法极难收敛到优秀解。</li>
+<li><strong>ResNet 的解决方案</strong>：提出了残差学习（Residual
+Learning）机制。通过引入“跳跃连接（Skip
+Connection）”（原文中叫快捷连接（Shortcut
+Connection）），将网络原本需要直接拟合的目标映射 <span
+class="math inline">\(H(x)\)</span> 转化为学习残差 <span
+class="math inline">\(F(x) = H(x) - x\)</span>
+。这种设计使得信息与梯度能够跨层无损传递，从根本上攻克了极深网络难以训练的瓶颈，成功将神经网络的深度从十几层提升到了上百层甚至上千层（如
+ResNet-50, ResNet-101, ResNet-152）。</li>
+</ul>
+<h3 id="基本介绍">4.1.1 基本介绍</h3>
+<p>随着卷积神经网络的出现，人们发现多层卷积或全连接网络的效果通常优于单层网络。因此，很多人潜意识里认为网络的层数越多，提取特征的能力越强，效果就会越好。然而，微软研究院的何恺明、张祥雨、任少卿、孙剑等人发现，当网络加深到一定程度后，整个网络的效果反而变差了，这种现象被称为“退化现象”（Degradation
+Problem）<strong>。值得注意的是，通过批归一化（Batch
+Normalization）和恰当的权重初始化，梯度消失和梯度爆炸在很大程度上已经被缓解，但深层网络依然极难训练。他们指出，退化的本质并不是过拟合，也不是简单的梯度消失，而是</strong>极深的网络结构使得优化算法（如
+SGD）难以对特征进行有效优化——让深层网络直接学习“什么都不做（恒等映射）”其实非常困难。针对这一优化难题，他们提出了
+ResNet（残差神经网络）。ResNet
+最核心的贡献在于引入了<strong>快捷连接（Shortcut
+Connection，也称跳跃连接）</strong>，将输入 <span
+class="math inline">\(x\)</span> 直接跨层传递并与残差部分叠加（<span
+class="math inline">\(F(x) +
+x\)</span>​）。这相当于为信息与梯度搭建了一条“无损高速公路”，不仅让网络极易学习恒等变换，也极大地简化了深层神经网络的优化过程，真正推动了神经网络迈向数百层乃至上千层的超深时代。</p>
+<h4 id="残差连接">4.1.1.1 残差连接</h4>
+<p>以下是对残差连接过程中相关概念与过程中精简描述。</p>
+<h5 id="核心概念拆解">4.1.1.1.1 核心概念拆解</h5>
+<p>在残差网络结构中，我们可以将一个基础的残差块（Residual
+Block）拆解为三个要素：</p>
+<ul>
+<li><strong><span
+class="math inline">\(x\)</span></strong>：输入数据（即进入这个残差块之前的特征图）。</li>
+<li><strong><span
+class="math inline">\(H(x)\)</span></strong>：我们<strong>最终期望这个残差块学到的目标函数/目标映射</strong>（即期望输出）。</li>
+<li><strong><span
+class="math inline">\(F(x)\)</span></strong>：卷积层/全连接层经过权重计算后实际学出的映射，即<strong>残差（Residual）</strong>。</li>
+</ul>
+<p>其核心公式为：</p>
+<p><span class="math display">\[H(x) = F(x) + x \quad \implies \quad
+F(x) = H(x) - x\]</span></p>
+<p>这里的 <span class="math inline">\(F(x) = H(x) - x\)</span>
+在数学上就叫作<strong>残差</strong>（目标输出与输入的差值）。</p>
+<h5 id="详细解释为何叠加-fx-x-是-resnet-的核心突破">4.1.1.1.2
+详细解释：为何叠加 <span class="math inline">\(F(x) + x\)</span> 是
+ResNet 的核心突破？</h5>
+<p>要理解这个设计的精妙之处，可以从“传统的困难”和“残差的解决思路”两个角度来看：</p>
+<h6 id="传统网络没有-shortcut直接硬刚-hx">1. 传统网络（没有
+Shortcut）：直接硬刚 <span class="math inline">\(H(x)\)</span></h6>
+<p>在传统的深层网络（如 VGG）中，数据 <span
+class="math inline">\(x\)</span>
+依次经过多个卷积层、激活层，网络被强行要求<strong>直接去拟合最终的目标映射
+<span class="math inline">\(H(x)\)</span></strong>。</p>
+<ul>
+<li><strong>致命痛点</strong>：假设网络加深到一定程度后，新增的这几层其实<strong>不需要改变任何特征</strong>（即理想的目标是“恒等映射”
+<span class="math inline">\(H(x) = x\)</span>）。</li>
+<li><strong>现实难题</strong>：要让多个含有非线性激活函数（如
+ReLU）的复杂卷积层去<strong>从 0 刚好学习出 <span
+class="math inline">\(H(x) = x\)</span>
+这个恒等变换，在数学和优化上是极其困难的</strong>。优化器（如
+SGD）很容易在层层复杂的参数空间中迷失，导致特征表达被“搅乱”，训练误差反而上升（即退化现象）。</li>
+</ul>
+<h6 id="残差网络引入-shortcut拆解为-fx-x">2. 残差网络（引入
+Shortcut）：拆解为 <span class="math inline">\(F(x) + x\)</span></h6>
+<p>ResNet 改变了思路：它不让卷积层直接去猜 <span
+class="math inline">\(H(x)\)</span>，而是把路径拆成两条：</p>
+<ol type="1">
+<li><strong>主干路径（卷积层）</strong>：负责学习残差 <span
+class="math inline">\(F(x)\)</span>。</li>
+<li><strong>快捷路径（Shortcut）</strong>：负责将输入 <span
+class="math inline">\(x\)</span> 原封不动地直接“打横拉过去”。</li>
+</ol>
+<p>最后在输出端将两者相加，得到 <span class="math inline">\(H(x) = F(x)
++ x\)</span>。</p>
+<h6 id="为什么这样设计极易优化">3. 为什么这样设计极易优化？</h6>
+<ul>
+<li><p><strong>极致的退化兜底（学习 <span class="math inline">\(F(x) =
+0\)</span> 极其简单）</strong></p>
+<p>如果新增的这几层没有任何用处，优化器只需要把这些卷积层的权重调整为
+0（或者非常接近 0），此时 <span class="math inline">\(F(x) =
+0\)</span>。</p>
+<p>整个模块的输出就变成了：</p>
+<p><span class="math display">\[H(x) = 0 + x = x\]</span></p>
+<p>网络瞬间自动退化为一个<strong>无损传递的恒等映射</strong>！这意味着，<strong>增加残差层至少绝对不会让模型的效果变差</strong>，彻底消除了深层网络退化的风险。</p></li>
+<li><p><strong>搭建梯度的“无损高速公路”</strong></p>
+<p>在反向传播计算梯度时，根据求导法则：</p>
+<p><span class="math display">\[\frac{\partial H(x)}{\partial x} =
+\frac{\partial F(x)}{\partial x} + 1\]</span></p>
+<p>注意公式中的 <strong><span class="math inline">\(+
+1\)</span></strong>！这意味着，哪怕主干路径的梯度 <span
+class="math inline">\(\frac{\partial F(x)}{\partial x}\)</span>
+因为层数太深而趋近于 0（梯度消失），总梯度项中依然保留了一个常数项 <span
+class="math inline">\(1\)</span>。</p>
+<p>梯度可以顺着 Shortcut
+这条“高速公路”直达前方的浅层网络，保证了前方的网络层永远能接收到足够的更新信号。</p></li>
+</ul>
+<hr />
+<h4 id="梯度消失与梯度爆炸">4.1.1.2 梯度消失与梯度爆炸</h4>
+<p>尽管何恺明等人证实了“退化现象”并非由梯度消失或梯度爆炸直接引起，但在ResNet诞生之前，梯度消失与梯度爆炸确实是阻碍神经网络加深的主要瓶颈之一。以下是对这二者的精简描述：<strong>梯度消失与梯度爆炸</strong>，本质都是在神经网络反向传播中，<strong>连乘效应</strong>被网络层数无限放大导致的数值异常现象。</p>
+<ul>
+<li><strong>梯度消失（Gradient Vanishing）</strong>
+<ul>
+<li><strong>现象</strong>：网络前期的梯度极小，接近于 <span
+class="math inline">\(0\)</span>。</li>
+<li><strong>成因</strong>：反向传播基于链式法则求导，当每层的导数或权重小于
+<span class="math inline">\(1\)</span>
+时，多层相乘会导致梯度呈指数级衰减。</li>
+<li><strong>后果</strong>：靠近输入端的浅层网络权重<strong>无法更新</strong>，模型训练停滞。</li>
+</ul></li>
+<li><strong>梯度爆炸（Gradient Exploding）</strong>
+<ul>
+<li><strong>现象</strong>：网络中的梯度极大，甚至变为无穷大（<code>NaN</code>
+/ <code>Inf</code>）。</li>
+<li><strong>成因</strong>：当每层的导数或权重大于 <span
+class="math inline">\(1\)</span> 时，多层连乘导致梯度呈指数级暴增。</li>
+<li><strong>后果</strong>：权重更新幅度过大，引发数值溢出，模型震荡发散乃至<strong>崩塌</strong>。</li>
+</ul></li>
+</ul>
+<h3 id="源码解读">4.1.2 源码解读</h3>
+<p>以下根据<a
+target="_blank" rel="noopener" href="https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py">torchvision的ResNet源码</a>来解读相关概念与设计思想。</p>
+<h4 id="卷积核的封装">4.1.2.1 卷积核的封装</h4>
+<p>以下是ResNet的源码（vision/torchvision/models/resnet.py）文件中开头处的部分内容，其中将3x3和1x1的卷积核进行了封装，提升了代码的可读性与工程可扩展性。基于类似设计理念与目的，其他深度学习代码实现中可能会将卷积层、激活函数层和BN层封装在一起。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python">...<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">conv3x3</span>(<span class="hljs-params">in_planes: <span class="hljs-built_in">int</span>, out_planes: <span class="hljs-built_in">int</span>, stride: <span class="hljs-built_in">int</span> = <span class="hljs-number">1</span>, groups: <span class="hljs-built_in">int</span> = <span class="hljs-number">1</span>, dilation: <span class="hljs-built_in">int</span> = <span class="hljs-number">1</span></span>) -&gt; nn.Conv2d:<br>    <span class="hljs-string">&quot;&quot;&quot;3x3 convolution with padding&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">return</span> nn.Conv2d(<br>        in_planes,<br>        out_planes,<br>        kernel_size=<span class="hljs-number">3</span>,<br>        stride=stride,<br>        padding=dilation,<br>        groups=groups,<br>        bias=<span class="hljs-literal">False</span>,<br>        dilation=dilation,<br>    )<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">conv1x1</span>(<span class="hljs-params">in_planes: <span class="hljs-built_in">int</span>, out_planes: <span class="hljs-built_in">int</span>, stride: <span class="hljs-built_in">int</span> = <span class="hljs-number">1</span></span>) -&gt; nn.Conv2d:<br>    <span class="hljs-string">&quot;&quot;&quot;1x1 convolution&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">return</span> nn.Conv2d(in_planes, out_planes, kernel_size=<span class="hljs-number">1</span>, stride=stride, bias=<span class="hljs-literal">False</span>)<br>...<br></code></pre></td></tr></table></figure>
+<h4 id="基本模块的设计">4.1.2.2 基本模块的设计</h4>
+<h5 id="imagenet-架构设计">4.1.2.2.1 ImageNet 架构设计</h5>
+<p>ResNet 网络是由结构高度统一的模块重复堆叠而成的（如附图中的 <span
+class="math inline">\([\dots] \times 3\)</span>，表示将该残差块连续堆叠
+3 次）。为了提升代码的可读性与工程可扩展性，ResNet
+采用了<strong>模块化设计思想</strong>：针对不同深度的模型，分别抽象封装出
+<strong><code>BasicBlock</code>（基础残差块）</strong> 和
+<strong><code>Bottleneck</code>（瓶颈残差块）</strong>
+两个核心类。在构建不同规模的网络（如 ResNet-18 至
+ResNet-152）时，只需灵活调整传入的模块类型以及各阶段（Stage）的堆叠次数即可实现高效复用。</p>
+<p>ResNet常见的大小有下图的ResNet-18，ResNet-34，ResNet-50、ResNet-101和ResNet-152，其中网络后面的数字代表的是网络的层数。</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/08/28/Ujr8/image-20260828175030500.png" srcset="/img/loading.gif" lazyload
+alt="image-20260828175030500" />
+<figcaption aria-hidden="true">image-20260828175030500</figcaption>
+</figure>
+<p>这张图来自于 ResNet 原论文（<em>Deep Residual Learning for Image
+Recognition</em>），展示了 <strong>ResNet-18、34、50、101 和
+152</strong> 这五种经典残差网络架构的具体层数配置与计算量对比。</p>
+<h6 id="表格列与行的含义">4.1.2.2.1.1 表格列与行的含义</h6>
+<ul>
+<li><strong><code>layer name</code>（层名称）</strong>：网络从输入到输出划分为
+<code>conv1</code> 以及 <code>conv2_x</code> ~ <code>conv5_x</code> 共 5
+个阶段（Stage）。</li>
+<li><strong><code>output size</code>（特征图输出尺寸）</strong>：输入图片假设为
+<span class="math inline">\(224 \times
+224\)</span>。随着网络深入，特征图分辨率逐步下采样为 <span
+class="math inline">\(112 \times 112 \to 56 \times 56 \to 28 \times 28
+\to 14 \times 14 \to 7 \times 7\)</span>。</li>
+<li><strong>各网络列（18/34/50/101/152-layer）</strong>：方括号中代表<strong>残差块（Residual
+Block）的内部结构</strong>，右侧的 <code>×N</code>
+代表该残差块在当前阶段<strong>重复堆叠的次数</strong>。</li>
+<li><strong><code>FLOPs</code>（浮点运算量）</strong>：衡量模型计算复杂度的指标。层数越深，计算量越大（从
+<span class="math inline">\(1.8 \times 10^9\)</span> 增加至 <span
+class="math inline">\(11.3 \times 10^9\)</span>）。</li>
+</ul>
+<h6 id="核心架构区别基础残差块-vs-瓶颈结构bottleneck">4.1.2.2.1.2
+核心架构区别：基础残差块 vs 瓶颈结构（Bottleneck）</h6>
+<p>表格中将 ResNet 明显分为了两大类别：</p>
+<ol type="1">
+<li>浅层网络（ResNet-18 / ResNet-34）：使用基础块（Basic Block）</li>
+</ol>
+<ul>
+<li><strong>结构</strong>：每一个残差块由两个 <span
+class="math inline">\(3 \times 3\)</span> 的卷积层组成，如 <span
+class="math inline">\(\begin{bmatrix} 3\times 3, 64 \\ 3\times 3, 64
+\end{bmatrix}\)</span>。</li>
+<li><strong>特点</strong>：输入通道数与输出通道数保持一致（例如均为
+64），结构简单直接。</li>
+</ul>
+<ol start="2" type="1">
+<li>深层网络（ResNet-50 / ResNet-101 /
+ResNet-152）：使用瓶颈块（Bottleneck Block）</li>
+</ol>
+<ul>
+<li><strong>结构</strong>：每一个残差块改用三个卷积层组合，如 <span
+class="math inline">\(\begin{bmatrix} 1\times 1, 64 \\ 3\times 3, 64 \\
+1\times 1, 256 \end{bmatrix}\)</span>。
+<ol type="1">
+<li>第一层 <span class="math inline">\(1 \times
+1\)</span>：<strong>降维</strong>（例如将 256 维降到 64
+维。其中64就是卷积核的输出通道大小），减少后续 <span
+class="math inline">\(3 \times 3\)</span> 卷积的计算量。</li>
+<li>第二层 <span class="math inline">\(3 \times
+3\)</span>：在低维空间进行空间特征提取。</li>
+<li>第三层 <span class="math inline">\(1 \times
+1\)</span>：<strong>升维</strong>（将 64 维恢复/拓展到 256 维）。</li>
+</ol></li>
+<li><strong>目的</strong>：在层数急剧增加时控制参数量和计算复杂度，使得
+ResNet-50 虽然层数是 ResNet-34 的 1.5 倍，但 FLOPs（<span
+class="math inline">\(3.8 \times 10^9\)</span>）与 ResNet-34（<span
+class="math inline">\(3.6 \times 10^9\)</span>）非常接近。</li>
+</ul>
+<h6 id="层数是如何计算出来的以-resnet-50-为例">4.1.2.2.1.3
+层数是如何计算出来的？（以 ResNet-50 为例）</h6>
+<p>所谓“ResNet-50”中的 <strong>50
+层</strong>，指的是带可学习权重参数的卷积层和全连接层的总和（不计入
+Pooling 层与 Activation 层）：</p>
+<ul>
+<li><strong><code>conv1</code></strong>：1 层（<span
+class="math inline">\(7 \times 7\)</span> 卷积）</li>
+<li><strong><code>conv2_x</code></strong>：<span class="math inline">\(3
+\text{ 个 Bottleneck} \times 3 \text{ 层} = 9\)</span> 层</li>
+<li><strong><code>conv3_x</code></strong>：<span class="math inline">\(4
+\text{ 个 Bottleneck} \times 3 \text{ 层} = 12\)</span> 层</li>
+<li><strong><code>conv4_x</code></strong>：<span class="math inline">\(6
+\text{ 个 Bottleneck} \times 3 \text{ 层} = 18\)</span> 层</li>
+<li><strong><code>conv5_x</code></strong>：<span class="math inline">\(3
+\text{ 个 Bottleneck} \times 3 \text{ 层} = 9\)</span> 层</li>
+<li><strong><code>fc</code></strong>：1 层（全连接分类层，1000-d
+fc）</li>
+</ul>
+<p><span class="math display">\[\text{总层数} = 1 + 9 + 12 + 18 + 9 + 1
+= 50 \text{ 层}\]</span></p>
+<blockquote>
+<p>同理，ResNet-101 和 ResNet-152 主要是在 <strong><code>conv4_x</code>
+阶段</strong>大幅增加了残差块的重复次数（分别重复 23 次和 36
+次），用来抽取更高阶的语义特征。</p>
+</blockquote>
+<h6 id="附图表中瓶颈块是指什么">4.1.2.2.1.4
+附：图表中瓶颈块是指什么</h6>
+<p><strong>瓶颈块（Bottleneck Block）</strong> 在图表中指的就是
+<strong>ResNet-50、101 和 152
+这三列中，所有由三个卷积层组合构成的方括号结构整体</strong>。</p>
+<ol type="1">
+<li>图表中的具体位置与形态</li>
+</ol>
+<p>在图表右侧的 <code>50-layer</code>、<code>101-layer</code> 和
+<code>152-layer</code> 列中，每个 Stage
+里面的<strong>一个方括号单元</strong>就是一个瓶颈块。</p>
+<p>例如以 <code>50-layer</code> 的 <code>conv2_x</code> 阶段为例：</p>
+<p><span class="math display">\[\begin{bmatrix} 1\times 1, 64 \\ 3\times
+3, 64 \\ 1\times 1, 256 \end{bmatrix} \times 3\]</span></p>
+<p>这整组方括号括起来的内容，就是一个标准的瓶颈模块：</p>
+<ul>
+<li><strong>括号内部的 3 行</strong>：代表这个瓶颈块内部顺序连接的
+<strong>3 个卷积层</strong>。
+<ol type="1">
+<li><span class="math inline">\(1 \times 1,
+64\)</span>（降维层：把输入通道压缩到 64）</li>
+<li><span class="math inline">\(3 \times 3,
+64\)</span>（空间特征提取层：在 64 通道的低维空间运算）</li>
+<li><span class="math inline">\(1 \times 1,
+256\)</span>（升维层：把通道重新恢复/扩充到 256）</li>
+</ol></li>
+<li><strong>右侧的 <span class="math inline">\(\times
+3\)</span></strong>：代表将这一个瓶颈模块按顺序<strong>连续堆叠 3
+次</strong>。</li>
+</ul>
+<ol start="2" type="1">
+<li>为什么叫“瓶颈（Bottleneck）”？</li>
+</ol>
+<p>它被称为“瓶颈”是因为其通道数呈现出 <strong>“大 <span
+class="math inline">\(\to\)</span> 小 <span
+class="math inline">\(\to\)</span> 大”</strong>
+的两头宽、中间窄的物理形状：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs scss">输入通道 (<span class="hljs-number">256</span>) <br>     │<br><span class="hljs-selector-attr">[1x1 卷积]</span> ──&gt; 降维到 <span class="hljs-number">64</span>  ──────┐<br>                                ├─&gt; 【瓶颈区域】：中间的 <span class="hljs-number">3</span>x3 卷积只在 <span class="hljs-number">64</span> 维低维处理<br><span class="hljs-selector-attr">[3x3 卷积]</span> ──&gt; 保持 <span class="hljs-number">64</span>    ──────┘   计算量被极大地限制住了！<br>     │<br><span class="hljs-selector-attr">[1x1 卷积]</span> ──&gt; 恢复到 <span class="hljs-number">256</span><br>     │<br>输出通道 (<span class="hljs-number">256</span>)<br></code></pre></td></tr></table></figure>
+<p>数据流经过中间的 <span class="math inline">\(3 \times 3\)</span>
+卷积层时，特征通道被压缩成了一个“窄瓶颈”，以此大幅降低了参数量和计算开销。</p>
+<h4 id="downsample操作">4.1.2.3 downsample操作</h4>
+<p>正如上面图表中内容所示，根据残差块结构的特征差异（是否包含瓶颈层结构、convN_x的输入通道数与最终输出通道数是否相同），可以将ResNet-18，ResNet-34，ResNet-50、ResNet-101和ResNet-152划分为两大类：ResNet-18、ResNet-34只包含浅层网络属于一类，ResNet-50、ResNet-101和ResNet-152包含深层网络属于第二类。</p>
+<p><code>torchvision</code>
+官方源码同样采用了这种模块化设计思想，分别封装了如上图所示的
+<code>BasicBlock</code>（左）和
+<code>Bottleneck</code>（右）两个核心模块。在源码实现中，残差块最终输出的通道数通过
+<code>expansion</code> 参数进行控制：两个模块均接收通道数为
+<code>in_planes</code> 的特征图，并统一输出通道数为
+<code>planes \* block.expansion</code>
+的特征图。其中，<code>BasicBlock</code> 的 <code>expansion</code> 设为
+1（输出通道等于 <code>planes</code>），而 <code>Bottleneck</code> 的
+<code>expansion</code> 设为 4（输出通道扩充为 <code>planes</code> 的 4
+倍）。此外，右侧 Shortcut 支路上的 <code>downsample</code>
+操作，正是用于在做残差叠加前解决输入 <span
+class="math inline">\(x\)</span> 与主干输出 <span
+class="math inline">\(F(x)\)</span>
+空间尺寸或通道维度不匹配问题的线性映射分支。</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/08/29/Tz5r/677ca58e-1358-43c7-9709-1fc3ed2a.png" srcset="/img/loading.gif" lazyload
+alt="677ca58e-1358-43c7-9709-1fc3ed2a3392" />
+<figcaption
+aria-hidden="true">677ca58e-1358-43c7-9709-1fc3ed2a3392</figcaption>
+</figure>
+<h4 id="shortcut-connection">4.1.2.4 Shortcut Connection</h4>
+<p>下图展示了shortcut connection 的过程：</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/08/29/X4pc/image-20260829225614504.png" srcset="/img/loading.gif" lazyload
+alt="image-20260829225614504" />
+<figcaption aria-hidden="true">image-20260829225614504</figcaption>
+</figure>
+<p><strong>Shortcut Connection（快捷连接）</strong> 是跨越卷积层将输入
+<span class="math inline">\(x\)</span>
+直连至输出端的旁路结构，让网络只需拟合残差 <span
+class="math inline">\(\mathcal{F}(x)\)</span>
+以缓解深层退化与梯度消失；当输入 <span class="math inline">\(x\)</span>
+与主干输出 <span class="math inline">\(\mathcal{F}(x)\)</span>
+维度相同时，采用无参数的 恒等映射 直接相加（<span
+class="math inline">\(y = \mathcal{F}(x) +
+x\)</span>）；当因下采样或通道变化导致维度不一致时，则采用 投影映射
+，通过 <span class="math inline">\(1 \times 1\)</span> 卷积调整 <span
+class="math inline">\(x\)</span> 的尺寸与通道数对齐后再行叠加（<span
+class="math inline">\(y = \mathcal{F}(x) + W_s
+x\)</span>）。关于调整x尺寸，其中情况可以大致描述如下：</p>
+<p>这里的“尺寸”包含两个层面：<strong>通道尺寸（Channel）</strong> 和
+<strong>空间尺寸（Height / Width）</strong>。</p>
+<p><span class="math inline">\(1 \times 1\)</span>
+卷积不仅能改变通道数，<strong>只要把步长（stride）设置为
+2</strong>，就能同时将图像的高和宽缩小一半，实现空间尺寸的调整。</p>
+<p>具体通过以下两种方式完成调整：</p>
+<ol type="1">
+<li><p>调整通道尺寸（Channel Dimension）</p>
+<ul>
+<li><p><strong>原理</strong>：通过控制 <span class="math inline">\(1
+\times 1\)</span> 卷积核的数量（即
+<code>out_channels</code>）来改变通道数。</p></li>
+<li><p><strong>例子</strong>：输入特征图形状为 <span
+class="math inline">\([C_{\text{in}}=64, H=56, W=56]\)</span>，使用 256
+个 <span class="math inline">\(1 \times 1\)</span>
+卷积核（<code>stride=1</code>），输出特征图就会变为 <span
+class="math inline">\([C_{\text{out}}=256, H=56,
+W=56]\)</span>。</p></li>
+</ul></li>
+<li><p>调整空间尺寸（Height &amp; Width）</p>
+<ul>
+<li><p><strong>原理</strong>：将 <span class="math inline">\(1 \times
+1\)</span> 卷积的<strong>步长设置为
+<code>stride=2</code></strong>。此时卷积核在图像上隔一个像素跳着滑动采样，从而使输出的高和宽变为原来的
+<span class="math inline">\(\frac{1}{2}\)</span>。</p></li>
+<li><p><strong>代入公式</strong>：</p>
+<p>根据尺寸计算公式：</p>
+<p><span class="math display">\[H_{\text{out}} = \lfloor
+\frac{H_{\text{in}} + 2 \times \text{padding} -
+\text{kernel\_size}}{\text{stride}} \rfloor + 1\]</span></p>
+<p>当输入 <span class="math inline">\(H_{\text{in}} =
+56\)</span>，<code>kernel_size = 1</code>, <code>padding = 0</code>,
+<strong><code>stride = 2</code></strong> 时：</p>
+<p><span class="math display">\[H_{\text{out}} = \lfloor \frac{56 + 0 -
+1}{2} \rfloor + 1 = 27 + 1 = 28\]</span></p></li>
+<li><p><strong>例子</strong>：输入形状为 <span
+class="math inline">\([64, 56, 56]\)</span>，使用步长为 2 的 <span
+class="math inline">\(1 \times 1\)</span> 卷积（假设输出通道设为
+128），输出特征图就会变为 <span class="math inline">\([128, 28,
+28]\)</span>。</p></li>
+</ul></li>
+<li><p>总结（Shortcut 支路中的 Downsample）</p></li>
+</ol>
+<p>在 ResNet 的 Shortcut 支路上，当需要进行 <code>downsample</code>
+时，正是使用了 <strong><code>stride=2</code> 且改变卷积核数量的 <span
+class="math inline">\(1 \times 1\)</span> 卷积</strong>，一次性将输入
+<span class="math inline">\(x\)</span>
+的<strong>通道数加倍</strong>并将其<strong>高宽减半</strong>，完美对齐了主干分支
+<span class="math inline">\(F(x)\)</span> 的维度与尺寸。</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/08/29/o2Rs/image-20260829225456318.png" srcset="/img/loading.gif" lazyload
+alt="image-20260829225456318" />
+<figcaption aria-hidden="true">image-20260829225456318</figcaption>
+</figure>
+<p>上图展示了ImageNet的示例网络构架图。其中左图表示VGG-19模型的网络构架图（$19.6
+^{9} $ FLOPs ），作为参考。中图表示一个有34个参数层的普通网络（$3.6 ^{9}
+$ FLOPs ）。右图表示一个有34个参数层的残差网络（$3.6 ^{9} $ FLOPs
+）。</p>
+<p>对比中图与右图可以看到，右图中添加了shortcut
+connection操作，且这种shortcut
+connection操作只发生在堆叠的残差模块之间。这种shortcut
+connection操作分为两种：恒等映射、投影映射，分别对应右图中最右侧的实曲线、虚曲线。只有当特征图的通道数或空间尺寸发生变化时，才会用到投影映射，保证块的输入与最终输出在通道维度与空间尺寸上同时完成对齐。比如跨
+Stage 的 “3x3 conv, 128,
+/2”卷积层中指定通道数变为128、步长Stride=2，这样会将特征图的通道数变为原来的2倍、空间尺寸变为原来的1/2，此时，旁路（Shortcut
+支路）通过施加一个步长为 2 的 <span class="math inline">\(1 \times
+1\)</span> 卷积（配置 128 个卷积核）进行线性映射，使输入 <span
+class="math inline">\(x\)</span>
+的空间尺寸与通道维度同时与主干输出对齐，从而确保两路特征图能够正常执行逐元素相加。</p>
+<p>在 ResNet 网络结构中，无论是 BasicBlock 还是 BottleNeck
+结构均包含了残差连接（Shortcut
+Connection）操作，确保块的输入与最终输出在通道维度上完成对齐。BasicBlock采用两次标准
+<span class="math inline">\(3 \times 3\)</span>
+卷积直接进行特征提取，适用于浅层网络。BottleNeck对残差主干进行了模块化优化。首先通过
+<span class="math inline">\(1 \times 1\)</span>
+卷积减少通道数（降维），接着在低维空间利用 <span class="math inline">\(3
+\times 3\)</span> 卷积提取空间特征，最后再用 <span
+class="math inline">\(1 \times 1\)</span>
+卷积恢复通道数（升维），最终将输入 <span
+class="math inline">\(x\)</span> 与主干输出 <span
+class="math inline">\(F(x)\)</span>
+相加。这种“降维-卷积-升维”的设计在保持特征表达能力的同时，相比同等深度的纯
+<span class="math inline">\(3 \times 3\)</span>
+卷积极大地压缩了参数量与计算量，使得 ResNet 能够在堆叠更多层数（如
+50、101、152 层）时依然保持高效的计算性能与优异的准确率。</p>
+<h4 id="basicblock">4.1.2.5 BasicBlock</h4>
+<h4 id="bottleneck">4.1.2.6 BottleNeck</h4>
+<h3 id="总结">4.1.3 总结</h3>
+<h2 id="基础实战fashionmnist时装分类">4.2
+基础实战——FashionMNIST时装分类</h2>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/PyTorch/" class="category-chain-item">PyTorch</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/PyTorch/" class="print-no-link">#PyTorch</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>PyTorch04-PyTorch基础实战</div>
+      <div>https://jiangsanyin.github.io/2026/08/27/PyTorch04-PyTorch基础实战/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sanyinjiang</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年8月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - sanyinjiang">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/08/06/PyTorch03-PyTorch%E7%9A%84%E4%B8%BB%E8%A6%81%E7%BB%84%E6%88%90%E6%A8%A1%E5%9D%97/" title="PyTorch03-PyTorch的主要组成模块">
+                        <span class="hidden-mobile">PyTorch03-PyTorch的主要组成模块</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"lhgjNNoNy5Syl0F4Bw8i5P5K-gzGzoHsz","appKey":"0d6M8Wx7ZmYewOQqA20Nbqen","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
