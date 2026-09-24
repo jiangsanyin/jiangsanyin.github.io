@@ -27,7 +27,7 @@
 <meta property="og:description" content="本系列学习笔记源自开源项目：https:&#x2F;&#x2F;github.com&#x2F;datawhalechina&#x2F;hello-gpu 。是自己在学习过程上的记录与心得。 第0篇 入门与硬件速通 0.0 项目介绍与学习提示     篇 你要学什么 学完能做什么 大约时间     第 0 篇 入门 环境验证、GPU 体系结构、第一个程序 跑通环境，建立硬件直觉 1-2 天   第 1 篇 Profiling bench">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-20T06:34:38.000Z">
-<meta property="article:modified_time" content="2026-09-24T09:58:59.810Z">
+<meta property="article:modified_time" content="2026-09-24T10:03:44.810Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="GPU">
 <meta property="article:tag" content="算子">
@@ -486,15 +486,18 @@ alt="921199065c9a5aa1f731a877aa0ad71d.png" /></p>
 <p>在GPU显存中，数据是按数据块进行组织与访问。一个数据块的大小一般来说是相对稳定的，就相当于格式化一块磁盘会将选定其数据块大小一样，所以说每个数据块中能够保存的数据个数就是有限的。
 这样的机制下，想要访问到某个数据，其实是先访问数据所在的整个数据块，然后再从数据块中取出我们想要的某个（些）数据。试想如果我们真正想要的数据分散在不同的数据块就会造成如下现象：先找到并传输所有相关的多个数据块，然后这些数据块只分别取出其中某个或某几个数据，这样造成了带宽的很大浪费，也增加访问的时间与效率。</p>
 <p>显存的带宽是极其宝贵的，以 64
-个工人（Lane）搬取货物（读取数据）为例说明合并访存的必要性： -
-合并访存成功时：64 个工人需要的东西都在同一个箱子里，卡车送来 1
+个工人（Lane）搬取货物（读取数据）为例说明合并访存的必要性：</p>
+<ul>
+<li>合并访存成功时：64 个工人需要的东西都在同一个箱子里，卡车送来 1
 个箱子，所有人同时拿到东西（合并访存，效率极高）。==【64
 个线程的请求落入同一个数据块，GPU 只需要向显存（VRAM）发起 <strong>1
-次</strong> 内存事务（Memory Transaction）就能把数据一次性搬运过来。】==
-- 完全散乱时：64 个工人每人要的东西都在不同的仓库里，卡车必须跑 64
+次</strong> 内存事务（Memory
+Transaction）就能把数据一次性搬运过来。】==</li>
+<li>完全散乱时：64 个工人每人要的东西都在不同的仓库里，卡车必须跑 64
 趟去搬 64 个箱子，而每个箱子装满数据，工人却只拿走了其中 4
 个字节，造成严重的带宽浪费。==【GPU 的内存控制器不得不向显存发起
-<strong>64 次</strong> 独立的内存事务。】==</p>
+<strong>64 次</strong> 独立的内存事务。】==</li>
+</ul>
 <p>为此，在GPU编程中，不仅仅是要“写 Kernel
 函数”，更核心的功夫在于<strong>设计数据在显存中的排布方式（尽量连续与对齐）</strong>，以及<strong>合理分配线程的工作任务（让相邻线程恰好去读连续的数据）</strong>，从而把分散的访存请求压缩成尽量少的数据块传输。</p>
 <p>当同一个wavefront中不同线程访问数据时，我们应该尽量保证这些数据存储在相同/相邻的数据块或位置。把同一
