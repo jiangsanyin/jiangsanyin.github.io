@@ -27,7 +27,7 @@
 <meta property="og:description" content="六、PyTorch进阶训练技巧 6.1 自定义损失函数 尽管PyTorch官方针对主流模型为用户提供了很多内置损失函数，但随着应用场景的变化与自定义模型的出现，那些内置损失函数可能并不适合，于是产生了一些针对非通用模型的损失函数。有些损失函数是针对某特定场景使用，可以直接拿来使用或修改使用，有些场景或自定义模型甚至找不到现成或逼近的损失函数可用，此时就需要自定义损失函数。 本章节学习的内容包括：如">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-21T07:55:11.000Z">
-<meta property="article:modified_time" content="2026-09-29T03:26:43.450Z">
+<meta property="article:modified_time" content="2026-09-29T03:27:54.000Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -508,10 +508,10 @@ learning），将开源模型在源数据集上学习到的能力迁移到目标
 <ul>
 <li><strong>操作</strong>：把开源 Backbone
 中除了最后输出层外的所有层参数全冻结（<code>param.requires_grad = False</code>），只训练我们自己新加的最后一层分类头（Linear）。</li>
-<li><strong>适用</strong>：目标数据集<strong>非常非常小</strong>（比如只有几百张图）时。
-具体描述此策略下模型微调的流程如下：</li>
+<li><strong>适用</strong>：目标数据集<strong>非常非常小</strong>（比如只有几百张图）时。</li>
 </ul></li>
 </ol>
+<p>具体描述此策略下模型微调的流程如下：</p>
 <ul>
 <li>1）获取源模型：在源数据集（一般是大规模开源数据集）上训练得到源模型。这个工作一般开源社区已经帮忙完成了。</li>
 <li>2）构建目标模型：复制源模型中除了最后的输出层外的模型结构与权重参数，并手动构建、添加一个输出与目标数据集一致的新输出层，新输出层的权重参数是随机初始化的。</li>
