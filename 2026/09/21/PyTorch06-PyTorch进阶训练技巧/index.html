@@ -27,7 +27,7 @@
 <meta property="og:description" content="六、PyTorch进阶训练技巧 6.1 自定义损失函数 尽管PyTorch官方针对主流模型为用户提供了很多内置损失函数，但随着应用场景的变化与自定义模型的出现，那些内置损失函数可能并不适合，于是产生了一些针对非通用模型的损失函数。有些损失函数是针对某特定场景使用，可以直接拿来使用或修改使用，有些场景或自定义模型甚至找不到现成或逼近的损失函数可用，此时就需要自定义损失函数。 本章节学习的内容包括：如">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-21T07:55:11.000Z">
-<meta property="article:modified_time" content="2026-09-28T08:45:15.990Z">
+<meta property="article:modified_time" content="2026-09-29T03:26:43.450Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -247,7 +247,7 @@
         
         
         
-          111 分钟
+          113 分钟
         
       </span>
     
@@ -491,11 +491,12 @@ target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/t
 <p>开源社区已经为大家提供了很多针对各种场景下使用的神经网络，其中很多神经网络训练时采用了大规模、高质量的数据集，但它们终归只是考虑到了当时场景。大家在实际学习工作时，会遇到各种不同实际业务场景，经当时的数据集训练得到的神经网络一般情况下并不能直接应用。</p>
 <p>对于一般小型团队或公司而言，项目中能够收集到的训练、测试数据集规模相对较小，相比而言开源社区很多结构复杂的大规模神经网络如<code>ViT</code>使用的数据集则大得多，比如ImageNet系统数据集至少是百万个样本数据。如果直接采用这些”开源神经网络的结构+自己的目标数据集“，很可能会造成过拟合，同时因为此时的目标数据集小太多可能训练得到的最终模型精度（如准确率、泛化能力等）达不到实用程度。
 （当然如果某开源模型当时就是由小规模数据集或跟自己当前的目标数据集规模度差不多甚至更小训练得到的，理论上是可能直接拿此开源模型的结构从头开始训练，更新得到目标数据集上的全新权重参数，从而得到一个新的目标模型。）</p>
-<p>为此，对于这类大规模神经网络，要想使用它们的结构（甚至进行少量改动），并利用自己当前已有的目标数据集训练、更新权重参数，有如下两种常见的方法：
--
-<strong>将目标数据集规模、质量扩大</strong>或提升至开源的大规模神经网络当时使用的数据集一致。但收集与标数据集是一个成本非常高的过程，其成本大小与数据集规模、质量呈正相关关系，所以这一过程意味更高的成本，这<strong>对于一般的小团队或公司是不可取的</strong>。
-- 使用<strong>应用迁移学习</strong>（transfer
-learning），将开源模型在源数据集上学习到的能力迁移到目标数据集上。它的机理是：开源模型使用的源数据集跟目标数据集可能很大程度并不一致或不是描述同类事物，但开源模型在源数据集能够学习到抽象通用的图像特征（比如图像的纹理、边缘、形状与颜色等），它们也适用于目标数据集。</p>
+<p>为此，对于这类大规模神经网络，要想使用它们的结构（甚至进行少量改动），并利用自己当前已有的目标数据集训练、更新权重参数，有如下两种常见的方法：</p>
+<ul>
+<li><strong>将目标数据集规模、质量扩大</strong>或提升至开源的大规模神经网络当时使用的数据集一致。但收集与标数据集是一个成本非常高的过程，其成本大小与数据集规模、质量呈正相关关系，所以这一过程意味更高的成本，这<strong>对于一般的小团队或公司是不可取的</strong>。</li>
+<li>使用<strong>应用迁移学习</strong>（transfer
+learning），将开源模型在源数据集上学习到的能力迁移到目标数据集上。它的机理是：开源模型使用的源数据集跟目标数据集可能很大程度并不一致或不是描述同类事物，但开源模型在源数据集能够学习到抽象通用的图像特征（比如图像的纹理、边缘、形状与颜色等），它们也适用于目标数据集。</li>
+</ul>
 <p>模型方面，应用迁移学习的最常用、最典型应用场景就是模型微调（finetuning）。模型微调的大致意思是：复制某个开源模型（包括模型结构与权重参数），在目标数据集上重新进行训练、不断更新其模型权重参数，使其能够在目标数据集表现达到预期。就是说我们站在巨人的肩膀上，利用优秀开源模型的骨架，赋予其目标数据集的灵魂，使模型与数据完美融合获得预期的涌现能力。</p>
 <p>掌握模型微调，可以快速验证问题、提升模型与数据融合能力。</p>
 <h3 id="微调在-pytorch-中的两类典型操作">6.3.2 微调在 PyTorch
@@ -566,6 +567,22 @@ target="_blank" rel="noopener" href="https://docs.pytorch.org/docs/2.14/model_zo
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torchvision<br><span class="hljs-keyword">import</span> torchvision.models <span class="hljs-keyword">as</span> models<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">set_parameter_requires_grad</span>(<span class="hljs-params">model, feature_extracting</span>):<br>    <span class="hljs-keyword">if</span> feature_extracting:<br>        <span class="hljs-keyword">for</span> param <span class="hljs-keyword">in</span> model.parameters():<br>            param.requires_grad = <span class="hljs-literal">False</span><br><br><span class="hljs-comment"># 实例化 resnet18 模型</span><br>model = models.resnet18(weights=torchvision.models.ResNet18_Weights.DEFAULT)<br><br><span class="hljs-comment"># 构建目标模型</span><br><span class="hljs-comment">## 冻结model所有层的权重或偏置 参数</span><br>feature_extract = <span class="hljs-literal">True</span><br>set_parameter_requires_grad(model, feature_extract)<br><span class="hljs-comment">## 修改模型：创建新的输出层直接覆盖原输出层</span><br>num_ftrs = model.fc.in_features<br>model.fc = nn.Linear(in_features=num_ftrs, out_features=<span class="hljs-number">4</span>, bias=<span class="hljs-literal">True</span>)<br><br><span class="hljs-comment"># print(f&quot;model.fc: &#123;model.fc&#125;&quot;)</span><br><span class="hljs-comment"># print(&quot;model.fc.weight.requires_grad:&quot;, model.fc.weight.requires_grad)</span><br><span class="hljs-comment"># print(&quot;model.fc.bias.requires_grad:  &quot;, model.fc.bias.requires_grad)</span><br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n查看模型所有参数的requires_grad属性值：&quot;</span>)<br><span class="hljs-keyword">for</span> name, param <span class="hljs-keyword">in</span> model.named_parameters():<br>    <span class="hljs-built_in">print</span>(name, param.requires_grad)<br><br></code></pre></td></tr></table></figure>
 <p>此示例代码基于<code>resnet18</code>开源模型为基础构建目标模型，将目标模型的最后一层由原来的输出1000个分类更改为输出4个分类，并将输出层前面层的权重或偏置的<code>requires_grad</code>属性值强制更改为<code>False</code>以冻结它们。但未完整给出后续微调具体代码。</p>
 <h2 id="模型微调---timm">6.3 模型微调 - timm</h2>
+<p>通过前面的学习，已知PyTorch官方的torchvision库中包含了许多开源模型。除此之外，还有一个开源timm中也包含了大量开源模型、与工具和优化器等功能。
+timm（Py<strong>T</strong>orch <strong>Im</strong>age
+<strong>M</strong>odels）是一组图像模型、层、实用工具、优化器、调度器、数据加载器/增强方法，以及参考的训练和验证脚本，旨在整合多种最先进的模型，使其能够重现
+ImageNet 的训练结果。</p>
+<p>timm开源项目中包含的开源模型是torchvision中开源模型的父集。
+它的github官方链接是：<code>https://github.com/huggingface/pytorch-image-models</code>（还在更新中），官方文档网站是：<code>https://timm.fast.ai/</code>（最近4年无更新）。</p>
+<h3 id="timm的安装">6.3.1 timm的安装</h3>
+<p>根据官方文档，其提供了如下两种安装方式： （1）使用pip安装
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install timm<br></code></pre></td></tr></table></figure> （2）源码可编辑安装 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/huggingface/pytorch-image-models.git<br><span class="hljs-built_in">cd</span> pytorch-image-models &amp;&amp; pip install -e .<br></code></pre></td></tr></table></figure></p>
+<h3 id="timm的使用">6.3.2 timm的使用</h3>
+<h4 id="查看模型">6.3.2.1 查看模型</h4>
+<h4 id="查询模型">6.3.2.2 查询模型</h4>
+<h4 id="创建模型">6.3.2.3 创建模型</h4>
+<h4 id="修改模型">6.3.2.4 修改模型</h4>
+<h4 id="微调模型">6.3.2.5 微调模型</h4>
+<h3 id="模型的保存">6.3.4 模型的保存</h3>
 <h2 id="半精度训练">6.4 半精度训练</h2>
 <h2 id="数据增强-imgaug">6.5 数据增强-imgaug</h2>
 <h2 id="使用argparse进行调参">6.6 使用argparse进行调参</h2>
