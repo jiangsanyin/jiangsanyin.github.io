@@ -27,7 +27,7 @@
 <meta property="og:description" content="六、PyTorch进阶训练技巧 6.1 自定义损失函数 尽管PyTorch官方针对主流模型为用户提供了很多内置损失函数，但随着应用场景的变化与自定义模型的出现，那些内置损失函数可能并不适合，于是产生了一些针对非通用模型的损失函数。有些损失函数是针对某特定场景使用，可以直接拿来使用或修改使用，有些场景或自定义模型甚至找不到现成或逼近的损失函数可用，此时就需要自定义损失函数。 本章节学习的内容包括：如">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-21T07:55:11.000Z">
-<meta property="article:modified_time" content="2026-10-06T08:49:46.420Z">
+<meta property="article:modified_time" content="2026-10-06T09:06:30.410Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -247,7 +247,7 @@
         
         
         
-          335 分钟
+          336 分钟
         
       </span>
     
@@ -1056,6 +1056,9 @@ target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3.12/library/
 title="sys.argv"><code>sys.argv</code></a> 解析它们。
 <code>argparse</code> 模块还能自动生成帮助和用法消息文本。
 该模块还会在用户向程序传入无效参数时发出错误提示。</p>
+<p><code>Python</code>官方针对<code>argparse</code>模块的官方文档：<a
+target="_blank" rel="noopener" href="https://docs.python.org/3.12/library/argparse.html">argparse.html</a>
+。</p>
 <h3 id="argparse的经常性用法">6.7.3
 <code>argparse</code>的经常性用法</h3>
 <h4 id="用法概述">6.7.3.1 用法概述</h4>
@@ -1358,6 +1361,9 @@ dest="batch_size"。</td>
 <p>命令行参数只负责“本次运行的配置入口”。为了让日后能够复现一次实验，实际训练时还应将
 vars(args)（或 args 的内容）连同模型权重、训练日志一起保存到 JSON、YAML
 或 checkpoint 中。</p>
+<h4 id="总结">6.7.3.5 总结</h4>
+<p>可以看到，<code>argparse</code>模块为命令行的传入与解析提供了方便、实用的API接口，极大地方便深度学习中超参数的传入与解析。</p>
+<p>一般地，为了复现或继承训练结果，深度学习会将超参数以json或dict或yaml等格式文件进行保存，模型结构与权重参数以pth等格式文件进行保存。</p>
 
                 
               </div>
@@ -1447,6 +1453,12 @@ vars(args)（或 args 的内容）连同模型权重、训练日志一起保存�
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2026/10/06/PyTorch07-PyTorch%E5%8F%AF%E8%A7%86%E5%8C%96/" title="PyTorch07-PyTorch可视化">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">PyTorch07-PyTorch可视化</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

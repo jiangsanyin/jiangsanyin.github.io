@@ -27,7 +27,7 @@
 <meta property="og:description" content="三、PyTorch的主要组成模块 3.1 深度学习流程及与机器学习差异 一项机器学习任务的整体流程如下：  数据准备与划分：对原始数据进行清洗、格式统一与特征变换，并划分为训练集、验证集和测试集（如采用随机切分或 K 折交叉，可以使用sklearn带的test_train_split函数、kfold来实现）。 模型与算法配置：选择合适的网络架构，指定衡量误差的损失函数、更新参数的优化器以及相关超参">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-08-06T04:45:50.000Z">
-<meta property="article:modified_time" content="2026-09-04T09:56:19.380Z">
+<meta property="article:modified_time" content="2026-10-06T14:18:14.060Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          35k 字
+          37k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          291 分钟
+          310 分钟
         
       </span>
     
@@ -643,6 +643,144 @@ class="math inline">\(1\times1\)</span>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># 创建一个全连接层：4 个输入特征 -&gt; 3 个输出特征</span><br>fc = nn.Linear(in_features=<span class="hljs-number">4</span>, out_features=<span class="hljs-number">3</span>, bias=<span class="hljs-literal">True</span>)<br><br><span class="hljs-comment"># 为了便于核对计算过程，手动设置权重 W 和偏置 b</span><br><span class="hljs-comment"># PyTorch 中 fc.weight 的形状为 (out_features, in_features)，即 (3, 4)</span><br><span class="hljs-keyword">with</span> torch.no_grad():<br>    fc.weight.copy_(torch.tensor([<br>        [<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>, <span class="hljs-number">4.0</span>],<br>        [<span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, -<span class="hljs-number">1.0</span>],<br>        [-<span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">0.0</span>],<br>    ]))<br>    fc.bias.copy_(torch.tensor([<span class="hljs-number">0.5</span>, -<span class="hljs-number">0.5</span>, <span class="hljs-number">1.0</span>]))<br><br><span class="hljs-comment"># 两个样本组成一个 batch，每个样本包含 4 个特征</span><br>X = torch.tensor([<br>    [<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>, <span class="hljs-number">4.0</span>],<br>    [<span class="hljs-number">4.0</span>, <span class="hljs-number">3.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">1.0</span>],<br>])<br><br>Y = fc(X)<br>Y_manual = X @ fc.weight.T + fc.bias  <span class="hljs-comment"># 按公式 Y = XW^T + b 手工计算</span><br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;输入 X 的形状: <span class="hljs-subst">&#123;X.shape&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;权重 W 的形状: <span class="hljs-subst">&#123;fc.weight.shape&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;偏置 b 的形状: <span class="hljs-subst">&#123;fc.bias.shape&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n第一个样本第一个输出:&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;1×1 + 2×2 + 3×3 + 4×4 + 0.5 =&quot;</span>, Y[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>].item())<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n全连接层输出 Y:&quot;</span>)<br><span class="hljs-built_in">print</span>(Y)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n手工矩阵计算结果:&quot;</span>)<br><span class="hljs-built_in">print</span>(Y_manual)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n两种计算结果是否一致:&quot;</span>, torch.allclose(Y, Y_manual))<br></code></pre></td></tr></table></figure>
 <p>输出如下：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs text">输入 X 的形状: torch.Size([2, 4])<br>权重 W 的形状: torch.Size([3, 4])<br>偏置 b 的形状: torch.Size([3])<br><br>第一个样本第一个输出:<br>1×1 + 2×2 + 3×3 + 4×4 + 0.5 = 30.5<br><br>全连接层输出 Y:<br>tensor([[30.5000, -2.5000,  3.0000],<br>        [20.5000,  1.5000, -1.0000]], grad_fn=&lt;AddmmBackward0&gt;)<br><br>手工矩阵计算结果:<br>tensor([[30.5000, -2.5000,  3.0000],<br>        [20.5000,  1.5000, -1.0000]], grad_fn=&lt;AddBackward0&gt;)<br><br>两种计算结果是否一致: True<br></code></pre></td></tr></table></figure>
+<h4 id="批正则处理层">3.4.2.6 批正则处理层</h4>
+<p>批正则处理层通常指 <strong>批量归一化层</strong>（Batch
+Normalization，简称 <strong>BatchNorm</strong> 或
+<strong>BN</strong>）。它经常被放在卷积层或全连接层之后、激活函数之前，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br>nn.Conv2d(<span class="hljs-number">3</span>, <span class="hljs-number">64</span>, kernel_size=<span class="hljs-number">3</span>, padding=<span class="hljs-number">1</span>)<br>nn.BatchNorm2d(<span class="hljs-number">64</span>)<br>nn.ReLU()<br></code></pre></td></tr></table></figure>
+<p>名称中的 Normalization 是“归一化”，不是“正则化”。BN
+的直接工作是调整中间特征的数值分布；它有时会带来一定的正则化效果，但它与在损失函数中加入
+L1/L2 正则项、或随机丢弃神经元的 Dropout 不是同一件事。</p>
+<p>在训练深层网络时，前面层的参数一更新，后面层接收到的特征分布也会随之改变。例如某一特征在这次迭代中的数值可能集中在
+0 附近，而下一次迭代中可能整体变得很大或很小。BatchNorm
+会根据<strong>当前小批量（mini-batch）</strong>的统计量，把各个特征先调整到较稳定的尺度，再交给后续层处理。这通常能让训练更稳定，并允许使用相对更大的学习率；但它不是保证模型一定收敛或一定提高准确率的“万能层”。</p>
+<p><strong>一维特征的计算过程：</strong>假设全连接层的输入形状为 (N,
+C)，其中 N 是 batch_size、C 是特征数。对每一个特征通道 c，BN 会在当前
+batch 的 N 个样本上分别计算均值和方差：</p>
+<p><span class="math display">\[
+\mu_{\mathcal{B},c}=\frac{1}{N}\sum_{i=1}^{N}x_{i,c}
+\]</span></p>
+<p><span class="math display">\[
+\sigma_{\mathcal{B},c}^{2}=\frac{1}{N}\sum_{i=1}^{N}(x_{i,c}-\mu_{\mathcal{B},c})^{2}
+\]</span></p>
+<p>接着进行标准化：</p>
+<p><span class="math display">\[
+\hat{x}_{i,c}=\frac{x_{i,c}-\mu_{\mathcal{B},c}}{\sqrt{\sigma_{\mathcal{B},c}^{2}+\epsilon}}
+\]</span></p>
+<p>其中 <span class="math inline">\(\epsilon\)</span>
+是一个很小的常数，用于防止方差为 0 时除以
+0。若只到这一步，每个特征在当前 batch 上的均值约为 0、方差约为 1。BN
+最后还会进行可学习的仿射变换：</p>
+<p><span class="math display">\[
+y_{i,c}=\gamma_c\hat{x}_{i,c}+\beta_c
+\]</span></p>
+<p>这里的 <span class="math inline">\(\gamma_c\)</span>（缩放）和 <span
+class="math inline">\(\beta_c\)</span>（平移）是每个通道各自拥有的可学习参数。它们使网络不被限制为“输出必须均值为
+0、方差为 1”：模型可以在训练中学会保留、放大、缩小或平移某个特征。</p>
+<p><strong>卷积特征图的计算过程：</strong>卷积层通常输出形状 (N, C, H,
+W)。nn.BatchNorm2d(C) 仍然是“每个通道一组统计量”，但第 c
+个通道的均值和方差会同时在 N、H、W
+三个维度上计算，也就是用该通道内的全部 N × H × W
+个数值计算，而不会把不同通道混在一起。输出形状保持为 (N, C, H, W)
+不变。三种常见 BN 层的输入形式如下：</p>
+<table>
+
+<thead>
+<tr>
+<th>层</th>
+<th>常见输入形状</th>
+<th>统计范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nn.BatchNorm1d(num_features)</td>
+<td>(N, C)，或序列特征 (N, C, L)</td>
+<td>每个通道分别在 batch 维（以及存在时的序列长度维）统计</td>
+</tr>
+<tr>
+<td>nn.BatchNorm2d(num_features)</td>
+<td>图像特征图 (N, C, H, W)</td>
+<td>每个通道分别在 N、H、W 维统计</td>
+</tr>
+<tr>
+<td>nn.BatchNorm3d(num_features)</td>
+<td>三维体数据 (N, C, D, H, W)</td>
+<td>每个通道分别在 N、D、H、W 维统计</td>
+</tr>
+</tbody>
+</table>
+<p><strong>训练模式与评估模式的区别：</strong>这是使用 BN
+时很重要的一点。</p>
+<ul>
+<li>在 model.train() 的训练模式下，BN 使用<strong>当前
+batch</strong>的均值和方差完成前向计算；同时会把这些统计量以滑动平均的方式更新到
+running_mean 和 running_var 中。</li>
+<li>在 model.eval() 的评估/推理模式下，BN 不再依赖当前输入 batch
+的统计量，而是使用训练期间累计得到的 running_mean 和
+running_var；这使得同一张图片单独推理或与其他图片一起推理时，结果不会因为同批的其他样本不同而变化。</li>
+<li>running_mean、running_var 是模型的
+<strong>buffer（缓冲区）</strong>，会随 state_dict()
+一起保存和加载，但不会由优化器通过反向传播更新；可学习的则是 weight（即
+<span class="math inline">\(\gamma\)</span>）和 bias（即 <span
+class="math inline">\(\beta\)</span>）。</li>
+</ul>
+<p>PyTorch 中 momentum 的默认值为
+0.1。每次训练前向传播后，运行均值大致按下面的方式更新：</p>
+<p><span class="math display">\[
+\text{running\_mean}_{new}=(1-\text{momentum})\times\text{running\_mean}_{old}+\text{momentum}\times\mu_\mathcal{B}
+\]</span></p>
+<p>这里的 momentum 是“当前 batch
+统计量在运行统计量中所占的更新比例”，含义不要与 SGD
+等优化器中的动量混淆。通常不需要手动修改它。</p>
+<p>有一个用于理解数值的实现细节：PyTorch 在训练前向传播中用“除以
+N”的有偏方差（也就是示例中 x.var(..., unbiased=False)
+的结果）完成标准化；但更新 running_var 时使用无偏方差（除以
+N-1）。因此示例第一个特征的前向方差为 1.25，而首次更新后的运行方差为 0.9
+× 1 + 0.1 × 1.6667，约为 1.0667。初学时只需知道：应让 PyTorch 自动维护
+running_var，而不要手动替换它。</p>
+<p>BatchNorm 的常用构造参数包括：</p>
+<ul>
+<li>num_features：通道数/特征数。例如卷积输出通道为 64 时，应写
+nn.BatchNorm2d(64)，不是写 batch_size。</li>
+<li>eps=1e-5：公式中的 <span
+class="math inline">\(\epsilon\)</span>，通常使用默认值即可。</li>
+<li>momentum=0.1：更新运行均值、运行方差的比例，通常使用默认值即可。</li>
+<li>affine=True：是否保留可学习的 <span
+class="math inline">\(\gamma\)</span>、<span
+class="math inline">\(\beta\)</span>。默认值为 True；若为 False，BN
+只做标准化。</li>
+<li>track_running_stats=True：是否维护供评估模式使用的运行统计量。默认值为
+True，一般保持默认值。</li>
+</ul>
+<p>下面的完整示例使用 BatchNorm1d 展示“当前 batch
+的统计量”“可学习的仿射参数”和“训练/评估模式差异”。为方便核对，示例手动设置了
+<span class="math inline">\(\gamma\)</span> 与 <span
+class="math inline">\(\beta\)</span>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><br><span class="hljs-comment"># 输入形状为 (N, C)：4 个样本，每个样本有 3 个特征。</span><br>x = torch.tensor([<br>    [<span class="hljs-number">1.0</span>, <span class="hljs-number">10.0</span>, <span class="hljs-number">100.0</span>],<br>    [<span class="hljs-number">2.0</span>, <span class="hljs-number">20.0</span>, <span class="hljs-number">200.0</span>],<br>    [<span class="hljs-number">3.0</span>, <span class="hljs-number">30.0</span>, <span class="hljs-number">300.0</span>],<br>    [<span class="hljs-number">4.0</span>, <span class="hljs-number">40.0</span>, <span class="hljs-number">400.0</span>],<br>])<br><br><span class="hljs-comment"># num_features=3 对应输入的特征数 C=3。</span><br><span class="hljs-comment"># affine=True：拥有可学习的 weight(gamma) 与 bias(beta)；</span><br><span class="hljs-comment"># track_running_stats=True：拥有 running_mean 与 running_var。</span><br>bn = nn.BatchNorm1d(num_features=<span class="hljs-number">3</span>, eps=<span class="hljs-number">1e-5</span>, momentum=<span class="hljs-number">0.1</span>)<br><br><span class="hljs-comment"># 为了让结果容易理解，手动设置 gamma 和 beta。</span><br><span class="hljs-comment"># 实际训练中不需要这样做，它们会由优化器通过反向传播学习。</span><br><span class="hljs-keyword">with</span> torch.no_grad():<br>    bn.weight.copy_(torch.tensor([<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">0.5</span>]))  <span class="hljs-comment"># gamma</span><br>    bn.bias.copy_(torch.tensor([<span class="hljs-number">0.0</span>, <span class="hljs-number">1.0</span>, -<span class="hljs-number">1.0</span>]))   <span class="hljs-comment"># beta</span><br><br><span class="hljs-comment"># train()：使用当前 x 的 batch 均值/方差，并更新运行统计量。</span><br>bn.train()<br>y_train = bn(x)<br><br><span class="hljs-comment"># 手工复现训练模式的主要计算过程。</span><br><span class="hljs-comment"># unbiased=False 对应 BatchNorm 前向标准化时使用的“除以 N”的方差形式。</span><br>batch_mean = x.mean(dim=<span class="hljs-number">0</span>)<br>batch_var = x.var(dim=<span class="hljs-number">0</span>, unbiased=<span class="hljs-literal">False</span>)<br>x_normalized = (x - batch_mean) / torch.sqrt(batch_var + bn.eps)<br>y_manual = x_normalized * bn.weight + bn.bias<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;输入 x：&quot;</span>)<br><span class="hljs-built_in">print</span>(x)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n当前 batch 的每个特征均值：&quot;</span>, batch_mean)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;当前 batch 的每个特征方差：&quot;</span>, batch_var)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n训练模式的 BN 输出：&quot;</span>)<br><span class="hljs-built_in">print</span>(y_train)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n手工计算与 BN 输出是否一致：&quot;</span>, torch.allclose(y_train, y_manual))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;训练后 running_mean：&quot;</span>, bn.running_mean)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;训练后 running_var：&quot;</span>, bn.running_var)<br><br><span class="hljs-comment"># eval()：不再使用当前 x 的 batch 均值/方差，而是使用上面已更新的运行统计量。</span><br>bn.<span class="hljs-built_in">eval</span>()<br>y_eval = bn(x)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n评估模式对同一 x 的输出：&quot;</span>)<br><span class="hljs-built_in">print</span>(y_eval)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;训练模式与评估模式输出是否相同：&quot;</span>, torch.allclose(y_train, y_eval))<br><br><span class="hljs-comment"># BatchNorm2d 的形状示例：只改变数值分布，不改变 N、C、H、W 的形状。</span><br>images = torch.randn(<span class="hljs-number">4</span>, <span class="hljs-number">3</span>, <span class="hljs-number">8</span>, <span class="hljs-number">8</span>)  <span class="hljs-comment"># (batch_size=4, channels=3, height=8, width=8)</span><br>bn2d = nn.BatchNorm2d(num_features=<span class="hljs-number">3</span>)<br>feature_maps = bn2d(images)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\nBatchNorm2d 输入形状：&quot;</span>, images.shape)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;BatchNorm2d 输出形状：&quot;</span>, feature_maps.shape)<br></code></pre></td></tr></table></figure>
+<p>运行时可观察到：</p>
+<ul>
+<li>batch_mean 分别为 [2.5, 25.0, 250.0]，说明 BN
+是对每一个特征列独立计算，不会把三列数值混在一起。</li>
+<li>torch.allclose(y_train, y_manual) 为
+True，说明训练模式下的输出符合“标准化后乘以 <span
+class="math inline">\(\gamma\)</span>、再加 <span
+class="math inline">\(\beta\)</span>”的公式。</li>
+<li>由于这里手动设置了不同的 <span
+class="math inline">\(\gamma\)</span>、<span
+class="math inline">\(\beta\)</span>，y_train 的各列最终均值并不一定是
+0、方差也不一定是 1；均值为 0、方差为 1 的是中间量 x_normalized。</li>
+<li>训练后 running_mean 和 running_var 不等于当前 batch
+的统计量，因为它们是从初始值按 momentum=0.1 做一次滑动更新得到的。</li>
+<li>对同一个 x，训练模式和刚切换到评估模式后的输出通常不同：前者使用当前
+batch 的统计量，后者使用尚未完全稳定的运行统计量。这是正常现象，并不是
+BN 出错。</li>
+</ul>
+<p>BN 依赖一个 batch 内的统计量。当训练 batch
+很小（尤其每个通道的有效元素数很少）时，均值和方差的估计可能不稳定；对于小
+batch 的检测、分割或生成任务，常会根据具体网络与任务考虑
+GroupNorm、LayerNorm 等替代方案。无论使用哪一种归一化层，都应正确切换
+model.train() 与 model.eval()，不要只切换部分 BN 层。</p>
 <h3 id="模型示例">3.4.3 模型示例</h3>
 <p>前面提到过，可以使用<code>torch.nn</code>包来构建神经网络。<code>nn</code>包则依赖于<code>autograd</code>包来定义模型并对它们求导。一个<code>nn.Module</code>包含各个层和一个<code>forward(input)</code>方法，由<code>forward(input)</code>方法返回模型或层的输出<code>output</code>。</p>
 <h4 id="lenet">3.4.3.1 LeNet</h4>
