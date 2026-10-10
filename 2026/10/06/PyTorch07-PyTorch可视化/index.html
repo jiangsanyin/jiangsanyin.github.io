@@ -27,7 +27,7 @@
 <meta property="og:description" content="七、PyTorch可视化 7.1 可视化网络结构 7.1.1 神经网络可视化背景 前面说过，要想基于某个开源神经网络进行二开，修改成符合自己需求的神经网络，需要对原开源神经的结构、输入输出有熟悉的了解。 直接使用Python原生的print函数打印相关神经网络实例，固然可以输出其结构，但只能得到其最粗略的构件信息（每一个模型块或层由哪些模型块组成，及构造函数的关键参数），不能直观地查看每一个模型块">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-06T09:08:33.000Z">
-<meta property="article:modified_time" content="2026-10-10T07:23:55.380Z">
+<meta property="article:modified_time" content="2026-10-10T07:52:33.960Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          17k 字
+          18k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          141 分钟
+          154 分钟
         
       </span>
     
@@ -552,7 +552,7 @@ Rainbow）叠加在原图上：</p>
 <p>此项目已经5年未更新，不推荐使用。但此CAM作为开山之作，首次给出了“直接的经验实证（Empirical
 Proof）”，即通过“眼见为实”的直接可视化解释了卷积层在干什么、是怎么工作的（在这之前，人们已经感知到“低层提取简单结构（线条/边缘），高层提取复杂实体形状”，也通过“理论推导与间接证明”
 验证这一点，但仅仅局限于抽象层面），仍具有重要意义。</p>
-<h4 id="grad-cam-的介绍">7.2.3.2 Grad-CAM 的介绍</h4>
+<h4 id="grad-cam-的介绍推荐">7.2.3.2 Grad-CAM 的介绍（推荐）</h4>
 <p>Grad-CAM 是CAM的演进版本。 ##### 7.2.3.2.1 为什么提出Grad-CAM</p>
 <p>由于CAM存在以下致命缺陷：CAM 破坏了模型结构，且适用范围极窄</p>
 <ul>
@@ -620,7 +620,89 @@ ResNet、VGG、DenseNet 还是目标检测网络，只要是基于 CNN
 </tr>
 </tbody>
 </table>
-<h5 id="当前使用的pytorch-grad-cam">7.2.3.2.2
+<h5 id="grad-cam-的工作原理">7.2.3.2.2 grad-cam 的工作原理</h5>
+<p>Grad-CAM 的名称可以拆开理解：<strong>Grad</strong> 是
+Gradient（梯度），<strong>CAM</strong> 是 Class Activation
+Mapping（类激活映射）。它不再像原始 CAM
+那样直接读取“全连接层中已经存在的类别权重”，而是反过来问模型：</p>
+<blockquote>
+<p>如果希望“猫”这个类别的得分更高，最后一个卷积层的哪些特征图、哪些位置最需要发生变化？</p>
+</blockquote>
+<p>这个“需要怎样变化”的信息，就保存在梯度中。因此，Grad-CAM
+的关键思想可以概括为：<strong>用目标类别得分对最后一个卷积层特征图的梯度，计算每个特征图对该类别的重要程度；再按重要程度把这些特征图加权合成一张热力图。</strong></p>
+<p>以“输入一张同时有猫和狗的图片，并解释模型为什么认为它是狗”为例，整个过程可以分为以下几步：</p>
+<ol type="1">
+<li><p><strong>正常做一次前向传播，确定要解释的类别</strong></p>
+<p>图片先经过卷积层、池化层和分类器，模型会给每个类别输出一个分数。假设本次关注的是“狗”类别，记它的分类分数为
+<span class="math inline">\(y^c\)</span>，其中 <span
+class="math inline">\(c\)</span> 表示目标类别编号。</p>
+<p>这里通常使用分类器输出的原始分数（logit），而不是先经过 Softmax
+得到的概率。可以简单理解为：Grad-CAM
+要直接观察“让狗这一类得分变高”的依据。</p></li>
+<li><p><strong>取出一个较靠后的卷积层输出的特征图</strong></p>
+<p>假设该卷积层一共输出 <span class="math inline">\(K\)</span>
+个通道，则可记为 <span class="math inline">\(A^1, A^2, \ldots,
+A^K\)</span>。每个 <span class="math inline">\(A^k\)</span>
+都是一张二维特征图，图上的每个位置对应原图中的一个较大区域。</p>
+<p>和前面观察 CNN
+特征图时一样，不同通道会对不同的图像模式产生响应。例如某些通道可能更容易响应于毛发、眼睛、轮廓或局部纹理。Grad-CAM
+通常选择<strong>最后一个卷积层</strong>：它已经包含较高层的类别语义，同时仍保留“特征来自图片哪个位置”的二维空间信息。</p></li>
+<li><p><strong>从目标类别分数反向传播，计算梯度</strong></p>
+<p>Grad-CAM 不训练模型，也不修改模型参数；它只针对本次输入，计算：</p>
+<p><span class="math display">\[
+\frac{\partial y^c}{\partial A^k_{ij}}
+\]</span></p>
+<p>其中，<span class="math inline">\(A^k_{ij}\)</span> 表示第 <span
+class="math inline">\(k\)</span> 张特征图中第 <span
+class="math inline">\(i\)</span> 行、第 <span
+class="math inline">\(j\)</span>
+列的一个数值。这个梯度可以通俗地理解为：<strong>若稍微增大该位置的激活值，目标类别“狗”的分数会受到多大影响。</strong></p>
+<ul>
+<li>梯度为正且较大：该位置的激活增强通常会提高“狗”的得分；</li>
+<li>梯度接近 0：该位置对“狗”得分几乎没有影响；</li>
+<li>梯度为负：该位置的激活增强反而会降低“狗”的得分。</li>
+</ul></li>
+<li><p><strong>把每张特征图的梯度汇总为一个通道权重</strong></p>
+<p>一张特征图上有许多位置，Grad-CAM
+会对其梯度做全局平均池化（GAP），得到该通道对目标类别的总体重要性权重：</p>
+<p><span class="math display">\[
+\alpha_k^c = \frac{1}{Z}\sum_i\sum_j \frac{\partial y^c}{\partial
+A^k_{ij}}
+\]</span></p>
+<p>其中，<span class="math inline">\(Z\)</span>
+是该特征图的空间位置总数。例如特征图大小为 <span
+class="math inline">\(14\times14\)</span> 时，<span
+class="math inline">\(Z=196\)</span>。<span
+class="math inline">\(\alpha_k^c\)</span> 越大，说明第 <span
+class="math inline">\(k\)</span>
+个通道整体上越有助于提高“狗”这个目标类别的得分。</p>
+<p>这正是 Grad-CAM 相比 CAM 最重要的区别：CAM
+使用分类器中固定存在的权重；Grad-CAM
+每次都通过反向传播，根据<strong>当前图片、当前目标类别</strong>的梯度动态算出权重。</p></li>
+<li><p><strong>按权重叠加特征图，得到类别相关热力图</strong></p>
+<p>有了每个通道的权重后，将所有特征图加权求和，并经过 ReLU：</p>
+<p><span class="math display">\[
+L_{\mathrm{Grad\text{-}CAM}}^c = \operatorname{ReLU}\left(\sum_k
+\alpha_k^c A^k\right)
+\]</span></p>
+<p>ReLU 会将负值置为
+0，因此最终热力图重点保留“对目标类别有正向支持作用”的区域，而不突出“会降低该类别得分”的区域。得到的
+<span class="math inline">\(L_{\mathrm{Grad\text{-}CAM}}^c\)</span>
+就是一张较小的二维热力图。</p></li>
+<li><p><strong>放大并叠加回原图，便于人眼观察</strong></p>
+<p>最后一个卷积层的特征图通常只有 <span
+class="math inline">\(7\times7\)</span> 或 <span
+class="math inline">\(14\times14\)</span>，而输入图片可能是 <span
+class="math inline">\(224\times224\)</span>。因此需要先把热力图插值放大到输入图片大小，再使用伪彩色叠加到原图上。</p>
+<p>红色、黄色等暖色区域表示：在本次解释的目标类别下，该位置相对更有助于提高类别得分；蓝色等冷色区域表示相对贡献较小。这里的颜色表示<strong>同一张热力图内部的相对重要性</strong>，并不等价于“该像素属于目标物体的概率”，也不能把热力图当作精确的目标检测框或分割掩码。</p></li>
+</ol>
+<p>把上述过程连起来，可以简记为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">输入图片<br>  → 前向传播，得到目标类别分数 y^c<br>  → 目标分数对最后卷积层特征图反向传播，得到梯度<br>  → 对每个通道的梯度做全局平均，得到通道权重 α_k^c<br>  → 通道权重 × 对应特征图，再加权求和并经过 ReLU<br>  → 放大热力图并叠加到原图<br></code></pre></td></tr></table></figure>
+<p>因此，同一张“猫和狗”图片可以分别指定“狗”与“猫”作为目标类别：虽然模型和输入图片都不变，但目标类别分数
+<span class="math inline">\(y^c\)</span>
+不同，反向传播得到的梯度、通道权重和最终热力图也会不同。这就是 Grad-CAM
+能够做到“解释同一张图片中不同类别关注位置”的原因。</p>
+<h5 id="当前使用的pytorch-grad-cam">7.2.3.2.3
 当前使用的pytorch-grad-cam</h5>
 <p>由于原作者（首次提出Grad-CAM的作者）早期的代码多基于 Caffe 或旧版
 Torch，目前在 Python/PyTorch 开发中，大家普遍使用的 <strong>Grad-CAM
@@ -670,8 +752,8 @@ Backpropagation（引导反向传播）</strong> 逐像素点乘相乘，提出�
 的<strong>类别区分度</strong>（只保留狗的纹理，猫被过滤掉了），又具备了引导反向传播的<strong>高分辨率细粒度边缘特征</strong>。</li>
 </ul></li>
 </ol>
-<h5 id="pytorch-grad-cam的安装与使用">7.2.3.2.3
-pytorch-grad-cam的安装与使用</h5>
+<h5 id="pytorch-grad-cam的安装与示例">7.2.3.2.4
+pytorch-grad-cam的安装与示例</h5>
 <p>官方文档只提供了通过pip安装pytorch-grad-cam： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">(ai_py312) jsy@jmac ~ % pip install grad-cam<br><br>(ai_py312) jsy@jmac ~ %  pip list | grep cam<br>grad-cam                                 1.5.7<br></code></pre></td></tr></table></figure></p>
 <p>知道图片的分类标签、直接指定模型预测结果，要求对结果的依据进行可视化：
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch  <span class="hljs-comment"># PyTorch：创建张量，并让模型执行前向传播。</span><br><span class="hljs-keyword">from</span> torchvision.models <span class="hljs-keyword">import</span> vgg11, VGG11_Weights  <span class="hljs-comment"># 导入 VGG11 结构及其 ImageNet 预训练权重配置。</span><br><span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt  <span class="hljs-comment"># 导入 Matplotlib 绘图接口，用于显示原图和 CAM 叠加图。</span><br><span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image  <span class="hljs-comment"># 导入 Pillow 的 Image，用于从磁盘读取图片。</span><br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np  <span class="hljs-comment"># 导入 NumPy，用于保存和处理 H×W×C 格式的图像数组。</span><br><br><span class="hljs-keyword">from</span> pytorch_grad_cam <span class="hljs-keyword">import</span> GradCAM  <span class="hljs-comment"># 导入 Grad-CAM：根据特征图与梯度生成类别关注热力图。</span><br><span class="hljs-keyword">from</span> pytorch_grad_cam.utils.model_targets <span class="hljs-keyword">import</span> ClassifierOutputTarget  <span class="hljs-comment"># 导入分类目标，指定要解释哪个类别。</span><br><span class="hljs-keyword">from</span> pytorch_grad_cam.utils.image <span class="hljs-keyword">import</span> show_cam_on_image  <span class="hljs-comment"># 导入工具函数，将热力图覆盖到 RGB 原图上。</span><br><br><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">此文件演示如何使用 pytorch-grad-cam 对 VGG11 的分类依据进行 Grad-CAM 可视化。</span><br><span class="hljs-string"></span><br><span class="hljs-string">其中没有进行模型预测，而是直接指定类别编号 243（bull mastiff，斗牛獒犬）作为解释目标，</span><br><span class="hljs-string">实际上就是对此预测结果的依据进行可视化。</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-comment"># 创建并加载 ImageNet 预训练的 VGG11 模型。</span><br>model = vgg11(weights=VGG11_Weights.IMAGENET1K_V1)<br><span class="hljs-comment"># 指定待解释图片的相对路径；路径相对于运行脚本时的当前目录。</span><br><span class="hljs-comment"># 来自 https://github.com/ramprs/grad-cam/blob/master/images/cat_dog.jpg</span><br>img_path = <span class="hljs-string">&#x27;./cat_dog.jpg&#x27;</span><br><span class="hljs-comment"># resize 操作是为了让图片尺寸与传入神经网络的常用输入尺寸一致。</span><br><span class="hljs-comment"># 读取图片并缩放为 224×224 像素，适配 VGG 的常用输入尺寸。</span><br>img = Image.<span class="hljs-built_in">open</span>(img_path).resize((<span class="hljs-number">224</span>,<span class="hljs-number">224</span>))<br><br><span class="hljs-comment"># 创建 1 行 2 列子图：左侧显示原图，右侧显示 Grad-CAM 结果。</span><br>fig, axes = plt.subplots(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br><br><span class="hljs-comment"># 将原始图片转为 np.float32 格式，并把每个像素值缩放到 [0, 1]。</span><br><span class="hljs-comment"># 转换结果是形状为 H×W×3 的 RGB 数组。</span><br>rgb_img = np.float32(img)/<span class="hljs-number">255</span><br><br><span class="hljs-comment"># 输出 rgb_img 的 Python 类型，确认其为 NumPy 数组。</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;type(rgb_img): <span class="hljs-subst">&#123;<span class="hljs-built_in">type</span>(rgb_img)&#125;</span>&quot;</span>)  <span class="hljs-comment"># &lt;class &#x27;numpy.ndarray&#x27;&gt;</span><br><span class="hljs-comment"># 在左侧子图中显示归一化后的 RGB 原图。</span><br>axes[<span class="hljs-number">0</span>].imshow(rgb_img)<br><br><span class="hljs-comment"># 将图片转为模型输入 Tensor：(H,W,C)→(C,H,W)，再增加批次维度为 (1,3,224,224)。</span><br>img_tensor = torch.from_numpy(rgb_img).permute(<span class="hljs-number">2</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>).unsqueeze(<span class="hljs-number">0</span>)<br><br><span class="hljs-comment"># 选择 VGG11 特征提取器的最后一层 MaxPool2d；列表形式可支持多个目标层。</span><br>target_layers = [model.features[-<span class="hljs-number">1</span>]]<br><br><span class="hljs-comment"># 在 ImageNet 1000 分类数据中，每类事物都有一个类索引编号；243 对应 bull mastiff（斗牛獒犬）。</span><br><span class="hljs-comment"># 此模型所用到的训练数据集中所有分类的编号和名称都可以在 VGG11_Weights.IMAGENET1K_V1.meta[&quot;categories&quot;] 中查到。</span><br>preds = <span class="hljs-number">243</span><br><span class="hljs-comment"># 把类别 243 包装成 Grad-CAM 的解释目标，而不是默认解释模型预测的最大类别。</span><br>targets = [ClassifierOutputTarget(preds)]<br><br><span class="hljs-comment"># 创建 Grad-CAM 对象；它会在目标层注册 hook，以保存激活值和对应梯度。</span><br><span class="hljs-comment"># ScoreCAM 和 AblationCAM 等其他 CAM 方法还需要额外设置 batch_size。</span><br><span class="hljs-keyword">with</span> GradCAM(model=model, target_layers=target_layers) <span class="hljs-keyword">as</span> cam:<br>    <span class="hljs-comment"># 前向与反向传播后得到灰度 CAM，形状为 (批次大小, 高度, 宽度)。</span><br>    grayscale_cam = cam(input_tensor=img_tensor, targets=targets)<br>    <span class="hljs-comment"># 当前批次只有 1 张图，取批次索引 0，结果形状为 (224,224)。</span><br>    grayscale_cam = grayscale_cam[<span class="hljs-number">0</span>]<br><br><span class="hljs-comment"># 将灰度热力图伪彩色化并叠加到原图，返回 uint8 RGB 数组。</span><br>cam_img = show_cam_on_image(rgb_img, grayscale_cam, use_rgb=<span class="hljs-literal">True</span>)<br><span class="hljs-comment"># 输出叠加结果的 Python 类型，确认其为 NumPy 数组。</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;type(cam_img): <span class="hljs-subst">&#123;<span class="hljs-built_in">type</span>(cam_img)&#125;</span>&quot;</span>)  <span class="hljs-comment"># &lt;class &#x27;numpy.ndarray&#x27;&gt;</span><br><span class="hljs-comment"># 在右侧子图中显示 Grad-CAM 叠加结果。</span><br>axes[<span class="hljs-number">1</span>].imshow(cam_img)<br><br><span class="hljs-comment"># 把当前整张 Figure 保存到当前工作目录；同名文件会被覆盖。</span><br>plt.savefig(<span class="hljs-string">&#x27;22-Grad-CAM可视化结果01.png&#x27;</span>)<br><br></code></pre></td></tr></table></figure></p>
@@ -679,6 +761,11 @@ pytorch-grad-cam的安装与使用</h5>
 src="https://files.seeusercontent.com/2026/10/10/5xsS/20261010112313975.png" srcset="/img/loading.gif" lazyload
 alt="image.png" /></p>
 <h3 id="cnn的flashtorch可视化">7.2.4 CNN的FlashTorch可视化</h3>
+<p>注：由于FlashTorch相关兼容性问题，要在 PyTorch 2.6.x
+及以后版本中长期、可靠地实现显著性图或 Guided
+Backpropagation，建议使用原生 PyTorch
+实现，或选择仍在维护的可解释性工具库（如前面介绍的
+<code>pytorch-grad-cam</code>）。</p>
 <h4 id="flashtorch-的介绍">7.2.4.1 FlashTorch 的介绍</h4>
 <p><a
 target="_blank" rel="noopener" href="https://github.com/MisaOgura/flashtorch">MisaOgura/flashtorch</a>
