@@ -27,7 +27,7 @@
 <meta property="og:description" content="本系列学习笔记源自开源项目：https:&#x2F;&#x2F;github.com&#x2F;datawhalechina&#x2F;hello-gpu 。是自己在学习过程上的记录与心得。 第0篇 入门与硬件速通 0.0 项目介绍与学习提示     篇 你要学什么 学完能做什么 大约时间     第 0 篇 入门 环境验证、GPU 体系结构、第一个程序 跑通环境，建立硬件直觉 1-2 天   第 1 篇 Profiling bench">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-20T06:34:38.000Z">
-<meta property="article:modified_time" content="2026-09-24T10:03:44.810Z">
+<meta property="article:modified_time" content="2026-10-12T14:42:27.250Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="GPU">
 <meta property="article:tag" content="算子">
@@ -238,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          7.2k 字
+          7.4k 字
         
       </span>
     
@@ -249,7 +249,7 @@
         
         
         
-          61 分钟
+          62 分钟
         
       </span>
     
@@ -542,6 +542,9 @@ target="_blank" rel="noopener" href="https://github.com/datawhalechina/hello-gpu
 <p>其中“逻辑有效带宽”描述的是程序每秒完成了多少<strong>有用的读写工作</strong>。实验中每个元素读一次、写一次，所以逻辑有效带宽按
 <code>2 × N × sizeof(float) / 时间</code> 计算。</p>
 <p>这个表格展示了某次实验的结果数据：通过给Stride赋予不同的读取步长，模拟与计算了合并访存与非合并访存情况下相关结果参数的结果。</p>
+<p>以下是我在设备"AMD Radeon 8060S
+Graphics"上测试得到的数据，好像跟上述表格中结果有点不一致：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">(part0-intro) jovyan@jupyter-sanyinjiang:~/hello-gpu/code/part0-intro/chapter3$ ./global_memory_access --implementation all --size 16777216 --warmup 10 --repeat 50<br>ENV runtime=hip gpu=<span class="hljs-string">&quot;AMD Radeon 8060S Graphics&quot;</span> <span class="hljs-built_in">arch</span>=gfx1151 hip_multiprocessor_count=20 wave_size=32<br>RESULT experiment=global-memory implementation=stride-1 runtime=hip shape=N=16777216 dtype=fp32 warmup=10 repeat=50 seed=20260726 timed=1 correct=OK precheck=OK postcheck=OK min_ms=0.572992 median_ms=0.574154 mean_ms=0.575007 logical_bandwidth_gbs=233.766069 tflops=0 max_abs_error=0<br>RESULT experiment=global-memory implementation=stride-17 runtime=hip shape=N=16777216 dtype=fp32 warmup=10 repeat=50 seed=20260726 timed=1 correct=OK precheck=OK postcheck=OK min_ms=5.152326 median_ms=5.185188 mean_ms=5.184238 logical_bandwidth_gbs=25.884832 tflops=0 max_abs_error=0<br>RESULT experiment=global-memory implementation=stride-257 runtime=hip shape=N=16777216 dtype=fp32 warmup=10 repeat=50 seed=20260726 timed=1 correct=OK precheck=OK postcheck=OK min_ms=2.177036 median_ms=2.181625 mean_ms=2.181773 logical_bandwidth_gbs=61.521909 tflops=0 max_abs_error=0<br></code></pre></td></tr></table></figure></p>
 <h3 id="lds的作用与工作流程">0.3.4 LDS的作用与工作流程</h3>
 <p>同一个工作组的多个不同的线程需要交换与复用某个（些）数据，就需要用到局部数据共享存储（LDS）。其中的多个线程按照约定流程将自己负责的那部分内容写进LDS，并在写入后更新
 <strong>屏障同步（Barrier）</strong>
@@ -613,7 +616,7 @@ Hiding）</strong>。</p>
 <p>相对地，增加单个wavefront保留的临时资源，会使用系统中容纳wavefront数减少，从而减少wavefront占用率，就绪状态的wavefront可能减少了，但却会增加
 wavefront 复用数据、内合并访存的可能性，从而提升程序执行效率。</p>
 <p>所以是提升还是减少wavefron占用率，不能一概而论，要根据实际的内核设计与程序执行效果来分析与优化。</p>
-<h4 id="自我检验-1">自我检验</h4>
+<h3 id="自我检验-1">自我检验</h3>
 <ol type="1">
 <li>线程要计算 <code>c[2]</code>，是否必须先把
 <code>a[2]</code>、<code>b[2]</code> 放到 LDS？</li>
@@ -823,6 +826,12 @@ wavefront 复用数据、内合并访存的可能性，从而提升程序执行�
   
 
 
+  
+  
+
+
+
+
 
 
 
@@ -1024,6 +1033,49 @@ wavefront 复用数据、内合并访存的可能性，从而提升程序执行�
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script defer src="/js/leancloud.js" ></script>
 
