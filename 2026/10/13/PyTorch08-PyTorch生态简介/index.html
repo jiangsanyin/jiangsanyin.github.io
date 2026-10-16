@@ -27,7 +27,7 @@
 <meta property="og:description" content="八、PyTorch生态简介 前面几个章节已经学习了张量的基础知识、PyTorch 模型的常用组成部分与定义、模型的常规训练与验证&#x2F;测试流程、模型可视化等内容，大家对基于 PyTorch 的深度学习已经有了初步的认知。回顾一下，前面学习过程中使用到的场景、示例大多是计算机视觉（CV）相关的，几乎一直在使用 PyTorch 官方开源的 torchvision 这个计算机视觉包。虽然一直在使用，但并未从">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-13T02:12:46.000Z">
-<meta property="article:modified_time" content="2026-10-14T03:01:11.110Z">
+<meta property="article:modified_time" content="2026-10-16T14:49:19.470Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6.7k 字
+          10k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          56 分钟
+          83 分钟
         
       </span>
     
@@ -685,9 +685,460 @@ title="torchvision.utils.save_image"><code>save_image</code></a>(tensor, fp[, 
 </tr>
 </tbody>
 </table>
-<h2 id="pytorchvideo简介">8.2 pytorchvideo简介</h2>
-<h2 id="torchtext简介">8.3 torchtext简介</h2>
-<h2 id="torchaudio简介">8.4 torchaudio简介</h2>
+<h2 id="torchtext简介">8.2 <code>torchtext</code>简介</h2>
+<p>官方文档地址：<code>https://docs.pytorch.org/text/stable/index.html</code>。</p>
+<p>首先说明：官方已于 <strong>2024 年 4 月</strong>（发布 0.18
+版本后）宣布<strong>停止活跃开发</strong>并将该库归入维护阶段。在当前的深度学习与
+NLP 实际开发中，社区和官方均已全面转向使用 <strong>Hugging Face 生态（如
+<code>transformers</code>、<code>tokenizers</code> 等）</strong>
+作为绝对的主流替代方案。因此，在现代 PyTorch 项目中通常不再依赖
+<code>torchtext</code>。</p>
+<p><code>torchtext</code> 是 PyTorch
+官方曾经用于自然语言处理（NLP）的核心数据与工具库，旨在为文本任务提供一站式的预处理和管道支持。</p>
+<p><code>torchtext</code> 的核心与组成如下：</p>
+<ul>
+<li><strong>数据集（Datasets）</strong>：内置了许多经典的 NLP
+基准数据集（如 IMDb、AG_NEWS、SST-2 等）的加载接口。<br />
+</li>
+<li><strong>文本处理与词表（Transforms &amp;
+Vocab）</strong>：提供分词器（Tokenizer）、词表构建（Vocab）以及词向量（Word
+Embeddings）加载工具。</li>
+<li><strong>预训练模型（Models）</strong>：曾集成如 RoBERTa、T5、Flan-T5
+等经典 Transformer 模型的架构与官方预训练权重。</li>
+</ul>
+<p>如果有需要，关于<code>torchtext</code>的使用可参考：<code>https://github.com/atnlp/torchtext-summary</code>、<code>https://datawhalechina.github.io/thorough-pytorch/%E7%AC%AC%E5%85%AB%E7%AB%A0/8.4%20%E6%96%87%E6%9C%AC%20-%20torchtext.html</code>，以及官方文档与示例。</p>
+<h2 id="torchaudio简介">8.3 <code>torchaudio</code>简介</h2>
+<p>官方文档地址：<code>https://docs.pytorch.org/audio/2.6.0/index.html</code>、<code>https://docs.pytorch.org/audio/2.11.0/index.html</code>。</p>
+<p>Torchaudio 是一个使用 PyTorch
+进行音频和信号处理的库。它提供了信号和数据处理功能、数据集、模型实现以及应用组件。</p>
+<p>从 Torchaudio 2.8 版本开始，其已过渡到维护阶段。因此存在如下变更</p>
+<ul>
+<li>部分 API 在 2.8 中被弃用，并自 2.9 起被移除。</li>
+<li>PyTorch 对音频和视频的编解码能力已整合到 <a
+target="_blank" rel="noopener" href="https://github.com/meta-pytorch/torchcodec">meta-pytorch/torchcodec</a>
+中。 详情可参见 <a
+target="_blank" rel="noopener" href="https://github.com/pytorch/audio/issues/3902">https://github.com/pytorch/audio/issues/3902</a>。</li>
+</ul>
+<h3 id="主要组成部分">8.3.1 主要组成部分</h3>
+<p>在 torchaudio 2.6.0中，各子包的精简介绍及其在 torchaudio 0.11
+中的状态：</p>
+<ul>
+<li><code>torchaudio</code>：提供核心的音频加载、保存与元数据查询功能。在
+torchaudio 0.11 中已作为核心顶层命名空间存在。</li>
+<li><code>torchaudio.io</code>：提供音频与视频的流式输入/输出编解码功能。此功能在后续版本中逐步被废弃并转移到
+<a
+target="_blank" rel="noopener" href="https://github.com/meta-pytorch/torchcodec">meta-pytorch/torchcodec</a>。</li>
+<li><code>torchaudio.functional</code>：提供无状态的音频信号处理和数学运算函数。在
+torchaudio 0.11 中仍存在并广泛使用。</li>
+<li><code>torchaudio.transforms</code>：提供基于
+<code>torch.nn.Module</code> 的有状态音频变换与数据增强模块。在
+torchaudio 0.11 中仍存在。</li>
+<li><code>torchaudio.datasets</code>：提供常用公开音频数据集的便捷下载与加载接口。在
+torchaudio 0.11 中仍存在。</li>
+<li><code>torchaudio.models</code>：提供常见音频任务的神经网络模型架构定义。在
+torchaudio 0.11 中仍存在。</li>
+<li><code>torchaudio.models.decoder</code>：提供用于语音识别任务的解码器及搜索算法组件。在
+torchaudio 0.11 中仍存在。</li>
+<li><code>torchaudio.pipelines</code>：提供集成预训练模型及其配套预处理逻辑的封装流水线。在
+torchaudio 0.11 中仍存在。</li>
+<li><code>torchaudio.sox_effects</code>：提供基于 SoX
+库的音频效果链处理与应用工具。在 torchaudio 0.11 中仍存在。</li>
+<li><code>torchaudio.compliance.kaldi</code>：提供与 Kaldi
+兼容的音频特征提取实现。在 torchaudio 0.11 中仍存在。</li>
+<li><code>torchaudio.kaldi_io</code>：提供用于读取和写入 Kaldi
+数据格式的轻量级封装工具。在 torchaudio 0.11 中仍存在。</li>
+<li><code>torchaudio.utils</code>：提供各种辅助性实用工具函数。在
+torchaudio 0.11 中仍存在。</li>
+</ul>
+<h3 id="torchaudio的安装">8.3.2 <code>torchaudio</code>的安装</h3>
+<p><code>torchaudio</code> 强制依赖于
+<code>pytorch</code>、<code>python</code>，所以安装<code>torchaudio</code>前必须先安装<code>pytorch</code>、<code>python</code>，它们之间存在版本兼容性，请参考<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.11.0/installation.html#compatibility-matrix">PyTorch-TorchAudio-Python
+兼容性矩阵</a>
+安装。此外使用<code>torchaudio</code>的一些子包或功能时，依赖于某特定的python组件或开源项目，请根据实际情况、参考
+<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/installation.html#optional-dependencies">torchaudio
+2.11 的Optional Dependencies</a>、<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.11.0/installation.html#optional-dependencies">torchaudio
+stable 的Optional Dependencies</a>。</p>
+<p>Pytorch的安装请参考前面的文章：<a
+href="https://jiangsanyin.github.io/2026/07/20/PyTorch01-PyTorch%E7%9A%84%E7%AE%80%E4%BB%8B%E5%92%8C%E5%AE%89%E8%A3%85/">PyTorch的简介和安装</a>。
+通过 pip 安装<code>torchaudio</code>（也可通过Conda安装）：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">(ai_py312) jsy@jmac 08第八章 % pip install torchaudio<br><br>(ai_py312) jsy@jmac 08第八章 % pip list | egrep -w <span class="hljs-string">&quot;torchaudio|torch&quot;</span><br>torch                                    2.6.0<br>torchaudio                               2.6.0<br></code></pre></td></tr></table></figure></p>
+<h3 id="torchaudio.datasets的使用">8.3.3 torchaudio.datasets的使用</h3>
+<p>torchaudio
+已经收纳了一些常用的音频相关开源数据集，可以直接下载使用；同时，如果要对开源数据集进行自定义使用或对自定义音频数据集进行封装使用，仍是先继承<code>torch.utils.data.Dataset</code>来自定义数据集类，然后将数据集实例传递给<code>torch.utils.data.DataLoader</code>进行数据的加载与获取。</p>
+<p>就是说，所有数据集都是 <a
+target="_blank" rel="noopener" href="https://docs.pytorch.ac.cn/docs/stable/data.html#torch.utils.data.Dataset"
+title="(in PyTorch v2.13)"><code>torch.utils.data.Dataset</code></a>
+的子类，并且都实现了 <code>__getitem__</code> 和 <code>__len__</code>
+方法。因此，它们都可以传递给 <a
+target="_blank" rel="noopener" href="https://docs.pytorch.ac.cn/docs/stable/data.html#torch.utils.data.DataLoader"
+title="(in PyTorch v2.13)"><code>torch.utils.data.DataLoader</code></a>，该类可以使用
+<a
+target="_blank" rel="noopener" href="https://docs.pytorch.ac.cn/docs/stable/multiprocessing.html#module-torch.multiprocessing"
+title="(in PyTorch v2.13)"><code>torch.multiprocessing</code></a>
+工作进程并行加载多个样本。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torchaudio<br><br>yesno_data = torchaudio.datasets.YESNO(<span class="hljs-string">&#x27;.&#x27;</span>, download=<span class="hljs-literal">True</span>)<br>data_loader = torch.utils.data.DataLoader(<br>    yesno_data,<br>    batch_size=<span class="hljs-number">1</span>,<br>    shuffle=<span class="hljs-literal">True</span>,<br>    num_workers=<span class="hljs-number">0</span>)<br><br></code></pre></td></tr></table></figure>
+<p>torchaudio 官网列出了20多个开源音频数据集：</p>
+<table>
+
+<thead>
+<tr>
+<th>数据集名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.CMUARCTIC.html#torchaudio.datasets.CMUARCTIC"
+title="torchaudio.datasets.CMUARCTIC"><code>CMUARCTIC</code></a></td>
+<td><em>CMU ARCTIC</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id36"
+title="John Kominek, Alan W Black, and Ver Ver. Cmu arctic databases for speech synthesis. Technical Report, 2003.">Kominek
+<em>et al.</em>, 2003</a>] dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.CMUDict.html#torchaudio.datasets.CMUDict"
+title="torchaudio.datasets.CMUDict"><code>CMUDict</code></a></td>
+<td><em>CMU Pronouncing Dictionary</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id45"
+title="R.L. Weide. The carnegie mellon pronuncing dictionary. 1998. URL: http://www.speech.cs.cmu.edu/cgi-bin/cmudict.">Weide,
+1998</a>] (CMUDict) dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.COMMONVOICE.html#torchaudio.datasets.COMMONVOICE"
+title="torchaudio.datasets.COMMONVOICE"><code>COMMONVOICE</code></a></td>
+<td><em>CommonVoice</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id10"
+title="Rosana Ardila, Megan Branson, Kelly Davis, Michael Henretty, Michael Kohler, Josh Meyer, Reuben Morais, Lindsay Saunders, Francis M. Tyers, and Gregor Weber. Common voice: a massively-multilingual speech corpus. 2020. arXiv:1912.06670.">Ardila
+<em>et al.</em>, 2020</a>] dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.DR_VCTK.html#torchaudio.datasets.DR_VCTK"
+title="torchaudio.datasets.DR_VCTK"><code>DR_VCTK</code></a></td>
+<td><em>Device Recorded VCTK (Small subset version)</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id42"
+title="Seyyed Saeed Sarfjoo and Junichi Yamagishi. Device recorded vctk (small subset version). 2018.">Sarfjoo
+and Yamagishi, 2018</a>] dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.FluentSpeechCommands.html#torchaudio.datasets.FluentSpeechCommands"
+title="torchaudio.datasets.FluentSpeechCommands"><code>FluentSpeechCommands</code></a></td>
+<td><em>Fluent Speech Commands</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id48"
+title="Loren Lugosch, Mirco Ravanelli, Patrick Ignoto, Vikrant Singh Tomar, and Yoshua Bengio. Speech model pre-training for end-to-end spoken language understanding. In Gernot Kubin and Zdravko Kacic, editors, Proc. of Interspeech, 814–818. 2019.">Lugosch
+<em>et al.</em>, 2019</a>] dataset</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.GTZAN.html#torchaudio.datasets.GTZAN"
+title="torchaudio.datasets.GTZAN"><code>GTZAN</code></a></td>
+<td><em>GTZAN</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id43"
+title="George Tzanetakis, Georg Essl, and Perry Cook. Automatic musical genre classification of audio signals. 2001. URL: http://ismir2001.ismir.net/pdf/tzanetakis.pdf.">Tzanetakis
+<em>et al.</em>, 2001</a>] dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.IEMOCAP.html#torchaudio.datasets.IEMOCAP"
+title="torchaudio.datasets.IEMOCAP"><code>IEMOCAP</code></a></td>
+<td><em>IEMOCAP</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id52"
+title="Carlos Busso, Murtaza Bulut, Chi-Chun Lee, Abe Kazemzadeh, Emily Mower Provost, Samuel Kim, Jeannette Chang, Sungbok Lee, and Shrikanth Narayanan. Iemocap: interactive emotional dyadic motion capture database. Language Resources and Evaluation, 42:335-359, 12 2008. doi:10.1007/s10579-008-9076-6.">Busso
+<em>et al.</em>, 2008</a>] dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.LibriMix.html#torchaudio.datasets.LibriMix"
+title="torchaudio.datasets.LibriMix"><code>LibriMix</code></a></td>
+<td><em>LibriMix</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id37"
+title="Joris Cosentino, Manuel Pariente, Samuele Cornell, Antoine Deleforge, and Emmanuel Vincent. Librimix: an open-source dataset for generalizable speech separation. 2020. arXiv:2005.11262.">Cosentino
+<em>et al.</em>, 2020</a>] dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.LIBRISPEECH.html#torchaudio.datasets.LIBRISPEECH"
+title="torchaudio.datasets.LIBRISPEECH"><code>LIBRISPEECH</code></a></td>
+<td><em>LibriSpeech</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id13"
+title="Vassil Panayotov, Guoguo Chen, Daniel Povey, and Sanjeev Khudanpur. Librispeech: an asr corpus based on public domain audio books. In 2015 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), volume, 5206-5210. 2015. doi:10.1109/ICASSP.2015.7178964.">Panayotov
+<em>et al.</em>, 2015</a>] dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.LibriLightLimited.html#torchaudio.datasets.LibriLightLimited"
+title="torchaudio.datasets.LibriLightLimited"><code>LibriLightLimited</code></a></td>
+<td>Subset of Libri-light [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id12"
+title="J. Kahn, M. Rivière, W. Zheng, E. Kharitonov, Q. Xu, P. E. Mazaré, J. Karadayi, V. Liptchinsky, R. Collobert, C. Fuegen, T. Likhomanenko, G. Synnaeve, A. Joulin, A. Mohamed, and E. Dupoux. Libri-light: a benchmark for asr with limited or no supervision. In ICASSP 2020 - 2020 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 7669-7673. 2020. \url https://github.com/facebookresearch/libri-light.">Kahn
+<em>et al.</em>, 2020</a>] dataset, which was used in HuBERT [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id16"
+title="Wei-Ning Hsu, Benjamin Bolte, Yao-Hung Hubert Tsai, Kushal Lakhotia, Ruslan Salakhutdinov, and Abdelrahman Mohamed. Hubert: self-supervised speech representation learning by masked prediction of hidden units. 2021. arXiv:2106.07447.">Hsu
+<em>et al.</em>, 2021</a>] for supervised fine-tuning.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.LIBRITTS.html#torchaudio.datasets.LIBRITTS"
+title="torchaudio.datasets.LIBRITTS"><code>LIBRITTS</code></a></td>
+<td><em>LibriTTS</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id38"
+title="Heiga Zen, Viet-Trung Dang, Robert A. J. Clark, Yu Zhang, Ron J. Weiss, Ye Jia, Z. Chen, and Yonghui Wu. Libritts: a corpus derived from librispeech for text-to-speech. ArXiv, 2019.">Zen
+<em>et al.</em>, 2019</a>] dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.LJSPEECH.html#torchaudio.datasets.LJSPEECH"
+title="torchaudio.datasets.LJSPEECH"><code>LJSPEECH</code></a></td>
+<td><em>LJSpeech-1.1</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id7"
+title="Keith Ito and Linda Johnson. The lj speech dataset. \url https://keithito.com/LJ-Speech-Dataset/, 2017.">Ito
+and Johnson, 2017</a>] dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.MUSDB_HQ.html#torchaudio.datasets.MUSDB_HQ"
+title="torchaudio.datasets.MUSDB_HQ"><code>MUSDB_HQ</code></a></td>
+<td><em>MUSDB_HQ</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id47"
+title="Zafar Rafii, Antoine Liutkus, Fabian-Robert Stöter, Stylianos Ioannis Mimilakis, and Rachel Bittner. MUSDB18-HQ - an uncompressed version of musdb18. December 2019. URL: https://doi.org/10.5281/zenodo.3338373, doi:10.5281/zenodo.3338373.">Rafii
+<em>et al.</em>, 2019</a>] dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.QUESST14.html#torchaudio.datasets.QUESST14"
+title="torchaudio.datasets.QUESST14"><code>QUESST14</code></a></td>
+<td><em>QUESST14</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id44"
+title="Xavier Anguera Miro, Luis Javier Rodriguez-Fuentes, Andi Buzo, Florian Metze, Igor Szoke, and Mikel Peñagarikano. Quesst2014: evaluating query-by-example speech search in a zero-resource setting with real-life queries. 2015 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), pages 5833-5837, 2015.">Miro
+<em>et al.</em>, 2015</a>] dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.Snips.html#torchaudio.datasets.Snips"
+title="torchaudio.datasets.Snips"><code>Snips</code></a></td>
+<td><em>Snips</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id53"
+title="Alice Coucke, Alaa Saade, Adrien Ball, Théodore Bluche, Alexandre Caulier, David Leroy, Clément Doumouro, Thibault Gisselbrecht, Francesco Caltagirone, Thibaut Lavril, and others. Snips voice platform: an embedded spoken language understanding system for private-by-design voice interfaces. arXiv preprint arXiv:1805.10190, 2018.">Coucke
+<em>et al.</em>, 2018</a>] dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.SPEECHCOMMANDS.html#torchaudio.datasets.SPEECHCOMMANDS"
+title="torchaudio.datasets.SPEECHCOMMANDS"><code>SPEECHCOMMANDS</code></a></td>
+<td><em>Speech Commands</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id39"
+title="P. Warden. Speech Commands: A Dataset for Limited-Vocabulary Speech Recognition. ArXiv e-prints, April 2018. URL: https://arxiv.org/abs/1804.03209, arXiv:1804.03209.">Warden,
+2018</a>] dataset.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.TEDLIUM.html#torchaudio.datasets.TEDLIUM"
+title="torchaudio.datasets.TEDLIUM"><code>TEDLIUM</code></a></td>
+<td><em>Tedlium</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id40"
+title="Anthony Rousseau, Paul Deléglise, and Yannick Estève. Ted-lium: an automatic speech recognition dedicated corpus. In Conference on Language Resources and Evaluation (LREC), 125–129. 2012.">Rousseau
+<em>et al.</em>, 2012</a>] dataset (releases 1,2 and 3).</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.VCTK_092.html#torchaudio.datasets.VCTK_092"
+title="torchaudio.datasets.VCTK_092"><code>VCTK_092</code></a></td>
+<td><em>VCTK 0.92</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id41"
+title="Junichi Yamagishi, Christophe Veaux, and Kirsten MacDonald. CSTR VCTK Corpus: english multi-speaker corpus for CSTR voice cloning toolkit (version 0.92). 2019. doi:10.7488/ds/2645.">Yamagishi
+<em>et al.</em>, 2019</a>] dataset</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.VoxCeleb1Identification.html#torchaudio.datasets.VoxCeleb1Identification"
+title="torchaudio.datasets.VoxCeleb1Identification"><code>VoxCeleb1Identification</code></a></td>
+<td><em>VoxCeleb1</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id49"
+title="Arsha Nagrani, Joon Son Chung, and Andrew Zisserman. Voxceleb: a large-scale speaker identification dataset. arXiv preprint arXiv:1706.08612, 2017.">Nagrani
+<em>et al.</em>, 2017</a>] dataset for speaker identification task.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.VoxCeleb1Verification.html#torchaudio.datasets.VoxCeleb1Verification"
+title="torchaudio.datasets.VoxCeleb1Verification"><code>VoxCeleb1Verification</code></a></td>
+<td><em>VoxCeleb1</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id49"
+title="Arsha Nagrani, Joon Son Chung, and Andrew Zisserman. Voxceleb: a large-scale speaker identification dataset. arXiv preprint arXiv:1706.08612, 2017.">Nagrani
+<em>et al.</em>, 2017</a>] dataset for speaker verification task.</td>
+</tr>
+<tr>
+<td><a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/generated/torchaudio.datasets.YESNO.html#torchaudio.datasets.YESNO"
+title="torchaudio.datasets.YESNO"><code>YESNO</code></a></td>
+<td><em>YesNo</em> [<a
+target="_blank" rel="noopener" href="https://docs.pytorch.org/audio/2.6.0/references.html#id46"
+title="Yesno. URL: http://www.openslr.org/1/."><em>YesNo</em>, n.d.</a>]
+dataset.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="models与pipelines的使用">8.3.4
+<code>models</code>与<code>pipelines</code>的使用</h3>
+<p>官方文档地址：<code>https://docs.pytorch.org/audio/2.6.0/installation.html</code>、<code>https://docs.pytorch.org/audio/stable/models.html</code>。</p>
+<p><code>torchaudio.models</code>
+子包包含用于解决常见音频任务的模型定义，比如：<code>HDemucs</code>、<code>Conformer</code>、<code>ConvTasNet</code>、<code>DeepSpeech</code>等。对于具有预训练参数的模型，参考
+<code>torchaudio.pipelines</code>模块。</p>
+<p><code>torchaudio.pipelines</code>
+模块将预训练模型与支持函数和元数据打包成专门用于执行特定任务的简单
+API。</p>
+<p>当使用预训练模型执行任务时，除了使用预训练权重实例化模型外，客户端代码还需要以训练时相同的方式构建用于特征提取和后处理的管道。这需要传递训练过程中使用的信息，例如变换的类型及其参数（例如，采样率和
+FFT 频元数）。</p>
+<p>为了使这些信息与预训练模型绑定并易于访问，<code>torchaudio.pipelines</code>
+模块使用了 <strong><code>Bundle 类</code></strong>
+的概念，该类定义了一组用于实例化管道的 API
+以及这些管道的接口。下图展示了这一点。 <img
+src="https://files.seeusercontent.com/2026/10/16/3oEe/985938f3-9e03-4835-b6de-c885825b.png" srcset="/img/loading.gif" lazyload
+alt="985938f3-9e03-4835-b6de-c885825b39ff.png" /></p>
+<p>预训练模型和相关管道表示为 <code>Bundle</code> 的实例。相同
+<code>Bundle</code>
+的不同实例共享接口，但其实现并不限制为相同类型。例如，<a
+target="_blank" rel="noopener" href="https://docs.pytorch.ac.cn/audio/stable/generated/torchaudio.pipelines.SourceSeparationBundle.html#torchaudio.pipelines.SourceSeparationBundle"
+title="torchaudio.pipelines.SourceSeparationBundle"><code>SourceSeparationBundle</code></a>
+定义了执行声源分离的接口，但其实例 <a
+target="_blank" rel="noopener" href="https://docs.pytorch.ac.cn/audio/stable/generated/torchaudio.pipelines.CONVTASNET_BASE_LIBRI2MIX.html#torchaudio.pipelines.CONVTASNET_BASE_LIBRI2MIX"
+title="torchaudio.pipelines.CONVTASNET_BASE_LIBRI2MIX"><code>CONVTASNET_BASE_LIBRI2MIX</code></a>
+实例化了一个 <a
+target="_blank" rel="noopener" href="https://docs.pytorch.ac.cn/audio/stable/generated/torchaudio.models.ConvTasNet.html#torchaudio.models.ConvTasNet"
+title="torchaudio.models.ConvTasNet"><code>ConvTasNet</code></a>
+模型，而 <a
+target="_blank" rel="noopener" href="https://docs.pytorch.ac.cn/audio/stable/generated/torchaudio.pipelines.HDEMUCS_HIGH_MUSDB.html#torchaudio.pipelines.HDEMUCS_HIGH_MUSDB"
+title="torchaudio.pipelines.HDEMUCS_HIGH_MUSDB"><code>HDEMUCS_HIGH_MUSDB</code></a>
+实例化了一个 <a
+target="_blank" rel="noopener" href="https://docs.pytorch.ac.cn/audio/stable/generated/torchaudio.models.HDemucs.html#torchaudio.models.HDemucs"
+title="torchaudio.models.HDemucs"><code>HDemucs</code></a>
+模型。尽管如此，因为它们共享相同的接口，所以用法是相同的。</p>
+<p>例如，“使用 Wav2Vec2 进行语音识别”的示例：<a
+target="_blank" rel="noopener" href="https://docs.pytorch.ac.cn/audio/stable/tutorials/speech_recognition_pipeline_tutorial.html#speech-recognition-with-wav2vec2">使用
+Wav2Vec2 进行语音识别</a> 。</p>
+<p><code>torchaudio.pipelines</code>详细用法见：<code>https://docs.pytorch.ac.cn/audio/stable/pipelines.html</code>。</p>
+<h3 id="transforms与functional的使用">8.3.5
+<code>transforms</code>与<code>functional</code>的使用</h3>
+<p><code>transforms</code>官方文档：<code>https://docs.pytorch.org/audio/stable/transforms.html</code>。
+<code>functional</code>官方文档：<code>https://docs.pytorch.org/audio/stable/functional.html</code>。</p>
+<p><code>torchaudio.transforms</code>
+模块包含常用的音频处理和特征提取。<code>torchaudio.functional</code>
+模块则包含了一些用于执行常用音频操作的函数。</p>
+<p><code>torchaudio</code>中的变换（Transforms）是使用 torch.nn.Module
+实现的。构建处理管道的常用方法是定义自定义 Module 类，或者使用
+torch.nn.Sequential 将多个 Module
+链接起来，然后将其移动到目标设备和数据类型。
+类比下，<code>torchvision.transforms</code>中通过创建<code>Compose</code>实例（其中传入多个要执行的变换操作）来创建数据变换管道，然后再使用<code>Compose</code>实例做数据变换，个人感觉，<code>torchaudio</code>中这样的设计方案为音频数据的变换提供更大的灵活性与功能复杂性（<code>torchaudio.transforms</code>也已经内置了许多音频数据变换实现），但也提升了设计复杂性与门槛。</p>
+<p>如下是自定义的<code>torchaudio</code>中的变换（Transforms）：
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Define custom feature extraction pipeline.</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># 1. Resample audio</span><br><span class="hljs-comment"># 2. Convert to power spectrogram</span><br><span class="hljs-comment"># 3. Apply augmentations</span><br><span class="hljs-comment"># 4. Convert to mel-scale</span><br><span class="hljs-comment">#</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyPipeline</span>(torch.nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params"></span><br><span class="hljs-params">        self,</span><br><span class="hljs-params">        input_freq=<span class="hljs-number">16000</span>,</span><br><span class="hljs-params">        resample_freq=<span class="hljs-number">8000</span>,</span><br><span class="hljs-params">        n_fft=<span class="hljs-number">1024</span>,</span><br><span class="hljs-params">        n_mel=<span class="hljs-number">256</span>,</span><br><span class="hljs-params">        stretch_factor=<span class="hljs-number">0.8</span>,</span><br><span class="hljs-params">    </span>):<br>        <span class="hljs-built_in">super</span>().__init__()<br>        <span class="hljs-variable language_">self</span>.resample = Resample(orig_freq=input_freq, new_freq=resample_freq)<br><br>        <span class="hljs-variable language_">self</span>.spec = Spectrogram(n_fft=n_fft, power=<span class="hljs-number">2</span>)<br><br>        <span class="hljs-variable language_">self</span>.spec_aug = torch.nn.Sequential(<br>            TimeStretch(stretch_factor, fixed_rate=<span class="hljs-literal">True</span>),<br>            FrequencyMasking(freq_mask_param=<span class="hljs-number">80</span>),<br>            TimeMasking(time_mask_param=<span class="hljs-number">80</span>),<br>        )<br><br>        <span class="hljs-variable language_">self</span>.mel_scale = MelScale(<br>            n_mels=n_mel, sample_rate=resample_freq, n_stft=n_fft // <span class="hljs-number">2</span> + <span class="hljs-number">1</span>)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, waveform: torch.Tensor</span>) -&gt; torch.Tensor:<br>        <span class="hljs-comment"># Resample the input</span><br>        resampled = <span class="hljs-variable language_">self</span>.resample(waveform)<br>        <span class="hljs-comment"># Convert to power spectrogram</span><br>        spec = <span class="hljs-variable language_">self</span>.spec(resampled)<br><br>        <span class="hljs-comment"># Apply SpecAugment</span><br>        spec = <span class="hljs-variable language_">self</span>.spec_aug(spec)<br>        <span class="hljs-comment"># Convert to mel-scale</span><br>        mel = <span class="hljs-variable language_">self</span>.mel_scale(spec)<br>        <span class="hljs-keyword">return</span> mel<br><br><span class="hljs-comment"># Instantiate a pipeline</span><br>pipeline = MyPipeline()<br><br><span class="hljs-comment"># Move the computation graph to CUDA</span><br>pipeline.to(device=torch.device(<span class="hljs-string">&quot;cuda&quot;</span>), dtype=torch.float32)<br><br><span class="hljs-comment"># Perform the transform</span><br>features = pipeline(waveform)<br></code></pre></td></tr></table></figure></p>
+<p>官方文档中提供了API的详细说明与使用示例。</p>
+<h3 id="compliance.kaldi与和kaldi_io的使用">8.3.6
+<code>compliance.kaldi</code>与和<code>kaldi_io</code>的使用</h3>
+<p>官方文档：<code>https://docs.pytorch.org/audio/stable/compliance.kaldi.html</code>。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/kaldi-asr/kaldi">Kaldi</a>
+是一个用于语音识别研究的工具箱，由CMU开发，开源免费。它包含了构建语音识别系统所需的全部组件，是语音识别领域最流行和影响力最大的开源工具之一。torchaudio中提供了一些与
+Kaldi
+工具兼容的方法，这些方法分别属于<code>torchaduio.compliance.kaldi</code>，<code>torchaduio.kaldi_io</code>。</p>
+<h4 id="torchaduio.compliance.kaldi">8.3.6.1
+torchaduio.compliance.kaldi</h4>
+<p>在<code>torchaudio.compliance.kaldi</code>中，torchaudio
+提供了以下三种方法：</p>
+<ul>
+<li>torchaudio.compliance.kaldi.spectrogram：从原始音频信号创建语谱图。</li>
+<li>torchaudio.compliance.kaldi.fbank：从原始音频信号创建滤波器组（fbank）。</li>
+<li>torchaduio.compliance.kaldi.mfcc：从原始音频信号创建梅尔频率倒谱系数（mfcc）。</li>
+</ul>
+<h4 id="torchaduio.kaldi_io">8.3.6.2 torchaduio.kaldi_io</h4>
+<p><code>torchaudio.kaldi_io</code>是一个 torchaudio
+的子模块，用于读取和写入 Kaldi
+的数据集格式。当我们要使用<code>torchaudio.kaldi_io</code>时，我们需要先确保
+<a target="_blank" rel="noopener" href="https://github.com/vesis84/kaldi-io-for-python">kalid_io</a>
+（这是一个轻量级的 kaldi_io 包装器，用于返回
+torch.Tensors）已经安装。</p>
+<p><code>torchaudio.kaldi_io</code>主要提供了以下几个接口：</p>
+<ul>
+<li>torchaudio.kaldi_io.read_vec_int_ark：从 Kaldi 的 <code>.ark</code>
+文件、压缩文件、管道或已打开文件对象中逐条读取“键名 + 整数向量”，并返回
+PyTorch Tensor。</li>
+<li>torchaudio.kaldi_io.read_vec_flt_scp：按照 Kaldi <code>.scp</code>
+索引文件提供的位置逐条读取“键名 +
+<code>float32</code>/<code>float64</code> 浮点向量”，并返回 PyTorch
+Tensor。</li>
+<li>torchaudio.kaldi_io.read_vec_flt_ark：从 Kaldi 的 <code>.ark</code>
+文件、压缩文件、管道或已打开文件对象中逐条读取“键名 +
+<code>float32</code>/<code>float64</code> 浮点向量”，并返回 PyTorch
+Tensor。</li>
+<li>torchaudio.kaldi_io.read_mat_scp：按照 Kaldi <code>.scp</code>
+索引文件提供的位置逐条读取“键名 +
+<code>float32</code>/<code>float64</code> 浮点矩阵”，并返回 PyTorch
+Tensor。</li>
+<li>torchaudio.kaldi_io.read_mat_ark：从 Kaldi 的 <code>.ark</code>
+文件、压缩文件、管道或已打开文件对象中逐条读取“键名 +
+<code>float32</code>/<code>float64</code> 浮点矩阵”，并返回 PyTorch
+Tensor。</li>
+</ul>
+<p>奇怪的是，<code>torchaudio.kaldi_io</code> 的源码在 torchaudio
+2.8及之后还存在，但 <code>torchaudio.kaldi_io</code> 的介绍与使用在
+torchaudio
+2.8及之后的官方文档中并不见了。相关描述只能从源码或以前版本的官方文档中查看。</p>
+<h2 id="pytorchvideo简介">8.4 <code>pytorchvideo</code>简介</h2>
+<p><a target="_blank" rel="noopener" href="https://pytorchvideo.org/">PyTorchVideo</a>
+（官方开源地址：<code>https://github.com/facebookresearch/pytorchvideo</code>）
+是一个专注于视频理解任务的深度学习开源工具库，由 Meta（原 Facebook）AI
+研究院（FAIR）专门为视频理解（Video
+Understanding）领域开发并2021年中左右开源。它提供了可复用、模块化且高效的组件，以加速视频理解领域的研究。PyTorchVideo
+基于 PyTorch
+开发，支持多种深度学习视频组件，如视频模型、视频数据集以及针对视频的特定变换操作。是
+PyTorch 生态的重要组成部分。</p>
+<p>相关论文见：<a
+target="_blank" rel="noopener" href="https://arxiv.org/html/2111.09887v1">PyTorchVideo: A Deep Learning
+Library for Video Understanding</a> ，发表于2021年11月。</p>
+<h3 id="核心定位与设计目标">8.4.1. 核心定位与设计目标</h3>
+<p>与专注于通用图像任务的 <code>torchvision</code>
+不同，<code>PyTorchVideo</code>
+专门聚焦于<strong>时空（Spatiotemporal）视觉数据</strong>。其核心设计目标包括：</p>
+<ul>
+<li><strong>模块化与可重用性</strong>：提供标准化的视频模型架构、损失函数和评估指标，避免开发者每次都要从头实现。</li>
+<li><strong>高效的数据处理（Efficient
+I/O）</strong>：针对视频文件体积大、解码慢的痛点，提供高性能的视频解码与数据加载管道（支持多线程、硬件加速等）。</li>
+<li><strong>开箱即用的预训练模型</strong>：集成了一系列主流的视频分类、动作识别和时空检测模型及官方预训练权重。</li>
+</ul>
+<h3 id="核心功能与模块组成">8.4.2. 核心功能与模块组成</h3>
+<ul>
+<li><strong>视频数据转换与增强（Transforms）</strong>：支持丰富的时空几何变换，例如同时对视频帧序列进行时间戳抽帧、空间裁剪、随机翻转、色彩调整等。</li>
+<li><strong>经典/前沿视频模型（Models）</strong>：内置了大量顶尖的视频理解模型架构，例如：
+<ul>
+<li><strong>SlowFast</strong>：Meta
+提出的经典双通路视频动作识别模型。</li>
+<li><strong>X3D</strong>：高效轻量化的视频网络架构，适合移动端或算力受限的场景。</li>
+<li><strong>CSN (Channel-Separated Networks)</strong>、<strong>MViT
+(Multiscale Vision Transformers)</strong> 等基于 Transformer
+的现代时空架构。</li>
+</ul></li>
+<li><strong>高效的视频 I/O
+管道</strong>：针对视频解码优化，能够无缝集成到 PyTorch 的
+<code>DataLoader</code> 中，减少数据传输瓶颈。</li>
+</ul>
+<h3 id="生态现状与独立性">8.4.3. 生态现状与独立性</h3>
+<ul>
+<li><strong>独立的项目生命周期</strong>：<code>PyTorchVideo</code>
+采用了独立的开源仓库和独立的官方文档网站（<code>pytorchvideo.org</code>），没有作为子包合并到
+<code>torchvision</code> 中。</li>
+<li><strong>应用场景</strong>：它广泛应用于短视频内容分析、安防监控、体育动作评析、自动驾驶视频感知等需要对“时间序列图像”进行深度理解的业务与科研场景中。</li>
+</ul>
+<h3 id="其他参考资料">8.4.4 其他参考资料</h3>
+<ul>
+<li><a
+target="_blank" rel="noopener" href="https://datawhalechina.github.io/thorough-pytorch/%E7%AC%AC%E5%85%AB%E7%AB%A0/8.3%20%E8%A7%86%E9%A2%91%20-%20PyTorchVideo.html">ZhikangNiu
+的博客文章：PyTorchVideo简介</a></li>
+<li></li>
+</ul>
 
                 
               </div>
