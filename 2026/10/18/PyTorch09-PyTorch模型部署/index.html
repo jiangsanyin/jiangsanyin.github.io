@@ -27,7 +27,7 @@
 <meta property="og:description" content="九、PyTorch模型部署 到目前为止，我们已经初步掌握了如何用 PyTorch 框架实现与训练神经网络模型，也学习如何在训练环境下做推理、将模型文件保存下来。但很多时候，我们在软硬件环境A下训练与保存得到了模型文件，实际使用时可能无法还原当时训练环境A中的软硬件，甚至要求使用与训练环境A完全不同的另一套软硬件环境。此时我们可能会想，有没有一种类似于 Java 虚拟机一样的东西能让编译好的 Jav">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-18T03:13:41.000Z">
-<meta property="article:modified_time" content="2026-10-19T15:01:29.590Z">
+<meta property="article:modified_time" content="2026-10-20T01:19:34.140Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -364,14 +364,15 @@ MLIR、JAX、GGUF、RKNN、ncnn、MNN、PaddlePaddle 和 scikit-learn
 <p>Netron
 不仅支持通过pip安装，且在不同操作系统下提供了对应的安装文件。如下：</p>
 <p><strong>Python</strong>: <code>pip install netron</code>, then run
-<code>netron [FILE]</code> or <code>netron.start('[FILE]')</code>.
-<strong>macOS</strong>: <a
+<code>netron [FILE]</code> or <code>netron.start('[FILE]')</code>.</p>
+<p><strong>macOS</strong>: <a
 target="_blank" rel="noopener" href="https://github.com/lutzroeder/netron/releases/latest"><strong>Download</strong></a>
 the <code>.dmg</code> file or run
-<code>brew install --cask netron</code>. <strong>Linux</strong>: <a
+<code>brew install --cask netron</code>.</p>
+<p><strong>Linux</strong>: <a
 target="_blank" rel="noopener" href="https://github.com/lutzroeder/netron/releases/latest"><strong>Download</strong></a>
-the <code>.deb</code> or <code>.rpm</code> file.
-<strong>Windows</strong>: <a
+the <code>.deb</code> or <code>.rpm</code> file.</p>
+<p><strong>Windows</strong>: <a
 target="_blank" rel="noopener" href="https://github.com/lutzroeder/netron/releases/latest"><strong>Download</strong></a>
 the <code>.exe</code> installer or run
 <code>winget install -s winget netron</code>.</p>
