@@ -27,7 +27,7 @@
 <meta property="og:description" content="本系列学习笔记源自开源项目：https:&#x2F;&#x2F;github.com&#x2F;datawhalechina&#x2F;hello-gpu 。是自己在学习过程上的记录与心得。 第0篇 入门与硬件速通 0.0 项目介绍与学习提示     阶段 你会学到 学完能做什么     入门（第 0 篇） RX 9070 XT 环境、GPU 体系结构速通、第一个程序 跑通环境，建立 Roofline 心智模型   Profiling（">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-20T06:34:38.000Z">
-<meta property="article:modified_time" content="2026-10-18T01:14:57.790Z">
+<meta property="article:modified_time" content="2026-10-20T09:55:16.740Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="GPU">
 <meta property="article:tag" content="算子">
@@ -238,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          12k 字
+          16k 字
         
       </span>
     
@@ -249,7 +249,7 @@
         
         
         
-          102 分钟
+          133 分钟
         
       </span>
     
@@ -701,6 +701,157 @@ Grid、Block、Wavefront、Thread，它们一级嵌套一级的上下级与包�
 <p>最后给出一个完整可执行的HIP示例： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// HIP Runtime API：负责 GPU 内存分配、主机/设备间数据传输、内核启动后的错误查询等。</span><br><span class="hljs-comment">// 在 AMD ROCm 平台上，HIP 提供了与 CUDA 相近的编程模型和接口风格。</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;hip/hip_runtime.h&gt;</span></span><br><br><span class="hljs-comment">// `std::abs` 和 `std::max` 分别用于计算数值误差的绝对值和最大值。</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cmath&gt;</span></span><br><span class="hljs-comment">// 使用标准输出流打印设备信息和验证结果。</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-comment">// 使用 `std::vector` 管理主机（CPU）端数组，自动负责其内存生命周期。</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span><br><br><span class="hljs-comment">// 将每个 HIP Runtime API 调用包裹为统一的错误检查。</span><br><span class="hljs-comment">//</span><br><span class="hljs-comment">// `call` 会先被执行，其返回的 `hipError_t` 状态码保存到 `err`。若状态不是</span><br><span class="hljs-comment">// `hipSuccess`，就打印可读的错误信息并从 `main` 返回失败码。`do &#123; ... &#125; while (0)`</span><br><span class="hljs-comment">// 使这个多行宏在语法上表现得像一条普通语句，因此可安全地写成 `HIP_CHECK(...);`。</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> HIP_CHECK(call)                                                    \</span><br><span class="hljs-meta">  do &#123;                                                                     \</span><br><span class="hljs-meta">    hipError_t err = call;                                                 \</span><br><span class="hljs-meta">    <span class="hljs-keyword">if</span> (err != hipSuccess) &#123;                                               \</span><br><span class="hljs-meta">      std::cerr &lt;&lt; <span class="hljs-string">&quot;HIP error: &quot;</span> &lt;&lt; hipGetErrorString(err) &lt;&lt; std::endl;  \</span><br><span class="hljs-meta">      return 1;                                                            \</span><br><span class="hljs-meta">    &#125;                                                                      \</span><br><span class="hljs-meta">  &#125; while (0)</span><br><br><span class="hljs-comment">// GPU 内核函数：每个启动的 GPU 线程最多计算向量中的一个元素。</span><br><span class="hljs-comment">// `__global__` 表示此函数由 CPU 端（host）发起调用、在 GPU 端（device）并行执行。</span><br><span class="hljs-comment">// a、b 是输入向量，c 用来保存逐元素相加的结果，n 是向量的有效元素个数。</span><br>__global__ <span class="hljs-type">void</span> <span class="hljs-title function_">vector_add</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">float</span>* a, <span class="hljs-type">const</span> <span class="hljs-type">float</span>* b, <span class="hljs-type">float</span>* c, <span class="hljs-type">int</span> n)</span> &#123;<br>  <span class="hljs-comment">// 将三维线程索引在本例中使用的 x 维展开为全局一维元素下标：</span><br>  <span class="hljs-comment">// 每个 block 有 `blockDim.x` 个线程，`blockIdx.x` 指明当前是第几个 block，</span><br>  <span class="hljs-comment">// `threadIdx.x` 则是当前线程在本 block 内的编号。</span><br>  <span class="hljs-type">int</span> idx = blockIdx.x * blockDim.x + threadIdx.x;<br><br>  <span class="hljs-comment">// 最后一个 block 往往不能被 n 整除，部分线程的 idx 会越过向量末尾。</span><br>  <span class="hljs-comment">// 此边界判断可防止这些多出的线程进行非法内存访问。</span><br>  <span class="hljs-keyword">if</span> (idx &lt; n) &#123;<br>    <span class="hljs-comment">// 每个合法线程只写入自己对应的 c[idx]，线程之间不会写同一位置，</span><br>    <span class="hljs-comment">// 因此这里不需要额外的同步或原子操作。</span><br>    c[idx] = a[idx] + b[idx];<br>  &#125;<br>&#125;<br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>  <span class="hljs-comment">// 向量长度为 2^20（1,048,576）个单精度浮点元素。</span><br>  <span class="hljs-comment">// 使用 2 的幂便于演示大规模数据上的并行计算，但不是算法的必需条件。</span><br>  <span class="hljs-type">const</span> <span class="hljs-type">int</span> n = <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">20</span>;<br>  <span class="hljs-comment">// 一个 float 占 `sizeof(float)` 字节；该值用于设备端分配和数据拷贝。</span><br>  <span class="hljs-type">const</span> <span class="hljs-type">size_t</span> bytes = n * <span class="hljs-keyword">sizeof</span>(<span class="hljs-type">float</span>);<br><br>  <span class="hljs-comment">// 在主机内存中创建输入、输出向量。构造函数的第二个参数会初始化所有元素：</span><br>  <span class="hljs-comment">// a 全为 1、b 全为 2，故正确的逐元素相加结果应当全部为 3。</span><br>  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-type">float</span>&gt; <span class="hljs-title function_">h_a</span><span class="hljs-params">(n, <span class="hljs-number">1.0f</span>)</span>;<br>  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-type">float</span>&gt; <span class="hljs-title function_">h_b</span><span class="hljs-params">(n, <span class="hljs-number">2.0f</span>)</span>;<br>  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">vector</span>&lt;<span class="hljs-type">float</span>&gt; <span class="hljs-title function_">h_c</span><span class="hljs-params">(n, <span class="hljs-number">0.0f</span>)</span>;<br><br>  <span class="hljs-comment">// d_ 前缀表示设备（device）端指针。先初始化为 nullptr，便于明确其尚未分配 GPU 内存。</span><br>  <span class="hljs-type">float</span>* d_a = nullptr;<br>  <span class="hljs-type">float</span>* d_b = nullptr;<br>  <span class="hljs-type">float</span>* d_c = nullptr;<br><br>  <span class="hljs-comment">// 在 GPU 全局内存中为两个输入向量和一个输出向量各分配 `bytes` 字节空间。</span><br>  <span class="hljs-comment">// 每次调用均经 HIP_CHECK 检查，例如显存不足时会立刻报错并退出。</span><br>  HIP_CHECK(hipMalloc(&amp;d_a, bytes));<br>  HIP_CHECK(hipMalloc(&amp;d_b, bytes));<br>  HIP_CHECK(hipMalloc(&amp;d_c, bytes));<br><br>  <span class="hljs-comment">// 将 CPU 端准备好的两个输入向量复制到对应的 GPU 内存。</span><br>  <span class="hljs-comment">// `hipMemcpyHostToDevice` 明确指示传输方向，避免 HIP 猜测指针所属位置。</span><br>  HIP_CHECK(hipMemcpy(d_a, h_a.data(), bytes, hipMemcpyHostToDevice));<br>  HIP_CHECK(hipMemcpy(d_b, h_b.data(), bytes, hipMemcpyHostToDevice));<br><br>  <span class="hljs-comment">// 每个 block 启动 256 个线程。block 数采用向上取整，确保至少为 n 个元素</span><br>  <span class="hljs-comment">// 启动足够多的线程；最后一个未填满的 block 由内核中的边界判断处理。</span><br>  <span class="hljs-type">const</span> <span class="hljs-type">int</span> threads = <span class="hljs-number">256</span>;<br>  <span class="hljs-type">const</span> <span class="hljs-type">int</span> blocks = (n + threads - <span class="hljs-number">1</span>) / threads; <span class="hljs-comment">// 4096</span><br><br>  <span class="hljs-comment">// 使用 HIP/CUDA 风格的 &lt;&lt;&lt;grid, block&gt;&gt;&gt; 语法启动内核：`blocks` 是 grid 中的</span><br>  <span class="hljs-comment">// block 数，`threads` 是每个 block 的线程数。该启动通常是异步的，CPU 会继续执行。</span><br>  vector_add&lt;&lt;&lt;blocks, threads&gt;&gt;&gt;(d_a, d_b, d_c, n);<br><br>  <span class="hljs-comment">// `hipGetLastError` 检查内核“启动”本身是否失败（例如配置参数不合法）。</span><br>  <span class="hljs-comment">// `hipDeviceSynchronize` 等待 GPU 完成实际计算，并报告执行期间出现的异步错误。</span><br>  HIP_CHECK(hipGetLastError());<br>  HIP_CHECK(hipDeviceSynchronize());<br><br>  <span class="hljs-comment">// GPU 计算结束后，将结果向量从设备端复制回 CPU 端，以便进行数值验证。</span><br>  HIP_CHECK(hipMemcpy(h_c.data(), d_c, bytes, hipMemcpyDeviceToHost));<br><br>  <span class="hljs-comment">// 遍历结果，计算所有元素与理论值 3.0f 之差的最大绝对值。</span><br>  <span class="hljs-comment">// 这里输入值 1、2 和结果 3 都可被 float 精确表示，因而预期最大误差正好为 0。</span><br>  <span class="hljs-type">float</span> max_error = <span class="hljs-number">0.0f</span>;<br>  <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; n; ++i) &#123;<br>    max_error = <span class="hljs-built_in">std</span>::max(max_error, <span class="hljs-built_in">std</span>::<span class="hljs-built_in">abs</span>(h_c[i] - <span class="hljs-number">3.0f</span>));<br>  &#125;<br><br>  <span class="hljs-comment">// 查询编号为 0 的设备属性，用于在输出中标识实际执行计算的 GPU。</span><br>  <span class="hljs-comment">// 代码成功完成前已运行过 GPU 内核，因此此处可确认至少存在一个可用设备。</span><br>  hipDeviceProp_t prop&#123;&#125;;<br>  HIP_CHECK(hipGetDeviceProperties(&amp;prop, <span class="hljs-number">0</span>));<br><br>  <span class="hljs-comment">// 打印实验规模、启动配置和验证结论，便于快速确认运行环境及计算是否正确。</span><br>  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;device_name: &quot;</span> &lt;&lt; prop.name &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;vector_size: &quot;</span> &lt;&lt; n &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;blocks: &quot;</span> &lt;&lt; blocks &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;threads_per_block: &quot;</span> &lt;&lt; threads &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;max_error: &quot;</span> &lt;&lt; max_error &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br>  <span class="hljs-built_in">std</span>::<span class="hljs-built_in">cout</span> &lt;&lt; <span class="hljs-string">&quot;status: &quot;</span> &lt;&lt; (max_error == <span class="hljs-number">0.0f</span> ? <span class="hljs-string">&quot;PASS&quot;</span> : <span class="hljs-string">&quot;FAIL&quot;</span>) &lt;&lt; <span class="hljs-built_in">std</span>::<span class="hljs-built_in">endl</span>;<br><br>  <span class="hljs-comment">// 释放前面由 hipMalloc 获取的三块设备内存，避免长时间运行的程序造成显存泄漏。</span><br>  <span class="hljs-comment">// `std::vector` 管理的主机内存则会在 `main` 结束时自动释放。</span><br>  HIP_CHECK(hipFree(d_a));<br>  HIP_CHECK(hipFree(d_b));<br>  HIP_CHECK(hipFree(d_c));<br><br>  <span class="hljs-comment">// 将数值验证结论映射为进程退出码：0 表示成功，1 表示检测到计算结果异常。</span><br>  <span class="hljs-keyword">return</span> max_error == <span class="hljs-number">0.0f</span> ? <span class="hljs-number">0</span> : <span class="hljs-number">1</span>;<br>&#125;<br><br></code></pre></td></tr></table></figure></p>
 <h2 id="gpu-体系结构下片上资源与数据通路">0.3 GPU
 体系结构（下）：片上资源与数据通路</h2>
+<p>本章从更细化、深入的角度来分析上一章节中两个数组相加的示例，学习核函数中数据存储与访问的具体过程。</p>
+<h3 id="数据位置与读写过程">0.3.1 数据位置与读写过程</h3>
+<p>还是以”两个数组a、b对应位置元素相加，结果保存到数组c中对应位置“为例：
+<img
+src="https://files.seeusercontent.com/2026/10/20/jM7w/20261020114052501.png" srcset="/img/loading.gif" lazyload
+alt="image.png" />
+此图（图0.3.1-1）是两个数组相加示例的线程执行过程的粗略总体示意图。</p>
+<p>两个数组a、b中都有多个元素（假设为n个）需要对应相加，理论上需要n个线程来完成。这里取其中下标为2的数组元素为例，细致分析这个线程中具体做的事情，如下图（图0.3.1-2）所示：
+<img
+src="https://files.seeusercontent.com/2026/10/20/0Ucx/20261020114622091.png" srcset="/img/loading.gif" lazyload
+alt="image.png" /></p>
+<p>上述两个图中几个关键部位都有一个对应的专门术语：</p>
+<ul>
+<li>全局内存（Global
+Memory）：图0.3.1-1中，存放输入与输出数组的位置（存储空间）。全局内存是从软件层面来讲的，全局内存中的数据实际由”GPU显卡“硬件来承载。</li>
+<li>寄存器（Register）：图0.3.1-1中，存放临时值对应的位置。是指指令要使用到的临时存储空间，保存的是指令使用到的临时值（包括指令需要的输入与指令执行后的输出）。</li>
+<li>执行单元：图0.3.1-1中，执行加法对应的逻辑与物理单元。它读入寄存器中的数据、执行指令、再将指令执行结果写入寄存器。</li>
+</ul>
+<p>上述就是GPU内，执行<code>c[2] = a[2] + b[2]</code>那个线程做的事情。</p>
+<h3 id="wavefront-的访存组织">0.3.2 Wavefront 的访存组织</h3>
+<p>前面说明过：同一个wavefront内不同lane对应的线程，执行完全相同的指令。
+就是说，对于同一个wavefront，当它执行一条数组读取指令时，这个wavefront内的所有线程分别有自己要读取与使用的数组元素，此时AMD
+HIP编程的实现是，去把这些线程要读取的数据所在数据块（每个数据块可能包含多个数组元素，根据自定义数据结构与数据类型而异）读取来，但实际上最后可能只使用其中一部分数据。</p>
+<p>打个比方：
+某次任务中，其中一个wavefront包含多个线程，下图只画出其中4个。由于自定义数据结构与数据类型的不同，可能会出现下图中”相邻位置“、”分散位置“两种情况（可以把下图中的教学组看成一个数据块）：
+<img
+src="https://files.seeusercontent.com/2026/10/20/1bFw/20261020145535982.png" srcset="/img/loading.gif" lazyload
+alt="image.png" />
+在GPU显存中，数据是按数据块进行组织与访问。一个数据块的大小一般来说是相对稳定的，就相当于格式化一块磁盘会将选定其数据块大小一样，所以说每个数据块中能够保存的数据是有限的。</p>
+<p>即存储系统通常按一定大小的数据块组织和服务访问。<strong>线程需要一个元素，不意味着底层只处理这一个元素</strong>。请求集中时，同一段数据（一个或少数几个相邻数据块）就可能满足多个线程；请求分散时，可能需要涉及更多数据块，其中只有部分元素被这批线程使用。</p>
+<p>对于”相邻位置“这种情况，因为自定义数据结构设计地科学合理（与单个数据块刚好匹配：可能是一样大，也可能是几个结构体只好凑成一个数据块等情况），同一个wavefront的多个线程需要的数据，存储在一个或少数几个数据块内，访问这一个或少数几个数据块即可。
+对于”分散位置“这种情况，同一个wavefront的多个线程需要的数据会更分散地存储在不同的数据块中（典型的情况是：一个数据块中只有很少一部分数据是线程所需要的，把整个数据块读取过来浪费了寄存器、带宽等资源），此时就需要读取多个数据块，造成临时存储空间与带宽等资源的浪费。</p>
+<hr />
+<p>硬件把同一 wavefront
+的访存请求尽量合并处理，这个过程称为<strong>合并访存（Memory
+Coalescing）</strong>。所以在此背景下，在GPU编程中，不仅仅是要“写 Kernel
+函数”，更核心的功夫在于<strong>设计数据在显存中的排布方式（尽量连续与对齐）</strong>，以及<strong>合理分配线程的工作任务（让相邻线程恰好去读连续的数据）</strong>，从而把分散的访存请求压缩成尽量少的数据块传输，提高合并访存的效率。</p>
+<p>访存地址由我们编写的程序决定，实际怎样合并由硬件完成。</p>
+<p>数据读取还存在另一种机会：需要的数据可能已经有一份副本留在更靠近计算部件的存储中。这种由硬件管理的存储叫<strong>缓存（Cache）</strong>。找到所需副本叫<strong>命中（Hit）</strong>，没找到则继续向后面的存储层级请求。缓存通常按数据块保存副本，这些数据块称为<strong>缓存行（Cache
+Line）</strong>。</p>
+<p>合并访存关注的是一批请求所需数据的位置是否相邻、分布在一个或少数几个相邻的数据块中；缓存关注的是请求所需数据是否已在更靠近计算部件的存储中存在副本。</p>
+<h3 id="block-内的数据共享与同步">0.3.3 Block 内的数据共享与同步</h3>
+<p>上面的示例，各个线程只需要关注自己所需数据，且不需要互相协作或共享数据，实现上很简单。</p>
+<p>现在给出一个数据简单但需要引入数据共享与同步机制的新示例：<strong>把
+<code>[1, 2, 10, 20]</code> 中的四个数求成一个总和</strong>。</p>
+<p>因为”在单个 wavefront
+内部：硬件天然锁步，无需显式做屏障同步。“这样的机制存在，所以单个
+wavefront
+内部不存在屏障同步。触发屏障同步的线程理论上应该属于不同wavefront（如果
+线程块 里只有 1 个 wavefront，此时调用 <code>__syncthreads()</code>
+在逻辑上虽然能通过编译，但对于单个 wavefront
+内部而言并没有实际的硬件等待意义）。</p>
+<p>所以此示例假设需要用两个线程甲、乙来实现，且这两个线程分别属于同一个线程块的不同wavefront：wave0、wave1。
+<img
+src="https://files.seeusercontent.com/2026/10/20/Zh7e/4a9bddcc-4021-4b70-a8a7-e80ec414.png" srcset="/img/loading.gif" lazyload
+alt="4a9bddcc-4021-4b70-a8a7-e80ec41490e3.png" /></p>
+<p>其中线程甲、线程乙分别计算
+<code>1与2之和</code>、<code>10与20之和</code>，当两种线程得出自己结果（先后顺序不一定）后，分别将中间结果保存共享区LDS中。之后这两个线程在共同同步点会合、之后不同线程才能执行同步点之后的操作，并保证同步点前的共享写入对组内线程可见。</p>
+<p>上图中，同一个线程块内线程甲需要读取线程乙保存的计算结果，线程乙内的普通局部变量不是甲可以直接读取的共享位置。为此需要在两个线程之外提供一个双方都能使用的交换区域。可以使用
+AMD GPU 的<strong>局部数据共享存储（Local Data Share，LDS）</strong>
+提供这个交换区域，在HIP中， 用 <code>__shared__</code> 声明供同一 block
+的线程使用的共享存储。</p>
+<p>上图中，线程甲把计算结果写入LDS中后，并不能保证线程乙也已经完成（实际情况是：线程甲先完成或后完成都可能发生）。此时需要引入一个同步机制，保证线程甲、线程乙（如果还存在其他线程，就需要等待并保证所有线程完成）都完成。这个同步机制就是<strong>屏障同步（Barrier）</strong>。
+<strong>屏障同步（Barrier）</strong>
+是一种多线程协调机制：它强制规定一组并发执行的实体（如不同的
+wavefront）在到达该指定代码位置时<strong>必须暂停等待，直到所有参与者全部到达</strong>后，方可被共同放行继续向下执行，以此实现<strong>进度对齐</strong>与<strong>内存可见性/安全性</strong>。</p>
+<p>HIP 的 <code>__syncthreads()</code> 让 block
+中的线程在共同同步点会合，并保证屏障前的共享写入对组内线程可见。本例把
+屏障同步 放在局部和写入之后、合并读取之前；block
+中的全部线程都要到达它，不能让部分线程绕过。<a
+target="_blank" rel="noopener" href="https://rocm.docs.amd.com/projects/HIP/en/latest/how-to/hip_cpp_language_extensions.html#synchronization-functions">HIP
+同步函数</a></p>
+<p><img
+src="https://files.seeusercontent.com/2026/10/20/5esT/20261020162559963.png" srcset="/img/loading.gif" lazyload
+alt="image.png" /> 等并发执行的线程甲、线程乙都到过
+屏障同步点后，线程甲再从共享区LDS中取出所有线程各自写入的数据，执行后续的求和操作。在这一过程里，LDS
+提供交接位置，屏障确定何时可以使用交接的数据。</p>
+<p>同样都是直接从中取值，缓存是由硬件管理，保存访问过的数据副本；而共享区LDS则是由程序在软件层面来安排，用于数据交接与共享。</p>
+<h3 id="访存等待与指令调度">0.3.4 访存等待与指令调度</h3>
+<p>一个wavefront被调度执行后，可能并不会一直占用系统的计算资源执行下去直到结束。因为它可能会在某个步骤发生读写请求，此时它申请读取或写入动作可能并不会立刻成功结束（比如申请读取数据时，但数据并不会立刻返回来），此时，如果后续步骤依赖此步骤的读写结束，wavefront就要等待，具体为是状态变更为“驻留”。</p>
+<p>由此引发对wavefront的几种状态的探讨：</p>
+<table>
+
+<thead>
+<tr>
+<th>状态</th>
+<th>可以怎样理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>驻留（Resident）</strong></td>
+<td>工作已经获得相应片上资源，但因为数据等未准备就绪无法被立刻调度以执行。但其状态保留在硬件中</td>
+</tr>
+<tr>
+<td><strong>就绪（Ready / Eligible）</strong></td>
+<td>满足继续执行所需的条件，可以被选择</td>
+</tr>
+<tr>
+<td><strong>执行（Executing）</strong></td>
+<td>当前获得了执行机会，正在发射或执行相应指令</td>
+</tr>
+</tbody>
+</table>
+<p>回到上述4个数求总和的示例，wave0的线程甲读取数据过程，wave0
+已经发出请求，但输入还没有返回，依赖它的加法暂时不能执行。如果同一计算资源上还有
+wave1 的指令已经就绪，硬件可以先安排 wave1。</p>
+<p>这种选择就绪指令放到执行资源上真正执行的过程由 GPU
+的<strong>调度器（Scheduler）</strong> 发起。</p>
+<p>wave0 等待时，它的临时值和执行状态仍然保留；选择 wave1 不需要把 wave0
+当作已经完成，也不需要由 CPU 手动切换这两个 wavefront。</p>
+<p>这种用其他就绪工作利用等待时间的方式，称为<strong>延迟隐藏（Latency
+Hiding）</strong>。wave0
+的读取并没有因此更早返回，只是执行资源在这段时间有机会继续做别的工作。如果其他
+wavefront
+也都在等待，或者它们需要的执行资源正忙，仍然可能出现资源空闲。<a
+target="_blank" rel="noopener" href="https://gpuopen.com/learn/occupancy-explained/">AMD
+GPUOpen：Occupancy explained</a></p>
+<h3 id="本章小结">本章小结</h3>
+<ul>
+<li>输入、输出数组与计算使用的临时值各有用途。寄存器保存值，执行单元使用这些值运算；得到结果后仍要写回输出。</li>
+<li>看访存要观察同一 wavefront
+的地址排列。集中请求更有机会合并服务，缓存则可能提供已有的数据副本。</li>
+<li>当后续计算需要其他线程的中间结果时，可以用 LDS 安排交接，并用正确的
+block 同步保证先写后读。</li>
+<li>一个 wavefront
+等待数据时，调度器可以选择其他就绪指令；这利用了等待时间，但没有消除访问本身的延迟。</li>
+</ul>
+<h3 id="自我检验-1">自我检验</h3>
+<ol type="1">
+<li>加法已经得到临时结果 33，为什么 <code>c[2]</code>
+还可能没有更新？执行加法与保存临时值分别由什么部件承担？</li>
+<li>两组线程都只读取四个数，为什么不能仅凭读取数量判断访问工作量？</li>
+<li>求和例子中的 30
+从哪里来，由谁写入共享区，最后由谁读取？甲写完自己的位置后，为什么还需要同步？</li>
+<li>调度器选择 B（wave1） 执行时，等待中的 A（wave0）
+是否已经完成？A（wave0） 的输入会因此更早返回吗？</li>
+</ol>
+<p>回答：</p>
+<ol type="1">
+<li>临时结果是在执行单元上执行得到的，需要先保存到寄存器中，然后再更新到保存在全局内存中的数组具体位置上。执行单元、寄存器。</li>
+<li>要看所需的四个数的地址分布，即它们是否在相同或相邻数据块上。如果在相同或相邻数据块上，则只读取一个或少量数据块即可，数据访问工作量少；如果在多个不同的数据块上，则需要读取多个不同的数据块，每个数据块中只取很少数据，数据访问工作量大。
+<strong>另外，是否已有缓存也会影响访存工作量。</strong></li>
+<li>30
+由wave1的线程乙方计算得到，并写入到LDS中，所有相关线程到达屏障同步后由wave0中的线程甲读取。线程甲写完自己的位置后，并不能保证其他线程已完成，这是不确定的，所以需要利用屏障产同步机制实现等待。</li>
+<li>等待中的 A（wave0）
+未完成，它因等待的输入未到达而让出执行资源，保存了临时值与执行状态，并未完成。A（wave0）
+的输入不会因此更早返回。</li>
+</ol>
+<h2 id="gpu-体系结构下片上资源与数据通路旧">0.3 GPU
+体系结构（下）：片上资源与数据通路（旧）</h2>
 <h3 id="一次加法的大致过程">0.3.1 一次加法的大致过程</h3>
 <p>AMD
 GPU上要执行一次计算，首先要从全局内存（显存。同一事物从不同角度的不同叫法）或缓存（如果能在缓存中找到对应的数据）读取数据加载到临时存储（一般是寄存器），然后把临时存储中的输入数据进行计算得到结果，再将结果写回到全局内存（显存）中。</p>
@@ -729,8 +880,8 @@ wavefront 下的不同lane 有自己独有存取数据的存储空间，这是�
 src="https://files.seeusercontent.com/2026/09/23/fDn3/921199065c9a5aa1f731a877aa0ad71d.png" srcset="/img/loading.gif" lazyload
 alt="921199065c9a5aa1f731a877aa0ad71d.png" /></p>
 <h3 id="向合并访存靠近">0.3.3 向“合并访存”靠近</h3>
-<p>在GPU显存中，数据是按数据块进行组织与访问。一个数据块的大小一般来说是相对稳定的，就相当于格式化一块磁盘会将选定其数据块大小一样，所以说每个数据块中能够保存的数据个数就是有限的。
-这样的机制下，想要访问到某个数据，其实是先访问数据所在的整个数据块，然后再从数据块中取出我们想要的某个（些）数据。试想如果我们真正想要的数据分散在不同的数据块就会造成如下现象：先找到并传输所有相关的多个数据块，然后这些数据块只分别取出其中某个或某几个数据，这样造成了带宽的很大浪费，也增加访问的时间与效率。</p>
+<p>在GPU显存中，数据是按数据块进行组织与访问。一个数据块的大小一般来说是相对稳定的，就相当于格式化一块磁盘会将选定其数据块大小一样，所以说每个数据块中能够保存的数据是有限的。</p>
+<p>这样的机制下，想要访问到某个数据，其实是先访问数据所在的整个数据块，然后再从数据块中取出我们想要的某个（些）数据。试想如果我们真正想要的数据分散在不同的数据块就会造成如下现象：先找到并传输所有相关的多个数据块，然后这些数据块只分别取出其中某个或某几个数据，这样造成了带宽的很大浪费，也增加访问的时间与效率。</p>
 <p>显存的带宽是极其宝贵的，以 64
 个工人（Lane）搬取货物（读取数据）为例说明合并访存的必要性：</p>
 <ul>
@@ -744,9 +895,34 @@ Transaction）就能把数据一次性搬运过来。】==</li>
 个字节，造成严重的带宽浪费。==【GPU 的内存控制器不得不向显存发起
 <strong>64 次</strong> 独立的内存事务。】==</li>
 </ul>
+<p>程序员该如何解决这个问题？（数据结构与访问模式优化）
+既然待读取的数据位置决定了合并访存的成败，那么在 GPU
+编程中，<strong>程序员的责任就是主动把数据“整理”成便于相邻线程连续读取的格式</strong>。最典型的优化手段就是
+<strong>SOA 与 AOS 的转换</strong>：</p>
+<p>例子：结构体数组（AOS）vs 数组结构体（SOA） 假设要处理 1000
+个粒子，每个粒子有 <span class="math inline">\((x, y, z)\)</span>
+坐标：</p>
+<ul>
+<li><p><strong>AOS (Array of Structures，结构体数组，对 GPU
+很不友好)</strong>： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Particle</span> &#123; <span class="hljs-type">float</span> x, y, z; &#125;;<br>Particle particles[<span class="hljs-number">1000</span>];<br></code></pre></td></tr></table></figure> 如果每个线程负责一个粒子并读取其
+<code>x</code> 坐标：</p></li>
+<li><p>Lane 0 读 <code>particles[0].x</code> (地址 0)</p></li>
+<li><p>Lane 1 读 <code>particles[1].x</code> (地址 12，中间隔了 y 和
+z)</p></li>
+<li><p>Lane 2 读 <code>particles[2].x</code> (地址 24)
+<strong>结果</strong>：相邻线程访问的内存地址跨度大（跨步访问），数据离散，无法很好地合并访存。</p></li>
+<li><p><strong>SOA (Structure of Arrays，数组结构体，GPU
+推荐做法)</strong>： <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Particles</span> &#123;<br>	<span class="hljs-type">float</span> x[<span class="hljs-number">1000</span>];<br>	<span class="hljs-type">float</span> y[<span class="hljs-number">1000</span>];<br>	<span class="hljs-type">float</span> z[<span class="hljs-number">1000</span>];<br>&#125;;<br></code></pre></td></tr></table></figure> 如果每个线程读取 <code>x</code>
+坐标：</p></li>
+<li><p>Lane 0 读 <code>x[0]</code> (地址 0)</p></li>
+<li><p>Lane 1 读 <code>x[1]</code> (地址 4)</p></li>
+<li><p>Lane 2 读 <code>x[2]</code> (地址 8)
+<strong>结果</strong>：数据在物理内存中是完全连续排列的！Lane 0~64
+访问的恰好是连续的内存块，硬件能将其瞬间合并为一次连续的内存请求。</p></li>
+</ul>
 <p>为此，在GPU编程中，不仅仅是要“写 Kernel
 函数”，更核心的功夫在于<strong>设计数据在显存中的排布方式（尽量连续与对齐）</strong>，以及<strong>合理分配线程的工作任务（让相邻线程恰好去读连续的数据）</strong>，从而把分散的访存请求压缩成尽量少的数据块传输。</p>
-<p>当同一个wavefront中不同线程访问数据时，我们应该尽量保证这些数据存储在相同/相邻的数据块或位置。把同一
+<p>当同一个wavefront中不同线程访问数据时，我们应该尽量保证这些数据存储在相同/相邻的数据块。把同一
 wavefront 的地址请求组织得便于硬件合并处理，这就是
 <strong>合并访存（Memory Coalescing）</strong>
 要解决的问题。当同一个wavefront中不同线程待访问的数据紧凑地分布在相同或相邻的数据块中时，硬件就能将其打包为极少数的内存事务（Memory
@@ -862,7 +1038,7 @@ Hiding）</strong>。</p>
 <p>相对地，增加单个wavefront保留的临时资源，会使用系统中容纳wavefront数减少，从而减少wavefront占用率，就绪状态的wavefront可能减少了，但却会增加
 wavefront 复用数据、内合并访存的可能性，从而提升程序执行效率。</p>
 <p>所以是提升还是减少wavefron占用率，不能一概而论，要根据实际的内核设计与程序执行效果来分析与优化。</p>
-<h3 id="自我检验-1">自我检验</h3>
+<h3 id="自我检验-2">自我检验</h3>
 <ol type="1">
 <li>线程要计算 <code>c[2]</code>，是否必须先把
 <code>a[2]</code>、<code>b[2]</code> 放到 LDS？</li>
