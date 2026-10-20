@@ -27,7 +27,7 @@
 <meta property="og:description" content="九、PyTorch模型部署 到目前为止，我们已经初步掌握了如何用 PyTorch 框架实现与训练神经网络模型，也学习如何在训练环境下做推理、将模型文件保存下来。但很多时候，我们在软硬件环境A下训练与保存得到了模型文件，实际使用时可能无法还原当时训练环境A中的软硬件，甚至要求使用与训练环境A完全不同的另一套软硬件环境。此时我们可能会想，有没有一种类似于 Java 虚拟机一样的东西能让编译好的 Jav">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-18T03:13:41.000Z">
-<meta property="article:modified_time" content="2026-10-20T01:19:34.140Z">
+<meta property="article:modified_time" content="2026-10-20T01:21:49.850Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -476,9 +476,12 @@ target="_blank" rel="noopener" href="https://www.qwe.edu.pl/ai-tools/onnx-instal
 #### 9.2.2.3 <code>ONNX Runtime</code>的使用</li>
 </ul>
 <h5 id="使用流程讲解">9.2.2.3.1 使用流程讲解</h5>
-<p><code>ONNX Runtime</code>的使用流程大致如下： 1.
-根据转换得到的.onnx文件创建一个ONNX Runtime 推理器； 2.
-构建onnx的输入，要注意输入的名字与数据类型； 3. 执行模型推理。</p>
+<p><code>ONNX Runtime</code>的使用流程大致如下：</p>
+<ol type="1">
+<li>根据转换得到的.onnx文件创建一个ONNX Runtime 推理器；</li>
+<li>构建onnx的输入，要注意输入的名字与数据类型；</li>
+<li>执行模型推理。</li>
+</ol>
 <p>以下示例代码，展示了使用<code>ONNX Runtime</code>运行转换得到的".onnx"模型文件，并进行推理的核心过程：
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 导入onnxruntime</span><br><span class="hljs-keyword">import</span> onnxruntime<br><span class="hljs-comment"># 需要进行推理的onnx模型文件名称</span><br>onnx_file_name = <span class="hljs-string">&quot;model.onnx&quot;</span><br><br><span class="hljs-comment"># onnxruntime.InferenceSession用于获取一个 ONNX Runtime 推理器</span><br>ort_session = onnxruntime.InferenceSession(onnx_file_name)  <br><br><span class="hljs-comment"># 构建字典的输入数据，字典的key需要与我们构建onnx模型时的input_names相同</span><br><span class="hljs-comment"># 输入的input_img 也需要改变为ndarray格式</span><br>input_img = rng.standard_normal(size=(<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">224</span>, <span class="hljs-number">224</span>)).astype(np.float32)<br>ort_inputs = &#123;<span class="hljs-string">&#x27;input&#x27;</span>: input_img&#125; <br><span class="hljs-comment"># 我们更建议使用下面这种方法,因为避免了手动输入key</span><br><span class="hljs-comment"># ort_inputs = &#123;ort_session.get_inputs()[0].name:input_img&#125;</span><br><br><span class="hljs-comment"># run是进行模型的推理</span><br><span class="hljs-comment"># 第一个参数是“希望取回哪些输出”。None 表示取回模型的全部输出；</span><br><span class="hljs-comment"># 第二个参数为构建的输入值的字典：&#123;输入名称: NumPy 数组&#125;</span><br><span class="hljs-comment"># 由于返回的结果被列表嵌套，因此我们需要进行[0]的索引</span><br>ort_output = ort_session.run(<span class="hljs-literal">None</span>, ort_inputs)[<span class="hljs-number">0</span>]<br><span class="hljs-comment"># output = &#123;ort_session.get_outputs()[0].name&#125;</span><br><span class="hljs-comment"># ort_output = ort_session.run([output], ort_inputs)[0]</span><br><br></code></pre></td></tr></table></figure> 在上述示例代码中，有几个需要注意的点： 1.
 <code>ONNX Runtime</code>公支持<strong>opset 7</strong>及以上的 .onnx
@@ -502,14 +505,16 @@ target="_blank" rel="noopener" href="https://docs.pytorch.org/tutorials/beginner
 执行时，会在当前目录生成一个""文件，此外命令行输出内容：
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs bash">[torch.onnx] Obtain model graph <span class="hljs-keyword">for</span> `ImageClassifierModel([...]` with `torch.export.export(..., strict=False)`...<br>[torch.onnx] Obtain model graph <span class="hljs-keyword">for</span> `ImageClassifierModel([...]` with `torch.export.export(..., strict=False)`... ✅<br>[torch.onnx] Run decompositions...<br>[torch.onnx] Run decompositions... ✅<br>[torch.onnx] Translate the graph into ONNX...<br>[torch.onnx] Translate the graph into ONNX... ✅<br>[torch.onnx] Optimize the ONNX graph...<br>[torch.onnx] Optimize the ONNX graph... ✅<br>PyTorch 版本：2.14.1<br>ONNX 版本：1.23.2<br>ONNX Runtime 版本：1.31.0<br>ONNX 导出方式：推荐的新导出器：dynamo=True<br>已导出 ONNX 文件：/Users/jsy/Dev/projects/python/2026年7月20日开始学习PyTorch/source/09第九章/13-image_classifier_model.onnx<br>ONNX 模型输入：[(<span class="hljs-string">&#x27;image&#x27;</span>, [1, 1, 32, 32], <span class="hljs-string">&#x27;tensor(float)&#x27;</span>)]<br>ONNX 模型输出：[(<span class="hljs-string">&#x27;logits&#x27;</span>, [1, 10], <span class="hljs-string">&#x27;tensor(float)&#x27;</span>)]<br>PyTorch 输出形状：(1, 10)<br>ONNX Runtime 输出形状：(1, 10)<br>最大绝对误差：0.00000004<br>PyTorch 与 ONNX Runtime 的输出一致！<br>示例输出 logits：[[-0.10066912 -0.0901743   0.03644537  0.05913131 -0.04214709  0.02031167<br>   0.03142105  0.07241504 -0.02758684  0.12333921]]<br></code></pre></td></tr></table></figure></p>
 <h5 id="参考文档">9.2.2.3.3 参考文档</h5>
-<p>（0）<a
-target="_blank" rel="noopener" href="https://datawhalechina.github.io/thorough-pytorch/%E7%AC%AC%E4%B9%9D%E7%AB%A0/9.1%20%E4%BD%BF%E7%94%A8ONNX%E8%BF%9B%E8%A1%8C%E9%83%A8%E7%BD%B2%E5%B9%B6%E6%8E%A8%E7%90%86.html#onnx-runtime">使用ONNX进行部署并推理</a>
-（1）<a
-target="_blank" rel="noopener" href="https://sourcelizi.github.io/202406/onnx-deploy/">ONNX模型使用与多环境部署</a>
-（2）<a
-target="_blank" rel="noopener" href="https://github.com/dwSun/AI-Tutorial/blob/main/chapters/PART10-%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96%E4%B8%8E%E9%83%A8%E7%BD%B2/10-4-%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E5%AE%9E%E6%88%98.md">10-4-模型部署实战.md</a>
-（3）<a target="_blank" rel="noopener" href="https://docs.pytorch.org/tutorials/index.html">PyTorch
-Tutorials</a>，此为PyTorch官方教程，其中提供了很多示例。</p>
+<ul>
+<li><a
+target="_blank" rel="noopener" href="https://datawhalechina.github.io/thorough-pytorch/%E7%AC%AC%E4%B9%9D%E7%AB%A0/9.1%20%E4%BD%BF%E7%94%A8ONNX%E8%BF%9B%E8%A1%8C%E9%83%A8%E7%BD%B2%E5%B9%B6%E6%8E%A8%E7%90%86.html#onnx-runtime">使用ONNX进行部署并推理</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://sourcelizi.github.io/202406/onnx-deploy/">ONNX模型使用与多环境部署</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://github.com/dwSun/AI-Tutorial/blob/main/chapters/PART10-%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96%E4%B8%8E%E9%83%A8%E7%BD%B2/10-4-%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2%E5%AE%9E%E6%88%98.md">10-4-模型部署实战.md</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.pytorch.org/tutorials/index.html">PyTorch
+Tutorials</a>，此为PyTorch官方教程，其中提供了很多示例。</li>
+</ul>
 <h3 id="其他推理引擎">9.2.3 其他推理引擎</h3>
 <p>前面介绍的 <code>ONNX Runtime</code> 是运行 ONNX
 模型的一种通用推理引擎，但并不是唯一选择。实际部署时还会遇到其他<strong>推理运行时</strong>、<strong>模型格式</strong>和<strong>编译工具链</strong>。</p>
