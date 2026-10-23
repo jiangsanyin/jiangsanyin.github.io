@@ -27,7 +27,7 @@
 <meta property="og:description" content="本系列学习笔记源自开源项目：https:&#x2F;&#x2F;github.com&#x2F;datawhalechina&#x2F;hello-gpu 。是自己在学习过程上的记录与心得。 第0篇 入门与硬件速通 0.0 项目介绍与学习提示     阶段 你会学到 学完能做什么     入门（第 0 篇） RX 9070 XT 环境、GPU 体系结构速通、第一个程序 跑通环境，建立 Roofline 心智模型   Profiling（">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-20T06:34:38.000Z">
-<meta property="article:modified_time" content="2026-10-20T10:03:14.730Z">
+<meta property="article:modified_time" content="2026-10-23T08:50:07.440Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="GPU">
 <meta property="article:tag" content="算子">
@@ -238,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          16k 字
+          20k 字
         
       </span>
     
@@ -249,7 +249,7 @@
         
         
         
-          134 分钟
+          164 分钟
         
       </span>
     
@@ -344,7 +344,8 @@
 <p>上表是此次课程的所有学习内容。</p>
 <h2 id="环境准备">0.1 环境准备</h2>
 <p>本次学习完成的事情主要是：准备学习所用的线上环境、验证学习环境中的软硬件环境是否可用。</p>
-<h3 id="使用aup-learning-cloud环境">使用AUP Learning Cloud环境</h3>
+<h3 id="使用aup-learning-cloud环境">0.1.1 使用AUP Learning
+Cloud环境</h3>
 <h4 id="根据环境修改配置">根据环境修改配置</h4>
 <p>此处使用“<a target="_blank" rel="noopener" href="https://tpe.aupcloud.io/">AUP Learning
 Cloud</a>”的环境，账号申请通过后，登录启动： <img
@@ -380,7 +381,8 @@ GPU，而是由于历史命名原因，将加速设备名称前缀写成固定�
 <p>先确认一下 <code>hipcc</code> 版本 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 这个命令顺带还能验证编译器路径是否在 `_rocm_sdk_devel` 下面</span><br>(part0-intro) jovyan@jupyter-sanyinjiang:~/hello-gpu/code/part0-intro$ hipcc --version<br>HIP version: 7.15.26333-0000000<br>AMD clang version 23.0.0git (https://github.com/ROCm/llvm-project.git 8f497e0992fb7513f7f78a6f6b6f1056c375e961)<br>Target: x86_64-unknown-linux-gnu<br>Thread model: posix<br>InstalledDir: /home/jovyan/hello-gpu/code/part0-intro/.venv/lib/python3.12/site-packages/_rocm_sdk_devel/lib/llvm/bin<br></code></pre></td></tr></table></figure></p>
 <p>然后编译 HIP 程序： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 检验 HIP 编译器能不能找到 GPU 对应的 device library</span><br>(part0-intro) jovyan@jupyter-sanyinjiang:~/hello-gpu/code/part0-intro$ <span class="hljs-built_in">cd</span> chapter1/<br>(part0-intro) jovyan@jupyter-sanyinjiang:~/hello-gpu/code/part0-intro/chapter1$ hipcc vector_add.hip -O2 -o vector_add &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;compile_status: PASS&quot;</span><br>compile_status: PASS<br></code></pre></td></tr></table></figure></p>
 <p>运行程序： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">(part0-intro) jovyan@jupyter-sanyinjiang:~/hello-gpu/code/part0-intro/chapter1$ ./vector_add<br>device_name: AMD Radeon 8060S Graphics<br>vector_size: 1048576<br>blocks: 4096<br>threads_per_block: 256<br>max_error: 0<br>status: PASS<br></code></pre></td></tr></table></figure></p>
-<h3 id="使用amd-radeon-cloud环境">使用AMD Radeon Cloud环境</h3>
+<h3 id="使用amd-radeon-cloud环境优先推荐">0.1.2 使用AMD Radeon
+Cloud环境（优先推荐）</h3>
 <h4 id="根据环境修改配置-1">根据环境修改配置</h4>
 <p>本来要访问<code>https://developer.amd.com.cn/radeon/</code>创建容器实例。但此处很可能遇到资源不够而无法创建容器实例成功的现象，要根据<code>https://zcnijjcepfie.feishu.cn/docx/F6vfdGhHroiNj2xPEJmcbKhBnzf</code>的指导提交邮箱、使用自己创建的模板创建容器实例，创建成功后进入容器实例时如下图：
 <img
@@ -390,6 +392,13 @@ alt="image.png" /></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># bash</span><br>root@j-wznpfx43tvz7ipt7pccbiqifit:/workspace/notebooks/part0-intro/chapter0# <span class="hljs-built_in">cd</span> ../<br>root@j-wznpfx43tvz7ipt7pccbiqifit:/workspace/notebooks/part0-intro# <br></code></pre></td></tr></table></figure>
 容器中默认使用的命令行解释器是sh（全路径为：<code>/usr/bin/sh</code>），本人很不习惯。所以执行<code>bash</code>命令修改命令行解释器为bash（全路径为：<code>/usr/bin/bash</code>）。
 然后切换目录到<code>/workspace/notebooks/part0-intro</code>，执行后续操作。</p>
+<p>另外，参考 <a
+target="_blank" rel="noopener" href="https://datawhalechina.github.io/hello-gpu/appendix/appendix-b-switch-gpu/">附录
+B · 换一张卡：切换 ROCm 10.0 的 GPU 架构</a>
+根据自己使用GPU型号与构架修改device-gfx1201 为 合适的 “AMD GPU
+硬件架构”的依赖扩展标记。此次使用的是“AMD Radeon Pro
+W7900D”，其构架是“device-gfx1100”，故修改成如下（即将第8行附近的device-gfx1201全部替换成device-gfx1151，共有3处需要替换）：
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs toml"><span class="hljs-section">[project]</span><br><span class="hljs-attr">name</span> = <span class="hljs-string">&quot;hello-gpu-notebook-part0-intro&quot;</span><br><span class="hljs-attr">version</span> = <span class="hljs-string">&quot;0.2.0&quot;</span><br><span class="hljs-attr">requires-python</span> = <span class="hljs-string">&quot;&gt;=3.12,&lt;3.13&quot;</span><br><span class="hljs-attr">dependencies</span> = [<br>    <span class="hljs-comment">#&quot;torch==2.13.0+rocm10.0.0&quot;,</span><br>    <span class="hljs-string">&quot;rocm[devel]==10.0.0&quot;</span>,<br>    <span class="hljs-string">&quot;hello-gpu-notebooks&quot;</span>,<br>    <span class="hljs-string">&quot;ipykernel&gt;=7.4.0&quot;</span>,<br>    <span class="hljs-string">&quot;jupyterlab&gt;=4.6.4&quot;</span>,<br>    <span class="hljs-string">&quot;nbclient&gt;=0.11.0&quot;</span>,<br>    <span class="hljs-string">&quot;nbformat&gt;=5.11.1&quot;</span>,<br>    <span class="hljs-string">&quot;pytest&gt;=9.1.1&quot;</span>,<br>    <span class="hljs-string">&quot;triton&gt;=3.8.0&quot;</span>,<br>    <span class="hljs-string">&quot;numpy&gt;=2.5.3&quot;</span>,<br>    <span class="hljs-string">&quot;torch[device-gfx1100]==2.13.0+rocm10.0.0&quot;</span>,<br>    <span class="hljs-string">&quot;torchvision[device-gfx1100]==0.28.0+rocm10.0.0&quot;</span>,<br>    <span class="hljs-string">&quot;rocm[devel,device-gfx1100]==10.0.0&quot;</span>,<br>]<br></code></pre></td></tr></table></figure></p>
 <h4 id="同步本篇-uv-环境-1">同步本篇 uv 环境：</h4>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">root@j-wznpfx43tvz7ipt7pccbiqifit:/workspace/notebooks/part0-intro# uv <span class="hljs-built_in">sync</span><br></code></pre></td></tr></table></figure>
 <p>这个过程耗时有点久，大概要10～20分钟。</p>
@@ -1056,6 +1065,235 @@ wavefront 复用数据、内合并访存的可能性，从而提升程序执行�
 <li>不能保证。比如说它们等待同一或同一类受限数据，那么在获取到数据之前所以wavefront都仍是在驻留状态，不会进入就绪状态。</li>
 </ol>
 <h2 id="第一个程序-性能分析">0.4 第一个程序 + 性能分析</h2>
+<p>本章节学习的主要内容包括：准备或恢复第1章那个软硬件环境；对<code>code/part0-intro/chapter4/vector_add.hip</code>这个HIP程序关键代码进行解释并编译执行它；学习通过PyTorch构架在CPU与AMD
+GPU上执行并行计算，规定了统计口径的情况下，重点统计加法GPU执行流中核函数本身在设备侧的整个执行时间、每次统计取平均值/中位数/最小值来对比有效数据带宽及与官方最高带宽进行对比；因为受到GPU
+侧排队、调度或与该操作相关的其他设备端开销等因素影响，当前方法得到的
+elapsed_time 并不能严格等同于“加法 kernel
+的执行时间”，进行多次测试综合统计可能能得出较可信的结果；给出了不同统计口径下，锚点的添加位置不同。</p>
+<h3 id="准备环境">0.4.1 准备环境</h3>
+<p>略。见自己前面的记录：<a
+href="https://jiangsanyin.github.io/2026/09/20/HelloGPU-P00-%E5%85%A5%E9%97%A8%E4%B8%8E%E7%A1%AC%E4%BB%B6%E9%80%9F%E9%80%9A/#%E4%BD%BF%E7%94%A8amd-radeon-cloud%E7%8E%AF%E5%A2%83">环境准备</a></p>
+<h3 id="从向量加法到-hip-程序">0.4.2 从向量加法到 HIP 程序</h3>
+<p>这部分主要是对<code>code/part0-intro/chapter4/vector_add.hip</code>这个HIP程序关键代码进行解释，自己有C++/C语言基础，掌握基本的常用语法、容器使用，然后自己曾经阅读一些CUDA
+C的语法基础入门，最后还有开源教程中提供了关键解释，所以此示例阅读起来没有问题。</p>
+<p>相当于是自己回顾了一下以前学习过的C++/C语言基础、CUDA
+C的语法基础。</p>
+<p>最后编译、执行是简单的命令操作。 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">(hello-gpu-notebook-part0-intro) root@j-7qhdfxoi6o3pyecodbv33kwd7z:/workspace/notebooks/part0-intro/chapter4# hipcc vector_add.hip -O2 -o vector_add<br>(hello-gpu-notebook-part0-intro) root@j-7qhdfxoi6o3pyecodbv33kwd7z:/workspace/notebooks/part0-intro/chapter4# ./vector_add <br>device_name: AMD Radeon Pro W7900D<br>vector_size: 1048576<br>blocks: 4096<br>threads_per_block: 256<br>max_error: 0<br>status: PASS<br></code></pre></td></tr></table></figure> ### 0.4.3 测量
+PyTorch 向量加法</p>
+<p>其中使用PyTorch直接在AMD显卡上执行并行计算，只统计GPU上执行加法本身的时间开销，更具体地说是：</p>
+<ul>
+<li>GPU 侧用同一执行流中的
+<code>start Event → torch.add → end Event</code> 测量。</li>
+<li>不包含输入创建、输出分配、CPU 与 GPU 间的数据拷贝、结果验证。</li>
+<li>不包含 Python 调用、PyTorch 框架分派，以及 CPU 向 GPU 提交 kernel
+的主机侧启动开销。</li>
+<li>Event 得到的是设备时间线中这段操作的经过时间；它适合比较该
+<code>torch.add</code> 实现，但不能严格等同于“纯 GPU
+算术指令执行时间”。</li>
+</ul>
+<p>PyTorch 中核函数启动仍然由 CPU 发起，只是被框架封装在这句里了：
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">torch.add(a, b, out=c)<br></code></pre></td></tr></table></figure> 可以把它理解为这条 Python 语句在 CPU 侧大致完成了：
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">Python 调用 torch.add<br>  → PyTorch 根据 a/b/c 的设备、类型、形状选择 ROCm 实现<br>  → 准备 kernel 参数<br>  → 调用 HIP 运行时，将 kernel 启动命令放入 GPU 的执行流<br>  → Python 返回<br></code></pre></td></tr></table></figure> 最后一步在 HIP 手写程序中会显式写成： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">vector_add&lt;&lt;&lt;blocks, threads&gt;&gt;&gt;(d_a, d_b, d_c, n);<br></code></pre></td></tr></table></figure> 而
+PyTorch 把类似的代码藏在其 C++/ROCm 后端内部，所以在 Python 脚本中看不到
+<code>&lt;&lt;&lt;...&gt;&gt;&gt;</code> 或
+<code>hipLaunchKernelGGL(...)</code>。 本例的一轮 GPU 时间线可以简化为：
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs text">CPU：<br>start.record() → torch.add(...) → end.record() → end.synchronize()<br>                    ↑<br>             CPU 在这里完成框架分派与 kernel launch<br><br>GPU 执行流：<br>start Event → 加法 kernel → end Event<br></code></pre></td></tr></table></figure> 因此：</p>
+<ul>
+<li><code>torch.add(...)</code> 这行的 CPU 执行时间包含“发起
+kernel”的开销。</li>
+<li><code>start.elapsed_time(end)</code> <strong>测得的是 GPU
+执行流中两个 Event 之间的设备侧时间</strong>。</li>
+<li>CPU 发起 kernel 所花的 Python、PyTorch 分派和 HIP 提交时间，不在 GPU
+Event 测得的时间内。</li>
+<li><code>end.synchronize()</code> 会让 CPU 等待 GPU 完成，但它位于
+Event 区间之后；其等待时间也不等于 GPU Event 的结果。</li>
+</ul>
+<p>对于当前未使用 <code>torch.compile</code> 的简单
+<code>torch.add</code>，通常可近似理解为：PyTorch
+在内部启动一个逐元素加法 kernel。但这是框架实现细节，不应把 Event
+结果严格称为“纯 GPU 算术指令执行时间”（Event
+结果即<code>start.elapsed_time(end)</code>，其主要是加法 kernel
+的执行时间，但可能还包含 GPU
+侧排队、调度或与该操作相关的其他设备端开销；但不能把这些部分精确分离出来。）。</p>
+<p>此外，作为参照，也在CPU上统计了 <code>torch.add</code> 调用前后的 CPU
+时钟计时，包含 Python 调用、PyTorch 分派和底层 CPU 算子执行时间。</p>
+<h3 id="解释测量结果">0.4.4 解释测量结果</h3>
+<p>PyTorch 向量加法示例中，每次加法需要处理的有效数据量为
+3个float32数，即3 * 4 = 12
+Bytes。假设示例需要处理的数组长度是N，那么整个示例算法需要处理的有效数据量为：12
+* N 。</p>
+<p>再设定 CPU/GPU 上执行计算的耗时是 t （单位：ms），那么得到有效带宽：
+<span class="math display">\[
+BW_{\mathrm{effective}}=\frac{12N}{t}.
+\]</span></p>
+<p>有效带宽回答的是“每秒完成了多少算法所要求的数据处理”，<strong>并没有测出显存实际传输了多少字节</strong>。缓存、访存粒度和写入路径都可能让物理流量与
+不同。</p>
+<p>上述公式再变更下形式与单位，得到如下计算公式（结果单位是：GB/s）：
+<span class="math display">\[
+BW_{\mathrm{effective}}
+=\frac{B_{\mathrm{effective}}\times10^{-6}}{耗时\_ms}
+\]</span></p>
+<h3 id="从算子时间到程序时间">0.4.5 从算子时间到程序时间</h3>
+<p>此程序中涉及到的统计时间，要先给限定统计口径，不同的统计口径得到的结果不同，这是一个细致而相对复杂的过程。</p>
+<table>
+
+<thead>
+<tr>
+<th>想回答的问题</th>
+<th>应观察的范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据已在设备上，一次 PyTorch 加法经过多久？</td>
+<td>本章的 GPU event 区间</td>
+</tr>
+<tr>
+<td>主机发出操作并等到结果完成，要多久？</td>
+<td>包含提交与等待的主机计时</td>
+</tr>
+<tr>
+<td>CPU 内存中的两个数组交给 GPU，直到取回结果，要多久？</td>
+<td>加上主机与设备间拷贝；说明是否包含分配</td>
+</tr>
+</tbody>
+</table>
+<h3 id="记录与练习">0.4.6 记录与练习</h3>
+<h4 id="回答问题">0.4.6.1 回答问题</h4>
+<ol type="1">
+<li>保持每块 256 个线程，若输入长度改成 1000，需要几个
+block？最后一块中哪些线程会被 <code>idx &lt; n</code>
+排除？这只是覆盖范围的推导，不代表已经运行过修改后的 HIP 程序。</li>
+<li>若开始和结束 event 仍按原顺序提交，却在读取
+<code>elapsed_time</code> 前不等待，缺少了什么保证？</li>
+<li>使用自己测得的 GPU 中位数，手算 。结果是否与
+<code>gpu_bandwidth_gb_s_by_median</code>
+相符？先检查毫秒与秒的换算。</li>
+<li>比较三个规模的 mean、median 和
+min。它们是否足够接近？再测一组时是否仍得到相同趋势？记录观察，不预设输入越大就一定越有效率。</li>
+</ol>
+<p>回答： 1. 需要的线程块数为 (1000 + 256
+-1)/256，结果是4，即需要4个线程块。前三个线程块共有256 * 3=
+768个线程，最后一个线程块还有（1000-768）=232个线程实际参与计算，所以最后一个线程块即编号为3（线程块编号从0开始）的线程块中，实际参与计算的块内线程编号是0~231，编号为
+232~255 这些块内线程会被<code>idx &lt; n</code> 排除。 2.
+无法保证GPU上本轮工作流中所有任务已经完成。导致计算得到的耗时可能比实际的小，从而导致后续相关统计结果不正确。
+3. 我先记录下自己实际执行时没得的数据： (1)python
+benchmark_vector_add.py --size 1048576 --warmup 5 --repeat 30
+--cpu-threads 1 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash">(hello-gpu-notebook-part0-intro) root@j-7qhdfxoi6o3pyecodbv33kwd7z:/workspace/notebooks/part0-intro/chapter4# python benchmark_vector_add.py --size 1048576 --warmup 5 --repeat 30 --cpu-threads 1<br>torch: 2.13.0+rocm10.0.0<br>hip: 7.15.26333<br>cuda_available: True<br>device_name: AMD Radeon Pro W7900D<br>cpu_name: AMD EPYC 9334 32-Core Processor<br>cpu_threads: 1<br>dtype: float32<br>vector_size: 1048576<br>warmup: 5<br>repeat: 30<br>cpu_timing: wall clock around torch.add(a, b, out=c)<br>gpu_timing: device event interval; not end-to-end latency<br>cpu_validation: PASS (all elements finite and equal to 3)<br>gpu_validation: PASS (all elements finite and equal to 3)<br>cpu_mean_ms: 0.132728<br>cpu_median_ms: 0.131815<br>cpu_min_ms: 0.130460<br>cpu_bandwidth_gb_s_by_median: 95.459066<br>cpu_bandwidth_gb_s_by_min: 96.450592<br>gpu_mean_ms: 0.030736<br>gpu_median_ms: 0.029359<br>gpu_min_ms: 0.024360<br>gpu_bandwidth_gb_s_by_median: 428.580610<br>gpu_bandwidth_gb_s_by_min: 516.539918<br>status: PASS<br></code></pre></td></tr></table></figure> 根据计算公式： <span
+class="math display">\[
+BW_{\mathrm{effective}}
+=\frac{B_{\mathrm{effective}}}{gpu\_median\_ms\times10^{-3}}
+\]</span> 可得$$ BW_{} = ^{11} </p>
+<p>=428 . $$</p>
+<p>(2)python benchmark_vector_add.py --size 16777216 --warmup 5 --repeat
+30 --cpu-threads 1 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash">(hello-gpu-notebook-part0-intro) root@j-7qhdfxoi6o3pyecodbv33kwd7z:/workspace/notebooks/part0-intro/chapter4# python benchmark_vector_add.py --size 16777216 --warmup 5 --repeat 30 --cpu-threads 1<br>torch: 2.13.0+rocm10.0.0<br>hip: 7.15.26333<br>cuda_available: True<br>device_name: AMD Radeon Pro W7900D<br>cpu_name: AMD EPYC 9334 32-Core Processor<br>cpu_threads: 1<br>dtype: float32<br>vector_size: 16777216<br>warmup: 5<br>repeat: 30<br>cpu_timing: wall clock around torch.add(a, b, out=c)<br>gpu_timing: device event interval; not end-to-end latency<br>cpu_validation: PASS (all elements finite and equal to 3)<br>gpu_validation: PASS (all elements finite and equal to 3)<br>cpu_mean_ms: 6.386754<br>cpu_median_ms: 6.300809<br>cpu_min_ms: 6.250024<br>cpu_bandwidth_gb_s_by_median: 31.952499<br>cpu_bandwidth_gb_s_by_min: 32.212132<br>gpu_mean_ms: 0.299717<br>gpu_median_ms: 0.289359<br>gpu_min_ms: 0.288039<br>gpu_bandwidth_gb_s_by_median: 695.766323<br>gpu_bandwidth_gb_s_by_min: 698.956019<br>status: PASS<br></code></pre></td></tr></table></figure> 根据公式可得$$ BW_{} = ^{11} </p>
+<p>=695 . $$</p>
+<p>(3)python benchmark_vector_add.py --size 67108864 --warmup 5 --repeat
+30 --cpu-threads 1 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash">(hello-gpu-notebook-part0-intro) root@j-7qhdfxoi6o3pyecodbv33kwd7z:/workspace/notebooks/part0-intro/chapter4# python benchmark_vector_add.py --size 67108864 --warmup 5 --repeat 30 --cpu-threads 1<br>torch: 2.13.0+rocm10.0.0<br>hip: 7.15.26333<br>cuda_available: True<br>device_name: AMD Radeon Pro W7900D<br>cpu_name: AMD EPYC 9334 32-Core Processor<br>cpu_threads: 1<br>dtype: float32<br>vector_size: 67108864<br>warmup: 5<br>repeat: 30<br>cpu_timing: wall clock around torch.add(a, b, out=c)<br>gpu_timing: device event interval; not end-to-end latency<br>cpu_validation: PASS (all elements finite and equal to 3)<br>gpu_validation: PASS (all elements finite and equal to 3)<br>cpu_mean_ms: 21.338049<br>cpu_median_ms: 21.250562<br>cpu_min_ms: 21.035420<br>cpu_bandwidth_gb_s_by_median: 37.895768<br>cpu_bandwidth_gb_s_by_min: 38.283351<br>gpu_mean_ms: 1.121033<br>gpu_median_ms: 1.121419<br>gpu_min_ms: 1.118158<br>gpu_bandwidth_gb_s_by_median: 718.114016<br>gpu_bandwidth_gb_s_by_min: 720.208039<br>status: PASS<br></code></pre></td></tr></table></figure> 根据公式可得$$ BW_{} = ^{11} </p>
+<p>=718 . $$ 三个手算结果，分别与对应的程序输出结果是一致的。</p>
+<ol start="4" type="1">
+<li>将它们绘制成一张表格如下： 三组均于 2026-10-23 在上述 Radeon Pro
+W7900D / 原生 Ubuntu 24.04.4 环境实测，以下只比较 PyTorch GPU 路径，均为
+<code>float32</code>、warmup 5、repeat 30：</li>
+</ol>
+<table>
+
+<thead>
+<tr>
+<th>元素数</th>
+<th>每个数组的大小</th>
+<th>GPU 平均数/中位数/最小数 （单位：ms）</th>
+<th>按平均数/中位数/最小数计算的有效带宽（单位：GB/s）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1,048,576</td>
+<td>4 MiB</td>
+<td>0.030736 / 0.029359 / 0.024360</td>
+<td>409.386778 / 428.587895 / 516.539901</td>
+</tr>
+<tr>
+<td>16,777,216</td>
+<td>64 MiB</td>
+<td>0.299717 / 0.289359 / 0.288039</td>
+<td>671.722298 / 695.767514 / 698.956016</td>
+</tr>
+<tr>
+<td>67,108,864</td>
+<td>256 MiB</td>
+<td>1.121033 / 1.121419 / 1.118158</td>
+<td>718.360983 / 718.113718 / 720.208028</td>
+</tr>
+</tbody>
+</table>
+<p>不完全接近，且规模越大越接近、越稳定。 大致规律是：</p>
+<ul>
+<li>小规模（4 MiB）中，加法本身极短，GPU
+提交、调度、时钟状态和其他进程活动等固定或偶发因素占比更高，所以
+mean、median、min 差异较大。</li>
+<li>中等规模（64 MiB）开始，实际数据处理时间占主要部分；<code>min</code>
+与 <code>median</code> 已很接近，但少数慢轮次仍会使 <code>mean</code>
+偏大。</li>
+<li>大规模（256
+MiB）时，三种统计量几乎一致，说明该配置下测量较稳定。</li>
+</ul>
+<p>带宽也呈现对应趋势：按中位数计算，从约 <code>428.6 GB/s</code> 增至
+<code>695.8 GB/s</code>、<code>718.1 GB/s</code>。这说明随着规模增大，固定开销被更多数据处理工作摊薄，性能逐步接近该实验环境中的稳定带宽区间。根据
+<a
+target="_blank" rel="noopener" href="https://www.amd.com/en/products/graphics/workstations.html#tabs-33767a92d0-item-a59d3a42f3-tab">AMD
+Radeon专业显示参数</a> 可知，AMD 为 Radeon Pro W7900D 给出的规格是最高
+864 GB/s 显存带宽。<span
+class="math inline">\(720/864\approx83.3\%\)</span>
+可以作为模型下的对照，但不能称为显存控制器的实测利用率，也不能据此判断“只剩
+16.7% 优化空间”。</p>
+<h4 id="报错处理">0.4.6.2 报错处理</h4>
+<h5
+id="提示orch.acceleratorerror-cuda-error-device-kernel-image-is-invalid">0.4.6.2.1
+提示<code>orch.AcceleratorError: CUDA error: device kernel image is invalid</code></h5>
+<p>尝试在容器中执行如下命令时， <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs bash">(hello-gpu-notebook-part0-intro) root@j-7qhdfxoi6o3pyecodbv33kwd7z:/workspace/notebooks/part0-intro/chapter4# python benchmark_vector_add.py --size 1048576 --warmup 5 --repeat 30 --cpu-threads 1<br>torch: 2.13.0+rocm10.0.0<br>hip: 7.15.26333<br>cuda_available: True<br>device_name: AMD Radeon Pro W7900D<br>cpu_name: AMD EPYC 9334 32-Core Processor<br>cpu_threads: 1<br>dtype: float32<br>vector_size: 1048576<br>warmup: 5<br>repeat: 30<br>cpu_timing: wall clock around torch.add(a, b, out=c)<br>gpu_timing: device event interval; not end-to-end latency<br>Traceback (most recent call last):<br>  File <span class="hljs-string">&quot;/workspace/notebooks/part0-intro/chapter4/benchmark_vector_add.py&quot;</span>, line 173, <span class="hljs-keyword">in</span> &lt;module&gt;<br>    main()<br>  File <span class="hljs-string">&quot;/workspace/notebooks/part0-intro/chapter4/benchmark_vector_add.py&quot;</span>, line 161, <span class="hljs-keyword">in</span> main<br>    gpu_times = benchmark_gpu(args.size, args.warmup, args.repeat)<br>                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^<br>  File <span class="hljs-string">&quot;/workspace/notebooks/part0-intro/chapter4/benchmark_vector_add.py&quot;</span>, line 79, <span class="hljs-keyword">in</span> benchmark_gpu<br>    a = torch.ones(size, device=<span class="hljs-string">&quot;cuda&quot;</span>, dtype=torch.float32)<br>        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^<br>torch.AcceleratorError: CUDA error: device kernel image is invalid<br>Search <span class="hljs-keyword">for</span> `hipErrorInvalidImage<span class="hljs-string">&#x27; in https://rocm.docs.amd.com/projects/HIP/en/latest/index.html for more information.</span><br><span class="hljs-string">For more detailed error information, run with CUDA_LOG_FILE=stderr</span><br><span class="hljs-string">Device-side assertion tracking was not enabled by user.</span><br><span class="hljs-string">(hello-gpu-notebook-part0-intro) root@j-7qhdfxoi6o3pyecodbv33kwd7z:/workspace/notebooks/part0-intro/chapter4# </span><br></code></pre></td></tr></table></figure></p>
+<p>原因高度确定：容器中的 PyTorch 很可能安装了默认的
+<code>gfx1201</code>（RX 9070 XT）设备包，但租赁卡 Radeon Pro W7900D
+属于 <code>gfx1100</code>。</p>
+<p><code>cuda_available: True</code> 只说明 ROCm 能看见
+GPU；直到这句首次真正提交 GPU 算子时：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">a = torch.ones(size, device=<span class="hljs-string">&quot;cuda&quot;</span>, dtype=torch.float32)<br></code></pre></td></tr></table></figure>
+<p>PyTorch 才加载并执行 GPU 内核。若内核镜像只含
+<code>gfx1201</code>、不含 <code>gfx1100</code>，就会出现：</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs maxima">hipErrorInvalidImage<br>CUDA <span class="hljs-built_in">error</span>: device kernel <span class="hljs-built_in">image</span> <span class="hljs-built_in">is</span> invalid<br></code></pre></td></tr></table></figure>
+<p>这不是 <code>benchmark_vector_add.py</code> 的逻辑问题，也与
+<code>c = torch.empty_like(a)</code>
+无关。<code>torch: 2.13.0+rocm10.0.0</code> 和
+<code>hip: 7.15.26333</code> 的组合本身是正常的。</p>
+<p>先在容器中确认实际架构和安装的设备包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash">python - &lt;&lt;<span class="hljs-string">&#x27;PY&#x27;</span><br>import importlib.metadata<br>import torch<br><br>prop = torch.cuda.get_device_properties(0)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;GPU:&quot;</span>, prop.name)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;architecture:&quot;</span>, prop.gcnArchName)<br><br><span class="hljs-keyword">for</span> dist <span class="hljs-keyword">in</span> importlib.metadata.distributions():<br>    name = dist.metadata[<span class="hljs-string">&quot;Name&quot;</span>]<br>    <span class="hljs-keyword">if</span> name and (<span class="hljs-string">&quot;gfx&quot;</span> <span class="hljs-keyword">in</span> name.lower() or name.lower().startswith(<span class="hljs-string">&quot;amd-torch&quot;</span>)):<br>        <span class="hljs-built_in">print</span>(name, dist.version)<br>PY<br></code></pre></td></tr></table></figure>
+<p>执行时能看到：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">GPU: AMD Radeon Pro W7900D<br>architecture: gfx1100<br></code></pre></td></tr></table></figure>
+<p>若输出中出现
+<code>amd-torch-device-gfx1201</code>、<code>rocm-sdk-device-gfx1201</code>，却没有对应的
+<code>gfx1100</code> 包，就证实了上述原因。</p>
+<p>修复方式是在 <code>part0-intro/pyproject.toml</code>
+中将以下三处统一从 <code>device-gfx1201</code> 改为
+<code>device-gfx1100</code>：</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs toml">&quot;torch<span class="hljs-section">[device-gfx1100]</span>==2.13.0+rocm10.0.0&quot;,<br>&quot;torchvision<span class="hljs-section">[device-gfx1100]</span>==0.28.0+rocm10.0.0&quot;,<br>&quot;rocm<span class="hljs-section">[devel,device-gfx1100]</span>==10.0.0&quot;,<br></code></pre></td></tr></table></figure>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs toml"><span class="hljs-comment"># 以下是修复后的部分内容：</span><br><span class="hljs-attr">dependencies</span> = [<br>    <span class="hljs-comment">#&quot;torch==2.13.0+rocm10.0.0&quot;,</span><br>    <span class="hljs-string">&quot;rocm[devel]==10.0.0&quot;</span>,<br>    <span class="hljs-string">&quot;hello-gpu-notebooks&quot;</span>,<br>    <span class="hljs-string">&quot;ipykernel&gt;=7.4.0&quot;</span>,<br>    <span class="hljs-string">&quot;jupyterlab&gt;=4.6.4&quot;</span>,<br>    <span class="hljs-string">&quot;nbclient&gt;=0.11.0&quot;</span>,<br>    <span class="hljs-string">&quot;nbformat&gt;=5.11.1&quot;</span>,<br>    <span class="hljs-string">&quot;pytest&gt;=9.1.1&quot;</span>,<br>    <span class="hljs-string">&quot;triton&gt;=3.8.0&quot;</span>,<br>    <span class="hljs-string">&quot;numpy&gt;=2.5.3&quot;</span>,<br>    <span class="hljs-string">&quot;torch[device-gfx1100]==2.13.0+rocm10.0.0&quot;</span>,<br>    <span class="hljs-string">&quot;torchvision[device-gfx1100]==0.28.0+rocm10.0.0&quot;</span>,<br>    <span class="hljs-string">&quot;rocm[devel,device-gfx1100]==10.0.0&quot;</span>,<br>]<br></code></pre></td></tr></table></figure>
+<p>然后在 <code>part0-intro</code> 目录执行：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs vim">uv <span class="hljs-keyword">sync</span><br><span class="hljs-keyword">source</span> ./activate-rocm.<span class="hljs-keyword">sh</span><br><span class="hljs-keyword">python</span> chapter1/check_torch_rocm.<span class="hljs-keyword">py</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">(hello-gpu-notebook-part0-intro) root@j-7qhdfxoi6o3pyecodbv33kwd7z:/workspace/notebooks/part0-intro# python chapter1/check_torch_rocm.py<br>python: 3.12.3<br>torch: 2.13.0+rocm10.0.0<br>cuda_available: True<br>device_count: 1<br>device_name: AMD Radeon Pro W7900D<br>result_shape: (1024, 1024)<br>result_dtype: torch.float32<br>result_device: cuda:0<br>result_checksum: 2210.884766<br></code></pre></td></tr></table></figure>
+<p>可以看到第 1 章的 PyTorch GPU smoke test
+通过，再执行上述程序成功。</p>
+<h3 id="本章小结-1">本章小结</h3>
+<ul>
+<li>一个完整 HIP
+示例包含主机数据准备、设备存储、数据拷贝、核函数启动、等待和结果检查；核函数只是其中一部分。</li>
+<li>一线程处理一元素时，全局下标决定访问位置，边界判断保护最后一个 block
+的无效线程。</li>
+<li>手写 HIP 程序负责验证结果，PyTorch benchmark
+负责演示计时。测量前需要明确实现、输入和计时范围。</li>
+<li>GPU event
+标记区间，同步保证区间完成；预热后重复测量，用中位数配合平均值和最小值阅读结果。</li>
+<li>给出向量加法的有效带宽。它是算法数据量与实测时间的比值，不能代替物理显存流量或端到端程序耗时。</li>
+</ul>
 
                 
               </div>
