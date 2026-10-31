@@ -19,13 +19,15 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
+    <meta name="description" content="第 3 篇 Agent（算子层） 第 14 章 Agent 入门 本章先为Agent优化算子建模。提出在优化要在相同环境、相同测量基准下执行，要首先给出任务规格、参考实现（可以认为是基准baseline），在验证过的baseline基础上进行分析、寻找瓶颈假设与优化点，借助大模型做一步的优化分析与优化实现，得出候选，首先验证候选结果的正确性，然后才能检查其延迟并与 baseline和当前方案 进行">
+<meta property="og:type" content="article">
 <meta property="og:title" content="HelloGPU-P03-Agent（算子层）">
 <meta property="og:url" content="https://jiangsanyin.github.io/2026/09/20/HelloGPU-P03-Agent%EF%BC%88%E7%AE%97%E5%AD%90%E5%B1%82%EF%BC%89/index.html">
 <meta property="og:site_name" content="sanyinjiang">
+<meta property="og:description" content="第 3 篇 Agent（算子层） 第 14 章 Agent 入门 本章先为Agent优化算子建模。提出在优化要在相同环境、相同测量基准下执行，要首先给出任务规格、参考实现（可以认为是基准baseline），在验证过的baseline基础上进行分析、寻找瓶颈假设与优化点，借助大模型做一步的优化分析与优化实现，得出候选，首先验证候选结果的正确性，然后才能检查其延迟并与 baseline和当前方案 进行">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-09-20T06:35:57.000Z">
-<meta property="article:modified_time" content="2026-09-20T06:54:54.660Z">
+<meta property="article:modified_time" content="2026-10-31T15:15:30.850Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="GPU">
 <meta property="article:tag" content="算子">
@@ -236,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          4.5k 字
         
       </span>
     
@@ -247,7 +249,7 @@
         
         
         
-          1 分钟
+          38 分钟
         
       </span>
     
@@ -298,7 +300,245 @@
             
               <div class="markdown-body">
                 
-                
+                <h1 id="第-3-篇-agent算子层">第 3 篇 Agent（算子层）</h1>
+<h1 id="第-14-章-agent-入门">第 14 章 Agent 入门</h1>
+<p>本章先为Agent优化算子建模。提出在优化要在相同环境、相同测量基准下执行，要首先给出任务规格、参考实现（可以认为是基准baseline），在验证过的baseline基础上进行分析、寻找瓶颈假设与优化点，借助大模型做一步的优化分析与优化实现，得出候选，首先验证候选结果的正确性，然后才能检查其延迟并与
+baseline和当前方案
+进行对比，如果候选更优则替换掉当前方案，否则保留当前方案、同时对本轮与前面所有证据进行综合评估分析，针对瓶颈假设另做优化尝试，即循环上述过程（引入了ReAct这一agent开发思路）。
+完整的Agent优化算子流程，如下： <img
+src="https://files.seeusercontent.com/2026/10/30/mn4T/90db7e0b-d837-490d-842d-ee440577.png" srcset="/img/loading.gif" lazyload
+alt="90db7e0b-d837-490d-842d-ee4405771f10.png" /></p>
+<h2 id="练习判断一份报告是否可信">14.6 练习：判断一份报告是否可信</h2>
+<p>试着根据以下情形，区分模型的提议、工具的观察和可以得出的结论。</p>
+<ol type="1">
+<li><p>模型说“这个实现减少了一次全局内存写回，所以一定更快”。把这句话拆成代码事实、性能假设和需要补充的实验。
+回答： 代码事实：减少了一次全局内存写回。
+性能假设：同一环境下、相同的计算，运行更快、耗时更少。
+需要补充的实验：将修改后的程序在同一个环境条件下，对相同的算子测试多次，以多次结果综合评估与检验。</p></li>
+<li><p>候选编译成功，但尚未对答案。指出 <a
+target="_blank" rel="noopener" href="https://datawhalechina.github.io/hello-gpu/part3-agent/chapter14/#fig-kernel-optimization-loop">图
+14.2</a> 中它还不能越过的检查，并说明原因。
+回答：不能越过正确性检查。如果候选答案错误，应先检查索引和掩码，继续比较延迟没有意义，答案正确性是第一要务。</p></li>
+<li><p>一轮候选被拒绝后，为什么 <code>best.py</code>
+应保持不变？如果每轮生成代码时都覆盖它，下一次比较会失去什么？
+回答：基线是最初的参照，当前版本是已经被接受的参照，候选则是尚待验证的修改。一轮候选被拒绝，说明当前候选验证失败或未达到期望，现有
+<code>best.py</code> 结果正确、性能更好， <code>best.py</code>
+应保持不变，这是由我们的优化目标决定的。
+如果每轮生成代码时都覆盖它，下一次比较会失去”已经被接受的参照“。</p></li>
+<li><p>不看源码，画出模型、工具和反馈之间的关系；再打开
+<code>agent.py</code>，找到与三个角色对应的位置。
+回答：模型、工具和反馈之间的关系，如下图所示： <img
+src="https://files.seeusercontent.com/2026/10/30/vKs0/20261030130945917.png" srcset="/img/loading.gif" lazyload
+alt="image.png" /></p></li>
+</ol>
+<h2 id="本章小结">本章小结</h2>
+<ul>
+<li>Agent
+在目标约束下反复选择行动、调用工具和读取反馈，模型参数不会因一次反馈而自动更新。</li>
+<li>基线是最初的参照，当前版本是已经被接受的参照，候选则是尚待验证的修改。</li>
+<li>正确性、计时和接受判定承担不同职责；瓶颈估算需要与硬件实测区分。</li>
+<li>一次搜索没有获得加速，也可以通过完整的负结果帮助我们缩小后续尝试范围。</li>
+</ul>
+<h1 id="第-15-章-工具封装">第 15 章 工具封装</h1>
+<p>本章给出了任务配置规范，编译与正确性检查compile_kernel、再次编译与多样本多次
+GPU Event 计时、瓶颈假设列表、接受候选的采用的评价标准
+等做出了设计。还具体阐明要根据实际情况（失败或性能未达标）决定下一步检查内容与优化方向。</p>
+<h2 id="练习为结果找对解释">15.7 练习：为结果找对解释</h2>
+<ol type="1">
+<li><code>compile_kernel</code> 返回 <code>ok = true</code>，但
+<code>bench_kernel</code>
+失败。列出仍需检查的信息，说明为什么两次工具调用不矛盾。
+回答：首先要明确这二者做的事情分别有哪些，如下。 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs text">compile_kernel：<br>检查源码 → 首次启动、编译并执行 → 与参考结果比较<br><br>bench_kernel：<br>重新检查源码与正确性 → 预热 → 多个样本、每样本多次 GPU Event 计时<br>            → 每次仍检查结果<br></code></pre></td></tr></table></figure>
+两者的正确性数据由固定种子生成，两者的“正确性输入分布/规则”是一致的；但
+<code>bench_kernel</code>
+会在更多次调用中重新填充输入、重置输出并反复验证，不能把它理解为只拿
+<code>compile_kernel</code> 那一次已经算过的同一块 GPU
+内存继续计时。如果某kernel检查成功与否依赖于输出数组的旧内容：第一次输出初值“碰巧”使结果正确；<code>bench_kernel</code>
+在后续重置输出后，这个偶然条件消失，验证失败。
+另外，显然bench_kernel做的事情更多、执行轮次更多，可能在compile_kernel中包含事情之外的事情中出错，
+如计时阶段出错；且这两者的执行总是有时间先后，并不能保证不同时刻环境（GPU可用性）是完全一致的。其他的可以考虑检查的事情如下表：</li>
+</ol>
+<table>
+
+<thead>
+<tr>
+<th>仍需检查什么</th>
+<th>为什么会导致 <code>bench_kernel</code> 失败</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bench_kernel</code> 的 <code>source</code> 是否与
+<code>compile_kernel</code> 字节完全相同</td>
+<td>两个工具都接收独立的 <code>source</code>
+参数。模型或用户可能在两次调用间改过源码；哪怕只改一个边界条件，也已经是新候选。</td>
+</tr>
+<tr>
+<td>固定任务是否仍一致（即可能修改了源码或任务规格）</td>
+<td><code>task.json</code> 规定入口 <code>launch</code>、形状、FP16
+类型、输入、误差阈值、warmup
+和样本数。任务或工作区的参考实现变了，也不能把前一次成功直接沿用。</td>
+</tr>
+<tr>
+<td><code>bench_kernel</code> 返回的
+<code>stage</code>、<code>errors</code>、具体错误日志</td>
+<td>先区分是源码策略/入口检查失败、首次启动时的编译失败、运行时错误、数值错误，还是计时阶段的问题。不同阶段的修复办法不同。</td>
+</tr>
+<tr>
+<td>候选能否在重复执行、输出重置后仍保持正确</td>
+<td><code>compile_kernel</code> 做正确性检查；<code>bench_kernel</code>
+会再次验证，并在预热和每次测量中反复调用
+<code>launch(...)</code>，每次还会重置输出、检查结果。某些实现一次能对，多次执行时才暴露依赖旧输出、未完整写输出、异步错误或状态依赖。</td>
+</tr>
+<tr>
+<td>GPU/运行环境是否稳定可用</td>
+<td>两次评测在独立进程中执行。两次之间可能发生显存不足、设备错误、依赖/驱动问题或超时；前一次成功不构成对后一次环境状态的保证。</td>
+</tr>
+</tbody>
+</table>
+<p>在正常、确定性的候选代码与稳定环境中，若两次传入的是同一源码、同一任务，那么
+<code>compile_kernel</code> 成功后，<code>bench_kernel</code>
+通常也应通过正确性检查。<strong>若失败，优先看 <code>bench_kernel</code>
+返回的 <code>stage</code>、<code>errors</code>
+和运行日志，不能只凭“前一次已编译成功”断定是计时器的问题。</strong></p>
+<ol start="2" type="1">
+<li><p>对照成本模型，推导 FP32
+向量加法的算法字节数和算术强度。这里计算的是物理显存事务数吗？
+回答：不是。对照成本模型，推导 FP32
+向量加法的算法字节数和算术强度，计算出来的都是逻辑统计数据，并不是由计数器测得的物理实际数据，比如其中关键的字节数数据就是由逻辑分析得到，并不是由计数器测得的物理显存流量，这是由任务语义得到的工作量模型，实际缓存行为、内存事务和编译器生成代码可能使物理流量与它不同。</p></li>
+<li><p>两份摘要都有中位延迟，却没有配对样本。说明哪些比较可以描述，哪些接受结论还不能下。
+回答： 没有配对样本时，
+哪些比较可以描述：两份独立测试摘要显示，候选的中位延迟低于当前版本；在各自测试时段与配置下，候选观察到的延迟更低。
+哪些结论还不能下：</p></li>
+</ol>
+<ul>
+<li>候选达到本任务的接受阈值；</li>
+<li>候选有至少 60% 的配对改进为正；</li>
+<li>配对改进比例的中位数达到阈值；</li>
+<li>性能差异由代码改动导致，而非负载、温度或运行状态漂移；</li>
+<li>每一对中候选都更快。</li>
+</ul>
+<p>如果有配对样本，则可以做如下陈述：
+在相同任务、相同测试数据、交错顺序的配对测量中，候选的配对改进比例中位数达到接受阈值，且至少
+60% 配对为正，因此该候选满足当前任务的接受规则。
+哪些结论还不能下：每一对测量中候选都更快，构成对其他输入、其他设备或其他运行环境的普遍性能保证。</p>
+<ol start="4" type="1">
+<li>设计一份错误返回结构，使模型能够分清“答案错误”和“缺少设备”；只需画字段表，不需要伪造实验输出。
+回答：</li>
+</ol>
+<h2 id="本章小结-1">本章小结</h2>
+<ul>
+<li>工具共享固定任务，将候选源码与实验条件分开。</li>
+<li>编译、正确性和计时逐层检查；有效带宽和 Roofline
+分类需要注明推算来源。</li>
+<li>接受工具重新配对比较，以配置阈值和样本条件裁决候选，拒绝时保留当前版本。</li>
+<li>裁决摘要不等于完整实验档案，缺少的信息必须如实标记。</li>
+</ul>
+<h1 id="第-16-章-算子优化-agent-设计">第 16 章 算子优化 Agent 设计</h1>
+<p>一次优化分成三部分：模型选择行动，工具执行评测，工作区保存结果。
+一项假设对应一份候选，这样方便检验每个假设的结果、避免混淆。
+管理已经测过计时、尚未裁决的候选的处理流程如下： <img
+src="https://files.seeusercontent.com/2026/10/31/vY0h/20261031203436934.png" srcset="/img/loading.gif" lazyload
+alt="image.png" />
+run_agent流程执行结束，并不表示所有接受版本一定比其基线快，还需进行独立复测才能报告相对最初基线的整体收益。</p>
+<h2 id="练习沿着状态检查程序">16.7 练习：沿着状态检查程序</h2>
+<ol type="1">
+<li><p>模型已成功 benchmark 版本 A，随后尝试提交版本 B。沿 <a
+target="_blank" rel="noopener" href="https://datawhalechina.github.io/hello-gpu/part3-agent/chapter16/#fig-pending-candidate">图
+16.2</a> 说明程序应当拒绝哪一步，以及理由。 回答：拒绝版本 B
+的”accept_candidate：提交同一源码“这一步。理由是：等待期间，只允许对同一份源码继续计时、分析或裁决；不能换一份源码直接提交，也不能跳到下一份候选。</p></li>
+<li><p>一轮模型回复调用了三个工具，其中只有一次
+<code>accept_candidate</code>。分别计算模型轮次、工具调用数和裁决数。
+回答： 计算模型轮次：1轮。 工具调用数：3个次。 裁决数：1次。</p></li>
+<li><p>所有候选都被拒绝时，什么条件下报告仍然有价值？报告中的“最终结果”应如何表述？
+回答： 所有候选都被拒绝时，候选的状态是complete或complete_with_warning
+时报告仍然有价值。
+报告中的“最终结果”大致描述如下：虽然所有都被拒绝，但候选的状态是complete或complete_with_warning，这表示候选的相关检查流程已经正常完成，有可分析的裁决证据且没有未清除的
+pending ，或者
+前面有可分析记录但存在未完成尝试等限制，这些可分析的裁决证据或可分析记录也能形成一份完整报告，在报告的基础上有助于决定下一步如何修改。</p></li>
+<li><p>在 <code>agent.py</code> 中找到保存和清除
+<code>pending_candidate.py</code>
+的位置，解释为什么不能在收到任意字符串返回后立即清除它。
+回答：两个关于保存与清除的方法定义在 <code>agent.py</code>
+文件中第196行、203
+行左右：<code>def persist_pending(source: str) -&gt; None:</code>、<code>def clear_pending() -&gt; None:</code>。它们分别在第510行、516行
+处被调用。</p></li>
+</ol>
+<p>什么不能在收到任意字符串返回后立即清除： 程序只有在调用
+<code>accept_candidate</code> 后，确认返回值是包含 <code>accepted</code>
+字段的 JSON，且 <code>trajectory.jsonl</code>
+文件大小确实增长、即裁决摘要已写入时，才调用
+<code>clear_pending()</code>。该裁决可以是“接受”或“拒绝”，关键是已经留下可追溯的裁决记录。</p>
+<p>因此，不能收到任意字符串返回就立刻清除
+pending。任意字符串可能是工具报错、格式异常，或一次没有写入裁决轨迹的失败调用；若此时清除，就会丢失已
+benchmark 的候选 A 的身份和待裁决状态。之后模型可能直接改用候选 B，却把
+A 的 benchmark 结果误关联到 B，或者让 A 没有经过
+<code>accept_candidate</code> 裁决就被遗漏。</p>
+<h2 id="本章小结-2">本章小结</h2>
+<ul>
+<li>模型选择行动，工具执行实验，工作区保存任务与当前状态，三者职责分开。</li>
+<li>提示词建议的流程不等于程序强制的流程；理解实现时需要分别核对。</li>
+<li>非交互模式为成功 benchmark
+的新候选建立待裁决状态，并检查源码一致性。</li>
+<li>停止运行、证据完整和获得加速是三个不同判断，报告必须分别说明。</li>
+</ul>
+<p>下一章用向量加法串起这些检查，学习怎样保存、读图并报告一次多轮优化实验。</p>
+<h1 id="第-17-章-多轮优化实战">第 17 章 多轮优化实战</h1>
+<h2 id="操作记录">操作记录</h2>
+<p>创建<code>~/.config/hello-gpu/kernel-agent.env</code>文件，其中设置如下内容：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">root@j-n3fgz62ihbedsl622r5kxsbxhn:/workspace/code/part3-agent# <span class="hljs-built_in">cat</span> ~/.config/hello-gpu/kernel-agent.env <br>KERNEL_AGENT_MODEL=<span class="hljs-string">&quot;DeepSeek-V4.1-Flash&quot;</span><br>KERNEL_AGENT_API_KEY=<span class="hljs-string">&quot;rc-bc1300672f1f0c758424f42d717021acd80exxx&quot;</span><br><span class="hljs-comment"># KERNEL_AGENT_API_BASE=可选，自定义兼容端点</span><br>KERNEL_AGENT_EXTRA_BODY=&#123;&#125; <span class="hljs-comment"># 按模型接口要求调整额外参数；需要移除默认扩展时可设为 &#123;&#125;</span><br></code></pre></td></tr></table></figure>
+其中，模型名称与API_KEY的内容来自<code>https://developer.amd.com.cn/radeon/profile</code>页面获得。API_KEY需要用户申请创建，所有可用的模型名可以如下命令获得：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl https://developer.amd.com.cn/radeon/api/v1/models -H <span class="hljs-string">&quot;Authorization: Bearer rc-bc1300672f1f0c758424f42d717021acd80ed053cec97a9c&quot;</span> -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> | jq | more<br></code></pre></td></tr></table></figure></p>
+<p>修改<code>code/part3-agent/pyproject.toml</code>文件： <figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs toml">...<br><span class="hljs-section">[project]</span><br><span class="hljs-attr">name</span> = <span class="hljs-string">&quot;part3-agent&quot;</span><br><span class="hljs-attr">version</span> = <span class="hljs-string">&quot;0.1.0&quot;</span><br><span class="hljs-attr">requires-python</span> = <span class="hljs-string">&quot;&gt;=3.12,&lt;3.13&quot;</span><br><span class="hljs-attr">dependencies</span> = [<br>    <span class="hljs-string">&quot;numpy&gt;=2.4.4&quot;</span>,<br>    <span class="hljs-comment">#&quot;torch[device-gfx1201]==2.13.0+rocm10.0.0&quot;,</span><br>    <span class="hljs-comment">#&quot;torchvision[device-gfx1201]==0.28.0+rocm10.0.0&quot;,</span><br>    <span class="hljs-comment">#&quot;torchaudio==2.11.0.2+rocm10.0.0&quot;,</span><br>    <span class="hljs-comment">#&quot;rocm[devel,device-gfx1201]==10.0.0&quot;,</span><br>    <span class="hljs-comment"># Agent 层依赖：LLM 调用、结构化输出、TUI</span><br>    <span class="hljs-string">&quot;litellm&gt;=1.50&quot;</span>,<br>    <span class="hljs-string">&quot;pydantic&gt;=2.0&quot;</span>,<br>    <span class="hljs-string">&quot;prompt_toolkit&gt;=3.0&quot;</span>,<br>    <span class="hljs-string">&quot;fastapi&gt;=0.100&quot;</span>,<br>    <span class="hljs-string">&quot;orjson&gt;=3.0&quot;</span>,     <span class="hljs-comment"># litellm MCP handler 的 http parsing 依赖（function calling 时的一个 import 链）</span><br>    <span class="hljs-string">&quot;matplotlib&gt;=3.0&quot;</span>,  <span class="hljs-comment"># Roofline 可视化</span><br>    <span class="hljs-string">&quot;torch[device-gfx1100]==2.13.0+rocm10.0.0&quot;</span>,<br>    <span class="hljs-string">&quot;torchvision[device-gfx1100]==0.28.0+rocm10.0.0&quot;</span>,<br>    <span class="hljs-string">&quot;torchaudio==2.11.0.2+rocm10.0.0&quot;</span>,<br>    <span class="hljs-string">&quot;rocm[devel,device-gfx1100]==10.0.0&quot;</span>,<br>]<br><br>...<br></code></pre></td></tr></table></figure>
+再执行如下步骤，部署环境： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> code/part3-agent<br>uv <span class="hljs-built_in">sync</span><br><span class="hljs-built_in">source</span> ./activate-rocm.sh<br><br></code></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">bash chapter17/run_all.sh --skip-pytest<br></code></pre></td></tr></table></figure>
+<p>这个命令做的事情比较，如下： 它不只是让 Agent
+尝试优化，也包含搜索后的性能复测与可视化。 正常完成时，它会依次做：</p>
+<ol type="1">
+<li>检查原始 <code>baseline.py</code> 正确性，并重新校准硬件峰值；</li>
+<li>运行 Agent 搜索候选；</li>
+<li>将原始 <code>baseline.py</code> 与最终 <code>best.py</code> 做 5
+次独立配对复测；</li>
+<li>生成搜索过程图；</li>
+<li>保存结构化汇总和 Agent 的文字报告。</li>
+</ol>
+<p>主要产物在终端打印的实际 workspace 中，通常类似：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs awk">chapter15<span class="hljs-regexp">/logs/</span>tasks<span class="hljs-regexp">/task-时间戳/</span><br>├── agent-report.md          <span class="hljs-comment"># Agent 最终生成的文字报告</span><br>├── final-comparison.json    <span class="hljs-comment"># 初始 baseline 与最终 best 的独立复测原始结果和汇总</span><br>├── run_summary.json         <span class="hljs-comment"># 本次运行的结构化概要</span><br>├── trajectory.jsonl         <span class="hljs-comment"># 每次 accept 裁决摘要</span><br>├── agent-status.json        <span class="hljs-comment"># complete / warning / incomplete 等状态</span><br>├── hardware.json            <span class="hljs-comment"># 当次机器峰值校准</span><br>└── viz/<br>    ├── rounds_overview.png<br>    ├── process_timeline.png<br>    └── status_breakdown.png<br></code></pre></td></tr></table></figure>
+<p>但需区分两件事：</p>
+<ul>
+<li>会自动生成 <code>agent-report.md</code>，但这是 Agent
+生成的文字报告，不能脱离
+<code>trajectory.jsonl</code>、<code>final-comparison.json</code>
+等证据单独采信。</li>
+<li>不保证一定进行 <code>profile_kernel</code>
+一类的细粒度性能剖析；它是 Agent
+按需调用的工具。脚本一定会做硬件校准、最终独立配对复测和可视化，但不保证产生硬件计数器级别的性能分析。</li>
+</ul>
+<p>另外，只有 Agent 阶段成功后，脚本才会继续执行最终的 5 次独立复测；若
+Agent 阶段失败，则应先检查
+<code>agent-status.json</code>、日志和错误原因。</p>
+<p>独立复测： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">uv run python chapter14/compare.py \<br>  --task <span class="hljs-string">&quot;chapter15/logs/tasks/&lt;本次工作区&gt;/task.json&quot;</span> \<br>  --incumbent <span class="hljs-string">&quot;chapter15/logs/tasks/&lt;本次工作区&gt;/baseline.py&quot;</span> \<br>  --candidate <span class="hljs-string">&quot;chapter15/logs/tasks/&lt;本次工作区&gt;/best.py&quot;</span> \<br>  --runs 5<br></code></pre></td></tr></table></figure></p>
+<p>由于部署环境中”uv
+sync“命令执行时间过久，暂时没有自己执行出结果。明天再试。
+从教程<code>docs/part3-agent/chapter17/optimization-report.md</code>中输出的文字报告来看，通过对测试的结果的分析看到，block_size的基线值为256，将block_size修改为512时获得的测试效果最好，报告中给出了详细的优化与分析过程。</p>
+<h2 id="练习完成一次可复盘的优化">17.7 练习：完成一次可复盘的优化</h2>
+<ol type="1">
+<li><p>找出当前 fixture 中与输入规模有关的所有字段，说明只修改
+<code>n_elements</code> 为什么可能改变实验含义。 回答：</p></li>
+<li><p>假设某个候选跨轮看起来更快，却被配对裁决拒绝。结合采样时间和比较对象，给出一个可能的解释，并说明还需哪些数据。
+回答：</p></li>
+<li><p>运行完成后，分别指出支持“流程完成”“版本被接受”“相对基线获得加速”的证据文件或实验步骤。
+回答：</p></li>
+<li><p>选择一次被拒绝的尝试，用一个短段落区分源码改动、观察结果与原因假设。没有实测时，先完成这份记录的字段设计。
+回答：</p></li>
+</ol>
+<h2 id="本章小结-3">本章小结</h2>
+<ul>
+<li>先固定任务与基线，再搜索候选；一次搜索不预设收益大小。</li>
+<li>运行状态、裁决摘要和完整实验档案的覆盖范围不同，需要逐项核对。</li>
+<li>候选延迟、当前版本记录与配对改进有不同含义，图例应明确说明。</li>
+<li>最终加速结论来自原始基线与最终版本的独立复测，不能从搜索曲线反推。</li>
+</ul>
 
                 
               </div>
