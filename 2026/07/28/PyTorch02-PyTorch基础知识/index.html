@@ -19,15 +19,15 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="二、PyTorch基础知识 本章的的内容包含如下：张量概念及特点、张量的运算、自动微分、并行计算简介以及并行计算加速设备。 2.1 张量 2.1.1 张量简介 张量就是“多维数组”，其中的元素的数据必须一致。它是 PyTorch 传输、存储和计算数据的统一标准载体。 无论在深度学习中处理的是什么数据，最终都会被转化成张量：  0维张量：标量（Scalar），就是一个独立的数字（如 loss &#x3D; 0">
+    <meta name="description" content="二、PyTorch基础知识 本章的的内容包含如下：张量概念及特点、张量的运算、自动微分、并行计算简介以及并行计算加速设备。 2.1 张量 2.1.1 张量简介 张量就是“多维数组”，其中的元素的数据必须一致。它是 PyTorch 传输、存储和计算数据的统一标准载体。 无论在深度学习中处理的是什么数据，最终都会被转化成张量：  0维张量：标量（Scalar），就是一个独立的数字（如loss &#x3D; 0.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PyTorch02-PyTorch基础知识">
 <meta property="og:url" content="https://jiangsanyin.github.io/2026/07/28/PyTorch02-PyTorch%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="二、PyTorch基础知识 本章的的内容包含如下：张量概念及特点、张量的运算、自动微分、并行计算简介以及并行计算加速设备。 2.1 张量 2.1.1 张量简介 张量就是“多维数组”，其中的元素的数据必须一致。它是 PyTorch 传输、存储和计算数据的统一标准载体。 无论在深度学习中处理的是什么数据，最终都会被转化成张量：  0维张量：标量（Scalar），就是一个独立的数字（如 loss &#x3D; 0">
+<meta property="og:description" content="二、PyTorch基础知识 本章的的内容包含如下：张量概念及特点、张量的运算、自动微分、并行计算简介以及并行计算加速设备。 2.1 张量 2.1.1 张量简介 张量就是“多维数组”，其中的元素的数据必须一致。它是 PyTorch 传输、存储和计算数据的统一标准载体。 无论在深度学习中处理的是什么数据，最终都会被转化成张量：  0维张量：标量（Scalar），就是一个独立的数字（如loss &#x3D; 0.">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-28T13:15:23.000Z">
-<meta property="article:modified_time" content="2026-09-26T09:18:42.790Z">
+<meta property="article:modified_time" content="2026-11-02T01:49:39.410Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -247,7 +247,7 @@
         
         
         
-          94 分钟
+          95 分钟
         
       </span>
     
@@ -306,19 +306,19 @@
 传输、存储和计算数据的<strong>统一标准载体</strong>。</p>
 <p>无论在深度学习中处理的是什么数据，最终都会被转化成张量：</p>
 <ul>
-<li><strong>0维张量</strong>：标量（Scalar），就是一个独立的数字（如
-<code>loss = 0.05</code>）。</li>
+<li><strong>0维张量</strong>：标量（Scalar），就是一个独立的数字（如<code>loss = 0.05</code>、<code>a=torch.tensor(1)</code>）。</li>
 <li><strong>1维张量</strong>：向量（Vector），如一维数组
-<code>[1.0, 2.0, 3.0]</code>。</li>
+<code>[1.0, 2.0, 3.0]</code>、<code>b = torch.tensor([1, 2])</code>。</li>
 <li><strong>2维张量</strong>：矩阵（Matrix），如 Excel 表格或灰度图（高
-× 宽）。</li>
+× 宽）、<code>c = torch.tensor([[1], [2]])</code>。</li>
 <li><strong>3维张量</strong>：时间序列数据、股价、单张彩色图像
-<code>(宽, 高, 通道)</code> 或一段文本序列（Batch × 序列长度）。</li>
+<code>(宽, 高, 通道)</code> 或一段文本序列（Batch ×
+序列长度），在PyTorch中如<code>d = torch.tensor([[[1, 2], [2, 3]], [[3, 4], [4, 5]]])</code>。</li>
 <li><strong>N维张量</strong>：更高维度的数据集合（比如
 4维张量常用来表示一批彩色图片
 <code>(Batch_size, Channel, Height, Width)</code>）。</li>
 </ul>
-<p>张量的核心是一个数据容器，一般情况下由数字组成，但也能由字符串组成。</p>
+<p>张量的核心是一个数据容器。PyTorch中张量原生不支持字符串，只能由数字组成。（但在Tensorflow中，张量元素可以是数字，也可以是字符串。）</p>
 <p>张量 <code>torch.Tensor</code>
 是PyTorch中存储和变换数据的主要工具。它跟Numpy多维数组非常类似，可以联想起来对比学习。但<code>Tensor</code>
 天生地提供了GPU计算和自动求梯度等更多功能，使用其更加适用于深度学习。</p>
