@@ -27,7 +27,7 @@
 <meta property="og:description" content="三、PyTorch的主要组成模块 3.1 深度学习流程及与机器学习差异 一项机器学习任务的整体流程如下：  数据准备与划分：对原始数据进行清洗、格式统一与特征变换，并划分为训练集、验证集和测试集（如采用随机切分或 K 折交叉，可以使用sklearn带的test_train_split函数、kfold来实现）。 模型与算法配置：选择合适的网络架构，指定衡量误差的损失函数、更新参数的优化器以及相关超参">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-08-06T04:45:50.000Z">
-<meta property="article:modified_time" content="2026-11-03T02:34:14.510Z">
+<meta property="article:modified_time" content="2026-11-03T02:57:21.040Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          37k 字
+          38k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          311 分钟
+          315 分钟
         
       </span>
     
@@ -309,122 +309,126 @@ K 折交叉，可以使用sklearn带的test_train_split函数、kfold来实现�
 <li><strong>模型训练（拟合）</strong>：将训练集输入模型，通过反向传播算法迭代更新权重以拟合数据。</li>
 <li><strong>性能评估与调优</strong>：在验证集和测试集上评估模型的泛化能力，并根据表现进行超参数微调或最终效果验证。</li>
 </ul>
-<table style="width:6%;">
+<table style="width:10%;">
+
+<tbody>
+<tr>
+<td>深度学习和机器学习在流程上类似，但在代码实现上有较大的差异。<strong>首先，由于深度学习所需的样本量很大，一次加载全部数据运行可能会超出内存容量而无法实现；同时还有批（batch）训练等提升模型表现的策略，需要每次训练读取固定数量的样本送入模型中训练</strong>，因此深度学习在数据加载上需要有专门的设计。</td>
+</tr>
+<tr>
+<td>在模型实现上，深度学习和机器学习也有很大差异。由于深度神经网络层数往往较多，其中会有一些用于实现特定功能的层（如卷积层、池化层、批正则化层、LSTM层等），因此<strong>深度神经网络往往需要“逐层”搭建，或者预先定义好可以实现特定功能的模块，再把这些模块组装起来</strong>。这种“定制化”的模型构建方式能够充分保证模型的灵活性，也对代码实现提出了新的要求。</td>
+</tr>
+<tr>
+<td>接下来是损失函数和优化器的设定。这部分和经典机器学习的实现是类似的。但由于模型设定的灵活性，因此<strong>损失函数和优化器要保证反向传播能够在用户自定义的模型结构上实现</strong>。</td>
+</tr>
+<tr>
+<td>上述步骤完成后就可以开始训练了。前面介绍了GPU的概念和GPU用于并行计算加速的功能，不过程序默认是在CPU上运行的，因此在代码实现中，需要把模型和数据“放到”GPU上去做运算，同时还需要保证损失函数和优化器能够在GPU上工作。如果使用多张GPU进行训练，还需要考虑模型和数据分配、整合的问题。此外，后续计算一些指标还需要把数据“放回”CPU。这里涉及到了一系列有关于GPU的配置和操作。</td>
+</tr>
+<tr>
+<td>深度学习中训练和验证过程<strong>最大的特点在于读入数据是按批的</strong>，每次读入一个批次的数据，放入GPU中训练，然后根据损失函数计算梯度并将其反向传播回网络最前面的层，同时使用优化器调整网络参数。这里会涉及到各个模块配合的问题。训练/验证后还需要根据设定好的指标计算模型表现。</td>
+</tr>
+</tbody>
+</table>
+<p>深度学习与机器学习的差异，用一个表格整理如下：</p>
+<table>
 
 <thead>
 <tr>
-<th>深度学习和机器学习在流程上类似，但在代码实现上有较大的差异。<strong>首先，由于深度学习所需的样本量很大，一次加载全部数据运行可能会超出内存容量而无法实现；同时还有批（batch）训练等提升模型表现的策略，需要每次训练读取固定数量的样本送入模型中训练</strong>，因此深度学习在数据加载上需要有专门的设计。</th>
+<th>对比维度</th>
+<th>传统机器学习</th>
+<th>深度学习</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>深度学习与机器学习的差异，用一个表格整理如下：</td>
+<td><strong>本质定义</strong></td>
+<td>数据驱动让程序从经验中提升性能，包含多种算法范式</td>
+<td>机器学习的一个分支，特指用<strong>多层神经网络</strong>自动提取特征</td>
 </tr>
 <tr>
-<td>| 对比维度 | 传统机器学习 | 深度学习 | | -------------------- |
------------------------------------------------------------- |
------------------------------------------------------------- | |
-<strong>本质定义</strong> |
-数据驱动让程序从经验中提升性能，包含多种算法范式 |
-机器学习的一个分支，特指用<strong>多层神经网络</strong>自动提取特征 | |
-<strong>特征提取方式</strong> |
-<strong>人工设计特征</strong>。依赖专家经验从原始数据中提取有用特征（如TF-IDF、HOG、SIFT等），特征的好坏直接影响模型上限
-|
-<strong>自动学习特征</strong>。网络底层自动学习边缘、纹理等低级特征，高层组合成语义特征，实现端到端学习，无需人工设计
-| | <strong>数据需求量</strong> |
-<strong>较小</strong>。几百到几万样本即可取得不错效果，在小数据集上表现稳定，不易过拟合
-|
-<strong>较大</strong>。因参数量巨大，通常需要十万级以上样本才能充分训练，否则容易过拟合；可通过迁移学习/数据增强缓解
-| | <strong>硬件依赖</strong> |
-<strong>CPU即可胜任</strong>。计算量相对较小，普通笔记本电脑即可运行大部分算法
-|
-<strong>重度依赖GPU</strong>。矩阵运算密集，需要GPU加速才能在大规模数据和深层网络上合理时间内完成训练
-| | <strong>数据加载方式</strong> |
-<strong>通常可全量加载</strong>。数据量小，可一次性读入内存，训练过程简单直接
-|
-<strong>需mini-batch分批加载</strong>。数据量和模型参数量远超显存容量，必须分批次送入GPU训练，配合DataLoader、预读取等机制；<strong>批大小（batch
-size）本身也是影响模型收敛的重要超参数</strong> | |
-<strong>模型构建方式</strong> |
-<strong>调用现成算法库</strong>。通常直接调用sklearn等库中的完整算法类，传入参数即可，无需逐层搭建网络结构
-|
-<strong>逐层搭建或模块组装</strong>。需手动定义网络各层（卷积层、池化层、批正则化层、LSTM层等），或预定义功能模块再组装，<strong>灵活性强但代码实现要求更高</strong>
-| | <strong>损失函数与优化器</strong> |
-与深度学习类似，均需设定损失函数和优化器；但传统模型多为凸优化，调参相对简单
-|
-损失函数和优化器需<strong>保证反向传播能在用户自定义的复杂网络结构上正确实现</strong>；非凸优化对学习率、动量等超参数更敏感
-| | <strong>GPU配置与操作</strong> |
-<strong>通常不需要</strong>。大部分传统ML算法在CPU上运行即可满足需求 |
-<strong>必须显式管理</strong>。需将模型和数据手动“放到”GPU（<code>.cuda()</code>或<code>.to(device)</code>），损失函数和优化器也需在GPU上工作；<strong>多卡训练还需考虑模型并行/数据并行、梯度同步、结果汇总等问题</strong>；验证/评测时常需将数据“放回”CPU
-| | <strong>训练与验证流程</strong> |
-<strong>全量数据一次性训练</strong>。通常一轮训练即可收敛（如线性回归闭式解），或少量迭代（如随机森林建树）
-|
-<strong>按批循环训练</strong>。每个epoch遍历所有batch，每批数据前向传播→计算损失→反向传播→优化器更新参数；<strong>需协调DataLoader、模型、损失函数、优化器、GPU之间的配合</strong>；验证时同样按批计算指标
-| | <strong>可解释性</strong> |
-<strong>较强</strong>。树模型可直接输出特征重要性排序，线性模型系数有明确含义，易于理解和调试
-|
-<strong>较弱</strong>。黑盒特性显著，难以直观解释内部决策逻辑，需借助Grad-CAM、SHAP、注意力可视化等事后工具辅助理解
-| | <strong>适用数据类型</strong> |
-<strong>结构化表格数据为主</strong>。在金融风控、电商推荐等表格数据场景中表现优异
-|
-<strong>非结构化数据为主</strong>。图像、语音、文本、视频等原始高维数据是深度学习的主场
-| | <strong>表格数据表现</strong> |
-<strong>常胜</strong>。XGBoost、LightGBM等梯度提升树在表格数据上至今是工业界首选
-|
-<strong>未必占优</strong>。纯深度模型在表格数据上通常打不过调优后的GBDT，需结合TabNet等专门设计才有竞争力
-| | <strong>图像/语音/NLP</strong> |
-<strong>基本退场</strong>。传统方法在这些领域已被深度学习全面超越 |
-<strong>绝对主场</strong>。CNN统治图像，RNN/Transformer统治序列数据，大语言模型引领NLP前沿
-| | <strong>典型算法举例</strong> |
-线性回归、逻辑回归、支持向量机(SVM)、决策树、随机森林、XGBoost、K近邻(KNN)、K均值聚类
-|
-卷积神经网络(CNN)、循环神经网络(RNN/LSTM)、Transformer、生成对抗网络(GAN)、扩散模型(Diffusion)、BERT/GPT
-|</td>
+<td><strong>特征提取方式</strong></td>
+<td><strong>人工设计特征</strong>。依赖专家经验从原始数据中提取有用特征（如TF-IDF、HOG、SIFT等），特征的好坏直接影响模型上限</td>
+<td><strong>自动学习特征</strong>。网络底层自动学习边缘、纹理等低级特征，高层组合成语义特征，实现端到端学习，无需人工设计</td>
 </tr>
 <tr>
-<td>其中需要特别提到的是，深度学习所需的样本量一般更大，所以相关数据（训练集/验证集/测试集）一般无法一次性被加载到内存或显存中，此时一般分批输入数据。因此深度学习在数据加载上需要有专门的设计。</td>
+<td><strong>数据需求量</strong></td>
+<td><strong>较小</strong>。几百到几万样本即可取得不错效果，在小数据集上表现稳定，不易过拟合</td>
+<td><strong>较大</strong>。因参数量巨大，通常需要十万级以上样本才能充分训练，否则容易过拟合；可通过迁移学习/数据增强缓解</td>
 </tr>
 <tr>
-<td>## 3.2 基本配置</td>
+<td><strong>硬件依赖</strong></td>
+<td><strong>CPU即可胜任</strong>。计算量相对较小，普通笔记本电脑即可运行大部分算法</td>
+<td><strong>重度依赖GPU</strong>。矩阵运算密集，需要GPU加速才能在大规模数据和深层网络上合理时间内完成训练</td>
 </tr>
 <tr>
-<td>### 一些常用的包</td>
+<td><strong>数据加载方式</strong></td>
+<td><strong>通常可全量加载</strong>。数据量小，可一次性读入内存，训练过程简单直接</td>
+<td><strong>需mini-batch分批加载</strong>。数据量和模型参数量远超显存容量，必须分批次送入GPU训练，配合DataLoader、预读取等机制；<strong>批大小（batch
+size）本身也是影响模型收敛的重要超参数</strong></td>
 </tr>
 <tr>
-<td>在使用PyTorch中，需要导入一些常用的包来使用其提供的特定功能。常见的包有如下：os、sys、torch、torch.nn、torch.utils.data.Dataset、torch.utils.data.DataLoader、torch.optimizer、numpy、matplotlib、seaborn，如果涉及到表格读取与处理一般会用到pandas，下游分析和指标计算一般会用到sklearn。</td>
+<td><strong>模型构建方式</strong></td>
+<td><strong>调用现成算法库</strong>。通常直接调用sklearn等库中的完整算法类，传入参数即可，无需逐层搭建网络结构</td>
+<td><strong>逐层搭建或模块组装</strong>。需手动定义网络各层（卷积层、池化层、批正则化层、LSTM层等），或预定义功能模块再组装，<strong>灵活性强但代码实现要求更高</strong></td>
 </tr>
 <tr>
-<td><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os <br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np <br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><span class="hljs-keyword">from</span> torch.utils.data <span class="hljs-keyword">import</span> Dataset, DataLoader<br><span class="hljs-keyword">import</span> torch.optim <span class="hljs-keyword">as</span> optimizer<br><span class="hljs-keyword">import</span> matplotlib<br><span class="hljs-keyword">import</span> seaborn<br><span class="hljs-keyword">import</span> sklearn<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;numpy: <span class="hljs-subst">&#123;np.__version__&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;torch: <span class="hljs-subst">&#123;torch.__version__&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;matplotlib: <span class="hljs-subst">&#123;matplotlib.__version__&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;seaborn: <span class="hljs-subst">&#123;seaborn.__version__&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;sklearn: <span class="hljs-subst">&#123;sklearn.__version__&#125;</span>&quot;</span>)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;导包完成！&quot;</span>)<br><br><br><span class="hljs-comment"># 输出如下：</span><br>numpy: <span class="hljs-number">2.5</span><span class="hljs-number">.1</span><br>torch: <span class="hljs-number">2.6</span><span class="hljs-number">.0</span>+cu124<br>matplotlib: <span class="hljs-number">3.11</span><span class="hljs-number">.1</span><br>seaborn: <span class="hljs-number">0.13</span><span class="hljs-number">.2</span><br>sklearn: <span class="hljs-number">1.9</span><span class="hljs-number">.0</span><br>导包完成！<br></code></pre></td></tr></table></figure></td>
+<td><strong>损失函数与优化器</strong></td>
+<td>与深度学习类似，均需设定损失函数和优化器；但传统模型多为凸优化，调参相对简单</td>
+<td>损失函数和优化器需<strong>保证反向传播能在用户自定义的复杂网络结构上正确实现</strong>；非凸优化对学习率、动量等超参数更敏感</td>
 </tr>
 <tr>
-<td>### 一些常用的超参数：</td>
+<td><strong>GPU配置与操作</strong></td>
+<td><strong>通常不需要</strong>。大部分传统ML算法在CPU上运行即可满足需求</td>
+<td><strong>必须显式管理</strong>。需将模型和数据手动“放到”GPU（<code>.cuda()</code>或<code>.to(device)</code>），损失函数和优化器也需在GPU上工作；<strong>多卡训练还需考虑模型并行/数据并行、梯度同步、结果汇总等问题</strong>；验证/评测时常需将数据“放回”CPU</td>
 </tr>
 <tr>
-<td>可以通过变量的形式设置超参数，然后在代码中使用：</td>
+<td><strong>训练与验证流程</strong></td>
+<td><strong>全量数据一次性训练</strong>。通常一轮训练即可收敛（如线性回归闭式解），或少量迭代（如随机森林建树）</td>
+<td><strong>按批循环训练</strong>。每个epoch遍历所有batch，每批数据前向传播→计算损失→反向传播→优化器更新参数；<strong>需协调DataLoader、模型、损失函数、优化器、GPU之间的配合</strong>；验证时同样按批计算指标</td>
 </tr>
 <tr>
-<td><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">batch_size = <span class="hljs-number">16</span><br><span class="hljs-comment"># 批次的大小</span><br>lr = <span class="hljs-number">1e-4</span><br><span class="hljs-comment"># 优化器的学习率</span><br>max_epochs = <span class="hljs-number">100</span><br>...<br></code></pre></td></tr></table></figure></td>
+<td><strong>可解释性</strong></td>
+<td><strong>较强</strong>。树模型可直接输出特征重要性排序，线性模型系数有明确含义，易于理解和调试</td>
+<td><strong>较弱</strong>。黑盒特性显著，难以直观解释内部决策逻辑，需借助Grad-CAM、SHAP、注意力可视化等事后工具辅助理解</td>
 </tr>
 <tr>
-<td>也可以使用<code>yaml</code>、<code>json</code>，<code>dict</code>等文件来存储超参数，这样可以方便后续的调试和修改，常见的深度学习库（mmdetection，Paddledetection，detectron2）和一些AI
-Lab里面比较常用这种方式。</td>
+<td><strong>适用数据类型</strong></td>
+<td><strong>结构化表格数据为主</strong>。在金融风控、电商推荐等表格数据场景中表现优异</td>
+<td><strong>非结构化数据为主</strong>。图像、语音、文本、视频等原始高维数据是深度学习的主场</td>
 </tr>
 <tr>
-<td>### 指定GPU</td>
+<td><strong>表格数据表现</strong></td>
+<td><strong>常胜</strong>。XGBoost、LightGBM等梯度提升树在表格数据上至今是工业界首选</td>
+<td><strong>未必占优</strong>。纯深度模型在表格数据上通常打不过调优后的GBDT，需结合TabNet等专门设计才有竞争力</td>
 </tr>
 <tr>
-<td>如果未指明要使用GPU，程序中默认使用的是CPU。如果指明了使用GPU但未指定GPU编号，那么默认就一直使用第0个GPU，容易造成此GPU资源如显存耗尽，所以最好明确要使用的GPU的编号。一般有如下两个方法</td>
+<td><strong>图像/语音/NLP</strong></td>
+<td><strong>基本退场</strong>。传统方法在这些领域已被深度学习全面超越</td>
+<td><strong>绝对主场</strong>。CNN统治图像，RNN/Transformer统治序列数据，大语言模型引领NLP前沿</td>
 </tr>
 <tr>
-<td><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># 方案一：过滤/屏蔽指定的 GPU。</span><br><span class="hljs-comment"># 1. 过滤/屏蔽指定的 GPU：仅将物理上的 1 号和 2 号卡暴露给当前程序。</span><br><span class="hljs-comment"># 2. PyTorch 内部会将这 2 张可见卡重新映射为逻辑上的 cuda:0 和 cuda:1。</span><br><span class="hljs-comment"># 3. 此时当前程序一共只能看到 2 张卡，只能使用cuda:0、cuda:1。如果尝试调用 cuda:2 或更高索引，会因索引越界而报错 (invalid device ordinal)。</span><br><span class="hljs-attribute">import</span> os<br><span class="hljs-attribute">os</span>.environ[&#x27;CUDA_VISIBLE_DEVICES&#x27;] = &#x27;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>&#x27; # 程序只能看到服务器上的<span class="hljs-number">1</span>,<span class="hljs-number">2</span>号GPU，它们会被映射为<span class="hljs-number">0</span>,<span class="hljs-number">1</span>号GPU<br><br><span class="hljs-comment"># 方案二：代码中动态为device变量赋值，后续对要使用GPU的变量用.to(device)。其实就是动态指定要使用的GPU编号</span><br><span class="hljs-attribute">device</span> = torch.device(<span class="hljs-string">&quot;cuda:1&quot;</span> if torch.cuda.is_available() else <span class="hljs-string">&quot;cpu&quot;</span>) # 指明调用的GPU为<span class="hljs-number">1</span>号<br><br><span class="hljs-comment"># 方案三：在终端中运行，仅将系统的 0 号和 1 号 GPU 暴露给该 Python 程序</span><br><span class="hljs-attribute">CUDA_VISIBLE_DEVICES</span>=<span class="hljs-number">0</span>,<span class="hljs-number">1</span> python train.py<br></code></pre></td></tr></table></figure></td>
-</tr>
-<tr>
-<td>## 3.3 数据读入</td>
-</tr>
-<tr>
-<td>此小节学习如下内容：PyTorch常见的数据读取方式、构建自己的数据读取流程。</td>
+<td><strong>典型算法举例</strong></td>
+<td>线性回归、逻辑回归、支持向量机(SVM)、决策树、随机森林、XGBoost、K近邻(KNN)、K均值聚类</td>
+<td>卷积神经网络(CNN)、循环神经网络(RNN/LSTM)、Transformer、生成对抗网络(GAN)、扩散模型(Diffusion)、BERT/GPT</td>
 </tr>
 </tbody>
 </table>
+<p>其中需要特别提到的是，深度学习所需的样本量一般更大，所以相关数据（训练集/验证集/测试集）一般无法一次性被加载到内存或显存中，此时一般分批输入数据。因此深度学习在数据加载上需要有专门的设计。</p>
+<h2 id="基本配置">3.2 基本配置</h2>
+<h3 id="一些常用的包">一些常用的包</h3>
+<p>在使用PyTorch中，需要导入一些常用的包来使用其提供的特定功能。常见的包有如下：os、sys、torch、torch.nn、torch.utils.data.Dataset、torch.utils.data.DataLoader、torch.optimizer、numpy、matplotlib、seaborn，如果涉及到表格读取与处理一般会用到pandas，下游分析和指标计算一般会用到sklearn。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os <br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np <br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><span class="hljs-keyword">from</span> torch.utils.data <span class="hljs-keyword">import</span> Dataset, DataLoader<br><span class="hljs-keyword">import</span> torch.optim <span class="hljs-keyword">as</span> optimizer<br><span class="hljs-keyword">import</span> matplotlib<br><span class="hljs-keyword">import</span> seaborn<br><span class="hljs-keyword">import</span> sklearn<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;numpy: <span class="hljs-subst">&#123;np.__version__&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;torch: <span class="hljs-subst">&#123;torch.__version__&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;matplotlib: <span class="hljs-subst">&#123;matplotlib.__version__&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;seaborn: <span class="hljs-subst">&#123;seaborn.__version__&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;sklearn: <span class="hljs-subst">&#123;sklearn.__version__&#125;</span>&quot;</span>)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;导包完成！&quot;</span>)<br><br><br><span class="hljs-comment"># 输出如下：</span><br>numpy: <span class="hljs-number">2.5</span><span class="hljs-number">.1</span><br>torch: <span class="hljs-number">2.6</span><span class="hljs-number">.0</span>+cu124<br>matplotlib: <span class="hljs-number">3.11</span><span class="hljs-number">.1</span><br>seaborn: <span class="hljs-number">0.13</span><span class="hljs-number">.2</span><br>sklearn: <span class="hljs-number">1.9</span><span class="hljs-number">.0</span><br>导包完成！<br></code></pre></td></tr></table></figure>
+<h3 id="一些常用的超参数">一些常用的超参数：</h3>
+<p>可以通过变量的形式设置超参数，然后在代码中使用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">batch_size = <span class="hljs-number">16</span><br><span class="hljs-comment"># 批次的大小</span><br>lr = <span class="hljs-number">1e-4</span><br><span class="hljs-comment"># 优化器的学习率</span><br>max_epochs = <span class="hljs-number">100</span><br>...<br></code></pre></td></tr></table></figure>
+<p>也可以使用<code>yaml</code>、<code>json</code>，<code>dict</code>等文件来存储超参数，这样可以方便后续的调试和修改，常见的深度学习库（mmdetection，Paddledetection，detectron2）和一些AI
+Lab里面比较常用这种方式。</p>
+<h3 id="指定gpu">指定GPU</h3>
+<p>如果未指明要使用GPU，程序中默认使用的是CPU。如果指明了使用GPU但未指定GPU编号，那么默认就一直使用第0个GPU，容易造成此GPU资源如显存耗尽，所以最好明确要使用的GPU的编号。一般有如下两个方法</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment"># 方案一：过滤/屏蔽指定的 GPU。</span><br><span class="hljs-comment"># 1. 过滤/屏蔽指定的 GPU：仅将物理上的 1 号和 2 号卡暴露给当前程序。</span><br><span class="hljs-comment"># 2. PyTorch 内部会将这 2 张可见卡重新映射为逻辑上的 cuda:0 和 cuda:1。</span><br><span class="hljs-comment"># 3. 此时当前程序一共只能看到 2 张卡，只能使用cuda:0、cuda:1。如果尝试调用 cuda:2 或更高索引，会因索引越界而报错 (invalid device ordinal)。</span><br><span class="hljs-attribute">import</span> os<br><span class="hljs-attribute">os</span>.environ[&#x27;CUDA_VISIBLE_DEVICES&#x27;] = &#x27;<span class="hljs-number">1</span>,<span class="hljs-number">2</span>&#x27; # 程序只能看到服务器上的<span class="hljs-number">1</span>,<span class="hljs-number">2</span>号GPU，它们会被映射为<span class="hljs-number">0</span>,<span class="hljs-number">1</span>号GPU<br><br><span class="hljs-comment"># 方案二：代码中动态为device变量赋值，后续对要使用GPU的变量用.to(device)。其实就是动态指定要使用的GPU编号</span><br><span class="hljs-attribute">device</span> = torch.device(<span class="hljs-string">&quot;cuda:1&quot;</span> if torch.cuda.is_available() else <span class="hljs-string">&quot;cpu&quot;</span>) # 指明调用的GPU为<span class="hljs-number">1</span>号<br><br><span class="hljs-comment"># 方案三：在终端中运行，仅将系统的 0 号和 1 号 GPU 暴露给该 Python 程序</span><br><span class="hljs-attribute">CUDA_VISIBLE_DEVICES</span>=<span class="hljs-number">0</span>,<span class="hljs-number">1</span> python train.py<br></code></pre></td></tr></table></figure>
+<h2 id="数据读入">3.3 数据读入</h2>
+<p>此小节学习如下内容：PyTorch常见的数据读取方式、构建自己的数据读取流程。</p>
+<hr />
 <p>在PyTorch中，通过Dataset与DataLoader的配合使用，完成对的数据集的加载与批量读入。其中Dataset告诉
 PyTorch
 数据在哪里、怎么读取某一条具体的数据（比如读取一张图片、一段文本或一行表格数据）、读取出来后要做什么预处理（数据变换/Augmentation），DataLoader本身就是一个可迭代对象（Iterable）、以迭代的方式不断按批次（就是一次读入固定的N个单数据，最后一个批次可能小于N个单数据）读入数据。</p>
