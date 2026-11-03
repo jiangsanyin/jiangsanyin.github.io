@@ -27,7 +27,7 @@
 <meta property="og:description" content="二、PyTorch基础知识 本章的的内容包含如下：张量概念及特点、张量的运算、自动微分、并行计算简介以及并行计算加速设备。 2.1 张量 2.1.1 张量简介 张量就是“多维数组”，其中的元素的数据必须一致。它是 PyTorch 传输、存储和计算数据的统一标准载体。 无论在深度学习中处理的是什么数据，最终都会被转化成张量：  0维张量：标量（Scalar），就是一个独立的数字（如loss &#x3D; 0.">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-28T13:15:23.000Z">
-<meta property="article:modified_time" content="2026-11-02T07:58:01.740Z">
+<meta property="article:modified_time" content="2026-11-03T01:52:02.200Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          11k 字
+          12k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          95 分钟
+          102 分钟
         
       </span>
     
@@ -917,6 +917,8 @@ Tensor 上的所有数学运算，以便后续计算梯度。</p></li>
 <code>True</code>，那么它将会追踪对于该张量的所有操作。当完成计算后可以通过调用<code>.backward()</code>，来自动计算所有的梯度。这个张量的所有梯度将会自动累加到<code>.grad</code>属性。</p>
 <p><strong>注意</strong>：在 y.backward() 时，如果 y 是标量，则不需要为
 backward() 传入任何参数；否则，需要传入一个与 y 同形的Tensor。</p>
+<p>可以把 <code>backward()</code>
+理解成：<strong>“请根据最终的一个总成绩（一般是标量，如模型损失），倒推每个输入对总成绩应负多少责任。”</strong></p>
 <p>要阻止一个张量被跟踪历史，可以调用<code>.detach()</code>方法将其与计算历史分离，并阻止它未来的计算记录被跟踪。为了防止跟踪历史记录(和使用内存），可以将代码块包装在
 <code>with torch.no_grad():</code>中。在评估模型时特别有用，因为模型可能具有
 <code>requires_grad = True</code>
@@ -952,7 +954,7 @@ Tensor 的 Function
 的梯度的。</p>
 <hr />
 <h4 id="示例2-展示反向传播过程">2.2.2.3 示例2-展示反向传播过程</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><br><span class="hljs-comment"># 1. 创建叶子张量 x（定义一个简单的 1 维张量方便计算），并设置requires_grad=True用来追踪其计算历史</span><br>x = torch.tensor([<span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>], requires_grad=<span class="hljs-literal">True</span>)<br><br><span class="hljs-comment"># 2. 前向传播计算：</span><br><span class="hljs-comment">#    y = x ** 2</span><br><span class="hljs-comment">#    z = y.sum()</span><br>y = x ** <span class="hljs-number">2</span><br>z = y.<span class="hljs-built_in">sum</span>()<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;--- 0. 查看每个张量的值 ---&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;x:&quot;</span>, x)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;y:&quot;</span>, y)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;z:&quot;</span>, z)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n--- 1. 查看每个张量的 grad_fn ---&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;z.grad_fn:&quot;</span>, z.grad_fn)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;y.grad_fn:&quot;</span>, y.grad_fn)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;x.grad_fn:&quot;</span>, x.grad_fn)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n--- 2. 通过 grad_fn 链条逆向追溯 ---&quot;</span>)<br><span class="hljs-comment"># z.grad_fn 的 next_functions 属性记录了它的上一级节点</span><br>prev_from_z = z.grad_fn.next_functions[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;z 的上游节点是:&quot;</span>, prev_from_z)  <span class="hljs-comment"># 这就是 y.grad_fn！</span><br><br>prev_from_y = y.grad_fn.next_functions[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;y 的上游节点是:&quot;</span>, prev_from_y)  <span class="hljs-comment"># 这指向了叶子节点 x 的 AccumulateGrad</span><br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n--- 3. 执行反向传播 ---&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;反向传播前 x.grad:&quot;</span>, x.grad)<br>z.backward()  <span class="hljs-comment"># 触发 Autograd 沿着上面的链条反向计算。z 此时其实是一个0维向量即标量，所以不需要传参</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;反向传播后 x.grad:&quot;</span>, x.grad)<br><span class="hljs-comment"># 输出如下：</span><br>--- <span class="hljs-number">0.</span> 查看每个张量的值 ---<br>x: tensor([<span class="hljs-number">2.</span>, <span class="hljs-number">3.</span>], requires_grad=<span class="hljs-literal">True</span>)<br>y: tensor([<span class="hljs-number">4.</span>, <span class="hljs-number">9.</span>], grad_fn=&lt;PowBackward0&gt;)<br>z: tensor(<span class="hljs-number">13.</span>, grad_fn=&lt;SumBackward0&gt;)<br><br>--- <span class="hljs-number">1.</span> 查看每个张量的 grad_fn ---<br>z.grad_fn: &lt;SumBackward0 <span class="hljs-built_in">object</span> at <span class="hljs-number">0x7fb67dd993c0</span>&gt;<br>y.grad_fn: &lt;PowBackward0 <span class="hljs-built_in">object</span> at <span class="hljs-number">0x7fb67dd993c0</span>&gt;<br>x.grad_fn: <span class="hljs-literal">None</span><br><br>--- <span class="hljs-number">2.</span> 通过 grad_fn 链条逆向追溯 ---<br>z 的上游节点是: &lt;PowBackward0 <span class="hljs-built_in">object</span> at <span class="hljs-number">0x7fb67e195d80</span>&gt;<br>y 的上游节点是: &lt;AccumulateGrad <span class="hljs-built_in">object</span> at <span class="hljs-number">0x7fb67e070ac0</span>&gt;<br><br>--- <span class="hljs-number">3.</span> 执行反向传播 ---<br>反向传播前 x.grad: <span class="hljs-literal">None</span><br>反向传播后 x.grad: tensor([<span class="hljs-number">4.</span>, <span class="hljs-number">6.</span>])<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><br><span class="hljs-comment"># 1. 创建叶子张量 x（定义一个简单的 1 维张量方便计算），并设置requires_grad=True用来追踪其计算历史</span><br>x = torch.tensor([<span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>], requires_grad=<span class="hljs-literal">True</span>)<br><br><span class="hljs-comment"># 2. 前向传播计算：</span><br>y = x ** <span class="hljs-number">2</span><br>z = y.<span class="hljs-built_in">sum</span>()<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;--- 0. 查看每个张量的值 ---&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;x:&quot;</span>, x)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;y:&quot;</span>, y)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;z:&quot;</span>, z)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n--- 1. 查看每个张量的 grad_fn ---&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;z.grad_fn:&quot;</span>, z.grad_fn)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;y.grad_fn:&quot;</span>, y.grad_fn)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;x.grad_fn:&quot;</span>, x.grad_fn)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n--- 2. 通过 grad_fn 链条逆向追溯 ---&quot;</span>)<br><span class="hljs-comment"># z.grad_fn 的 next_functions 属性记录了它的上一级节点</span><br>prev_from_z = z.grad_fn.next_functions[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;z 的上游节点是:&quot;</span>, prev_from_z)  <span class="hljs-comment"># 这就是 y.grad_fn！</span><br><br>prev_from_y = y.grad_fn.next_functions[<span class="hljs-number">0</span>][<span class="hljs-number">0</span>]<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;y 的上游节点是:&quot;</span>, prev_from_y)  <span class="hljs-comment"># 这指向了叶子节点 x 的 AccumulateGrad</span><br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n--- 3. 执行反向传播 ---&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;反向传播前 x.grad:&quot;</span>, x.grad)<br>z.backward()  <span class="hljs-comment"># 触发 Autograd 沿着上面的链条反向计算。z 此时其实是一个0维向量即标量，所以不需要传参</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;反向传播后 x.grad:&quot;</span>, x.grad)<br><span class="hljs-comment"># 输出如下：</span><br>--- <span class="hljs-number">0.</span> 查看每个张量的值 ---<br>x: tensor([<span class="hljs-number">2.</span>, <span class="hljs-number">3.</span>], requires_grad=<span class="hljs-literal">True</span>)<br>y: tensor([<span class="hljs-number">4.</span>, <span class="hljs-number">9.</span>], grad_fn=&lt;PowBackward0&gt;)<br>z: tensor(<span class="hljs-number">13.</span>, grad_fn=&lt;SumBackward0&gt;)<br><br>--- <span class="hljs-number">1.</span> 查看每个张量的 grad_fn ---<br>z.grad_fn: &lt;SumBackward0 <span class="hljs-built_in">object</span> at <span class="hljs-number">0x7fb67dd993c0</span>&gt;<br>y.grad_fn: &lt;PowBackward0 <span class="hljs-built_in">object</span> at <span class="hljs-number">0x7fb67dd993c0</span>&gt;<br>x.grad_fn: <span class="hljs-literal">None</span><br><br>--- <span class="hljs-number">2.</span> 通过 grad_fn 链条逆向追溯 ---<br>z 的上游节点是: &lt;PowBackward0 <span class="hljs-built_in">object</span> at <span class="hljs-number">0x7fb67e195d80</span>&gt;<br>y 的上游节点是: &lt;AccumulateGrad <span class="hljs-built_in">object</span> at <span class="hljs-number">0x7fb67e070ac0</span>&gt;<br><br>--- <span class="hljs-number">3.</span> 执行反向传播 ---<br>反向传播前 x.grad: <span class="hljs-literal">None</span><br>反向传播后 x.grad: tensor([<span class="hljs-number">4.</span>, <span class="hljs-number">6.</span>])<br></code></pre></td></tr></table></figure>
 <p>为了彻底看清这套机制，<strong>现直接打印出上述代码反向传播自动求导完整的链条结构，并手动演算一次梯度</strong>，以直观看到
 <code>.grad_fn</code> 是如何把计算图“串”起来的。</p>
 <h5 id="详细过程拆解把逻辑图可视化">详细过程拆解（把逻辑图可视化）</h5>
@@ -1118,7 +1120,7 @@ y_1}{\partial x_n} \\
 y_m}{\partial x_n}
 \end{pmatrix}
 \]</span></p>
-<p>其中因变量y的个数与自变量的个数可以不一样，一般情况下也不一样。比如天气查询系统，用户输入经度、纬度、时间，得到的某地某时的天气可以表述为一个由多个数组成的一维张量（也叫向量），其中每个数可能温度、湿度、降水概率、空气PM2.5指数、紫外线强度等等。</p>
+<p>其中因变量y的个数与自变量的个数可以不一样，一般情况下也不一样。比如天气查询系统，用户输入经度、纬度、时间，得到的某地某时的天气可以表述为一个由多个数组成的一维张量（也叫向量），这些数可能是温度、湿度、降水概率、空气PM2.5指数、紫外线强度等等。</p>
 <p>可以使用 <code>torch.autograd</code>
 这个包来计算一些雅可比矩阵的乘积。例如，如果 <span
 class="math inline">\(v\)</span> 是一个标量函数 <span
@@ -1129,8 +1131,8 @@ y_1} &amp; \dots &amp; \frac{\partial l}{\partial y_m}
 class="math inline">\(\vec{y} = f(\vec{x})\)</span>
 求梯度的方法已在上面描述。根据链式法则，我们可以得到标量函数 <span
 class="math inline">\(l\)</span> 对 <span
-class="math inline">\(x\)</span> 的最终梯度（即导数）$v J $ 如下： <span
-class="math display">\[
+class="math inline">\(x\)</span> 的最终梯度（即导数）<span
+class="math inline">\(vJ\)</span> 如下： <span class="math display">\[
 v J = \begin{pmatrix} \frac{\partial l}{\partial y_1} &amp; \dots &amp;
 \frac{\partial l}{\partial y_m} \end{pmatrix}
 \begin{pmatrix}
@@ -1144,6 +1146,128 @@ y_m}{\partial x_n}
 \frac{\partial l}{\partial x_n} \end{pmatrix}
 \]</span>
 根据这套链式法则计算方法，不论经过了多少轮运算，我们总能计算出多轮计算后得到的最终变量<code>out</code>对最初的自变量<code>x</code>的梯度。</p>
+<p>下面用两个具体例子看看 <span class="math inline">\(vJ\)</span>
+是怎样计算的。为了与上面的数学符号一致，下面会把多维张量按元素顺序暂时看作一个一维向量；最后得到的梯度再恢复成原张量的形状。</p>
+<p><strong>示例一：自变量与因变量的个数相同</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">x = torch.ones(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, requires_grad=<span class="hljs-literal">True</span>)<br>y = x ** <span class="hljs-number">2</span><br>l = y.<span class="hljs-built_in">sum</span>()<br></code></pre></td></tr></table></figure>
+<p><code>x</code> 和 <code>y</code> 都是形状为 <code>(2, 3)</code>
+的张量，包含 6 个元素。将它们展平后，可以写为：</p>
+<p><span class="math display">\[
+\vec{x}=(x_1,x_2,x_3,x_4,x_5,x_6)
+\]</span></p>
+<p><span class="math display">\[
+\vec{y}=(y_1,y_2,y_3,y_4,y_5,y_6)
+=(x_1^2,x_2^2,x_3^2,x_4^2,x_5^2,x_6^2)
+\]</span></p>
+<p>每个 <span class="math inline">\(y_i\)</span> 只依赖对应的 <span
+class="math inline">\(x_i\)</span>。例如 <span
+class="math inline">\(\frac{\partial y_1}{\partial
+x_1}=2x_1\)</span>，但 <span class="math inline">\(\frac{\partial
+y_1}{\partial x_2}=0\)</span>。因为所有 <span
+class="math inline">\(x_i=1\)</span>，雅可比矩阵为：</p>
+<p><span class="math display">\[
+J=
+\begin{pmatrix}
+2&amp;0&amp;0&amp;0&amp;0&amp;0\\
+0&amp;2&amp;0&amp;0&amp;0&amp;0\\
+0&amp;0&amp;2&amp;0&amp;0&amp;0\\
+0&amp;0&amp;0&amp;2&amp;0&amp;0\\
+0&amp;0&amp;0&amp;0&amp;2&amp;0\\
+0&amp;0&amp;0&amp;0&amp;0&amp;2
+\end{pmatrix}
+\]</span></p>
+<p><code>l = y.sum()</code> 将 6 个输出相加为一个标量：</p>
+<p><span class="math display">\[
+l=y_1+y_2+y_3+y_4+y_5+y_6
+\]</span></p>
+<p>因此，每个 <span class="math inline">\(y_i\)</span> 对 <span
+class="math inline">\(l\)</span> 的影响都是 1：</p>
+<p><span class="math display">\[
+v=\left(\frac{\partial l}{\partial y_1},\ldots,\frac{\partial
+l}{\partial y_6}\right)
+=(1,1,1,1,1,1)
+\]</span></p>
+<p>所以：</p>
+<p><span class="math display">\[
+vJ=(1,1,1,1,1,1)
+\begin{pmatrix}
+2&amp;0&amp;0&amp;0&amp;0&amp;0\\
+0&amp;2&amp;0&amp;0&amp;0&amp;0\\
+0&amp;0&amp;2&amp;0&amp;0&amp;0\\
+0&amp;0&amp;0&amp;2&amp;0&amp;0\\
+0&amp;0&amp;0&amp;0&amp;2&amp;0\\
+0&amp;0&amp;0&amp;0&amp;0&amp;2
+\end{pmatrix}
+=(2,2,2,2,2,2)
+\]</span></p>
+<p>因此执行 <code>l.backward()</code> 后，<code>x.grad</code> 恢复为
+<code>x</code> 的原形状：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">tensor([[<span class="hljs-number">2.</span>, <span class="hljs-number">2.</span>, <span class="hljs-number">2.</span>],<br>        [<span class="hljs-number">2.</span>, <span class="hljs-number">2.</span>, <span class="hljs-number">2.</span>]])<br></code></pre></td></tr></table></figure>
+<p>这也说明了前面提到的“非标量输出为什么不能直接调用
+<code>backward()</code>”：<code>y</code> 有 6 个输出，PyTorch
+不知道它们各自应以多大权重参与反向传播；而 <code>y.sum()</code>
+明确给出了 <span
+class="math inline">\(v=(1,1,1,1,1,1)\)</span>。等价地，也可以写成
+<code>y.backward(torch.ones_like(y))</code>。</p>
+<p><strong>示例二：因变量的个数多于自变量的个数</strong></p>
+<p>下面的例子有 2 个自变量 <span
+class="math inline">\(x_1,x_2\)</span>，却计算出 3 个因变量 <span
+class="math inline">\(y_1,y_2,y_3\)</span>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python">x = torch.tensor([<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>], requires_grad=<span class="hljs-literal">True</span>)<br><br>y = torch.stack([<br>    x[<span class="hljs-number">0</span>] + x[<span class="hljs-number">1</span>],  <span class="hljs-comment"># y1</span><br>    x[<span class="hljs-number">0</span>] * x[<span class="hljs-number">1</span>],  <span class="hljs-comment"># y2</span><br>    x[<span class="hljs-number">0</span>] ** <span class="hljs-number">2</span>,    <span class="hljs-comment"># y3</span><br>])<br><br>l = y.<span class="hljs-built_in">sum</span>()<br>l.backward()<br><br><span class="hljs-built_in">print</span>(y)       <span class="hljs-comment"># tensor([3., 2., 1.], grad_fn=&lt;StackBackward0&gt;)</span><br><span class="hljs-built_in">print</span>(x.grad)  <span class="hljs-comment"># tensor([5., 2.])</span><br></code></pre></td></tr></table></figure>
+<p>其中：</p>
+<p><span class="math display">\[
+\begin{aligned}
+y_1&amp;=x_1+x_2\\
+y_2&amp;=x_1x_2\\
+y_3&amp;=x_1^2
+\end{aligned}
+\]</span></p>
+<p>这里 <span class="math inline">\(\vec{x}\)</span> 有 2 个元素，<span
+class="math inline">\(\vec{y}\)</span> 有 3
+个元素，所以雅可比矩阵不是方阵，而是一个 <span
+class="math inline">\(3\times2\)</span> 矩阵。代入当前的 <span
+class="math inline">\(x_1=1,x_2=2\)</span>，逐行求偏导可得：</p>
+<p><span class="math display">\[
+J=
+\begin{pmatrix}
+\frac{\partial y_1}{\partial x_1}&amp;\frac{\partial y_1}{\partial
+x_2}\\
+\frac{\partial y_2}{\partial x_1}&amp;\frac{\partial y_2}{\partial
+x_2}\\
+\frac{\partial y_3}{\partial x_1}&amp;\frac{\partial y_3}{\partial x_2}
+\end{pmatrix}
+=
+\begin{pmatrix}
+1&amp;1\\
+2&amp;1\\
+2&amp;0
+\end{pmatrix}
+\]</span></p>
+<p>同样，因为 <span
+class="math inline">\(l=y_1+y_2+y_3\)</span>，所以：</p>
+<p><span class="math display">\[
+v=\left(\frac{\partial l}{\partial y_1},\frac{\partial l}{\partial
+y_2},\frac{\partial l}{\partial y_3}\right)
+=(1,1,1)
+\]</span></p>
+<p>最终的 <span class="math inline">\(vJ\)</span> 为：</p>
+<p><span class="math display">\[
+vJ=(1,1,1)
+\begin{pmatrix}
+1&amp;1\\
+2&amp;1\\
+2&amp;0
+\end{pmatrix}
+=\left(1\times1+1\times2+1\times2,\quad1\times1+1\times1+1\times0\right)
+=(5,2)
+\]</span></p>
+<p>因此 <span class="math inline">\(\frac{\partial l}{\partial
+x_1}=5\)</span>、<span class="math inline">\(\frac{\partial l}{\partial
+x_2}=2\)</span>，这正是代码中 <code>x.grad</code>
+的值。这个例子也说明：即使输入和输出的元素个数不同，只要先通过 <span
+class="math inline">\(v\)</span>
+把多个输出“汇总”为一个标量目标，仍然可以使用 <span
+class="math inline">\(vJ\)</span> 得到每个输入的梯度。</p>
 <p>梯度在反向传播过程中默认是累积的，就是说如果做多次反向传播，后一次计算梯度值时会直接将前一次梯度值累加给当次成为新的梯度值，为了保证梯度是非累加后的，可以在反向传播之前把梯度清零（即先执行<code>x.grad.data.zero_()</code>）。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 反向传播的结果，结果是累加的</span><br><span class="hljs-comment"># 创建一个张量并设置requires_grad=True用来追踪其计算历史</span><br><span class="hljs-keyword">import</span> torch<br>x = torch.ones(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>, requires_grad=<span class="hljs-literal">True</span>)<br><span class="hljs-comment"># 对这个张量做一次幂运算</span><br>y = x**<span class="hljs-number">2</span><br>l = y.<span class="hljs-built_in">sum</span>()<br><br>l.backward(retain_graph=<span class="hljs-literal">True</span>) <span class="hljs-comment"># 第一次进行反向传播，参数“retain_graph=True”的意思是启用“计算图复用”</span><br><span class="hljs-built_in">print</span>(x.grad)<br><br>l.backward(retain_graph=<span class="hljs-literal">True</span>)   <span class="hljs-comment"># 第二次进行反向传播</span><br><span class="hljs-built_in">print</span>(x.grad)<br><span class="hljs-comment"># 输出如下：</span><br>tensor([[<span class="hljs-number">2.</span>, <span class="hljs-number">2.</span>],<br>        [<span class="hljs-number">2.</span>, <span class="hljs-number">2.</span>]])<br>tensor([[<span class="hljs-number">4.</span>, <span class="hljs-number">4.</span>],<br>        [<span class="hljs-number">4.</span>, <span class="hljs-number">4.</span>]])<br></code></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br>x = torch.ones(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>, requires_grad=<span class="hljs-literal">True</span>)<br><br>y1 = x*x<br>y1.backward(torch.ones(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>))  <span class="hljs-comment"># y1不是0维张量，做反向传播时要传入一个与y1相同形状的张量</span><br><span class="hljs-built_in">print</span>(x.grad)<br><br>y2 = x*x*x<br><span class="hljs-comment">#x.grad.data.zero_()  # 再次反向传播前不清零梯度，看到累加效果</span><br>y2.backward(torch.ones(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>))<br><span class="hljs-built_in">print</span>(x.grad)<br><span class="hljs-comment"># 输出如下：</span><br>tensor([[<span class="hljs-number">2.</span>, <span class="hljs-number">2.</span>],<br>        [<span class="hljs-number">2.</span>, <span class="hljs-number">2.</span>]])<br>tensor([[<span class="hljs-number">5.</span>, <span class="hljs-number">5.</span>],<br>        [<span class="hljs-number">5.</span>, <span class="hljs-number">5.</span>]])<br></code></pre></td></tr></table></figure>
