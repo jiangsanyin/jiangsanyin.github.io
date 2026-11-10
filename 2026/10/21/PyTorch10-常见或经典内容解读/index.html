@@ -19,15 +19,15 @@
   <meta name="author" content="sanyinjiang">
   <meta name="keywords" content="">
   
-    <meta name="description" content="十、常见或经典内容解读 10.1 RNN循环神经网络 介绍 10.1.1 什么是seq2seq模型 Seq2Seq（Sequence-to-Sequence，序列到序列） 是深度学习中处理“输入一个序列，输出另一个序列”任务的核心架构。拥有此构架的模型称为seq2seq模型，常用来完成机器翻译任务、文本摘要任务、文本对话任务等。 通俗地说，就是将一个输入序列转换成一个输出序列的转换器，如下面的动图">
+    <meta name="description" content="十、常见或经典内容解读 10.1 可视化神经机器翻译模型 可视化神经机器翻译模型，就是在讲述与分析“带注意力机制的Seq2Seq模型原理”。 10.1.1 什么是seq2seq模型 Seq2Seq（Sequence-to-Sequence，序列到序列） 是深度学习中处理“输入一个序列，输出另一个序列”任务的核心架构。拥有此构架的模型称为seq2seq模型，常用来完成机器翻译任务、文本摘要任务、文本">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PyTorch10-常见或经典内容解读">
 <meta property="og:url" content="https://jiangsanyin.github.io/2026/10/21/PyTorch10-%E5%B8%B8%E8%A7%81%E6%88%96%E7%BB%8F%E5%85%B8%E5%86%85%E5%AE%B9%E8%A7%A3%E8%AF%BB/index.html">
 <meta property="og:site_name" content="sanyinjiang">
-<meta property="og:description" content="十、常见或经典内容解读 10.1 RNN循环神经网络 介绍 10.1.1 什么是seq2seq模型 Seq2Seq（Sequence-to-Sequence，序列到序列） 是深度学习中处理“输入一个序列，输出另一个序列”任务的核心架构。拥有此构架的模型称为seq2seq模型，常用来完成机器翻译任务、文本摘要任务、文本对话任务等。 通俗地说，就是将一个输入序列转换成一个输出序列的转换器，如下面的动图">
+<meta property="og:description" content="十、常见或经典内容解读 10.1 可视化神经机器翻译模型 可视化神经机器翻译模型，就是在讲述与分析“带注意力机制的Seq2Seq模型原理”。 10.1.1 什么是seq2seq模型 Seq2Seq（Sequence-to-Sequence，序列到序列） 是深度学习中处理“输入一个序列，输出另一个序列”任务的核心架构。拥有此构架的模型称为seq2seq模型，常用来完成机器翻译任务、文本摘要任务、文本">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-21T02:45:56.000Z">
-<meta property="article:modified_time" content="2026-10-22T13:02:06.550Z">
+<meta property="article:modified_time" content="2026-11-09T09:48:50.450Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.1k 字
+          5.4k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          35 分钟
+          45 分钟
         
       </span>
     
@@ -299,7 +299,8 @@
               <div class="markdown-body">
                 
                 <h1 id="十常见或经典内容解读">十、常见或经典内容解读</h1>
-<h2 id="rnn循环神经网络-介绍">10.1 RNN循环神经网络 介绍</h2>
+<h2 id="可视化神经机器翻译模型">10.1 可视化神经机器翻译模型</h2>
+<p>可视化神经机器翻译模型，就是在讲述与分析“带注意力机制的Seq2Seq模型原理”。</p>
 <h3 id="什么是seq2seq模型">10.1.1 什么是seq2seq模型</h3>
 <p><strong>Seq2Seq（Sequence-to-Sequence，序列到序列）</strong>
 是深度学习中处理“输入一个序列，输出另一个序列”任务的核心架构。拥有此构架的模型称为seq2seq模型，常用来完成机器翻译任务、文本摘要任务、文本对话任务等。</p>
@@ -586,11 +587,90 @@ target="_blank" rel="noopener" href="https://github.com/tensorflow/tensor2tensor
 重新实现一遍，并且采用“文学编程”的方式，把论文段落和代码逐行对齐，且源码实现中给出了可读性很好的注释，源码实现见：<a
 target="_blank" rel="noopener" href="https://nlp.seas.harvard.edu/annotated-transformer/">annotated-transformer</a>
 。</p>
+<h3 id="解读1-transformer解读">10.2.1 解读1-transformer解读</h3>
+<p>以下内容主要参考与整理自《<a
+target="_blank" rel="noopener" href="https://jalammar.github.io/illustrated-transformer/">illustrated-transformer</a>》与《<a
+target="_blank" rel="noopener" href="https://datawhalechina.github.io/learn-nlp-with-transformers/#/./%E7%AF%87%E7%AB%A02-Transformer%E7%9B%B8%E5%85%B3%E5%8E%9F%E7%90%86/2.2-%E5%9B%BE%E8%A7%A3transformer">基于transformers的自然语言处理(NLP)入门</a>》。</p>
+<h4 id="transformer整体结构解读">102.1.1 transformer整体结构解读</h4>
+<p>参考前面提到的 <code>seq2seq</code>
+模型的概念，transformer构架模型也是一种具体的 <code>seq2seq</code>
+模型。它最初被提出来时也是用于处理机器翻译问题，即它接受一个用语言A表达的句子1，输出一个用语言B表达的句子2，且句子2是句子1的翻译。</p>
+<p>继续以前面的法语句子“Je suis étudiant”翻译成英文句子“I am a
+student”的示例，采用transformer构架模型时整个翻译过程可以表示如下（当前首先将transformer构架模型看作一个黑盒）：
+<img
+src="https://files.seeusercontent.com/2026/11/09/W9ae/702b6a9a-e62c-437f-a57d-dfcfdee5.png" srcset="/img/loading.gif" lazyload
+alt="Transformer黑盒输入和输出" /></p>
+<p>如果将上图中“THE。TRANSFORMER”按 <code>seq2seq</code>
+模型格式细化，可以折成一个“编码组件（ENCODERS）”、一个“解码组件（DECODERS）”及它们之间的连接。这样，上图可以表述如下图形式：
+<img
+src="https://files.seeusercontent.com/2026/11/09/2txJ/20261109161649925.png" srcset="/img/loading.gif" lazyload
+alt="TRANSFORMER由编码组件与解码组件构成" />
+其中编码组件是一个编码器栈（即由多个编码器组成的。Transformer论文中是由6个编码器堆叠组成，其中使用6个编码器并没有什么特殊安排或寓意，也可以尝试其他个数编码器）。类似地，解码组件是由一个解码器栈，同样也是由6个解码器堆叠而成。
+此时，可以将上图中编码组件与解码组件那一部分内容进一步细化，得到下图：
+<img
+src="https://files.seeusercontent.com/2026/11/09/6woX/20261109163941478.png" srcset="/img/loading.gif" lazyload
+alt="编/解码组件由多个编/解码器堆叠而成" /></p>
+<p>编码组件中的多个编码器使用了相同的神经网络结构，只是不共享参数。类似地，解码组件中的多个解码器也使用了相同的神经网络结构，但不共享参数。</p>
+<p>对于每个编码器，又可以再细分成两个子层，如下图所示：</p>
+<ul>
+<li>Self-Attention Layer（自注意力层）</li>
+<li>Feed Forward Neural Network（前馈神经网络，缩写为 FFNN）</li>
+</ul>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/11/09/xjT4/20261109164417092.png" srcset="/img/loading.gif" lazyload
+alt="单层encoder：由自注意力层与前馈神经网络顺序构成" />
+<figcaption
+aria-hidden="true">单层encoder：由自注意力层与前馈神经网络顺序构成</figcaption>
+</figure>
+<p>编码器中，自注意力层在前，前馈神经网络层在后。编码器的输入首先经过自注意力层，它的作用是“在编码某个词元时，帮助编码器关注这个长序列中的其他词元。”。关于自注意力层的细节，将在后面展开描述。
+自注意力层的输出将被喂给前馈神经网络层。</p>
+<p>如果用更详细点的内容对上述单层编码器中编码过程及前置过程进行描述，即：在输入
+Transformer 模型之前，Tokenizer
+会根据特定的分词算法，将原始文本序列切分成一系列词元Token。这样就得到一个词元序列：<span
+class="math inline">\(w_1, w_2,...,w_n\)</span> ，每个词元被映射为对应的
+Token ID、通过 Embedding 层转换为向量，这样得到每个词元的向量表示 <span
+class="math inline">\(x_1, x_2,...,x_n\)</span> ，其中<span
+class="math inline">\(x_i \in \mathbb{R}^{d}\)</span>是维度为<span
+class="math inline">\(d\)</span>的向量（其实此时就得到一个 <span
+class="math inline">\(n*d\)</span>
+矩阵，矩阵的每一行就是一个词元对应最终向量表示<span
+class="math inline">\(x_i\)</span>），然后所有向量经过一个Self-Attention神经网络层进行变换和信息交互得到<span
+class="math inline">\(h_1, h_2,...h_n\)</span>，其中<span
+class="math inline">\(h_i \in \mathbb{R}^{d}\)</span>是维度为<span
+class="math inline">\(d\)</span>的向量。self-attention层处理一个词向量的时候，不仅会使用这个词本身的信息，也会使用句子中其他词的信息（可以类比为：当翻译一个词的时候，不仅会只关注当前的词，也会关注这个整个句子中其他词的信息）。Self-Attention层的输出会经过前馈神经网络得到新的<span
+class="math inline">\(x_1, x_2,..,x_n\)</span>，依旧是<span
+class="math inline">\(n\)</span>个维度为<span
+class="math inline">\(d\)</span>的向量。这些向量将被送入下一层encoder，继续相同的操作。</p>
+<p>对于单个解码器，它不仅拥有自注意力层与前馈神经网络，而且在它们之间还插入了编码器-解码器注意力（Encoder-Decoder
+Attention）层，这个层帮助解码器聚焦于输入序列相关的部分（类似于加入了注意力机制的<code>seq2seq</code>模型中的
+Attention 做的事情）。
+单层解码器，由自注意力层、编码器-解码器注意力层与前馈神经网络顺序组成，如下图：
+<img
+src="https://files.seeusercontent.com/2026/11/09/0spN/20261109173947683.png" srcset="/img/loading.gif" lazyload
+alt="单层dncoder：由自注意力层、编码器-解码器注意力层与与前馈神经网络顺序构成" /></p>
+<p>总结一下，我们基本了解了Transformer由编码组件和解码组件组成，而编码组件和解码组件又分别由多个网络结构相同的编码器、解码器组成。每个编码器由self-attention和FFNN组成，每个解码器由self-attention、FFN和encoder-decoder
+attention组成。</p>
+<p>下面尝试了解transformer中更细节的内容。</p>
+<h4 id="transformer细节结构解读">102.1.2 transformer细节结构解读</h4>
+<h3
+id="解读2-深入浅出pytorchtransformer-解读">解读2-《深入浅出PyTorch》Transformer
+解读</h3>
 <h3 id="参考资料-1">参考资料</h3>
 <ol type="1">
 <li><a
 target="_blank" rel="noopener" href="https://datawhalechina.github.io/happy-llm/#/./chapter2/%E7%AC%AC%E4%BA%8C%E7%AB%A0%20Transformer%E6%9E%B6%E6%9E%84">datawhale开源文章：Transformer架构</a></li>
-<li></li>
+<li><a
+target="_blank" rel="noopener" href="https://datawhalechina.github.io/learn-nlp-with-transformers/#/./%E7%AF%87%E7%AB%A02-Transformer%E7%9B%B8%E5%85%B3%E5%8E%9F%E7%90%86/2.2-%E5%9B%BE%E8%A7%A3transformer">datawhale开源文章：图解transformer</a>、<a
+target="_blank" rel="noopener" href="https://jalammar.github.io/illustrated-transformer/">Jay
+Alammar的博客The Illustrated
+Transformer</a>，前者基本可以看作是后者的中文翻译版本</li>
+<li><a
+target="_blank" rel="noopener" href="https://transformers.run/c1/transformer/">开源在线教程网站transformers.run的“第二章：Transformer
+模型”</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://www.datacamp.com/zh/tutorial/how-transformers-work">datacamp文章：“Transformer
+如何工作：深入解析 Transformer 架构”</a></li>
 </ol>
 
                 
