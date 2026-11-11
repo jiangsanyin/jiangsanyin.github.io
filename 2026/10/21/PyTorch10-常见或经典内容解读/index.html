@@ -27,7 +27,7 @@
 <meta property="og:description" content="十、常见或经典内容解读 10.1 可视化神经机器翻译模型 可视化神经机器翻译模型，就是在讲述与分析“带注意力机制的Seq2Seq模型原理”。 10.1.1 什么是seq2seq模型 Seq2Seq（Sequence-to-Sequence，序列到序列） 是深度学习中处理“输入一个序列，输出另一个序列”任务的核心架构。拥有此构架的模型称为seq2seq模型，常用来完成机器翻译任务、文本摘要任务、文本">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-21T02:45:56.000Z">
-<meta property="article:modified_time" content="2026-11-09T09:48:50.450Z">
+<meta property="article:modified_time" content="2026-11-11T14:17:09.650Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.4k 字
+          11k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          45 分钟
+          93 分钟
         
       </span>
     
@@ -587,11 +587,10 @@ target="_blank" rel="noopener" href="https://github.com/tensorflow/tensor2tensor
 重新实现一遍，并且采用“文学编程”的方式，把论文段落和代码逐行对齐，且源码实现中给出了可读性很好的注释，源码实现见：<a
 target="_blank" rel="noopener" href="https://nlp.seas.harvard.edu/annotated-transformer/">annotated-transformer</a>
 。</p>
-<h3 id="解读1-transformer解读">10.2.1 解读1-transformer解读</h3>
 <p>以下内容主要参考与整理自《<a
 target="_blank" rel="noopener" href="https://jalammar.github.io/illustrated-transformer/">illustrated-transformer</a>》与《<a
 target="_blank" rel="noopener" href="https://datawhalechina.github.io/learn-nlp-with-transformers/#/./%E7%AF%87%E7%AB%A02-Transformer%E7%9B%B8%E5%85%B3%E5%8E%9F%E7%90%86/2.2-%E5%9B%BE%E8%A7%A3transformer">基于transformers的自然语言处理(NLP)入门</a>》。</p>
-<h4 id="transformer整体结构解读">102.1.1 transformer整体结构解读</h4>
+<h3 id="transformer整体结构解读">10.2.1 transformer整体结构解读</h3>
 <p>参考前面提到的 <code>seq2seq</code>
 模型的概念，transformer构架模型也是一种具体的 <code>seq2seq</code>
 模型。它最初被提出来时也是用于处理机器翻译问题，即它接受一个用语言A表达的句子1，输出一个用语言B表达的句子2，且句子2是句子1的翻译。</p>
@@ -629,8 +628,9 @@ aria-hidden="true">单层encoder：由自注意力层与前馈神经网络顺序
 Transformer 模型之前，Tokenizer
 会根据特定的分词算法，将原始文本序列切分成一系列词元Token。这样就得到一个词元序列：<span
 class="math inline">\(w_1, w_2,...,w_n\)</span> ，每个词元被映射为对应的
-Token ID、通过 Embedding 层转换为向量，这样得到每个词元的向量表示 <span
-class="math inline">\(x_1, x_2,...,x_n\)</span> ，其中<span
+Token ID、通过 Embedding
+层转换为向量、加上自己对应的位置向量，这样得到每个词元的最终向量表示
+<span class="math inline">\(x_1, x_2,...,x_n\)</span> ，其中<span
 class="math inline">\(x_i \in \mathbb{R}^{d}\)</span>是维度为<span
 class="math inline">\(d\)</span>的向量（其实此时就得到一个 <span
 class="math inline">\(n*d\)</span>
@@ -652,10 +652,362 @@ alt="单层dncoder：由自注意力层、编码器-解码器注意力层与与�
 <p>总结一下，我们基本了解了Transformer由编码组件和解码组件组成，而编码组件和解码组件又分别由多个网络结构相同的编码器、解码器组成。每个编码器由self-attention和FFNN组成，每个解码器由self-attention、FFN和encoder-decoder
 attention组成。</p>
 <p>下面尝试了解transformer中更细节的内容。</p>
-<h4 id="transformer细节结构解读">102.1.2 transformer细节结构解读</h4>
-<h3
-id="解读2-深入浅出pytorchtransformer-解读">解读2-《深入浅出PyTorch》Transformer
-解读</h3>
+<h3 id="transformer细节结构解读">10.2.2 transformer细节结构解读</h3>
+<p>上面已经从高级总体层面了解了Transformer的结构，但对于其如何从接收一个原始文本序列到输出一个结果序列的关键过程细节仍是不清楚。
+下面将就对它们进行详细展开，即本章节的内容包括如下：</p>
+<ul>
+<li>输入处理
+<ul>
+<li>词向量</li>
+<li>位置向量</li>
+</ul></li>
+<li>编码器
+<ul>
+<li>Self-Attention层</li>
+<li>FFNN</li>
+</ul></li>
+<li>解码器
+<ul>
+<li>Encoder-Decoder Attention层</li>
+</ul></li>
+<li>线性层和Softmax</li>
+<li>损失函数</li>
+</ul>
+<h4 id="输入处理">10.2.2.1 输入处理</h4>
+<p>原始文本序列在正式输入到Transformer之前被会转换成多个词向量，每个词向量还需要加上自身对应的位置向量得到最终的向量表示，它们才是Transformer接受的输入内容。</p>
+<h5 id="词向量">10.2.2.1.1 词向量</h5>
+<p>在输入 Transformer
+模型之前，分词器（Tokenizer）会根据特定的分词算法，将原始文本序列切分成一系列词元（Token）。这样就得到一个词元序列：</p>
+<p><span class="math display">\[  
+w_1,w_2,\ldots,w_n  
+\]</span></p>
+<p>每个词元被映射为对应的 Token ID，再通过 Embedding
+层转换为向量，得到每个词元的 Embedding 表示：</p>
+<p><span class="math display">\[  
+e_1,e_2,\ldots,e_n  
+\]</span></p>
+<p>其中，<span class="math inline">\(e_i\in\mathbb{R}^{d}\)</span>
+是维度为 <span class="math inline">\(d\)</span>
+的向量。对于一个输入序列而言，将所有向量按照词元顺序排列，就得到一个
+<span class="math inline">\(n\times d\)</span>
+的矩阵，矩阵的每一行就是一个词元对应的向量表示。</p>
+<p>向量维度 <span class="math inline">\(d\)</span> 由具体 Transformer
+模型的架构决定，不同模型的取值可能不同。例如，原始 Transformer Base
+模型采用 512 维。</p>
+<p>此外，Transformer
+还需要引入位置信息，使模型能够感知词元在序列中的位置。原始 Transformer
+采用位置编码（Positional
+Encoding。将在下一节进行具体讲述），将位置编码与词元 Embedding
+相加，得到最终输入 Encoder 的向量表示： <span class="math display">\[  
+x_i=e_i+p_i  
+\]</span> 上述 Token Embedding 和位置编码处理发生在 Transformer Encoder
+堆栈之前（即第一个Encoder之前）。后续 Encoder 的输入是前一个 Encoder
+的输出，不需要重复进行 Token Embedding。</p>
+<p>关于词向量序列长度与填充、截断的描述如下。 不同文本经过 Tokenizer
+分词后，得到的 Token
+数量可能不同，因此对应的词向量序列长度也可能不同。</p>
+<p>Transformer 模型通常具有一个最大序列长度（Maximum Sequence
+Length），表示模型能够处理的最大输入序列长度。这个长度需要根据模型架构、任务需求和计算资源等因素确定，并不一定是根据训练数据集中最长的文本自动确定的。通常，序列越长，自注意力计算的开销越大，也会占用更多的显存和计算资源，因此并不是越长越好。</p>
+<p>在模型训练过程中，通常会将多条文本组成一个 Batch。由于同一个 Batch
+中的文本长度可能不同，为了组成统一形状的输入张量，需要进行
+Padding（填充）。一种常见方式是将较短的序列填充到当前 Batch
+中最长序列的长度；也可以预先指定一个固定长度，将所有序列填充到这个长度。如果某条序列超过了指定的最大长度，则需要进行截断（Truncation）。</p>
+<p>最终，单条文本经过 Embedding 后的矩阵形状通常是：</p>
+<p><span class="math display">\[  
+(L_i,d)  
+\]</span></p>
+<p>多个文本组成 Batch 并完成 Padding 后，输入张量的形状通常是：</p>
+<p><span class="math display">\[  
+(B,L_{\text{batch}},d)  
+\]</span></p>
+<p>其中，<span class="math inline">\(B\)</span> 是 Batch Size，<span
+class="math inline">\(L_i\)</span> 是第 <span
+class="math inline">\(i\)</span> 条文本实际包含的 Token 数量，<span
+class="math inline">\(L_{\text{batch}}\)</span> 是当前 Batch
+填充后的统一序列长度，<span class="math inline">\(d\)</span>
+是向量维度。</p>
+<p>在模型推理过程中，同样需要遵守模型支持的最大序列长度。如果输入序列没有超过模型限制，通常可以直接处理，不需要填充到最大长度；如果同时处理多个不同长度的文本，则通常需要通过
+Padding 使同一个 Batch 中的序列长度保持一致。Padding 产生的位置需要通过
+Attention Mask 进行标记。</p>
+<p>如下图所示，为了方便描述与画图展示，此处我们假设 <span
+class="math inline">\(n=3\)</span>、<span
+class="math inline">\(d=4\)</span>。即假设输入文本序列包含 3
+个词元，那么每个词元可以通过词嵌入算法得到一个 4
+维向量，于是整个输入被转化为一个 <span
+class="math inline">\(3\times4\)</span> 的向量矩阵。</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/11/10/cj8Z/20261110121909774.png" srcset="/img/loading.gif" lazyload
+alt="输入序列词元及词元 Embedding" />
+<figcaption aria-hidden="true">输入序列词元及词元 Embedding</figcaption>
+</figure>
+<p>此图中只展示了输入序列拆分成多个词元及其Embedding。</p>
+<p>在输入给Transformer使用之前，还需要在此基础加上词元的位置信息。</p>
+<h5 id="位置向量">10.2.2.1.2 位置向量</h5>
+<p>到目前为止，我们主要阐述了将原始文本序列转换成多个词Embedding向量，如果原始文本序列经过分词器作用后得到了两个或多个相同的词元，此时它们会转换成相同的词Embedding向量，很有必要对它们的位置进行区别，毕竟同一个同一个字符串在不同位置代表的意义可能不同。比如原始文本序列“小李说他最喜欢的水果是苹果，最喜欢的手机也是苹果”，前一个苹果是指水果，后一个苹果是指手机，要根据“苹果”在序列中的位置来区别它们代表的意义。</p>
+<p>为了解决此类问题，Transformer模型为每个词元都配置了一个位置信息（位置向量遵循一个特定的计算模式来计算），这个位置信息也是以向量形式存在，称为位置向量。位置向量不仅可以用来确定每个词元的位置特征，还能用来确定不同词元之间的距离特征。</p>
+<p>使用位置向量的方法是，将它们直接与对应词Embedding向量相加（它们是一个词元两个不同特征值，以具有相同维度的向量形式存在）。词向量加上位置向量背后的直觉是：将这些表示位置的词位置向量添加到词Embedding向量中，得到的新向量，可以为模型提供更多有意义的信息，比如词元的位置，词元之间的距离等。</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/11/10/G3pm/20261110151447023.png" srcset="/img/loading.gif" lazyload
+alt="位置编码 = 词Embedding向量 + 词位置向量" />
+<figcaption aria-hidden="true">位置编码 = 词Embedding向量 +
+词位置向量</figcaption>
+</figure>
+<p>仍使用前面的示例，我们假设嵌入Embedding的维度为
+4，那么实际的位置编码将如下所示： <img
+src="https://files.seeusercontent.com/2026/11/10/rdJ3/20261110151832414.png" srcset="/img/loading.gif" lazyload
+alt="位置编码：展示位置向量示例" /></p>
+<p>前面说“位置向量遵循一个特定的计算模式来计算”，这个计算模式在Transformer论文中是如下（当然还存在其他由其他人在别处提出的计算模式）：
+<span class="math display">\[
+\begin{aligned}
+PE_{(pos,2i)} &amp;= sin(pos / 10000^{2i/d_{\text{model}}})  
+\\                                                                       PE_{(pos,2i+1)}
+&amp;= cos(pos / 10000^{2i/d_{\text{model}}})
+\end{aligned}
+\]</span> 上面表达式中<span
+class="math inline">\(pos\)</span>表示词元的位置，<span
+class="math inline">\((2i)\in [0, d_{model})\)</span>或<span
+class="math inline">\((2i+1)\in [0, d_{model})\)</span>表示<span
+class="math inline">\(d_{model}\)</span>维位置向量第<span
+class="math inline">\(2i\)</span>或<span
+class="math inline">\(2i+1\)</span>维（就是说维度索引是偶数时使用正弦公式，是奇数时使用余弦公式），<span
+class="math inline">\(d_{model}\)</span>代表位置向量的维度（对于特定的模型来讲一般是个固定的值）。</p>
+<p>仍然使用上述的法语“Je suis étudiant”翻译成英文“I am a
+student”的示例。 要求<span
+class="math inline">\(pos=0\)</span>处词元“Je”的位置向量，只要固定pos取0，不断往后增加维度索引即可：</p>
+<ul>
+<li>对于第0维（从 0 开始计数的第 0 个分量），根据公式 <span
+class="math inline">\(PE_{(pos,2i)} = sin(pos /
+10000^{2i/d_{\text{model}}})\)</span> ，代入<span
+class="math inline">\(pos=0\)</span>、<span
+class="math inline">\(2i=0\)</span>，得到此词元位置向量第0维的值 <span
+class="math inline">\(PE_{(0,0)}=sin(0 /
+10000^{0/d_{\text{model}}})=0\)</span> 。</li>
+<li>对于第1维，根据公式 <span class="math inline">\(PE_{(pos,2i+1)} =
+cos(pos / 10000^{2i/d_{\text{model}}})\)</span> ，代入<span
+class="math inline">\(pos=0\)</span>、<span
+class="math inline">\(2i+1=1\)</span> 即 <span
+class="math inline">\(i=0\)</span>，得到此词元位置向量第1维的值<span
+class="math inline">\(PE_{(0,1)}=cos(0 /
+10000^{0/d_{\text{model}}})=1\)</span> 。</li>
+<li>对于第2维，根据公式 <span class="math inline">\(PE_{(pos,2i)} =
+sin(pos / 10000^{2i/d_{\text{model}}})\)</span> ，代入<span
+class="math inline">\(pos=0\)</span>、<span
+class="math inline">\(2i=2\)</span>，得到此词元位置向量第0维的值 <span
+class="math inline">\(PE_{(0,2)}=sin(0 /
+10000^{2/d_{\text{model}}})=0\)</span> 。</li>
+<li>对于第3维，根据公式 <span class="math inline">\(PE_{(pos,2i+1)} =
+cos(pos / 10000^{2i/d_{\text{model}}})\)</span> ，代入<span
+class="math inline">\(pos=0\)</span>、<span
+class="math inline">\(2i+1=3\)</span> 即 <span
+class="math inline">\(i=1\)</span>，得到此词元位置向量第1维的值<span
+class="math inline">\(PE_{(0,3)}=cos(0 /
+10000^{2/d_{\text{model}}})=1\)</span> 。</li>
+</ul>
+<p>要求<span
+class="math inline">\(pos=1\)</span>处词元“suis”的位置向量，只要固定pos取1，不断往后增加维度索引即可：</p>
+<ul>
+<li>对于第0维（从 0 开始计数的第 0 个分量），根据公式 <span
+class="math inline">\(PE_{(pos,2i)} = sin(pos /
+10000^{2i/d_{\text{model}}})\)</span> ，代入<span
+class="math inline">\(pos=1\)</span>、<span
+class="math inline">\(2i=0\)</span>，得到此词元位置向量第0维的值 <span
+class="math inline">\(PE_{(1,0)}=sin(1 /
+10000^{0/d_{\text{model}}})\)</span> 。</li>
+<li>对于第1维，根据公式 <span class="math inline">\(PE_{(pos,2i+1)} =
+cos(pos / 10000^{2i/d_{\text{model}}})\)</span> ，代入<span
+class="math inline">\(pos=1\)</span>、<span
+class="math inline">\(2i+1=1\)</span> 即 <span
+class="math inline">\(i=0\)</span>，得到此词元位置向量第1维的值<span
+class="math inline">\(PE_{(1,1)}=cos(1 /
+10000^{0/d_{\text{model}}})\)</span> 。</li>
+<li>对于第2维，根据公式 <span class="math inline">\(PE_{(pos,2i)} =
+sin(pos / 10000^{2i/d_{\text{model}}})\)</span> ，代入<span
+class="math inline">\(pos=1\)</span>、<span
+class="math inline">\(2i=2\)</span> 即 <span
+class="math inline">\(i=1\)</span>，得到此词元位置向量第0维的值 <span
+class="math inline">\(PE_{(1,2)}=sin(1 /
+10000^{2/d_{\text{model}}})\)</span> 。</li>
+<li>对于第3维，根据公式 <span class="math inline">\(PE_{(pos,2i+1)} =
+cos(pos / 10000^{2i/d_{\text{model}}})\)</span> ，代入<span
+class="math inline">\(pos=1\)</span>、<span
+class="math inline">\(2i+1=3\)</span> 即 <span
+class="math inline">\(i=1\)</span>，得到此词元位置向量第1维的值<span
+class="math inline">\(PE_{(1,3)}=cos(1 /
+10000^{2/d_{\text{model}}})\)</span> 。</li>
+</ul>
+<p>在下图中，画出了词元位置在0~10范围时，每个词元的位置向量中第0个分量(dim=0)到第3个分量(dim=3)值按相同dim连接而成的曲线图。横坐标表示词元位置，纵坐标表示位置向量某个分量的值。
+<img
+src="https://files.seeusercontent.com/2026/11/10/pg1B/20261110165318370.png" srcset="/img/loading.gif" lazyload
+alt="image.png" />
+当我固定横坐标值（即指定某一个特定的词元），画一条垂直于横坐标、垂足为此固定横坐标值的直线时，就可以得到此词元对应的位置向量中所有分量的值，即得到了其位置向量。</p>
+<p>当把上图顺时针旋转90度，得到如下图： <img
+src="https://files.seeusercontent.com/2026/11/10/4Cwu/20261110172121244.png" srcset="/img/loading.gif" lazyload
+alt="image.png" />
+就基本上得到了一个原始文本序列拆分得到的多个不同词元后每个词元的位置向量，所有词元的位置向量就形成了个
+<span class="math inline">\(n*d_model\)</span> 矩阵。</p>
+<p>上述方法并非位置编码的唯一方法。然而，它的优势在于能够扩展到未见过的序列长度（例如，如果我们的训练模型被要求翻译一个比训练集中任何句子都长的句子时，此方法仍然能够为这个长句生成多个形式与训练时一致的位置向量）。</p>
+<h4 id="编码器">10.2.2.2 编码器</h4>
+<p>原始文本序列进入Transformer前经过输入处理，转换成包含位置信息的向量列表。这个向量列表然后输入到编码组件中，由于编码组件是由多个编码器堆叠而成的，所以这个向量列表首先输入到第一层编码器，它的输出还是一个与输入形状一样的向量列表，再按此规律将此输出的向量列表输入给后续的编码器，直到编码组件中的最后一个编码器，此时就得到整个编码组件的输出。</p>
+<p>由此可知，编码组件中第一个编码器的输入是融合了位置信息的词向量列表，输出是与输入形状相同的向量列表；编码器组件中后续编码器的输入是前一个编码器的输出。所有编码器的输入与输出形状都是一样的。</p>
+<p>下图展示了向量列表在单层Encoder中及向后一个Encoder的流动：融合位置信息的词向量<span
+class="math inline">\(x_i\)</span>进入Self-Attention层，Self-Attention处理后输出包含注意力信息的向量<span
+class="math inline">\(z_i\)</span>，再输入FFNN得到每个位置的新向量<span
+class="math inline">\(r_i\)</span>。 <img
+src="https://files.seeusercontent.com/2026/11/11/N3gf/20261111095732791.png" srcset="/img/loading.gif" lazyload
+alt="向量列表在单层Encoder中及向后一个Encoder的流动" /></p>
+<p>上图中展示包含了三个词向量的向量列表在单个编码器中的流动，并将结果输入给后一个编码器。</p>
+<h5 id="self-attention层">10.2.2.2.1 Self-Attention层</h5>
+<p>说了这么久，一直在提Self-Attention这个概念，但还是不知道它到底是什么的？如何工作的？</p>
+<h6 id="self-attention概览">Self-Attention概览</h6>
+<p>假设我们有如下一个英文句子需要翻译： <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">The animal didn&#x27;t cross the street because it was too tired<br></code></pre></td></tr></table></figure>
+对于人来说，我们能轻松、准确地知道其中单词“it”指代的是前面的“The
+animal”。但对于深度学习中模型来说，它并不是一件简单的事情，如何确定这个"it"到底指代“The
+animal”，还是“the street”，甚至是其他什么呢？</p>
+<p>这就是Self-Attention做的事情。通过引入Self-Attention，模型在翻译“it”时能够准确地将其与“The
+animal”关联起来。相应地，当模型处理句子中其他词时，<em>Self
+Attention</em>
+机制可以使得模型不仅仅关注当前位置的词，还会关注句子中其他位置上相关的词，从而可以更好地理解当前位置的词。</p>
+<p>回想一下RNN中的处理机制，它在处理当前字符串时，会考虑上一个处理的词/向量对应的
+<em>hidden state</em> ，这个 <em>hidden state</em>
+中其实包含了上一个词/向量及其前面所有词/向量的信息，RNN将这个 <em>hidden
+state</em> 融入到当前正在处理的词/向量中。Transformer
+使用自注意力机制，将对句子中其他相关词的“理解”融入到当前正在处理的词中。</p>
+<p>下图以可视化的方式展示了Transformer模型中编码组件中第5层编码器中，"it"位置处词向量对其他位置处词向量的关注情况。可以看到它（"it"）给予了“The”、“animal”最大的关注，并且把这两个词的信息融合到了"it"中。：
+<img
+src="https://files.seeusercontent.com/2026/11/11/hEr8/20261111120752571.png" srcset="/img/loading.gif" lazyload
+alt="对不同词给予的关注" />
+用通俗的话来描述Self-Attention做的事情：在理解当前词时，对句子中所有词（包括自己与其他词）按实际情况给予不同关注力度，并通过它们来理解自己，最终达到对整个句子的完整理解。</p>
+<p>稍微严谨一点的话来描述Self-Attention
+做的事情就是：在处理当前词元时，根据它与句子中其他词元（包括自身）的关联程度，动态分配不同的注意力权重，并对这些词元的信息进行加权汇总，从而更好地理解当前词元在整个句子中的含义。每个词元都这样处理，最终使模型获得对整个句子的上下文表示。</p>
+<h6 id="self-attention实现细节">Self-Attention实现细节</h6>
+<p>现在再来看看<strong>Self-Attention</strong>是如何实现的。</p>
+<p>什么是“self-attention自注意力机制”？假设一句话包含两个单词：Thinking
+Machines。自注意力的一种理解是：Thinking-Thinking，Thinking-Machines，Machines-Thinking，Machines-Machines，共<span
+class="math inline">\(2^2\)</span>种两两attention。我们需要这<span
+class="math inline">\(2^2\)</span>种两两attention分别计算出一个分数，并将这个分数应用到最后上下文理解中。</p>
+<p>那么具体如何计算呢？我们先来看看如何使用向量计算自注意力，然后再来看看它是如何实际实现的——使用矩阵。
+假设Thinking、Machines这两个单词经过输入处理得到词向量是<span
+class="math inline">\(X_1,
+X_2\)</span>，下面公式块中的六个步骤就是使用向量计算注意力的过程： <span
+class="math display">\[
+\begin{aligned}
+&amp;\textbf{1. Query、Key 和 Value 向量：}\\[4pt]
+q_1 &amp;= X_1 W^Q, \qquad q_2 = X_2 W^Q,\\
+k_1 &amp;= X_1 W^K, \qquad k_2 = X_2 W^K,\\
+v_1 &amp;= X_1 W^V, \qquad v_2 = X_2 W^V,\\
+&amp;W^Q, W^K, W^V \in \mathbb{R}^{d_x \times d_k}
+\\[10pt]
+&amp;\textbf{2--3. 计算缩放点积注意力分数：}\\[4pt]
+\mathrm{score}_{11} &amp;= \frac{q_1 \cdot k_1}{\sqrt{d_k}}, \qquad
+\mathrm{score}_{12} = \frac{q_1 \cdot k_2}{\sqrt{d_k}},\\
+\mathrm{score}_{21} &amp;= \frac{q_2 \cdot k_1}{\sqrt{d_k}}, \qquad
+\mathrm{score}_{22} = \frac{q_2 \cdot k_2}{\sqrt{d_k}}
+\\[10pt]
+&amp;\textbf{4. Softmax 归一化：}\\[4pt]
+\alpha_{11} &amp;= \frac{e^{\mathrm{score}_{11}}}
+{e^{\mathrm{score}_{11}} + e^{\mathrm{score}_{12}}},\\
+\alpha_{12} &amp;= \frac{e^{\mathrm{score}_{12}}}
+{e^{\mathrm{score}_{11}} + e^{\mathrm{score}_{12}}},\\[6pt]
+\alpha_{21} &amp;= \frac{e^{\mathrm{score}_{21}}}
+{e^{\mathrm{score}_{21}} + e^{\mathrm{score}_{22}}},\\
+\alpha_{22} &amp;= \frac{e^{\mathrm{score}_{22}}}
+{e^{\mathrm{score}_{21}} + e^{\mathrm{score}_{22}}}
+\\[10pt]
+&amp;\textbf{5--6. 加权求和，得到输出向量：}\\[4pt]
+z_1 &amp;= v_1 \times \alpha_{11} + v_2 \times \alpha_{12},\\
+z_2 &amp;= v_1 \times \alpha_{21} + v_2 \times \alpha_{22}
+\end{aligned}
+\]</span></p>
+<p>将上述六个步骤掰细进行讲解，如下。</p>
+<p><strong>第1步</strong>：计算q向量（Query向量/查询向量）、k向量（Key向量/键向量）、v向量（Value向量/值向量）。
+每一个词向量分别有一个对应的q向量/k向量/v向量。计算q向量/k向量/v向量时，分别要用到一个<span
+class="math inline">\(W_Q\)</span>/<span
+class="math inline">\(W_K\)</span>/<span
+class="math inline">\(W_V\)</span>矩阵，这些矩阵是独立的，但在所有词元之间共享，都经过训练得到。</p>
+<p>q向量/k向量/v向量分别表示什么意义呢？根据我的理解，可以大概如此理解：</p>
+<ul>
+<li>q向量：表示<strong>当前词元想要寻找什么信息？</strong>
+例如，当Thinking生成自己的q向量，它可以通过这个q向量去匹配与自己有关的信息。可以把q向量看成当前词元发出的一个查询请求。</li>
+<li>k向量：表示<strong>当前词元包含多少别人想要的信息，即当前词元提供什么特征、以便其他词元判断是否需要关注它？</strong>。例如，Machines生成自己的k向量后，其他词元用自己的q向量与此k向量进行匹配，判断Machines是否与自己相关、有多大相关性。可以把它k向量看成是当前词元提供的一个匹配标识。</li>
+<li>v向量：表示<strong>如果其他词元关注当前词元时，当前词元具体能为它们提供什么信息？</strong>。例如，Thinking的v向量就是Thinking可以贡献给其他词元的信息内容。可以把v向量理解为当前词元真正提供的信息载荷。</li>
+</ul>
+<p>q向量与k向量相乘得到一个标量分数(<span class="math inline">\(q_1
+\cdot
+k_1\)</span>)，表示k向量对应的词元对理解q向量对应的词元时的重要程度，分数与重要程度呈正相关。</p>
+<p><strong>第2步：</strong> 计算自注意力分数。
+假设我们要计算本例中第一个词“Thinking”的自注意力。我们需要将输入句子中的每个词元的k向量与“Thinking”的q向量进行比较并给出得分。这个得分决定了在编码特定位置的词元时，应该给予输入句子的其他词元多少关注。</p>
+<p>自注意力得分的计算方法是将q向量与当前正查询词元的q键向量进行点积运算。因此，如果我们正在处理"Thinking"的自注意力，则将"Thinking"的q向量与句子其他词元（包括"Thinking"）的k向量进行点积运算，每次运算都将得到一个标量分数，因此将获得一个分数列表。</p>
+<p>我们习惯将句子中每个词元的q/k/v向量从1开始编号，则"Thinking"、"Machines"的q向量分别记为<span
+class="math inline">\(q_1\)</span>、<span
+class="math inline">\(q_2\)</span>，"Thinking"、"Machines"的v向量分别记为<span
+class="math inline">\(v_1\)</span>、<span
+class="math inline">\(v_2\)</span>。这样，根据上面所述内容，对于当前这个示例，我们将获得<span
+class="math inline">\(2^2\)</span>
+(体现在底数上，因为共有两个词元)种两两自注意力分数：<span
+class="math inline">\(q_1 \cdot k_1\)</span>、<span
+class="math inline">\(q1 \cdot k2\)</span>、<span
+class="math inline">\(q_2 \cdot k_1\)</span>、<span
+class="math inline">\(q_2 \cdot k_2\)</span> 。其中<span
+class="math inline">\(q_i \cdot k_j\)</span>
+表示在查询第i个词元的信息时，应该给予第j个词元多大的关注程度。关注程度与自注意力分数呈正相相关。</p>
+<p>下图用示例展示了<span class="math inline">\(q_1 \cdot
+k_1\)</span>、<span class="math inline">\(q1 \cdot k2\)</span>
+分别的结果。可见，在查询"Thinking"的信息时，"Thinking"给予“Thinking”本身的关注程度应该要大于给予对“Machines”的关注程度，因为前者的自注意力分数更大。
+<img
+src="https://files.seeusercontent.com/2026/11/11/Nts5/20261111174715230.png" srcset="/img/loading.gif" lazyload
+alt="计算自注意力分数" /></p>
+<p><strong>第3步：</strong>
+适当缩小自注意力分数。把每个第2步得到的每个自注意力分数除以 <span
+class="math inline">\(\sqrt{d_k}\)</span>，<span
+class="math inline">\(d_{k}\)</span>是k向量的维度。此处除以一个数缩小结果主要是为了防止点积结果过大、
+Softmax 的输出趋于极端化（某个权重接近1，其他权重接近0），避免 Softmax
+进入梯度非常小的饱和区域（此时，即使输入分数发生一些变化，Softmax
+的输出也几乎不再变化），使梯度更加稳定、模型正常训练。</p>
+<p><strong>第4步：</strong>
+<code>Softmax</code>归一化。针对任意一个词元，将其对其他所有词元的（缩放后的）自注意力分数进行归一化处理（得到针对其他所有词元的权重），分数归一化后都变成正数且和为1
+（即针对其他所有词元的权重都为正、和为1）。</p>
+<p>归一化后的分数决定了，在理解当前词元时应该分别给予所有其他词元多少自注意力（关注），分数越高意味着给予更大的自注意力（关注）。下图示例中说明了，在理解"Thinking"时，给予"Thinking"、“Machines”的归一化自注意力分别是0.88、012
+。
+显然是对本身更加重视，这也是自注意力机制的一个特点：在理解某个词元时，总是给自己给予最大自注意力（关注）。
+<img
+src="https://files.seeusercontent.com/2026/11/11/F9lb/20261111212336725.png" srcset="/img/loading.gif" lazyload
+alt="将缩放后自注意力分数归一化" /></p>
+<p><strong>第5步：</strong> 将针对其他所有词元的权重<span
+class="math inline">\(\alpha_{ij}\)</span>与对应词元的v向量<span
+class="math inline">\(v_i\)</span>相乘。 即针对每个词元<span
+class="math inline">\(x_i\)</span>，<span class="math inline">\(i \in
+[1, n]\)</span>，计算 <span class="math inline">\(v_i \times
+\alpha_{ij}\)</span>，其中 <span class="math inline">\(j \in [1,
+n]\)</span> ，n表示句子中词元的总个数。</p>
+<p>这样做的意义就是：对理解当前词元时，应该给予更大关注的词元（相关的词元）中蕴含的信息要尽更大努力加权保留下来，应该给予更小关注的词元（不相关的词元）中蕴含的信息要尽更小努力加权保留下来、可以说在一定程度上是尽更大努力降低贡献。</p>
+<p><strong>第6步：</strong> 将上述权重与v向量乘积进行求和。
+即针对每个词元<span class="math inline">\(x_i\)</span>，<span
+class="math inline">\(i \in [1, n]\)</span>，计算 <span
+class="math inline">\(z_i=\sum_{j=1}^{n}\alpha_{ij}v_j\)</span>
+。求得的<span
+class="math inline">\(z_i\)</span>可以这样理解：在处理当前词元 <span
+class="math inline">\(x_i\)</span>
+时，模型根据注意力权重，从句子中所有词元对应的
+v向量中提取并融合相关信息，最终得到当前词元融合上下文信息后的新表示
+<span class="math inline">\(z_i\)</span>。</p>
+<p>下图展示了计算“Thinking”这个词元融合了上下文信息后的新表示过程： <img
+src="https://files.seeusercontent.com/2026/11/11/jw6Q/20261111220151077.png" srcset="/img/loading.gif" lazyload
+alt="将自注意力权重与v向量进行加权求和" /></p>
+<p>经过上述的步骤，我们就完成了对一个句子的Self-Attention计算过程，并得到了它经过Self-Attention层后的新表示。这个新表示可以向后传递给同一个编码器的FFNN。</p>
+<p>然而，在实际实现中，为了加快处理速度，这种计算是以矩阵形式进行的。既然已经了解了词级与句子级计算的原理，接下来让来看看矩阵形式的计算。</p>
+<h6 id="self-attention矩阵计算">Self-Attention矩阵计算</h6>
+<h6 id="多头注意力机制">多头注意力机制</h6>
+<h6 id="多头attention代码实例">多头Attention代码实例</h6>
+<h6 id="残差连接">残差连接</h6>
+<h5 id="ffnn">10.2.2.2.2 FFNN</h5>
+<h4 id="解码器">10.2.2.3 解码器</h4>
+<ul>
+<li>Encoder-Decoder Attention层</li>
+</ul>
+<h4 id="线性层和softmax">10.2.2.4 线性层和Softmax</h4>
+<h4 id="损失函数">10.2.2.5 损失函数</h4>
 <h3 id="参考资料-1">参考资料</h3>
 <ol type="1">
 <li><a
