@@ -27,7 +27,7 @@
 <meta property="og:description" content="十、常见或经典内容解读 10.1 可视化神经机器翻译模型 可视化神经机器翻译模型，就是在讲述与分析“带注意力机制的Seq2Seq模型原理”。 10.1.1 什么是seq2seq模型 Seq2Seq（Sequence-to-Sequence，序列到序列） 是深度学习中处理“输入一个序列，输出另一个序列”任务的核心架构。拥有此构架的模型称为seq2seq模型，常用来完成机器翻译任务、文本摘要任务、文本">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-21T02:45:56.000Z">
-<meta property="article:modified_time" content="2026-11-11T14:17:09.650Z">
+<meta property="article:modified_time" content="2026-11-12T13:30:36.180Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          11k 字
+          13k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          93 分钟
+          110 分钟
         
       </span>
     
@@ -998,7 +998,110 @@ alt="将自注意力权重与v向量进行加权求和" /></p>
 <p>经过上述的步骤，我们就完成了对一个句子的Self-Attention计算过程，并得到了它经过Self-Attention层后的新表示。这个新表示可以向后传递给同一个编码器的FFNN。</p>
 <p>然而，在实际实现中，为了加快处理速度，这种计算是以矩阵形式进行的。既然已经了解了词级与句子级计算的原理，接下来让来看看矩阵形式的计算。</p>
 <h6 id="self-attention矩阵计算">Self-Attention矩阵计算</h6>
+<p>将Self-Attention计算6个步骤中的输入向量放一起，比如<span
+class="math inline">\(X=[x_1;x_2]\)</span>​，便可以进行矩阵计算啦。下面，依旧按步骤展示Self-Attention的矩阵计算方法。
+<span class="math display">\[
+\begin{aligned}
+X &amp;= [X_1;X_2] \\
+Q &amp;= X W^Q, K = X W^K, V=X W^V \\
+Z &amp;= softmax(\frac{QK^T}{\sqrt{d_k}}) V
+\end{aligned}
+\]</span> 第1步：计算 Query，Key，Value
+的矩阵。首先，我们把所有词向量放到一个矩阵X中，然后分别和3个权重矩阵<span
+class="math inline">\(W^Q, W^K W^V\)</span> 相乘，得到 Q，K，V
+矩阵。矩阵X中的每一行，表示句子中的每一个词的词向量。Q，K，V
+矩阵中的每一行表示 Query向量，Key向量，Value向量，向量维度是<span
+class="math inline">\(d_k\)</span>（注意：Query向量与Key向量的维度一定要相等，它们要做点积；但Value向量的维度可以是它们不同，后面还有一个输出投影矩阵<span
+class="math inline">\(W^O\)</span>，负责将 <span
+class="math inline">\(Z\)</span> 向量映射回 <span
+class="math inline">\(d_{model}\)</span> 维。
+但Transformer论文中采用多头注意力将这三个向量的维度都设置为64）。</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/11/12/Lbk8/20261112101258049.png" srcset="/img/loading.gif" lazyload
+alt="QKV矩阵乘法" />
+<figcaption aria-hidden="true">QKV矩阵乘法</figcaption>
+</figure>
+<p>第2步：由于使用了矩阵来计算，可以把上面的第 2 步到第 6
+步压缩为一步，直接得到 Self-Attention 的输出。</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/11/12/z6hT/20261112101331317.png" srcset="/img/loading.gif" lazyload
+alt="得到输出Z" />
+<figcaption aria-hidden="true">得到输出<span
+class="math inline">\(Z\)</span></figcaption>
+</figure>
 <h6 id="多头注意力机制">多头注意力机制</h6>
+<p>原Transformer论文通过添加“多头”注意力机制，进一步改进了自注意力层。“多头”注意力机制在如下两个方面提升了自注意力层的性能：</p>
+<ol type="1">
+<li><strong>它扩展了模型关注不同位置的能力</strong>。它通过引入多个注意力头，每个词元在不同注意力头下对其他词元的关注情况不同，从而使词元能够从多方面、不同角度对其他位置处的词元给予不同的关注。比如在上述示例中，其他词元为<span
+class="math inline">\(z1\)</span>分别贡献了相对很少一部分信息，但“Thinking”词元本身却为<span
+class="math inline">\(z1\)</span>贡献了很大比重信息，就是说<span
+class="math inline">\(z1\)</span>可能由“Thinking”词元本身的信息主导了，这对完整“Thinking”词元、整个句子中每个词元其实是不够合理、不够科学的。再举个更明显的例子，对于翻译示例“The
+animal didn’t cross the street because it was too
+tired”，"it"不仅要关注它自身，还应该重点关注“The”、“animal”，因为“The”、“animal”才能为理解"it"提供主要与重点信息，否则我们并不知道"it"指代什么。使用多个注意力能提高模型关注不同位置的可能性。</li>
+<li><strong>它赋予了自注意力层多个“子表示空间”</strong>。
+多头注意力机制会有多组<span class="math inline">\(W^Q, W^K W^V\)</span>​
+的权重矩阵（在原始 Transformer 论文中，使用了 8
+组注意力)，可以将同一个词元映射到多个不同的子表示空间（不同注意力头的表示子空间并不一定彼此正交，也不一定完全独立），每一组注意力的权重矩阵都是随机初始化的，但经过训练之后，每一组注意力的权重<span
+class="math inline">\(W^Q, W^K W^V\)</span>​
+可以把输入的向量映射到一个对应的”子表示空间“。在不同的子表示空间中，词元给予其他词元不同关注的同时给予其他同一个词元不同的关注，有助于从全面综合角度理解当前词元，比如某个子表示空间从感情色彩上进行理解，另一个子表示空间从词性（是否同为名词等）角度进行理解。</li>
+</ol>
+<p>最后，多个注意力头的输出会通过 Concat 拼接，再经过输出投影矩阵 <span
+class="math inline">\(W^O\)</span>
+进行融合，得到最终的多头注意力输出。</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/11/12/J0ey/20261112113637679.png" srcset="/img/loading.gif" lazyload
+alt="多头注意力：每个头拥有属于自己的一组W^Q, W^K W^V​ 矩阵" />
+<figcaption aria-hidden="true">多头注意力：每个头拥有属于自己的一组<span
+class="math inline">\(W^Q, W^K W^V\)</span>​ 矩阵</figcaption>
+</figure>
+<p>像在原始 Transformer 论文中使用了 8 组注意力一样，对于“Thinking
+Machines”这个示例，此处也采用8组注意力。我们需要将代表一个句子矩阵<span
+class="math inline">\(X\)</span>与8个不同的权重矩阵相乘，执行8次矩阵乘法得到8个不同的<span
+class="math inline">\(Z\)</span>矩阵，如下所示： <img
+src="https://files.seeusercontent.com/2026/11/12/Mye1/20261112193044030.png" srcset="/img/loading.gif" lazyload
+alt="每个注意力头工作后都会得到一个Z矩阵" /></p>
+<p>但Self_Attention层后面的FFNN层接收的是 1
+个矩阵（其中每行是对应于一个词元的向量，它是一个词元融合上下文信息后的新表示），而不是
+8 个矩阵，所以我们需要把8个子矩阵压缩下得到一个矩阵。</p>
+<p>具体的做法是：先将8个子矩阵 <span class="math inline">\(Z_i\)</span>
+拼接起来得到一个大矩阵，然后将此大矩阵与另一个权重矩阵 <span
+class="math inline">\(W^O\)</span>
+相乘做一次变换，映射到前馈神经网络层所需要的矩阵<span
+class="math inline">\(Z\)</span>（此时，向量 <span
+class="math inline">\(Z\)</span>
+的维度与输入给多头自注意力层的向量维度相同）。如下图所示： <img
+src="https://files.seeusercontent.com/2026/11/12/iyS7/20261112194230550.png" srcset="/img/loading.gif" lazyload
+alt="将多个自注意力的输出进行拼接，再进行压缩" /></p>
+<p>如果将多头自注意力的计算过程放在同一张图中进行展示（其中步骤1、2是进入Transformer之前的输入处理操作），则如下：
+<img
+src="https://files.seeusercontent.com/2026/11/12/E6qe/20261112201811955.png" srcset="/img/loading.gif" lazyload
+alt="多头自注意力全流程" />
+输入给Transformer编码组件中多个编码器的数据中，只有最开始的那个编码器的输入是添加位置编码信息的词元嵌入向量/矩阵，后续的编码器的输入是前一个编码器的输出。</p>
+<p>先前学习（单头）自注意力后，我们使用可视化的方式观察过翻译示例“The
+animal didn’t cross the street because it was too
+tired”中“it”对其他词元的关注情况。现在学习完多头注意力了，再来看看“it”对其他词元的关注情况如何，有什么变化没？</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/11/12/a0fV/20261112205057264.png" srcset="/img/loading.gif" lazyload
+alt="使用两个自注意力头时&quot;it&quot;对其他词元的关注情况" />
+<figcaption
+aria-hidden="true">使用两个自注意力头时"it"对其他词元的关注情况</figcaption>
+</figure>
+<p>上图展示了使用两个自注意力头时"it"对其他词元的关注情况。其中橙色表示一个自注意力头，绿色表示另一个自注意力头。可以看到，当我们尝试理解“it”时，橙色自注意力头最关注"The
+animal"，在某种程度上来说，"it" 在模型中的表示，融合了 "animal" 和
+"tired"
+等词元的部分信息；而绿色自注意力头最关注“tired”。同时这两个自注意力头都对“street”与“too”等词元给予了不同程度的关注。</p>
+<p>正如先前描述的那样，不同注意力头可以在不同的表示子空间中学习不同的注意力模式，不同的自注意力头从不同角度对其他词元给予不同关注力度，但也并非绝对相互正交。</p>
+<p>当我们尝试理解“it”时，如果我们尝试让8组自注意力全部生效，各自注意力头对其他词元的关注情况如下：
+<img
+src="https://files.seeusercontent.com/2026/11/12/1Siz/20261112211259762.png" srcset="/img/loading.gif" lazyload
+alt="使用8个自注意力头时&quot;it&quot;对其他词元的关注情况" />
+情况变得复杂起来，虽然难以非常清晰明确地看出某自注意力头对哪个词元最关注、具体关注力度如何。但依然可以看出不同的自注意力头可能对同一个词元给予不同程度的关注，因为线条的颜色是不同颜色叠加后的复合颜色，这些不同颜色的连线代表了不同注意力头的注意力权重，说明多头注意力正在尝试从多方面、不同角度对其他位置的词元给予不同的关注，尝试从全面综合的角度理解其他词元。</p>
+<p>这正是多头自注意力的特点：不同注意力头分别在各自的表示子空间中，对上下文信息进行加权汇总，得到各自的输出表示。随后，这些输出表示会被拼接起来，再通过输出投影矩阵<span
+class="math inline">\(W^O\)</span>进行线性变换和信息融合，最终得到包含多种注意力头信息的综合表示，为句子中的每个词元生成融合上下文信息后的新表示。</p>
 <h6 id="多头attention代码实例">多头Attention代码实例</h6>
 <h6 id="残差连接">残差连接</h6>
 <h5 id="ffnn">10.2.2.2.2 FFNN</h5>
