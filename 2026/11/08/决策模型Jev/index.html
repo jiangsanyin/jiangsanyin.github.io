@@ -27,7 +27,7 @@
 <meta property="og:description" content="决策模型 Jev：从类型化判断到可控分流  本文整理自本目录的 01_认识Jev.ipynb 第 1～6 节，面向会一点 Python、刚接触 AI Agent 的读者。示例中的客户消息、赛事消息和离线答案均为教学合成数据；它们用于理解数据结构与代码路径，不代表真实 API 返回、准确率或安全保证。  先建立全景：Jev 在系统里做什么 Jev 是 TypeSafe 的 System One 决策">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-11-08T08:10:54.000Z">
-<meta property="article:modified_time" content="2026-11-15T09:32:18.260Z">
+<meta property="article:modified_time" content="2026-11-15T09:43:50.600Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="大模型">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.3k 字
+          5.5k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          45 分钟
+          46 分钟
         
       </span>
     
@@ -596,211 +596,217 @@ target="_blank" rel="noopener" href="https://docs.typesafe.ai/introduction">Type
 Map</a></p>
 <hr />
 <h2 id="开源jev模型部署实践">8. 开源Jev模型部署实践</h2>
-<h3 id="ubuntu20.04-服务器上部署">Ubuntu20.04 服务器上部署</h3>
-<p><del>这里计划使用一个NVIDIA A40 GPU来部署，模型地址是：<a
-target="_blank" rel="noopener" href="https://www.modelscope.cn/models/mlx-community/Qwen3.5-0.8B-decision">Qwen3.5-0.8B
-决策模型</a>、<a
-target="_blank" rel="noopener" href="https://huggingface.co/mlx-community/clef-OptiQ-4bit">mlx-community/clef-OptiQ-4bit</a></del></p>
-<p>可以，而且从你的硬件条件来看，<strong>我认为把决策模型部署到 Ubuntu
-20.04 + NVIDIA A40 服务器，是比继续占用 Mac 16GB
-统一内存更合理的方案。</strong></p>
-<p>你的服务器有 128GB 系统内存和 48GB 显存（A40 实际可用显存约
-46GB），运行 9B 甚至部分 27B 量化模型，都有比较大的硬件空间。</p>
-<p>不过，这次我们需要调整部署思路：</p>
-<p><strong>不再尝试直接在 Ubuntu 上运行</strong>
-<code>mlx-optiq</code><strong>，而是寻找能够在 NVIDIA CUDA 环境下运行的
-OptiQ 决策模型及其兼容推理实现。</strong></p>
-<p>这里有一个关键区别：模型权重格式、模型架构和推理框架是三个不同的问题。即使模型文件可以下载，也不代表
-vLLM、Transformers 或其他框架能够直接加载它。</p>
-<h2
-id="一先纠正一个重要认识实际上有适合-nvidia-的原生-clef-模型"><strong>一、先纠正一个重要认识：实际上有适合
-NVIDIA 的原生 Clef 模型</strong></h2>
-<p>我查阅了 Cloudflare 在 Hugging Face
-发布的原始模型仓库，发现一个很有价值的信息：</p>
-<p>除了之前使用的：</p>
-<ul>
-<li><p><code>mlx-community/clef-OptiQ-4bit</code></p></li>
-<li><p><code>mlx-community/clef-flash-OptiQ-4bit</code></p></li>
-</ul>
-<p>还有原生 PyTorch 权重版本：</p>
-<ul>
-<li><p>Cloudflare/clef-flash</p></li>
-<li><p>Cloudflare/clef</p></li>
-</ul>
-<p>这两个模型都包含：</p>
-<ul>
-<li><p>Qwen 语言模型骨干网络（Backbone）。</p></li>
-<li><p>Joint Schema Head（联合模式决策头）。</p></li>
-<li><p><code>joint_schema_model.py</code>：官方提供的 PyTorch
-模型加载、决策计算代码。</p></li>
-</ul>
-<p>其中，官方提供的 <code>joint_schema_model.py</code> 使用
-PyTorch、Transformers 和 Safetensors 实现，并且提供了 CUDA
-加载方式。官方说明已经使用 PyTorch 2.11、Transformers 5.10.2 在单张 H200
-上测试。</p>
-<p>Hugging Face+2</p>
-<p>这意味着我们不必自己重新实现决策头，也不必放弃 Clef 的决策能力。</p>
-<p><strong>我建议直接使用 Cloudflare 官方原生 PyTorch 版本的 Clef-Flash
-9B。</strong></p>
-<h2 id="二推荐的部署架构"><strong>二、推荐的部署架构</strong></h2>
-<p><strong>Ubuntu 20.04 LTS</strong></p>
-<p>64 核 CPU / 128GB RAM</p>
-<p><strong>Python 3.12 + PyTorch + Transformers</strong></p>
-<p>CUDA 推理环境</p>
-<p><strong>NVIDIA A40</strong></p>
-<h1 id="gb-vram"><strong>48GB VRAM</strong></h1>
-<p>CUDA / BF16 推理</p>
-<p><strong>Cloudflare/clef-flash</strong></p>
-<p>Qwen3.5-9B + Joint Schema Head</p>
-<p><strong>FastAPI 决策服务</strong></p>
-<p>自定义实现 /v1/systemone</p>
-<p>这里有两个值得注意的地方：</p>
-<ol type="1">
-<li><p>不使用 MLX，不安装 <code>mlx-optiq</code>。</p></li>
-<li><p>不直接使用普通的 <code>vllm serve</code>
-来替代决策服务。虽然模型仓库提供了通用生成接口示例，但 Clef
-的特殊决策能力依赖 <code>joint_schema_model.py</code>
-中的联合决策头。我们应该使用官方代码实现决策推理。</p>
-<p>Cloudflare/clef at main+1</p></li>
-</ol>
-<h2 id="三模型和显存选择"><strong>三、模型和显存选择</strong></h2>
+<p>本节目标是先在 <strong>Ubuntu 20.04 + NVIDIA A40（48 GB
+显存）</strong>
+上完成一次可复现的本地推理验证，再考虑封装服务。文中命令尚未在目标服务器执行；每一步均给出验收条件，只有通过前一步才进入下一步。</p>
+<blockquote>
+<p><strong>部署路线</strong>：NVIDIA 服务器不使用 Apple Silicon 专用的
+MLX/OptiQ 权重或 <code>mlx-optiq</code>。优先验证 Cloudflare 发布的原生
+PyTorch 模型 <code>Cloudflare/clef-flash</code>
+及其仓库随附的联合决策头代码。普通 <code>vllm serve</code>
+能否保留该决策能力尚未验证，因此不作为本次首选方案。</p>
+</blockquote>
+<h3 id="目标边界与模型选择">8.1 目标、边界与模型选择</h3>
+<h4 id="目标环境">8.1.1 目标环境</h4>
 <table>
 <thead>
 <tr>
-<th>模型</th>
-<th>参数规模</th>
-<th>BF16 理论权重大小</th>
-<th>A40 适用性</th>
+<th>项目</th>
+<th>本次验证目标</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Clef-Flash</td>
-<td>9B</td>
-<td>约 18GB</td>
-<td>推荐</td>
+<td>操作系统</td>
+<td>Ubuntu 20.04 LTS</td>
 </tr>
 <tr>
-<td>Clef</td>
-<td>27B</td>
-<td>约 54GB</td>
-<td>不建议 BF16</td>
+<td>GPU</td>
+<td>NVIDIA A40，48 GB 显存</td>
+</tr>
+<tr>
+<td>推理精度</td>
+<td>优先 BF16</td>
+</tr>
+<tr>
+<td>第一阶段目标</td>
+<td>单卡加载、完成一条类型化决策、记录耗时与显存峰值</td>
+</tr>
+<tr>
+<td>第二阶段目标</td>
+<td>在第一阶段通过后封装 <code>POST /v1/systemone</code></td>
 </tr>
 </tbody>
 </table>
-<p>这里的权重大小只是理论估算，实际运行还需要额外显存。</p>
-<p>A40 的 46GB 可用显存足够我们优先测试 9B BF16 模型。</p>
-<p>27B 如果采用 4-bit、8-bit 等量化方案，理论上也有研究价值，但需要处理
-PyTorch 模型量化与决策头的兼容性，暂时不建议作为第一步。</p>
-<h2 id="四具体部署步骤"><strong>四、具体部署步骤</strong></h2>
-<p>建议先完成模型单机加载和推理验证，再封装 API 服务。不要一开始就引入
-vLLM、Docker 等额外组件。</p>
-<h3 id="创建独立-conda-环境"><strong>1. 创建独立 Conda
-环境</strong></h3>
-<p>你之前的 <code>py31213</code>
-环境可以保留，但我建议新建一个环境，避免之前 MLX
-安装的依赖产生干扰。</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs vim">conda create -n clef-cuda <span class="hljs-keyword">python</span>=<span class="hljs-number">3.12</span> -<span class="hljs-keyword">y</span><br>conda activate clef-cuda<br><br><span class="hljs-keyword">python</span> --<span class="hljs-keyword">version</span><br></code></pre></td></tr></table></figure>
-<h3 id="检查-cuda-和-pytorch-版本兼容性"><strong>2. 检查 CUDA 和 PyTorch
-版本兼容性</strong></h3>
-<p>你之前提供的服务器信息是：</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">NVIDIA</span> Driver: <span class="hljs-number">550</span>.<span class="hljs-number">54</span>.<span class="hljs-number">15</span><br><span class="hljs-attribute">CUDA</span> Version: <span class="hljs-number">12</span>.<span class="hljs-number">4</span><br><span class="hljs-attribute">GPU</span>: NVIDIA A40<br></code></pre></td></tr></table></figure>
-<p>这里需要特别注意：官方 Clef 代码的测试环境是 PyTorch
-2.11，而你的驱动比较旧。</p>
-<p>不要直接照搬官方测试环境的 PyTorch 安装命令。需要先确定 PyTorch 2.11
-对应的 CUDA Wheel 是否与你的驱动兼容。</p>
-<p>先检查：</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs vim">nvidia-smi<br><br><span class="hljs-keyword">python</span> -<span class="hljs-keyword">m</span> pip <span class="hljs-built_in">index</span> versions torch<br></code></pre></td></tr></table></figure>
-<p>建议优先考虑 PyTorch 2.11 + CUDA 12.8 对应的官方安装包。如果最终采用
-CUDA 12.8 运行时，需要先将 NVIDIA 驱动升级到兼容版本（通常需要 570
-系列或更新版本）。</p>
-<p>可参考：</p>
-<ul>
-<li><p><a
-target="_blank" rel="noopener" href="https://pytorch.org/get-started/locally/?utm_source=chatgpt.com">PyTorch
-官方安装页面</a></p></li>
-<li><p><a
-target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/?utm_source=chatgpt.com">NVIDIA
-CUDA 兼容性说明</a></p></li>
-</ul>
-<p>安装后验证：</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs stylus">python - &lt;&lt;<span class="hljs-string">&#x27;PY&#x27;</span><br>import torch<br><br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&quot;PyTorch:&quot;</span>, torch.__version__)</span></span><br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&quot;CUDA runtime:&quot;</span>, torch.version.cuda)</span></span><br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&quot;CUDA available:&quot;</span>, torch.cuda.is_available()</span></span>)<br><br><span class="hljs-keyword">if</span> torch<span class="hljs-selector-class">.cuda</span><span class="hljs-selector-class">.is_available</span>():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;GPU:&quot;</span>, torch<span class="hljs-selector-class">.cuda</span><span class="hljs-selector-class">.get_device_name</span>(<span class="hljs-number">0</span>))<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;BF16 supported:&quot;</span>, torch<span class="hljs-selector-class">.cuda</span><span class="hljs-selector-class">.is_bf16_supported</span>())<br>PY<br></code></pre></td></tr></table></figure>
-<p>期望结果：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">CUDA available:</span> <span class="hljs-literal">True</span><br><span class="hljs-attr">GPU:</span> <span class="hljs-string">NVIDIA</span> <span class="hljs-string">A40</span><br><span class="hljs-attr">BF16 supported:</span> <span class="hljs-literal">True</span><br></code></pre></td></tr></table></figure>
-<h3 id="安装其他依赖"><strong>3. 安装其他依赖</strong></h3>
-<p>PyTorch 安装及验证成功后：</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">pip</span> install <span class="hljs-punctuation">\</span><br><span class="hljs-punctuation"></span>    transformers==<span class="hljs-number">5</span>.<span class="hljs-number">10</span>.<span class="hljs-number">2</span> <span class="hljs-punctuation">\</span><br><span class="hljs-punctuation"></span>    accelerate <span class="hljs-punctuation">\</span><br><span class="hljs-punctuation"></span>    safetensors <span class="hljs-punctuation">\</span><br><span class="hljs-punctuation"></span>    huggingface_hub <span class="hljs-punctuation">\</span><br><span class="hljs-punctuation"></span>    pillow <span class="hljs-punctuation">\</span><br><span class="hljs-punctuation"></span>    fastapi <span class="hljs-punctuation">\</span><br><span class="hljs-punctuation"></span>    uvicorn<br></code></pre></td></tr></table></figure>
-<p>这里采用官方测试过的 Transformers
-版本，减少模型架构兼容性方面的不确定性。</p>
-<h3 id="下载-cloudflare-官方模型"><strong>4. 下载 Cloudflare
-官方模型</strong></h3>
-<p>建议仍然使用你之前的目录：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p /opt/installPkgs/research-PyTorch/models<br><span class="hljs-built_in">cd</span> /opt/installPkgs/research-PyTorch/models<br><br><span class="hljs-built_in">export</span> HF_ENDPOINT=https://hf-mirror.com<br></code></pre></td></tr></table></figure>
-<p>下载：</p>
-<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">hf download <span class="hljs-keyword">Cloudflare/clef-flash </span>\<br>    --local-<span class="hljs-keyword">dir </span><span class="hljs-keyword">Cloudflare-clef-flash</span><br></code></pre></td></tr></table></figure>
-<p>注意，这次下载的是：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">Cloudflare/clef-flash<br></code></pre></td></tr></table></figure>
-<p>而不是：</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">mlx</span>-community/clef-flash-OptiQ-<span class="hljs-number">4</span>bit<br></code></pre></td></tr></table></figure>
-<p>两者的权重格式和运行方式不同。</p>
-<p>官方模型仓库：</p>
-<p><a
-target="_blank" rel="noopener" href="https://huggingface.co/Cloudflare/clef-flash?utm_source=chatgpt.com">Cloudflare/clef-flash</a></p>
-<h3 id="测试官方-pytorch-决策模型"><strong>5. 测试官方 PyTorch
-决策模型</strong></h3>
-<p>进入模型目录：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /opt/installPkgs/research-PyTorch/models/Cloudflare-clef-flash<br></code></pre></td></tr></table></figure>
-<p>官方仓库包含：</p>
-<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-keyword">joint_schema_model.py</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">joint_head.safetensors</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">joint_head_config.json</span><br><span class="hljs-keyword"></span><span class="hljs-built_in">config</span>.<span class="hljs-keyword">json</span><br><span class="hljs-keyword"></span>model.safetensors<br>tokenizer.<span class="hljs-keyword">json</span><br><span class="hljs-keyword"></span>...<br></code></pre></td></tr></table></figure>
-<p>创建测试脚本 <code>test_clef.py</code>：</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs routeros">import torch<br><span class="hljs-keyword">from</span> pathlib import Path<br><span class="hljs-keyword">from</span> joint_schema_model import load_release_model, systemone<br><br>MODEL_PATH = str(Path(__file__).parent)<br><br><span class="hljs-comment"># 加载模型到 NVIDIA GPU</span><br>model, processor = load_release_model(<br>    MODEL_PATH,<br>    <span class="hljs-attribute">device</span>=<span class="hljs-string">&quot;cuda&quot;</span>,<br>    <span class="hljs-attribute">dtype</span>=torch.bfloat16<br>)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;模型加载成功&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;GPU:&quot;</span>, torch.cuda.get_device_name(0))<br><span class="hljs-built_in">print</span>(<br>    <span class="hljs-string">&quot;显存占用:&quot;</span>,<br>    round(torch.cuda.memory_allocated() / 1024*<span class="hljs-number">*3</span>, 2),<br>    <span class="hljs-string">&quot;GB&quot;</span><br>)<br><br><span class="hljs-comment"># 构造决策请求</span><br>request = &#123;<br>    <span class="hljs-string">&quot;model&quot;</span>: <span class="hljs-string">&quot;clef-flash&quot;</span>,<br>    <span class="hljs-string">&quot;state&quot;</span>: <span class="hljs-string">&quot;Checkout has been failing for every customer for the last hour.&quot;</span>,<br>    <span class="hljs-string">&quot;questions&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;urgent&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;noul&quot;</span>,<br>            <span class="hljs-string">&quot;instructions&quot;</span>: <span class="hljs-string">&quot;Is this urgent?&quot;</span><br>        &#125;,<br>        <span class="hljs-string">&quot;team&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;choice&quot;</span>,<br>            <span class="hljs-string">&quot;criteria&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;billing&quot;</span>: <span class="hljs-string">&quot;Payments&quot;</span>,<br>                <span class="hljs-string">&quot;technical&quot;</span>: <span class="hljs-string">&quot;Outages and errors&quot;</span><br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment"># 执行决策</span><br>result = systemone(model, processor, request)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\n决策结果:&quot;</span>)<br><span class="hljs-built_in">print</span>(result)<br><br><span class="hljs-built_in">print</span>(<br>    <span class="hljs-string">&quot;\n推理后显存占用:&quot;</span>,<br>    round(torch.cuda.memory_allocated() / 1024*<span class="hljs-number">*3</span>, 2),<br>    <span class="hljs-string">&quot;GB&quot;</span><br>)<br></code></pre></td></tr></table></figure>
-<p>执行：</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">python</span> test_clef.<span class="hljs-keyword">py</span><br></code></pre></td></tr></table></figure>
-<p>官方的 <code>load_release_model()</code> 默认就支持 CUDA 和
-BF16；<code>systemone()</code>
-则负责把模型输出转换成结构化决策结果。</p>
-<p>Cloudflare/clef at main+1</p>
-<p>预期验证目标</p>
-<ul>
-<li><p>模型可以完整加载到 A40。</p></li>
-<li><p>能够执行
-<code>noul</code>、<code>choice</code>、<code>score</code>
-三类决策。</p></li>
-<li><p>返回各选项的概率和决策结果。</p></li>
-<li><p>推理过程中显存没有溢出。</p></li>
-</ul>
-<h3 id="后续封装-fastapi-服务"><strong>6. 后续封装 FastAPI
-服务</strong></h3>
-<p>模型单机推理验证成功后，可以在官方代码基础上封装一个 FastAPI
-服务：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">POST /v1/systemone<br></code></pre></td></tr></table></figure>
-<p>这样就能保留 Mac 上使用的决策接口形式，后续 FastGPT、Dify 或
-LangGraph 等应用也可以通过 HTTP 调用。</p>
-<h2
-id="五我建议先解决两个环境问题再开始安装"><strong>五、我建议先解决两个环境问题，再开始安装</strong></h2>
-<p>你的 Ubuntu 20.04 不需要因为 MLX 的 glibc
-要求而立即升级。现在我们已经换成 PyTorch 原生实现，glibc 2.31 不再是 MLX
-CUDA 后端的那个限制。</p>
-<p>但是，PyTorch 2.11 与现有 NVIDIA 驱动的兼容性需要先确认。</p>
-<p>请在服务器上再执行以下命令：</p>
-<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-comment"># 1. 查看当前驱动</span><br>nvidia-smi<br><br><span class="hljs-comment"># 2. 查看 CUDA Toolkit（如果安装）</span><br>nvcc <span class="hljs-params">--version</span><br><br><span class="hljs-comment"># 3. 查看系统 Python 和 pip</span><br>python <span class="hljs-params">--version</span><br>pip <span class="hljs-params">--version</span><br><br><span class="hljs-comment"># 4. 查看是否安装了其他 CUDA 版本</span><br><span class="hljs-keyword">ls</span> -d <span class="hljs-string">/usr/local/cuda</span>*<br></code></pre></td></tr></table></figure>
-<p><strong>我建议我们分两步推进：</strong></p>
+<p>模型权重格式、模型架构和推理框架是三件不同的事：能下载一个模型文件，并不表示任意框架都能加载它，更不表示能执行其专有的联合决策头。</p>
+<h4 id="候选模型与取舍">8.1.2 候选模型与取舍</h4>
+<table>
+
+<thead>
+<tr>
+<th>模型</th>
+<th>权重/推理路线</th>
+<th>A40 上的建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Cloudflare/clef-flash</code></td>
+<td>原生 PyTorch 权重 + 仓库中的联合决策头</td>
+<td><strong>本次首测</strong>；9B 级 BF16 权重理论约 18
+GB，仍须以实际峰值显存为准</td>
+</tr>
+<tr>
+<td><code>Cloudflare/clef</code></td>
+<td>原生 PyTorch 权重 + 联合决策头</td>
+<td>暂不作为 BF16 首测；27B 级权重理论约 54 GB，已超过单张 A40
+的可用空间</td>
+</tr>
+<tr>
+<td><code>mlx-community/clef-*-OptiQ-4bit</code></td>
+<td>MLX/OptiQ 格式</td>
+<td>仅适用于 macOS/Apple Silicon 路线，不在本服务器安装</td>
+</tr>
+</tbody>
+</table>
+<p>本节不预先承诺具体的 PyTorch、Transformers 版本。应以下载模型仓库中的
+<code>README</code>、<code>requirements</code>、配置文件和实际导入报错为准，记录最终可用组合；这样可避免把随模型更新而失效的版本号当成固定事实。</p>
+<h3 id="安装前的兼容性检查">8.2 安装前的兼容性检查</h3>
+<h4 id="采集服务器基线">8.2.1 采集服务器基线</h4>
+<p>在服务器上运行下列只读命令，并把完整输出保存到本次验证记录中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">nvidia-smi<br>nvcc --version || <span class="hljs-literal">true</span><br>lsb_release -a<br><span class="hljs-built_in">uname</span> -r<br>python3 --version<br></code></pre></td></tr></table></figure>
+<p>验收条件：<code>nvidia-smi</code> 能识别 A40，且 GPU
+没有被其他任务长期占满。<code>nvidia-smi</code> 显示的 CUDA
+版本是驱动支持的最高 CUDA 运行时版本，不等于系统必须安装了对应版本的
+CUDA Toolkit。</p>
+<h4 id="建立隔离环境并安装-cuda-版-pytorch">8.2.2 建立隔离环境并安装
+CUDA 版 PyTorch</h4>
+<p>保留已有环境，新建环境避免与 macOS/MLX 依赖混用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda create -n clef-cuda python=3.12 -y<br>conda activate clef-cuda<br>python -m pip install --upgrade pip<br></code></pre></td></tr></table></figure>
+<p>从 <a target="_blank" rel="noopener" href="https://pytorch.org/get-started/locally/">PyTorch
+官方安装页</a> 选择与当前 NVIDIA 驱动兼容的 CUDA wheel
+安装命令；不要把本机的 <code>nvcc</code> 版本当成 wheel
+的唯一选择依据。安装完成后立即验证：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">python - &lt;&lt;<span class="hljs-string">&#x27;PY&#x27;</span><br>import torch<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;PyTorch:&quot;</span>, torch.__version__)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;CUDA runtime:&quot;</span>, torch.version.cuda)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;CUDA available:&quot;</span>, torch.cuda.is_available())<br><span class="hljs-keyword">if</span> torch.cuda.is_available():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;GPU:&quot;</span>, torch.cuda.get_device_name(0))<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;BF16 supported:&quot;</span>, torch.cuda.is_bf16_supported())<br>PY<br></code></pre></td></tr></table></figure>
+<p>验收条件：<code>CUDA available: True</code>、GPU 名称为
+<code>NVIDIA A40</code>、<code>BF16 supported: True</code>。若导入失败或
+CUDA 不可用，停在此处处理 PyTorch wheel
+与驱动的匹配问题；不要继续下载或调试模型代码。</p>
+<h3 id="下载模型并核对官方入口">8.3 下载模型并核对官方入口</h3>
+<h4 id="安装通用依赖与下载模型">8.3.1 安装通用依赖与下载模型</h4>
+<p>PyTorch
+验收通过后安装下载工具和模型常见依赖。<code>transformers</code>
+不先强行固定版本，以模型仓库中的要求为准；若仓库提供 requirements
+文件，优先按它安装。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">python -m pip install -U huggingface_hub safetensors accelerate transformers<br><span class="hljs-built_in">mkdir</span> -p /opt/installPkgs/research-PyTorch/models<br><span class="hljs-built_in">cd</span> /opt/installPkgs/research-PyTorch/models<br><br><span class="hljs-comment"># 若服务器访问 Hugging Face 需要镜像，可在确认镜像可信后再设置 HF_ENDPOINT。</span><br>hf download Cloudflare/clef-flash --local-dir Cloudflare-clef-flash<br></code></pre></td></tr></table></figure>
+<p>下载结束后确认文件齐全，而不是仅以命令退出码作为成功依据：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /opt/installPkgs/research-PyTorch/models/Cloudflare-clef-flash<br>find . -maxdepth 2 -<span class="hljs-built_in">type</span> f | <span class="hljs-built_in">sort</span> | sed -n <span class="hljs-string">&#x27;1,160p&#x27;</span><br></code></pre></td></tr></table></figure>
+<p>验收条件：可以看到模型配置、权重、tokenizer，以及仓库当前版本提供的联合决策头实现（历史版本中名称为
+<code>joint_schema_model.py</code>）。模型文件较大，下载前应确认磁盘空间充足。</p>
+<h4 id="以下载版本的代码为准确认-api">8.3.2 以下载版本的代码为准确认
+API</h4>
+<p>不要直接假设函数名、入参和依赖版本永远不变。先从刚下载的版本中定位真实入口与安装说明：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">find . -maxdepth 2 \( -iname <span class="hljs-string">&#x27;readme*&#x27;</span> -o -iname <span class="hljs-string">&#x27;requirements*.txt&#x27;</span> \) -<span class="hljs-built_in">type</span> f -<span class="hljs-built_in">print</span><br>rg -n <span class="hljs-string">&quot;def (load_release_model|systemone)|load_release_model|systemone&quot;</span> .<br></code></pre></td></tr></table></figure>
+<p>若存在
+<code>requirements.txt</code>，先阅读并安装其中明确的依赖：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python -m pip install -r requirements.txt<br></code></pre></td></tr></table></figure>
+<p>验收条件：确认当前下载版本实际导出的加载函数和决策函数。下节脚本以目前资料中的
+<code>load_release_model()</code>、<code>systemone()</code>
+为模板；若上一步查到的签名不同，必须按该版本
+README/源码调整后再运行。</p>
+<h3 id="单卡加载与决策冒烟测试">8.4 单卡加载与决策冒烟测试</h3>
+<h4 id="创建测试脚本">8.4.1 创建测试脚本</h4>
+<p>在模型目录中创建
+<code>test_clef.py</code>。下面的请求只使用合成的英文故障描述，不包含真实工单或密钥。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> perf_counter<br><span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path<br><span class="hljs-keyword">from</span> joint_schema_model <span class="hljs-keyword">import</span> load_release_model, systemone<br><br>model_path = <span class="hljs-built_in">str</span>(Path(__file__).parent)<br><br>load_started = perf_counter()<br>model, processor = load_release_model(<br>    model_path,<br>    device=<span class="hljs-string">&quot;cuda&quot;</span>,<br>    dtype=torch.bfloat16,<br>)<br>torch.cuda.synchronize()<br>load_seconds = perf_counter() - load_started<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;模型加载成功&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;GPU:&quot;</span>, torch.cuda.get_device_name(<span class="hljs-number">0</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;加载耗时 (s):&quot;</span>, <span class="hljs-built_in">round</span>(load_seconds, <span class="hljs-number">2</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;加载后显存 (GB):&quot;</span>, <span class="hljs-built_in">round</span>(torch.cuda.memory_allocated() / <span class="hljs-number">1024</span>**<span class="hljs-number">3</span>, <span class="hljs-number">2</span>))<br><br>request = &#123;<br>    <span class="hljs-string">&quot;model&quot;</span>: <span class="hljs-string">&quot;clef-flash&quot;</span>,<br>    <span class="hljs-string">&quot;state&quot;</span>: <span class="hljs-string">&quot;Checkout has been failing for every customer for the last hour.&quot;</span>,<br>    <span class="hljs-string">&quot;questions&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;urgent&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;noul&quot;</span>,<br>            <span class="hljs-string">&quot;instructions&quot;</span>: <span class="hljs-string">&quot;Is this urgent?&quot;</span>,<br>        &#125;,<br>        <span class="hljs-string">&quot;team&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;choice&quot;</span>,<br>            <span class="hljs-string">&quot;criteria&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;billing&quot;</span>: <span class="hljs-string">&quot;Payments&quot;</span>,<br>                <span class="hljs-string">&quot;technical&quot;</span>: <span class="hljs-string">&quot;Outages and errors&quot;</span>,<br>            &#125;,<br>        &#125;,<br>    &#125;,<br>&#125;<br><br>infer_started = perf_counter()<br>result = systemone(model, processor, request)<br>torch.cuda.synchronize()<br>infer_seconds = perf_counter() - infer_started<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;决策结果:&quot;</span>, result)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;完整决策耗时 (s):&quot;</span>, <span class="hljs-built_in">round</span>(infer_seconds, <span class="hljs-number">2</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;推理后显存 (GB):&quot;</span>, <span class="hljs-built_in">round</span>(torch.cuda.max_memory_allocated() / <span class="hljs-number">1024</span>**<span class="hljs-number">3</span>, <span class="hljs-number">2</span>))<br></code></pre></td></tr></table></figure>
+<blockquote>
+<p>这段脚本依赖于上节确认的历史接口：<code>joint_schema_model.py</code>、<code>load_release_model()</code>
+和
+<code>systemone()</code>。它不是对未来仓库版本的保证。若当前仓库没有这些符号，先以其官方
+README 示例替换导入与调用部分，不要自行重写联合决策头。</p>
+</blockquote>
+<h4 id="运行观测与验收">8.4.2 运行、观测与验收</h4>
+<p>在一个终端中运行测试，另一个终端观察 GPU：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 终端 1</span><br><span class="hljs-built_in">cd</span> /opt/installPkgs/research-PyTorch/models/Cloudflare-clef-flash<br>python test_clef.py<br><br><span class="hljs-comment"># 终端 2</span><br>watch -n 1 nvidia-smi<br></code></pre></td></tr></table></figure>
+<p>本阶段通过需同时满足：</p>
 <ol type="1">
-<li><p>先解决 PyTorch 2.11、CUDA Runtime 和 NVIDIA
-驱动的版本匹配问题。</p></li>
-<li><p>再部署 Cloudflare/clef-flash 9B，验证官方决策头能否在 A40
-上正常运行。</p></li>
+<li>模型在 A40 上完成加载，未出现 CUDA out of memory；</li>
+<li>请求返回可解析的类型化决策与选项概率；</li>
+<li>至少再补测 <code>score</code> 类型问题，并人工核对
+<code>noul</code>、<code>choice</code>、<code>score</code>
+三类结果的字段；</li>
+<li>记录 PyTorch、CUDA runtime、驱动、模型
+revision、加载时间、完整决策时间和
+<code>max_memory_allocated()</code>；</li>
+<li>释放进程后用 <code>nvidia-smi</code> 确认显存回收。</li>
 </ol>
-<p>这样可以最大限度保留你现有的 Ubuntu 20.04、Anaconda 和 A40
-服务器环境，不必为了运行一个决策模型就重装整台服务器。</p>
-<p>另外，原生 Clef-Flash 是 BF16 模型，不是之前的 MLX 4-bit
-量化模型。我们先验证 BF16 版本，再考虑是否需要进行 NVIDIA
-适用的量化。</p>
-<h3 id="在macos上部署">在macOS上部署</h3>
-<p>这里计划在一个16G物理内存的M3芯片macOS上部署量化模型<code>clef-flash-OptiQ-4bit</code>，参考文档：<a
+<p>若 BF16 失败，优先记录完整报错并检查依赖与模型 README；不要直接退回
+CPU，也不要在未验证联合决策头兼容性的情况下改用通用
+<code>vllm serve</code>。</p>
+<h3 id="通过冒烟测试后的服务化边界">8.5 通过冒烟测试后的服务化边界</h3>
+<p>仅在第 8.4 节通过后，才在同一进程中保留已加载的模型并封装
+<code>POST /v1/systemone</code>。服务层应只负责输入校验、调用官方决策函数、返回结构化结果和记录必要的性能指标；阈值、权限、人工升级等业务安全规则仍由调用方的确定性代码负责。</p>
+<p>正式开放端口前至少补充：请求体大小限制、并发/队列上限、健康检查、鉴权、日志脱敏，以及对超时和
+CUDA out of memory 的明确错误响应。FastGPT、Dify 或 LangGraph
+的接入属于后续工作，不能代替本节的单机正确性验证。</p>
+<h3 id="本次服务器验证记录模板">8.6 本次服务器验证记录模板</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>实际结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>验证日期与操作者</td>
+<td></td>
+</tr>
+<tr>
+<td>Ubuntu 内核 / NVIDIA 驱动</td>
+<td></td>
+</tr>
+<tr>
+<td>PyTorch / CUDA runtime / Transformers</td>
+<td></td>
+</tr>
+<tr>
+<td>模型名称与 revision</td>
+<td></td>
+</tr>
+<tr>
+<td>权重文件完整性</td>
+<td>通过 / 未通过</td>
+</tr>
+<tr>
+<td>BF16 可用性</td>
+<td>通过 / 未通过</td>
+</tr>
+<tr>
+<td><code>noul</code>、<code>choice</code>、<code>score</code></td>
+<td>分别记录通过 / 未通过及原因</td>
+</tr>
+<tr>
+<td>加载时间 / 推理时间 / 峰值显存</td>
+<td></td>
+</tr>
+<tr>
+<td>遗留问题与下一步</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="macosapple-silicon备选路线">8.7 macOS（Apple
+Silicon）备选路线</h3>
+<p>这一小节仅保留为 Mac 的轻量验证记录，和 A40 服务器路线相互独立。Apple
+Silicon 可参考 <a
 target="_blank" rel="noopener" href="https://mlx-optiq.pages.dev/docs/decision-models">Decision models
-on Apple Silicon</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 下载模型文件</span><br>(ai_py312) jsy@jmac AI_models % hf download mlx-community/clef-flash-OptiQ-4bit \<br>    --local-dir clef-flash-OptiQ-4bit<br>    <br><span class="hljs-comment"># 安装python库mlx-optiq</span><br>pip install mlx-optiq<br><br><span class="hljs-comment"># 拉起服务模型</span><br>optiq serve --model ./clef-flash-OptiQ-4bit<br><br><span class="hljs-comment"># 但发现上述模型在自己的macOS上跟其他软件一起工作，电脑仍有较大内存压力。</span><br><span class="hljs-comment"># 下载更小的模型</span><br>(ai_py312) jsy@jmac AI_models % hf download mlx-community/gemma-4-e2b-it-OptiQ-4bit-decision \<br>    --local-dir gemma-4-e2b-it-OptiQ-4bit-decision<br></code></pre></td></tr></table></figure>
+on Apple Silicon</a>，使用 MLX/OptiQ 格式的量化模型；它们不应复制到
+NVIDIA CUDA 服务器上。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">hf download mlx-community/clef-flash-OptiQ-4bit \<br>  --local-dir clef-flash-OptiQ-4bit<br>python -m pip install mlx-optiq<br>optiq serve --model ./clef-flash-OptiQ-4bit<br></code></pre></td></tr></table></figure>
+<p>16 GB 统一内存的 M3
+同时运行其他应用时可能压力较大；如需继续在本机实验，应另行评估更小模型，而不是把该限制外推到
+A40 服务器。</p>
 
                 
               </div>
