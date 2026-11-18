@@ -27,7 +27,7 @@
 <meta property="og:description" content="十、常见或经典内容解读 10.1 可视化神经机器翻译模型 可视化神经机器翻译模型，就是在讲述与分析“带注意力机制的Seq2Seq模型原理”。 10.1.1 什么是seq2seq模型 Seq2Seq（Sequence-to-Sequence，序列到序列） 是深度学习中处理“输入一个序列，输出另一个序列”任务的核心架构。拥有此构架的模型称为seq2seq模型，常用来完成机器翻译任务、文本摘要任务、文本">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-21T02:45:56.000Z">
-<meta property="article:modified_time" content="2026-11-13T14:25:03.160Z">
+<meta property="article:modified_time" content="2026-11-18T04:14:46.280Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          15k 字
+          24k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          124 分钟
+          200 分钟
         
       </span>
     
@@ -651,7 +651,10 @@ src="https://files.seeusercontent.com/2026/11/09/0spN/20261109173947683.png" src
 alt="单层dncoder：由自注意力层、编码器-解码器注意力层与与前馈神经网络顺序构成" /></p>
 <p>总结一下，我们基本了解了Transformer由编码组件和解码组件组成，而编码组件和解码组件又分别由多个网络结构相同的编码器、解码器组成。每个编码器由self-attention和FFNN组成，每个解码器由self-attention、FFN和encoder-decoder
 attention组成。</p>
-<p>下面尝试了解transformer中更细节的内容。</p>
+<p>原 Transformer 论文中给出的 Transformer 模型构架图如下： <img
+src="https://files.seeusercontent.com/2026/11/16/8Zlq/20261116204657641.png" srcset="/img/loading.gif" lazyload
+alt="原始 Transformer 模型构架图" /></p>
+<p>下面尝试了解Transformer中更细节的内容。</p>
 <h3 id="transformer细节结构解读">10.2.2 transformer细节结构解读</h3>
 <p>上面已经从高级总体层面了解了Transformer的结构，但对于其如何从接收一个原始文本序列到输出一个结果序列的关键过程细节仍是不清楚。
 下面将就对它们进行详细展开，即本章节的内容包括如下：</p>
@@ -930,7 +933,7 @@ class="math inline">\(W_V\)</span>矩阵，这些矩阵是独立的，但在所�
 <ul>
 <li>q向量：表示<strong>当前词元想要寻找什么信息？</strong>
 例如，当Thinking生成自己的q向量，它可以通过这个q向量去匹配与自己有关的信息。可以把q向量看成当前词元发出的一个查询请求。</li>
-<li>k向量：表示<strong>当前词元包含多少别人想要的信息，即当前词元提供什么特征、以便其他词元判断是否需要关注它？</strong>。例如，Machines生成自己的k向量后，其他词元用自己的q向量与此k向量进行匹配，判断Machines是否与自己相关、有多大相关性。可以把它k向量看成是当前词元提供的一个匹配标识。</li>
+<li>k向量：表示<strong>当前词元包含多少别人想要的信息，即当前词元提供什么特征、以便其他词元判断是否需要关注它？</strong>。例如，Machines生成自己的k向量后，其他词元用自己的q向量与此k向量进行匹配，判断Machines是否与自己相关、有多大相关性。可以把k向量看成是当前词元提供的一个匹配标识。</li>
 <li>v向量：表示<strong>如果其他词元关注当前词元时，当前词元具体能为它们提供什么信息？</strong>。例如，Thinking的v向量就是Thinking可以贡献给其他词元的信息内容。可以把v向量理解为当前词元真正提供的信息载荷。</li>
 </ul>
 <p>q向量与k向量相乘得到一个标量分数(<span class="math inline">\(q_1
@@ -1105,22 +1108,22 @@ class="math inline">\(W^O\)</span>进行线性变换和信息融合，最终得�
 <h6 id="多头attention代码实例">多头Attention代码实例</h6>
 <p>如下是自己在阅读相关文档与源码后，自己手动重写的多头注意力标准实现：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">此为手写针对 Transformer 模型框架中标准多头注意力机制实现。</span><br><span class="hljs-string"></span><br><span class="hljs-string">大致流程或步骤如下：</span><br><span class="hljs-string">1. 模拟输入一批序列，每个序列的最大长度是20，序列中每个词向量用256维向量表示，每批是32个序列。</span><br><span class="hljs-string">2. 以下功能都封装在一个自定义多头注意力类 MultiheadAttention 中：</span><br><span class="hljs-string">    2.1 构造函数中对一些必要的属性进行初始化赋值。</span><br><span class="hljs-string">    2.2 求取原始 Q、K、V </span><br><span class="hljs-string">    2.3 将原始 Q、K、V 划分给多个注意力头（此处用8个注意力头），并变更数据形状[batch_size, head_num, seq_len, k_dim//head_num或v_dim//head_num]</span><br><span class="hljs-string">    2.4 计算原始注意力得分，然后softmax得到注意力权重，并进行dropout操作</span><br><span class="hljs-string">    2.5 将注意力权重与V做矩阵乘法，得到原始注意力矩阵</span><br><span class="hljs-string">    2.6 将多个注意力头结果进行合并，此时数据形状为[batch_size, seq_len, v_dim]</span><br><span class="hljs-string">    2.7 将合并后的注意力头结果经过一层全连接层做线性变换，融合各头信息。</span><br><span class="hljs-string">    2.8 返回结果</span><br><span class="hljs-string"></span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MultiheadAttention</span>(nn.Module):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    手写多头注意力标准实现类</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, hid_dim, k_dim, v_dim, head_num, dropout</span>):<br>        <span class="hljs-built_in">super</span>().__init__()<br><br>        <span class="hljs-comment"># hid_dim：每个词向量的维度</span><br>        <span class="hljs-variable language_">self</span>.hid_dim = hid_dim<br>        <span class="hljs-comment"># 单个词Query向量用多少维向量表示（是所有注意力头合并后的 Q/K、总维度，不是单个注意力头的维度）</span><br>        <span class="hljs-variable language_">self</span>.k_dim = k_dim<br>        <span class="hljs-comment"># 单个词Value向量用多少维向量表示（是所有注意力头合并后的 V 总维度，不是单个注意力头的维度）</span><br>        <span class="hljs-variable language_">self</span>.v_dim = v_dim<br>        <span class="hljs-comment"># 多少个注意力头</span><br>        <span class="hljs-variable language_">self</span>.head_num = head_num<br>        <span class="hljs-comment"># 断言两者能够整除</span><br>        <span class="hljs-keyword">assert</span> (<span class="hljs-variable language_">self</span>.k_dim % <span class="hljs-variable language_">self</span>.head_num == <span class="hljs-number">0</span>)<br>        <span class="hljs-keyword">assert</span> (<span class="hljs-variable language_">self</span>.v_dim % <span class="hljs-variable language_">self</span>.head_num == <span class="hljs-number">0</span>)<br><br>        <span class="hljs-comment"># 如下三个线性层中都包含一个权重矩阵与偏置项。分别用来表示 W^Q、W^K、W^V</span><br>        <span class="hljs-variable language_">self</span>.wq_ = nn.Linear(<span class="hljs-variable language_">self</span>.hid_dim, <span class="hljs-variable language_">self</span>.k_dim)<br>        <span class="hljs-variable language_">self</span>.wk_ = nn.Linear(<span class="hljs-variable language_">self</span>.hid_dim, <span class="hljs-variable language_">self</span>.k_dim)<br>        <span class="hljs-variable language_">self</span>.wv_ = nn.Linear(<span class="hljs-variable language_">self</span>.hid_dim, <span class="hljs-variable language_">self</span>.v_dim)<br><br>        <span class="hljs-comment"># 随机丢弃一定比例的注意力权重值，防止过拟合</span><br>        <span class="hljs-variable language_">self</span>.dropout = nn.Dropout(dropout)<br><br>        <span class="hljs-comment"># 最后的全连接层，融合各头信息</span><br>        <span class="hljs-variable language_">self</span>.wo_ = nn.Linear(<span class="hljs-variable language_">self</span>.v_dim, <span class="hljs-variable language_">self</span>.hid_dim)<br>        <span class="hljs-comment"># 对原始注意力得分进行缩放，防止注意力权重过于尖锐</span><br>        <span class="hljs-variable language_">self</span>.scale = (<span class="hljs-variable language_">self</span>.k_dim // <span class="hljs-variable language_">self</span>.head_num) ** <span class="hljs-number">0.5</span><br><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, input_x, mask=<span class="hljs-literal">None</span></span>):<br>        <span class="hljs-comment"># input_x 此时的形状是：[batch_size, seq_len, hid_dim] ， 此例中具体为：[32, 20, 256]</span><br><br>        <span class="hljs-comment"># 2.2 求取原始 Q、K、V</span><br>        <span class="hljs-comment"># input_x 的最后一维与线性层做线性变换</span><br>        Q = <span class="hljs-variable language_">self</span>.wq_(input_x) <span class="hljs-comment"># Q的形状为：[batch_size, seq_len, k_dim]，即[32, 20, 128]</span><br>        K = <span class="hljs-variable language_">self</span>.wk_(input_x) <span class="hljs-comment"># K的形状为：[batch_size, seq_len, k_dim]，即[32, 20, 128]</span><br>        V = <span class="hljs-variable language_">self</span>.wv_(input_x) <span class="hljs-comment"># V的形状为：[batch_size, seq_len, v_dim]，即[32, 20, 64]</span><br>        <br>        <span class="hljs-comment"># 2.3 将原始 Q、K、V 划分给多个注意力头（此处用8个注意力头），并变更数据形状</span><br>        <span class="hljs-comment"># [batch_size, seq_len, k_dim] -&gt; [batch_size, seq_len, self.head_num, self.k_dim//self.head_num]</span><br>        <span class="hljs-comment">#       -&gt; [batch_size, self.head_num, seq_len, self.k_dim//self.head_num]</span><br>        <span class="hljs-comment"># 即 [32, 20, 128] -&gt; [32, 20, 8, 16] -&gt; [32, 8, 20, 16]</span><br>        batch_size = input_x.shape[<span class="hljs-number">0</span>]<br>        <span class="hljs-comment"># 线性变换操作的输出通常是连续存储的张量，所以此处不需要先执行 .contiguous() 操作</span><br>        Q = Q.reshape(batch_size, -<span class="hljs-number">1</span>, <span class="hljs-variable language_">self</span>.head_num, <span class="hljs-variable language_">self</span>.k_dim//<span class="hljs-variable language_">self</span>.head_num) \<br>            .permute(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>)<br>        K = K.reshape(batch_size, -<span class="hljs-number">1</span>, <span class="hljs-variable language_">self</span>.head_num, <span class="hljs-variable language_">self</span>.k_dim//<span class="hljs-variable language_">self</span>.head_num) \<br>            .permute(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>)<br>        <span class="hljs-comment"># [32, 20, 64] -&gt; [32, 20, 8, 8] -&gt; [32, 8, 20, 8]</span><br>        V = V.reshape(batch_size, -<span class="hljs-number">1</span>, <span class="hljs-variable language_">self</span>.head_num, <span class="hljs-variable language_">self</span>.v_dim//<span class="hljs-variable language_">self</span>.head_num) \<br>            .permute(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>)<br><br>        <span class="hljs-comment"># 2.4 计算原始注意力得分，然后softmax得到注意力权重</span><br>        <span class="hljs-comment"># [32, 8, 20, 16] * [32, 8, 16, 20] =&gt; [32, 8, 20, 20]，最后除以缩放因子</span><br>        attention_score = torch.matmul(Q, K.permute(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>)) / <span class="hljs-variable language_">self</span>.scale<br><br>        <span class="hljs-keyword">if</span> mask <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>            <span class="hljs-comment"># 此处，torch.finfo(torch.float32).min 与 torch.finfo(attention_score.dtype).min 作用相同</span><br>            <span class="hljs-comment"># torch.finfo(attention_score.dtype).min 获取当前张量数据类型的最小值，避免硬编码</span><br>            attention_score = attention_score.masked_fill(mask == <span class="hljs-number">0</span>, torch.finfo(attention_score.dtype).<span class="hljs-built_in">min</span>)<br><br>        <span class="hljs-comment"># 在最后一个维度上做softmax操作</span><br>        attention = torch.softmax(attention_score, dim=-<span class="hljs-number">1</span>)<br>        <span class="hljs-comment"># 做 dropout 操作</span><br>        attention = <span class="hljs-variable language_">self</span>.dropout(attention)<br><br>        <span class="hljs-comment"># 2.5 将注意力权重与V做矩阵乘法，得到原始注意力矩阵</span><br>        <span class="hljs-comment"># [32, 8, 20, 20] * [32, 8, 20, 8] =&gt; [32, 8, 20, 8]</span><br>        z_ = torch.matmul(attention, V)<br><br>        <span class="hljs-comment"># 2.6 将多个注意力头结果进行合并，结果数据形状为[batch_size, seq_len, v_dim]</span><br>        <span class="hljs-comment"># 变换维度，[32, 8, 20, 8] -&gt; [32, 20, 8, 8]。并在底层上重新分配连续内存，保证 .view 操作安全</span><br>        z_ = z_.permute(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>).contiguous()<br>        <span class="hljs-comment"># 将最后两维进行合并</span><br>        z_ = z_.reshape(batch_size, -<span class="hljs-number">1</span>, <span class="hljs-variable language_">self</span>.head_num * (<span class="hljs-variable language_">self</span>.v_dim//<span class="hljs-variable language_">self</span>.head_num))<br><br>        <span class="hljs-comment"># 2.7 将合并后的注意力头结果经过一层全连接层做线性变换，融合各头信息</span><br>        z = <span class="hljs-variable language_">self</span>.wo_(z_)<br><br>        <span class="hljs-keyword">return</span> z<br><br><br><br><span class="hljs-comment"># 1. 构造输入 [batch_size, seq_len, hid_dim]</span><br><span class="hljs-comment"># batch_size：每次训练的样本数，seq_len：每个序列的最大长度，hid_dim：每个词向量的维度</span><br>input_x = torch.rand(<span class="hljs-number">32</span>, <span class="hljs-number">20</span>, <span class="hljs-number">256</span>)<br><br>attention = MultiheadAttention(<span class="hljs-number">256</span>, <span class="hljs-number">128</span>, <span class="hljs-number">64</span>, <span class="hljs-number">8</span>, <span class="hljs-number">0.1</span>)<br>z = attention(input_x)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;输入形状为：<span class="hljs-subst">&#123;input_x.shape&#125;</span>&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;输入经过多头注意力层作用后，结果形状为：<span class="hljs-subst">&#123;z.shape&#125;</span>&quot;</span>)<br></code></pre></td></tr></table></figure>
-<h6 id="残差连接与层归一化">残差连接与层归一化</h6>
+<h5 id="残差连接与层归一化">10.2.2.2.2 残差连接与层归一化</h5>
 <p>前面概括性地说过“单层编码器中包含一个Self-Attention层、一个FFNN层”，其实还省略掉了一个子组件：“Add
 &amp; Normalize”，它们是两个步骤“Residual Connection &amp; Layer
 Normalization”的简写，“Residual Connection”叫残差连接，“Layer
 Normalization”叫层归一化。</p>
-<p>它们在单层编码器中的位置大概如下图所示。在每层编码器中，每个“Self-Attention层”、“Layer
-Normalization”后都会紧跟一个“Add &amp; Normalize”操作。 <img
+<p>它们在单层编码器中的位置大概如下图所示。在每层编码器中，每个
+Self-Attention 子层和 FFN 子层后都有 Add &amp; Normalize。 <img
 src="https://files.seeusercontent.com/2026/11/13/Qvk3/20261113161550019.png" srcset="/img/loading.gif" lazyload
 alt="Add &amp; Normalize在单层编码器中的位置" /></p>
 <p>其中，残差连接主要是为了尽可能保证模型性能不会退化、缓解模型反向传播时梯度消失。关于它的更详细一些的解析可见我以前总结的博客文章：<a
 href="https://jiangsanyin.github.io/2026/08/27/PyTorch04-PyTorch%E5%9F%BA%E7%A1%80%E5%AE%9E%E6%88%98/#%E6%AE%8B%E5%B7%AE%E8%BF%9E%E6%8E%A5">残差连接</a>
 。</p>
 <p>层归一化主要是为了把每个样本各层输出的数值分布拉回稳定范围，避免训练中数值过大或过小导致不稳定、收敛变慢。关于其计算维度、可学习参数，以及它与
-BatchNorm 的区别，见：<a
+BatchNorm 的区别，见我以前总结的博客文章：<a
 href="https://jiangsanyin.github.io/2026/08/06/PyTorch03-PyTorch%E7%9A%84%E4%B8%BB%E8%A6%81%E7%BB%84%E6%88%90%E6%A8%A1%E5%9D%97/#%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96%E5%B1%82">层归一化层</a>。</p>
-<p>如果将Self-Attention层后紧跟着的“Add &amp;
+<p>如果将“每个 Self-Attention 子层和 FFN 子层后都有 Add &amp;
 Normalize”从更细致地角度可视化展示，如下图所示： <img
 src="https://files.seeusercontent.com/2026/11/13/wt3O/20261113164108740.png" srcset="/img/loading.gif" lazyload
 alt="从更细致地角度可视化Self-Attention层后紧跟着的“Add &amp; Normalize”" /></p>
@@ -1130,14 +1133,644 @@ Normalize”在编码器与解码器中的位置，我们假设Transformer中只
 &amp; Normalize”结构示意图如下： <img
 src="https://files.seeusercontent.com/2026/11/13/jb1E/20261113164725452.png" srcset="/img/loading.gif" lazyload
 alt="两层Transformer中编码组件、解码组件基其中的子层和“Add &amp; Normalize”结构示意图" /></p>
-<h5 id="ffnn">10.2.2.2.2 FFNN</h5>
+<h5 id="ffnn">10.2.2.2.3 FFNN</h5>
+<p>Transformer中编码器解码器中都包含FFNN层，不管是在编码器中还是解码器中，FFNN层都是由4个子层顺序组成，它们分别是：Linear(<span
+class="math inline">\(d_{model} \rightarrow
+d_{ff}\)</span>)、ReLU、Linear(<span class="math inline">\(d_{ff}
+\rightarrow d_{model}\)</span>)、Dropout。</p>
+<p>就是说，FFNN层由上述这样的夹心结构构成。第一个线性变换，输入<span
+class="math inline">\(d_{model}\)</span>维输出<span
+class="math inline">\(d_{ff}\)</span>维，其中<span
+class="math inline">\(d_{ff}\)</span>中隐藏维度；再经过一个ReLU层激活函数，只对其中部分内容进行激活；再经过第二个线性层，输入<span
+class="math inline">\(d_{ff}\)</span>维输出<span
+class="math inline">\(d_{model}\)</span>维，将向量维度又恢复成<span
+class="math inline">\(d_{model}\)</span>；最后经过一个Dropout层，随机丢弃掉部分值防止出现过拟合。</p>
+<p>所以说，FFNN层的输入数据、输出数据在形状是一致的。</p>
+<p>FFNN在单层编码器中如下图所示（其中，一是因为空间有限；二是因为Dropout
+层只在训练阶段启用，推理/测试阶段关闭。所以下图未把Dropout层绘制出来）：
+<img
+src="https://files.seeusercontent.com/2026/11/16/y7Hm/20261116112524600.png" srcset="/img/loading.gif" lazyload
+alt="image.png" /></p>
 <h4 id="解码器">10.2.2.3 解码器</h4>
+<h5 id="解码器概览">10.2.2.3.1 解码器概览</h5>
+<p>Transformer 编码器一般由多层 Encoder Layer 堆叠而成。输入文本经过
+Tokenization、Embedding
+和位置编码后，每个词元被转换为一个向量，多个词元对应的向量按照原始顺序排列，形成一个向量序列，作为第一个
+Encoder Layer 的输入。</p>
+<p>各层 Encoder Layer
+均以一个向量序列作为输入，并输出经过进一步特征提取和上下文信息融合后的一个向量序列。每层处理前后的向量序列中，词元数量通常保持不变，但每个词元对应的向量表示会发生变化。</p>
+<p>最后一个 Encoder Layer
+输出的仍然是一个向量序列，其中每个向量都是融合了上下文信息的词元表示。（如果一次输入多个句子（Batch），那么输入和输出就分别是一组向量序列（多个向量序列），每个句子对应一个向量序列。）</p>
+<p>编码器首先处理输入序列。然后，顶层编码器（最后一个编码器）的输出会作为每个解码器层中“编码器-解码器注意力”层的
+K、V 的来源。每个解码器层都有各自独立的 K、V
+线性变换矩阵，因此它们使用的是同一份编码器输出，但实际计算得到的 K、V
+向量各不相同；这些向量帮助解码器关注输入序列中的适当位置，如下图所示：
+<img
+src="https://files.seeusercontent.com/2026/11/16/2ypF/transformer_decoding_1.gif" srcset="/img/loading.gif" lazyload
+alt="解码器组件生成第一个输出内容" /></p>
+<p>在上述这个翻译示例中，在解码阶段的每一个时间步生成一个翻译后的英文单词。随着时间步的增加，不断重复此过程生成后续的翻译单词，直到生成一个暗示解码阶段结束的特殊符号，标志解码阶段结束。
+具体过程是：第 0
+个时间步先向解码器输入一个起始符号；之后，每生成一个词元，就将该词元追加到已经生成的目标词元序列中。这个“已生成的目标词元前缀”经过
+Embedding
+和位置编码后，作为下一时间步解码器的输入，用来预测下一个词元。与此同时，同一次解码过程中，Encoder-Decoder
+Attention 所使用的 K、V
+都由顶层编码器的输出经过各解码器层相应的线性变换得到；源序列不变，所以同一解码器层的
+K、V 在不同时间步原则上保持不变。整个过程如下图所示：</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/11/16/myY6/2-decoder.gif" srcset="/img/loading.gif" lazyload
+alt="解码器组件生成一个完整的翻译句子" />
+<figcaption
+aria-hidden="true">解码器组件生成一个完整的翻译句子</figcaption>
+</figure>
+<p>解码器中的 Masked Self-Attention（掩码自注意力）层和 Encoder-Decoder
+Attention（编码器-解码器注意力，也叫
+Cross-Attention，交叉注意力）层，与编码器中的自注意力层相比，存在如下不同：</p>
+<ol type="1">
+<li>Masked
+Self-Attention（掩码自注意力）层关注的位置。在解码器中，自注意力层只能关注输出序列中当前位置及其之前的位置（上的内容）。这是通过屏蔽后面位置来实现的，即在Softmax之前将对后面位置的注意力分数手动设置负无穷大(<code>-inf</code>)。</li>
+<li>Encoder-Decoder
+Attention（编码器-解码器注意力，也叫交叉注意力）层生成 Q/K/V
+的方式。该层通过对同一个解码器中处于其前面的 Masked Self-Attention
+层的输出执行线性变换得到 Q 向量；K 向量、V
+向量则分别通过对顶层编码器的输出执行线性变换得到（多个解码器层在此处的线性变换矩阵相互独立）。</li>
+</ol>
+<h5 id="交叉注意力">10.2.2.3.2 交叉注意力</h5>
+<p>Encoder-Decoder
+Attention，翻译成中文是编码器-解码器注意力，也叫交叉注意力。</p>
+<p>在标准 Transformer 的每一层 Decoder 中，都包含三个子层： <img
+src="https://files.seeusercontent.com/2026/11/16/2nxL/20261116171502056.png" srcset="/img/loading.gif" lazyload
+alt="image.png" /></p>
+<p>Encoder-Decoder Attention 中<strong>Q、K、V</strong>
+的来源与操作：</p>
+<table>
+
+<thead>
+<tr>
+<th>向量</th>
+<th>来源</th>
+<th>具体说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q</td>
+<td>当前 Decoder Layer 的 Masked Self-Attention 输出</td>
+<td>经过线性变换得到</td>
+</tr>
+<tr>
+<td>K</td>
+<td>顶层 Encoder 的输出</td>
+<td>经过当前 Decoder Layer 的线性变换得到</td>
+</tr>
+<tr>
+<td>V</td>
+<td>顶层 Encoder 的输出</td>
+<td>经过当前 Decoder Layer 的线性变换得到</td>
+</tr>
+</tbody>
+</table>
+<p>可以用公式表示： 假设当前 Decoder Layer 的 Masked Self-Attention
+输出为 <span class="math inline">\(S\)</span>，顶层 Encoder 输出为 <span
+class="math inline">\(H\)</span>。</p>
+<p><span class="math display">\[
+\begin{aligned} Q &amp;= SW^Q\\ K &amp;= HW^K\\ V &amp;= HW^V
+\end{aligned}
+\]</span></p>
+<p>随后进行交叉注意力计算：</p>
+<p><span class="math display">\[
+\mathrm{Attention}(Q,K,V) = \mathrm{Softmax} \left(
+\frac{QK^\top}{\sqrt{d_k}} \right)V
+\]</span></p>
+<p>这里需要注意：每一层 Decoder 都有自己的投影矩阵 (<span
+class="math inline">\(W^Q\)</span>,<span
+class="math inline">\(W^K\)</span>,<span
+class="math inline">\(W^V\)</span>)，因此不同 Decoder Layer 的 K、V
+通常也不同，尽管它们的原始来源都是同一个顶层 Encoder 输出。</p>
+<p>源序列不变，同一 Decoder Layer 的 Encoder-Decoder Attention
+子层所使用的 K、V 在不同解码时间步保持不变（因为它们都是由顶层 Encoder
+的固定输出经过该层自身的线性变换得到的）。因此，在实际推理过程中，可以在解码开始时预先计算并缓存各
+Decoder Layer 对应的
+K、V，后续解码时间步直接复用缓存结果，从而避免重复计算，提高解码效率。</p>
+<h4 id="线性层和softmax层">10.2.2.4 线性层和<code>Softmax</code>层</h4>
+<p>上面讲述了Transformer中的解码器组件，可知，解码器组件的最终输出是一个个浮点型的向量。那么从这些浮点型向量如何得到我们想要的一个个字符呢？这就是用到解码器组件之后线性层与Softmax层。</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/11/16/Mij8/20261116212927765.png" srcset="/img/loading.gif" lazyload
+alt="以解码组件的输出为基础，使用最后的线性层与Softmax层得到预测词元" />
+<figcaption
+aria-hidden="true">以解码组件的输出为基础，使用最后的线性层与Softmax层得到预测词元</figcaption>
+</figure>
+<p>在先前的法语翻译成英文的示例中，模型给人的感觉就是输出一个个英文单词。但实际上的情况是，在模型解码阶段及后续的线性层、Softmax层，模型根据已有生成的
+Token 和 Encoder 提供的上下文信息，预测下一个 Token ，这个 Token
+并一定对应于一个单词。一个 Token 可能对应如下情况之一：</p>
 <ul>
-<li>Encoder-Decoder Attention层</li>
+<li>一个 Token 可能是一个完整英文单词。</li>
+<li>一个 Token 可能只是一个英文单词的一部分。</li>
+<li>一个 Token 也可能是标点符号、空格相关内容等。</li>
 </ul>
-<h4 id="线性层和softmax">10.2.2.4 线性层和Softmax</h4>
-<h4 id="损失函数">10.2.2.5 损失函数</h4>
-<h3 id="参考资料-1">参考资料</h3>
+<p>它们在 Transformer 中的位置如前面给出的图“原始 Transformer
+模型构架图”所示，不记得了可以回过头去查看。</p>
+<p>此处线性层是一个全连接层，将解码器组件的输出一个个向量映射成一个个更大、很大的结果向量（很大是指向量的维数很大），这个结果向量有一个专门的名字叫<code>logits</code>向量。</p>
+<p>假如我们的模型能够认识与输出 10000 个不同的英文词元（这 10000
+个不同的英文词元就是模型的输出词汇表）。那么一个<code>logits</code>向量就是一个10000维向量，其中包含10000个分量，每个分量是一个浮点数，每个分量所在位置对应着模型词汇表中不同英文词元，这个分量值就是这个英文词元的得分，得分越高，表示模型的输出结果越可能是这个分量位置对应的英文词元。</p>
+<p>在线性层之后的Softmax层负责将向量中每个分量的值转换成一个概率值，计算公式及相关描述如下。</p>
+<p>假设线性层输出的 <code>logits</code> 向量包含 10000 个分量：</p>
+<p><span class="math display">\[
+logits=[z_1,z_2,\ldots,z_{10000}]
+\]</span></p>
+<p>经过 Softmax 层后，每个分量转换为对应的概率值：</p>
+<p><span class="math display">\[
+\boxed{ p_i=\frac{e^{z_i}}{\displaystyle\sum_{j=1}^{10000}e^{z_j}} \quad
+(i=1,2,\ldots,10000) }
+\]</span></p>
+<p>其中：</p>
+<ul>
+<li><span class="math inline">\(z_i\)</span>：logits 向量中的第 <span
+class="math inline">\((i)\)</span> 个分量。</li>
+<li><span class="math inline">\(e^{z_i}\)</span>：对第 <span
+class="math inline">\((i)\)</span> 个分量进行指数运算。</li>
+<li>分母：对 logits 向量中所有分量进行指数运算后求和。</li>
+<li><span class="math inline">\(p_i\)</span>：第 <span
+class="math inline">\((i)\)</span> 个分量经过 Softmax
+转换后得到的概率值。</li>
+</ul>
+<p><strong>Softmax 处理后的结果满足：</strong></p>
+<p><span class="math display">\[
+0&lt;p_i&lt;1
+\]</span></p>
+<p><span class="math display">\[
+\boxed{\sum_{i=1}^{10000}p_i=1}
+\]</span></p>
+<p>这样，Softmax 将线性层输出的 logits
+向量转换为一个概率分布，概率值最大的分量所对应的词元，就是模型最终选择输出的词元（采用
+Greedy Decoding 时）。</p>
+<p>经过Softmax层处理后得到的向量是与处理前形状一致的向量，但经过Softmax层处理后得到的向量中所有分量之和为1
+。取概率值最大的那个分量所在位置对应的英文词元，这个英文词元就是此次解码的输出。</p>
+<h4 id="损失计算">10.2.2.5 损失计算</h4>
+<h5 id="输出词汇表与词元表示">10.2.2.5.1 输出词汇表与词元表示</h5>
+<p>我们已经对Transformer的整个前向传播过程有了一个了解，现在如果尝试对训练模型做一次直观的感受与分析，对理解与记忆Transformer很有帮助。</p>
+<p>即使模型还没有经过训练，它也可以执行完整的前向传播。
+就是说：不管是否训练过，Transformer
+模型都可以执行完成的前向传播，只要代码结构正确合理，前向传播过程都能正常跑通；只是未经训练的
+Transformer 的预测结果通常不准确而已。</p>
+<p>既然从未被训练或未被训练完成的模型在训练过程中都有输出，那么我们就可以将这个模型输出与真正正确的输出进行比较，从而通过某方法找到差异、逐步优化模型以缩小后续的输出差异。</p>
+<p>为了后续对模型输出与正确的标签进行比较，要将模型输出与正确标签定义可以量化表示与量化比较的形式。现在，让我们来学习输出词汇表与词元的表示。</p>
+<p>此处为了展示示例的方便，我们假设模型词汇表只有6个词元（此处我们理解原理，这并不会影响我们理解真实模型词汇表中有数以万计词元时的情况）：“a”、“am”、“i”、“thanks”、“student”和“<code>&lt;eos&gt;</code>”，其中“<code>&lt;eos&gt;</code>”是“end
+of sentence”的缩写，代表序列结束符对应的词元。</p>
+<p>在预处理阶段，我们定义好模型输出词汇表。上述示例中，输出词汇表由6个词元构成。下图就展示了这个输出词汇表及其中各词元在输出词汇表中的索引位置，这个索引位置也是词元在输出向量中的索引位置：
+<img
+src="https://files.seeusercontent.com/2026/11/17/M2tb/20261117205509060.png" srcset="/img/loading.gif" lazyload
+alt="模型输出词汇表示例" /></p>
+<p>定义好输出词汇表后，输出词汇表中的任意一个词元都可以被一个维度大小等于输出词汇表长度的向量来表示，我们知道每个词元在输出词汇表中的索引位置，当我们想要表示哪个词元时，这个词元对应的向量中对应索引位置上的分量就是1、其他索引位置上的分量全为0。那么输出词汇表中有多少个词元，就需要多少个这样的向量。这种表示机制有一个专门的名词，叫独热编码（<a
+target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/machine-learning/ml-one-hot-encoding/">one-hot
+encoding</a>），它是一种将离散类别转换为数值向量的编码方式。</p>
+<p>比如说，上述示例中输出词汇表的长度是6，那么这6个词元中任意一个词元都可以被一个维度大小为6的向量表示。其中输出词汇表中索引位置为1的词元"am"可以用如下向量表示：
+<img
+src="https://files.seeusercontent.com/2026/11/17/u4Cf/20261117212357658.png" srcset="/img/loading.gif" lazyload
+alt="使用独热编码方式对词元编码" /></p>
+<p>最后，这6个词元分别可以被如下6个向量来表示： <figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs erlang"><span class="hljs-function"><span class="hljs-title">a</span>          <span class="hljs-params">(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)</span></span><br><span class="hljs-function"><span class="hljs-title">am</span>         <span class="hljs-params">(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)</span></span><br><span class="hljs-function">I          <span class="hljs-params">(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)</span></span><br><span class="hljs-function"><span class="hljs-title">thanks</span>     <span class="hljs-params">(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)</span></span><br><span class="hljs-function"><span class="hljs-title">student</span>    <span class="hljs-params">(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>)</span></span><br><span class="hljs-function">&lt;<span class="hljs-title">eos</span>&gt;      <span class="hljs-params">(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>)</span></span><br></code></pre></td></tr></table></figure></p>
+<p>这样，我们再规定模型经过最后线性层与Softmax后，每次输出的是概率分布向量，就是说每次输出是一个向量，向量的维度就是输出词汇表的长度，向量中的每个分量分别对应输出词汇表中各词元的概率值，词汇表中各词元在在这个输出向量中的位置是约定好的、不变的。</p>
+<p>经过训练后模型理想情况下应该达到如下状态：每次输出一个向量，且这个向量中只有预期词元对应的索引位置对应分量为1，向量其余索引位置上的分量全为0
+。即对于上述示例来说，如果某次预期要输出词元"am"，那么模型Softmax后输出的向量应该是(0,
+1, 0, 0, 0,
+0)，但实际上模型一般无法达到此理想状态，实际上输出向量中各个分量总体是一个接近理想输出向量的情况，比如(0.05,
+0.86, 0.04, 0.01, 0.02, 0.02)。
+至少实际上的输出向量到底有多接近理想输出，就需要一个评价标准来衡量，最常用的评价标准就是损失函数。</p>
+<p>损失函数有多种具体的实现，但其主要思想仍是评判模型实际输出与理想输出的之间的差距有多大，当然损失越小越好。下面介绍损失函数，但不展开具体实现细节（内容太多，需要另用文章展开学习与记录。已有相关内容参考：<a
+href="https://jiangsanyin.github.io/2026/08/06/PyTorch03-PyTorch%E7%9A%84%E4%B8%BB%E8%A6%81%E7%BB%84%E6%88%90%E6%A8%A1%E5%9D%97/#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0">PyTorch中预定义损失函数</a>、<a
+href="https://jiangsanyin.github.io/2026/09/21/PyTorch06-PyTorch%E8%BF%9B%E9%98%B6%E8%AE%AD%E7%BB%83%E6%8A%80%E5%B7%A7/#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0">PyTorch中自定义损失函数</a>）。</p>
+<h5 id="损失函数">10.2.2.5.2 损失函数</h5>
+<p>假设我们正在训练模型。我们用一个简单的例子来训练它、说明训练的过程——将“merci”翻译成“thanks”。</p>
+<p>Transformer模型的期望输出结果是一个针对多个词元（模型输出词汇表中所有词元）的概率分布，其中“谢谢”这个词元的概率最大。在模型未训练前，无法准确地做到。为此，需要引入损失函数。</p>
+<p>Transformer 训练时，将 Decoder 的输出经过线性层和Softmax，然后与真实
+Label 一起送入损失函数（比如使用交叉熵损失）计算 Loss。最后，根据 Loss
+进行反向传播，计算模型各参数的梯度，并通过优化器更新模型参数。通过多轮训练，最终达到或接近上述期望状态。</p>
+<p>下图中展示了模型训练前与训练后，针对输出词汇表各词元的概率分布： <img
+src="https://files.seeusercontent.com/2026/11/17/0dEe/20261117111625937.png" srcset="/img/loading.gif" lazyload
+alt="模型训练前后的输出概率分布对比" /></p>
+<p>从上图可以看到，由于模型的所有参数（权重）都是随机初始化的，因此未经训练的模型最终会生成一个对词汇表中各词元的概率分布，其中每个词元的概率都是随机的。训练前词元"thanks"对应的概率并不是最大，而经过训练后的模型给出的概率分布中，词元"thanks"对应的概率最大。</p>
+<p>训练前与训练后产生的这种差异是如何造就的，这就是训练过程中的模型参数更新。训练过程中，我们可以将模型当前输出的概率分布与期望输出的概率分布进行比较，借助反向传播算法调整模型的所有权重，在多轮训练中反复执行这个动作，直到模型的输出达到收敛状并接近期望输出。</p>
+<p>那么如何比较这两个概率分布？这是个复杂且专业的范畴，有一些专门的算法来实现，常见的有 <a
+target="_blank" rel="noopener" href="https://colah.github.io/posts/2015-09-Visual-Information/">交叉熵（Cross-Entropy）</a>和<a
+target="_blank" rel="noopener" href="https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained">KL散度（Kullback-Leibler
+Divergence）</a>，在此处暂时不展开描述与学习。</p>
+<p>上面只翻译或输出一个单词的示例过于简单，让我们来看一个稍微复杂点、符合实际使用场景的句子翻译示例：我们要将法语句子“Je
+suis étudiant”翻译成英文句子“I am a
+student”（这就是期望的输出），但在模型做这个翻译时，我们真正想要实现的是让模型依次输出概率分布，其中一些细节如下：</p>
+<ul>
+<li>我们假设模型输出词汇表仍如上图“模型输出词汇表示例”（这个输出词汇表长度适合，既然能满足这个句子翻译的要求，又方面我们用文字与图描述此翻译过程。当然实际的大模型输出词汇表的长度至少以万计），那么模型Softmax后的输出就是一个用6维向量来表示的概率分布，其中6就是输出词汇表的长度。</li>
+<li>第一个期望的输出词元是“I”。所以第一个概率分布在与词元“I”相关的分量处（6维向量中的分量，按照上面定义的输出词汇表，词元“I”对应6维向量的第2个分量，分量索引从0开始算起）具有最高概率。</li>
+<li>第二个期望的输出词元是“am”。所以第一个概率分布在与词元“am”相关的分量处（6维向量的第1个分量）具有最高概率。</li>
+<li>按此规律不断往后输出概率分布，直到第五个概率分布中与词元“
+<code>&lt;eos&gt;</code>”相关的分量处（6维向量的第5个分量）具有最高概率，输出词元“
+<code>&lt;eos&gt;</code>”表示句子翻译结束、没有下一个待输出的词元了。</li>
+</ul>
+<p>但没有经过训练的模型无法按上述描述进行输出。为此我们需要对模型执行训练，首先我们需要定义理想的期望输出（标签），即我们要告诉模型训练时要不断向这样的输出靠近，做到有的放矢，如下图所示：</p>
+<figure>
+<img
+src="https://files.seeusercontent.com/2026/11/18/2egS/20261118103021054.png" srcset="/img/loading.gif" lazyload
+alt="这是针对上述翻译示例的、理想的模型输出，也就是标签" />
+<figcaption
+aria-hidden="true">这是针对上述翻译示例的、理想的模型输出，也就是标签</figcaption>
+</figure>
+<p>然后就是执行模型训练。我们在一个足够大的数据集上对模型训练足够多的轮次，每个训练轮次过程中，都要通过“损失函数”计算与评判模型实际输出的概率分布与期望输出的概率分布之间的差距，并采用反向传播方式不断更新模型参数、尝试优化模型后续的实际输出概率分布。</p>
+<p>算得上是训练成功的模型输出的概率分布很可能如下图所示： <img
+src="https://files.seeusercontent.com/2026/11/18/N4wd/20261118104707682.png" srcset="/img/loading.gif" lazyload
+alt="训练后模型可能输出的概率分布" /></p>
+<p>我们希望训练后的模型能够输出我们预期的正确翻译，上述概率分布确实也对应着正确的翻译。
+当然，如果这个翻译示例就已经出现在训练数据集中，模型在此训练数据集训练后，能够正确给出翻译，并不能真正说明模型具有良好的泛化能力，这时需要用到交叉验证（此处不展开，这里有一些相关介绍：<a
+target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/machine-learning/cross-validation-machine-learning/">cross-validation-machine-learning</a>、<a
+target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=TIgfjmp-4BA">K-Fold Cross
+Validation - Intro to Machine
+Learning</a>），通俗地说就是“我们还需要使用没有参与训练的数据来测试模型，观察它能否正确处理新的句子”，这样可以更客观地评估模型的泛化能力。</p>
+<p>我们在上图中还可以看到：即使某个词元在当前时间步不太可能被输出，它一般也会获得很小但大于0的概率值。这是
+Softmax 的一个有用特性，它使得损失函数（如交叉熵损失）能够根据不同
+词元的预测概率产生梯度，帮助模型调整参数、有助于模型训练。</p>
+<p>最后，我们来看看模型是如何根据Softmax操作输出的概率分布来确定输出给用户的最终词元的策略。</p>
+<p>首先，我们要知道： Greedy Decoding（贪心解码）、 Beam
+Search（集束搜索）与 Sampling（采样解码） 是 Transformer
+自回归推理中几种经典且常用的解码策略。前两者都是“根据 Softmax
+输出的概率分布，决定下一个时间步应该生成哪个词元”，但选择词元的策略有明显区别。Sampling则根据
+Softmax 输出的概率分布进行随机采样。</p>
+<p>下面对它们进行分别介绍：</p>
+<ul>
+<li>Greedy
+Decoding（贪心解码）。每个时间步都选择概率分布中最大概率值对应的词元作为当前时间步生成的词元，其余更小概率值被忽略、当然它们对应的词元也被抛弃。但每个时间步选取概率最大的词元，不一定能使整个输出序列达到最优（不一定得到全局最优解）。</li>
+<li>Beam Search（集束搜索）。每个时间步都且只保留 K
+个最有希望（一般是累计得分最高的 K
+个候选序列）的候选输出序列，其余输出序列将被抛弃，其中 K 是 Beam
+Width（集束宽度）。在最后一个时间步结束后，再从保留下来的 K
+个候选输出序列中，选择得分最高的一个，作为最终输出序列。</li>
+<li>Sampling（采样解码）。它跟Greedy
+Decoding很像但却不同（可以对照理解），Sampling并不是每次都选择概率最大的
+Token，而是按照 Softmax
+输出的概率分布进行随机采样（概率值更大的词元被选取的概率更大。就像如下场景：有一个不透明黑盒中存在多个不同颜色的球，每种颜色的球可能存在多个，每次从这个黑盒中取一个球，某种颜色的球个数越多，取到这种颜色球的概率就越大，但不一定必被取到）。</li>
+</ul>
+<p>将 <strong>Greedy Decoding（贪心解码）、Beam Search（集束搜索）和
+Sampling（采样解码）</strong> 放在一张表格中进行比较，如下：</p>
+<table>
+
+<thead>
+<tr>
+<th>对比维度</th>
+<th>贪心解码（Greedy Decoding）</th>
+<th>集束搜索（Beam Search）</th>
+<th>采样解码（Sampling）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>选择方式</td>
+<td>始终选择概率最大的 Token</td>
+<td>每步保留累计得分最高的 K 个候选序列</td>
+<td>按概率分布随机选择 Token</td>
+</tr>
+<tr>
+<td>是否随机</td>
+<td>否</td>
+<td>通常否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>是否一定选择概率最大的 Token</td>
+<td>是</td>
+<td>不一定，取决于整个序列的累计得分</td>
+<td>否</td>
+</tr>
+<tr>
+<td>候选数量</td>
+<td>每步保留 1 个候选序列</td>
+<td>每步保留 K 个候选序列</td>
+<td>每步采样 1 个 Token</td>
+</tr>
+<tr>
+<td>是否考虑多个候选序列</td>
+<td>否</td>
+<td>是</td>
+<td>否（基础采样方式）</td>
+</tr>
+<tr>
+<td>生成结果</td>
+<td>相同条件下通常确定</td>
+<td>相同条件下通常确定</td>
+<td>可能具有多样性</td>
+</tr>
+<tr>
+<td>计算开销</td>
+<td>较小</td>
+<td>较大</td>
+<td>通常较小</td>
+</tr>
+<tr>
+<td>典型应用</td>
+<td>机器翻译等确定性生成</td>
+<td>机器翻译、序列生成</td>
+<td>对话、创意文本生成</td>
+</tr>
+<tr>
+<td>推荐讲解文章</td>
+<td><a
+target="_blank" rel="noopener" href="https://huggingface.co/docs/transformers/v5.19.0/generation_strategies">Generation
+strategies)</a></td>
+<td><a
+target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/machine-learning/introduction-to-beam-search-algorithm">Introduction
+to Beam Search Algorithm</a></td>
+<td><a
+target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/artificial-intelligence/graph-based-semi-supervised-learning">Temperature,
+Top-K and Top-P Sampling in LLMs</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>最值得记住的区别：</strong></p>
+<ul>
+<li>贪心解码：每一步选概率最大的 Token。</li>
+<li>集束搜索：每一步保留 K 个累计得分最高的候选序列。</li>
+<li>采样解码：每一步按照概率分布随机选择 Token。</li>
+</ul>
+<h2 id="decoder-only-transformer">10.3 Decoder-only Transformer</h2>
+<p>前面介绍的原始 Transformer 是 Encoder-Decoder
+架构，适合机器翻译这类“给定一个输入序列，生成另一个输出序列”的任务。如今许多大语言模型则采用
+<strong>Decoder-only Transformer（仅解码器
+Transformer）</strong>：它只保留一叠带因果 Mask 的 Decoder
+Layer，并通过“根据已有词元预测下一个词元”的任务学习语言规律。</p>
+<p>以一段文本的词元序列 <span
+class="math inline">\(x_1,x_2,\ldots,x_T\)</span> 为例，Decoder-only
+模型依次学习预测：已知 <span class="math inline">\(x_1\)</span> 预测
+<span class="math inline">\(x_2\)</span>，已知 <span
+class="math inline">\(x_1,x_2\)</span> 预测 <span
+class="math inline">\(x_3\)</span>，直到预测最后一个词元。生成文本时也遵循同一规则：先给模型一个提示词（prompt），模型预测一个新词元；把该词元追加到提示词末尾后，再预测下一个词元。</p>
+<p>可以将典型的 Decoder-only Transformer 概括为下面的数据流：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">词元 ID 序列<br>    ↓ Token Embedding + 位置信息<br>输入表示 [B, T, d_model]<br>    ↓ 重复 L 次：Causal Self-Attention → MLP/FFN（每个子层都有残差连接和归一化）<br>隐藏状态 [B, T, d_model]<br>    ↓ 最终归一化 + 语言模型输出层（LM Head）<br>logits [B, T, vocab_size]<br>    ↓ Softmax（需要概率时才计算）<br>每个位置对“下一个词元”的概率分布<br></code></pre></td></tr></table></figure>
+<p>其中，<code>B</code> 是 batch_size，<code>T</code>
+是当前序列长度，<code>d_model</code>
+是隐藏向量维度，<code>vocab_size</code>
+是词表大小。<code>logits[b, t, :]</code> 是第 <code>b</code>
+个序列在位置 <code>t</code>
+的未归一化分数，包含词表中每一个候选词元作为“下一个词元”的分数。</p>
+<h3 id="与原始-encoder-decoder-transformer-的结构差异">10.3.1 与原始
+Encoder-Decoder Transformer 的结构差异</h3>
+<p>原始 Transformer 与典型 Decoder-only Transformer 的主要差别如下：</p>
+<table>
+
+<thead>
+<tr>
+<th>对比项</th>
+<th>原始 Encoder-Decoder Transformer</th>
+<th>Decoder-only Transformer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>典型任务</td>
+<td>翻译、摘要等“源序列 → 目标序列”任务</td>
+<td>续写、对话、代码生成等根据已有上下文继续生成的任务</td>
+</tr>
+<tr>
+<td>Encoder</td>
+<td>有。编码输入/源序列，Encoder 内自注意力可查看整个源序列</td>
+<td>没有独立的 Encoder 堆栈</td>
+</tr>
+<tr>
+<td>Decoder 的注意力</td>
+<td>Masked Self-Attention + Cross-Attention + FFN</td>
+<td>Causal Self-Attention + FFN</td>
+</tr>
+<tr>
+<td>Cross-Attention</td>
+<td>有，Q 来自 Decoder，K/V 来自 Encoder 输出</td>
+<td>基础纯文本形式没有
+Cross-Attention；所有上下文都放在同一词元序列中，由因果自注意力处理</td>
+</tr>
+<tr>
+<td>生成条件</td>
+<td>输入序列由 Encoder 单独处理，目标序列由 Decoder 自回归生成</td>
+<td>提示词、对话历史和已生成内容组成同一个前缀序列</td>
+</tr>
+</tbody>
+</table>
+<p>不要把“Decoder-only”理解为只保留原始 Decoder
+的一部分计算。它保留了“只能查看当前位置及之前位置”的因果自注意力思想，但现代实现常会调整归一化位置、位置编码、激活函数等细节。例如很多现代模型采用
+Pre-Norm 或 RMSNorm、旋转位置编码（RoPE）以及 SwiGLU
+等设计；这些是具体模型系列的架构选择，并不是 Decoder-only 定义本身。</p>
+<p>若用 <span class="math inline">\(h^{(l-1)}\)</span> 表示第 <span
+class="math inline">\(l\)</span> 层输入，许多现代 Decoder-only
+模型的一层可以概括为：</p>
+<p><span class="math display">\[
+u^{(l)}=h^{(l-1)}+\mathrm{CausalAttention}(\mathrm{Norm}(h^{(l-1)}))
+\]</span></p>
+<p><span class="math display">\[
+h^{(l)}=u^{(l)}+\mathrm{MLP}(\mathrm{Norm}(u^{(l)}))
+\]</span></p>
+<p>这里的 <code>CausalAttention</code> 表示带因果 Mask
+的多头自注意力，<code>Norm</code> 可能是 LayerNorm 或
+RMSNorm，<code>MLP</code> 是逐位置执行的前馈网络。公式描述的是常见的
+Pre-Norm 形式，用于帮助理解数据流；不同模型的精确实现可能有所不同。</p>
+<h3 id="因果-mask">10.3.2 因果 Mask</h3>
+<p>Decoder-only 模型需要保证：预测位置 <span
+class="math inline">\(t\)</span> 的下一个词元时，只能利用位置 <span
+class="math inline">\(t\)</span>
+及其之前的内容，不能提前看到未来词元。实现这一限制的关键就是
+<strong>因果 Mask（causal mask，也叫 look-ahead mask）</strong>。</p>
+<p>对长度为 <span class="math inline">\(T\)</span> 的序列，令第 <span
+class="math inline">\(i\)</span> 个位置查询第 <span
+class="math inline">\(j\)</span> 个位置时的 Mask 值为：</p>
+<p><span class="math display">\[
+M_{i,j}=\begin{cases}
+0, &amp; j\leq i\\
+-\infty, &amp; j&gt;i
+\end{cases}
+\]</span></p>
+<p>将它加到缩放点积注意力分数中：</p>
+<p><span class="math display">\[
+\mathrm{Attention}(Q,K,V)=\mathrm{Softmax}\left(\frac{QK^\top}{\sqrt{d_k}}+M\right)V
+\]</span></p>
+<p>当 <span class="math inline">\(j&gt;i\)</span> 时，分数被加上 <span
+class="math inline">\(-\infty\)</span>；经过 Softmax
+后，该位置的注意力权重为 0。以 4
+个位置为例，允许关注的位置可以画成下三角形式：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">查询位置 i      可以关注的 Key 位置 j<br>第 0 个位置     0<br>第 1 个位置     0, 1<br>第 2 个位置     0, 1, 2<br>第 3 个位置     0, 1, 2, 3<br></code></pre></td></tr></table></figure>
+<p>因此，训练时即使完整句子已经在内存中，位置 1 也无法利用位置 2、3
+的信息“偷看答案”。但所有位置的 <span
+class="math inline">\(Q\)</span>、<span
+class="math inline">\(K\)</span>、<span class="math inline">\(V\)</span>
+和注意力矩阵仍可通过一次批量矩阵运算并行计算，这正是自回归语言模型训练可以高效并行的原因。需要注意，因果
+Mask 解决的是“不能看未来”；若一个 batch
+中有不同长度的序列，仍通常需要额外的 Padding Mask 忽略填充位置。</p>
+<h3 id="与-qwengptllama-的对应关系">10.3.3 与 Qwen、GPT、Llama
+的对应关系</h3>
+<p>GPT、Llama、Qwen 都是以
+Decoder-only、因果语言建模为核心的语言模型系列：给定已有词元前缀，输出词表上“下一个词元”的概率分布。它们都不是原始
+Encoder-Decoder Transformer 中“带 Cross-Attention 的 Decoder
+堆栈”直接照搬；对于纯文本输入，它们通常没有独立的 Encoder，也没有来自
+Encoder 输出的 K、V。</p>
+<p>它们的共同点与常见实现差异可以概括如下：</p>
+<table>
+
+<thead>
+<tr>
+<th>模型系列</th>
+<th>共同的核心</th>
+<th>需要区分的具体实现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPT</td>
+<td>Decoder-only + 因果 Mask + next-token prediction</td>
+<td>GPT 是一个持续演进的系列；例如早期 GPT/GPT-2
+使用学习到的位置嵌入，具体层数、归一化位置和训练/对齐方法会随版本变化</td>
+</tr>
+<tr>
+<td>Llama</td>
+<td>Decoder-only + 因果 Mask + next-token prediction</td>
+<td>Llama 论文中的代表性设计采用 RoPE、RMSNorm 和 SwiGLU；Llama 2
+及后续版本还会因模型规模而采用不同的注意力优化方案</td>
+</tr>
+<tr>
+<td>Qwen</td>
+<td>Decoder-only + 因果 Mask + next-token prediction</td>
+<td>Qwen 是一个模型家族，Qwen、Qwen2、Qwen2.5、Qwen3
+等版本的上下文长度、注意力实现、训练数据和后训练方法会变化</td>
+</tr>
+</tbody>
+</table>
+<p>所以，“Qwen/GPT/Llama 都是 Decoder-only
+模型”是在架构范式上的共同描述；这不意味着它们的每层细节、词表、位置编码、参数规模或训练方法完全相同。阅读某个模型的源码或技术报告时，应以该模型的具体版本为准。</p>
+<h3 id="参考资料-1">10.3.4 参考资料</h3>
+<ol type="1">
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.03762">Attention Is All You
+Need：原始 Transformer 论文</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf">Improving
+Language Understanding by Generative Pre-Training：OpenAI GPT
+技术报告</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2302.13971">LLaMA: Open and Efficient
+Foundation Language Models</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2412.15115">Qwen2.5 Technical
+Report</a></li>
+</ol>
+<h2 id="next-token-prediction训练与推理">10.4 Next-token
+prediction、训练与推理</h2>
+<p>Decoder-only 模型的预训练目标通常称为 <strong>next-token
+prediction（下一个词元预测）</strong>，也称 <strong>causal language
+modeling（因果语言建模）</strong>。它不是一次直接预测整段后续文本，而是将一个序列的联合概率分解为每一步预测下一个词元的条件概率：</p>
+<p><span class="math display">\[
+p(x_1,x_2,\ldots,x_T)=\prod_{t=1}^{T}p(x_t\mid x_1,x_2,\ldots,x_{t-1})
+\]</span></p>
+<p>其中 <span class="math inline">\(x_t\)</span> 是第 <span
+class="math inline">\(t\)</span> 个词元；当 <span
+class="math inline">\(t=1\)</span>
+时，模型通常以起始符号（BOS）或给定提示词作为条件。训练阶段让模型在大量文本上反复完成这件事，模型便会学习词元之间的统计规律、语言结构和训练数据中蕴含的各种模式。</p>
+<h3 id="next-token-prediction">10.4.1 Next-token prediction</h3>
+<p>假设一条文本经过分词后得到：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">[BOS, 我, 喜欢, 学习, EOS]<br></code></pre></td></tr></table></figure>
+<p>其中 <code>BOS</code> 是起始符号，<code>EOS</code>
+是结束符号。可以把一次 next-token prediction 训练样本理解为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">模型输入： [BOS, 我,   喜欢, 学习]<br>监督标签： [我,   喜欢, 学习, EOS]<br>             ↑      ↑      ↑     ↑<br>          预测第 1 个词元……直到预测结束符号<br></code></pre></td></tr></table></figure>
+<p>模型在输入的每个位置都输出一个长度为 <code>vocab_size</code> 的
+logits 向量。比如看到 <code>[BOS, 我]</code> 后，模型在当前位置的 logits
+会给“喜欢”“吃”“是”等整个词表中的候选词元分别打分；Softmax
+将这些分数转换为概率分布，训练目标是提高正确下一个词元“喜欢”的概率。</p>
+<p>这里的“token”不一定等于一个汉字、英文单词或标点，它取决于所使用的分词器。无论一个词被拆成一个还是多个
+token，训练规则不变：每个位置预测紧随其后的一个 token。</p>
+<h3 id="标签右移与交叉熵">10.4.2 标签右移与交叉熵</h3>
+<p>上例中“输入”和“监督标签”相差一个位置：输入位置 <span
+class="math inline">\(t\)</span> 的输出用于预测原序列位置 <span
+class="math inline">\(t+1\)</span> 的词元。这就是常说的
+<strong>标签右移（shift labels）</strong>。若模型输出 logits 的形状为
+<code>(B, T, V)</code>，标签形状为 <code>(B, T)</code>，其中
+<code>V=vocab_size</code>，则第 <code>b</code> 条序列第 <code>t</code>
+个位置的损失为：</p>
+<p><span class="math display">\[
+\ell_{b,t}=-\log\frac{\exp(z_{b,t,y_{b,t}})}{\sum_{v=1}^{V}\exp(z_{b,t,v})}
+\]</span></p>
+<p>其中，<span class="math inline">\(z_{b,t,v}\)</span> 是该位置对词表第
+<span class="math inline">\(v\)</span> 个词元的 logit，<span
+class="math inline">\(y_{b,t}\)</span> 是正确的下一个词元 ID。对 batch
+内全部非填充位置的损失取平均，就得到训练时常用的交叉熵损失：</p>
+<p><span class="math display">\[
+\mathcal{L}=-\frac{1}{M}\sum_{b,t}\log p(y_{b,t}\mid x_{b,\leq t})
+\]</span></p>
+<p>这里 <span class="math inline">\(M\)</span>
+是参与损失计算的有效目标词元数量，不包括
+Padding。不同框架对“右移”放在哪里的实现细节不同：有些训练代码会显式构造
+<code>input_ids[:, :-1]</code> 和
+<code>labels[:, 1:]</code>；许多语言模型封装则接收同一份
+<code>input_ids</code> 和
+<code>labels</code>，在模型内部完成移位。两种写法表达的是同一个预测目标。</p>
+<p>下面用 PyTorch 的 <code>F.cross_entropy</code>
+展示显式右移的形状关系。示例中的 <code>logits</code>
+用随机数代替真实模型输出，目的只是说明损失的输入与标签如何对齐：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br><br>vocab_size = <span class="hljs-number">10</span><br>pad_id = <span class="hljs-number">0</span><br><br><span class="hljs-comment"># 每行是一条已补齐的序列；1 可看作 BOS，2 可看作 EOS，0 是 Padding。</span><br>input_ids = torch.tensor([<br>    [<span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">2</span>],<br>    [<span class="hljs-number">1</span>, <span class="hljs-number">7</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>],<br>])<br><br><span class="hljs-comment"># 第 t 个位置的 logits 要预测下一个 token，因此标签向左移动一位。</span><br><span class="hljs-comment"># -100 表示 Padding 对应的目标不参与交叉熵计算。</span><br>labels = torch.tensor([<br>    [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">2</span>, -<span class="hljs-number">100</span>],<br>    [<span class="hljs-number">7</span>, <span class="hljs-number">2</span>, -<span class="hljs-number">100</span>, -<span class="hljs-number">100</span>],<br>])<br><br><span class="hljs-comment"># 实际代码中这里应为 model(input_ids) 的输出，形状是 (B=2, T=4, V=10)。</span><br>logits = torch.randn(<span class="hljs-number">2</span>, <span class="hljs-number">4</span>, vocab_size, requires_grad=<span class="hljs-literal">True</span>)<br><br><span class="hljs-comment"># F.cross_entropy 需要类别维度 V 位于第 2 维，标签形状与其余维度 (B, T) 对齐。</span><br>loss = F.cross_entropy(logits.transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>), labels, ignore_index=-<span class="hljs-number">100</span>)<br><span class="hljs-built_in">print</span>(loss)<br></code></pre></td></tr></table></figure>
+<p><code>ignore_index=-100</code> 只是不计入 Padding
+位置损失的常见约定；实际项目中应与所使用的数据整理器和模型接口保持一致。<code>pad_id</code>
+不一定等于 0，<code>BOS</code>、<code>EOS</code> 是否存在以及具体 ID
+也由模型的分词器决定。</p>
+<h3 id="训练与推理的区别">10.4.3 训练与推理的区别</h3>
+<p>训练和推理都遵守“只利用当前位置及之前词元”的因果约束，但模型拿到的前缀、计算方式和目标不同：</p>
+<table>
+
+<thead>
+<tr>
+<th>对比项</th>
+<th>训练</th>
+<th>推理/生成</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>前缀中的历史词元</td>
+<td>使用训练文本中的真实前文，称为 teacher forcing（教师强制）</td>
+<td>使用提示词和模型自己已经生成的词元</td>
+</tr>
+<tr>
+<td>是否计算损失</td>
+<td>是，与右移后的真实标签计算交叉熵并反向传播</td>
+<td>否，通常在 <code>eval()</code> 与 <code>torch.no_grad()</code>
+下只做前向计算</td>
+</tr>
+<tr>
+<td>序列位置的计算</td>
+<td>因果 Mask
+已限制未来信息，因此一个完整序列的所有位置可以并行计算</td>
+<td>下一个词元依赖前一步的生成结果，必须按步自回归生成</td>
+</tr>
+<tr>
+<td>输出如何使用</td>
+<td>每个位置的 logits 都用于训练损失</td>
+<td>通常只取最后一个有效位置的 logits 选择下一个词元</td>
+</tr>
+<tr>
+<td>提速方式</td>
+<td>批量计算多个样本和多个位置</td>
+<td>缓存每层历史 token 的 K、V（KV Cache），避免重复计算历史前缀</td>
+</tr>
+</tbody>
+</table>
+<p>生成时的基本循环如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">prompt / 已生成前缀<br>        ↓<br>模型计算最后一个位置的 logits<br>        ↓<br>按贪心、温度采样、top-k 或 top-p 等规则选择一个 next token<br>        ↓<br>将该 token 追加到前缀末尾，重复上述步骤<br>        ↓<br>生成 EOS，或达到最大长度后停止<br></code></pre></td></tr></table></figure>
+<p>贪心解码总是选择概率最高的词元；采样方法会按调整后的概率分布抽取词元，通常能带来更多样的文本，但也可能提高不稳定性。无论采用哪种选择策略，模型本身每一步提供的都是下一个
+token 的 logits/概率分布。</p>
+<p>KV Cache
+只改变推理速度，不改变同一模型、同一前缀和同一解码策略下应得到的数学结果。它缓存的是
+Decoder-only 每层因果自注意力中历史位置的 K、V；新生成一个 token
+时，只需计算新 token 的 Q、K、V，并让新 Q 与缓存的历史 K、V
+进行注意力计算，而不必重新处理整个历史前缀。</p>
+<p>训练使用真实前文，推理使用模型自己生成的前文，这种差异意味着：一旦推理早期生成了不合适的词元，它也会成为后续步骤的条件。因此，预训练之外的指令微调、偏好优化、解码策略和上下文设计，都会显著影响最终的生成质量。</p>
+<h3 id="参考资料-2">10.4.4 参考资料</h3>
+<ol type="1">
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.03762">Attention Is All You
+Need：第 3.1 节 Masked Multi-Head Attention</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf">Improving
+Language Understanding by Generative Pre-Training：OpenAI GPT
+技术报告</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html">PyTorch
+官方文档：torch.nn.CrossEntropyLoss</a></li>
+</ol>
+<h2 id="参考资料-3">10.5 参考资料</h2>
 <ol type="1">
 <li><a
 target="_blank" rel="noopener" href="https://datawhalechina.github.io/happy-llm/#/./chapter2/%E7%AC%AC%E4%BA%8C%E7%AB%A0%20Transformer%E6%9E%B6%E6%9E%84">datawhale开源文章：Transformer架构</a></li>

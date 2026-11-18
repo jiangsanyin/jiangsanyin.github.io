@@ -27,7 +27,7 @@
 <meta property="og:description" content="三、PyTorch的主要组成模块 3.1 深度学习流程及与机器学习差异 一项机器学习任务的整体流程如下：  数据准备与划分：对原始数据进行清洗、格式统一与特征变换，并划分为训练集、验证集和测试集（如采用随机切分或 K 折交叉，可以使用sklearn带的test_train_split函数、kfold来实现）。 模型与算法配置：选择合适的网络架构，指定衡量误差的损失函数、更新参数的优化器以及相关超参">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-08-06T04:45:50.000Z">
-<meta property="article:modified_time" content="2026-11-15T03:01:42.640Z">
+<meta property="article:modified_time" content="2026-11-16T02:26:45.740Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -1056,9 +1056,8 @@ running_mean、running_var</td>
 <strong>Post-LN</strong>：先经过子层并与残差相加，再做 LN：</p>
 <p><span class="math display">\[
 \mathrm{LayerNorm}(x+\mathrm{Sublayer}(x))
-\]</span>
-如下图所示，展示了以后置归一化方式对Transformer子层中数据流进行层归一化：
-<img
+\]</span> 如下图所示，展示了以后置归一化方式（原始 Transformer
+论文中采用此方式）对Transformer子层中数据流进行层归一化： <img
 src="https://files.seeusercontent.com/2026/11/14/5omG/20261114230454399.png" srcset="/img/loading.gif" lazyload
 alt="Transformer子层中采用后置归一化：归一化在残差相加之后进行" /></p>
 <p>许多较新的 Transformer 实现采用
