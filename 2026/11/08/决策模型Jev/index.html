@@ -27,7 +27,7 @@
 <meta property="og:description" content="决策模型 Jev：从类型化判断到可控分流  本文整理自本目录的 01_认识Jev.ipynb 第 1～6 节，面向会一点 Python、刚接触 AI Agent 的读者。示例中的客户消息、赛事消息和离线答案均为教学合成数据；它们用于理解数据结构与代码路径，不代表真实 API 返回、准确率或安全保证。  先建立全景：Jev 在系统里做什么 Jev 是 TypeSafe 的 System One 决策">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-11-08T08:10:54.000Z">
-<meta property="article:modified_time" content="2026-11-15T09:43:50.600Z">
+<meta property="article:modified_time" content="2026-11-19T12:07:05.940Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="大模型">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.5k 字
+          6.4k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          46 分钟
+          54 分钟
         
       </span>
     
@@ -598,7 +598,9 @@ Map</a></p>
 <h2 id="开源jev模型部署实践">8. 开源Jev模型部署实践</h2>
 <p>本节目标是先在 <strong>Ubuntu 20.04 + NVIDIA A40（48 GB
 显存）</strong>
-上完成一次可复现的本地推理验证，再考虑封装服务。文中命令尚未在目标服务器执行；每一步均给出验收条件，只有通过前一步才进入下一步。</p>
+上完成一次可复现的本地推理验证，再考虑封装服务。以下“已验证”内容来自
+2026-11-18 的目标服务器实测；模型下载和 Clef
+联合决策头推理尚未执行。每一步均给出验收条件，只有通过前一步才进入下一步。</p>
 <blockquote>
 <p><strong>部署路线</strong>：NVIDIA 服务器不使用 Apple Silicon 专用的
 MLX/OptiQ 权重或 <code>mlx-optiq</code>。优先验证 Cloudflare 发布的原生
@@ -609,6 +611,7 @@ PyTorch 模型 <code>Cloudflare/clef-flash</code>
 <h3 id="目标边界与模型选择">8.1 目标、边界与模型选择</h3>
 <h4 id="目标环境">8.1.1 目标环境</h4>
 <table>
+
 <thead>
 <tr>
 <th>项目</th>
@@ -669,9 +672,14 @@ GB，仍须以实际峰值显存为准</td>
 </tr>
 </tbody>
 </table>
-<p>本节不预先承诺具体的 PyTorch、Transformers 版本。应以下载模型仓库中的
-<code>README</code>、<code>requirements</code>、配置文件和实际导入报错为准，记录最终可用组合；这样可避免把随模型更新而失效的版本号当成固定事实。</p>
-<h3 id="安装前的兼容性检查">8.2 安装前的兼容性检查</h3>
+<p>Cloudflare 模型卡标明其在
+<code>torch 2.11</code>、<code>transformers 5.10.2</code>
+上测试。本服务器已实测 <code>torch 2.11.0+cu126</code> 可以使用 A40 和
+BF16；下一步应安装并固定
+<code>transformers==5.10.2</code>，以尽量贴近该测试基线。模型仓库当前版本的
+<code>README</code>、<code>requirements</code>
+与源码仍是联合决策头调用方式的最终依据。</p>
+<h3 id="环境安装与基础兼容性验证">8.2 环境安装与基础兼容性验证</h3>
 <h4 id="采集服务器基线">8.2.1 采集服务器基线</h4>
 <p>在服务器上运行下列只读命令，并把完整输出保存到本次验证记录中：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">nvidia-smi<br>nvcc --version || <span class="hljs-literal">true</span><br>lsb_release -a<br><span class="hljs-built_in">uname</span> -r<br>python3 --version<br></code></pre></td></tr></table></figure>
@@ -684,54 +692,78 @@ CUDA 版 PyTorch</h4>
 <p>保留已有环境，新建环境避免与 macOS/MLX 依赖混用：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">conda create -n clef-cuda python=3.12 -y<br>conda activate clef-cuda<br>python -m pip install --upgrade pip<br></code></pre></td></tr></table></figure>
 <p>从 <a target="_blank" rel="noopener" href="https://pytorch.org/get-started/locally/">PyTorch
-官方安装页</a> 选择与当前 NVIDIA 驱动兼容的 CUDA wheel
-安装命令；不要把本机的 <code>nvcc</code> 版本当成 wheel
-的唯一选择依据。安装完成后立即验证：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">python - &lt;&lt;<span class="hljs-string">&#x27;PY&#x27;</span><br>import torch<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;PyTorch:&quot;</span>, torch.__version__)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;CUDA runtime:&quot;</span>, torch.version.cuda)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;CUDA available:&quot;</span>, torch.cuda.is_available())<br><span class="hljs-keyword">if</span> torch.cuda.is_available():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;GPU:&quot;</span>, torch.cuda.get_device_name(0))<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;BF16 supported:&quot;</span>, torch.cuda.is_bf16_supported())<br>PY<br></code></pre></td></tr></table></figure>
-<p>验收条件：<code>CUDA available: True</code>、GPU 名称为
-<code>NVIDIA A40</code>、<code>BF16 supported: True</code>。若导入失败或
-CUDA 不可用，停在此处处理 PyTorch wheel
-与驱动的匹配问题；不要继续下载或调试模型代码。</p>
+官方安装页</a> 选择与当前 NVIDIA 驱动兼容的 CUDA wheel；不要把本机的
+<code>nvcc</code> 版本当成 wheel 的唯一选择依据。PyTorch 的 CUDA wheel
+携带自己的用户态 CUDA runtime，因此系统 CUDA Toolkit 12.4 与 wheel 的
+<code>cu126</code> 可以并存。</p>
+<p>本服务器访问 PyTorch CDN 时，IPv4 可用而 IPv6 无法连接；已通过
+<code>/etc/gai.conf</code> 让地址解析优先返回
+IPv4。该项是本机网络问题的处理记录，不是所有服务器的通用安装前提。若下载再次中断，应先分别用
+<code>curl -4</code>、<code>curl -6</code> 测试网络，不应跳过 wheel
+的完整性校验。</p>
+<p>本机成功安装采用“先安装三件套、再补齐依赖”的方式。第二步的
+<code>--no-deps</code>
+只适用于网络/解析确有问题时；不能漏掉第三步，否则会报
+<code>ImportError: libcudnn.so.9</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 1. 安装普通 Python 依赖；这里的阿里云镜像为本机已配置的可信加速源。</span><br>python -m pip install \<br>  --index-url https://mirrors.aliyun.com/pypi/simple \<br>  numpy typing-extensions sympy networkx jinja2 filelock fsspec \<br>  <span class="hljs-string">&quot;setuptools&lt;82&quot;</span> pillow<br><br><span class="hljs-comment"># 2. 从 PyTorch 官方 cu126 仓库安装 CUDA 版三件套。</span><br><span class="hljs-comment">#    该命令在本机网络异常时曾失败；成功下载后不必重复安装。</span><br>python -m pip install --no-deps --<span class="hljs-built_in">timeout</span> 600 --retries 20 \<br>  --index-url https://download.pytorch.org/whl/cu126 \<br>  torch==2.11.0+cu126 \<br>  torchvision==0.26.0+cu126 \<br>  torchaudio==2.11.0+cu126<br><br><span class="hljs-comment"># 3. 补齐 torch 2.11.0+cu126 声明的 CUDA 运行依赖。</span><br><span class="hljs-comment">#    不使用 --no-deps，也不要用跳过哈希校验的参数。</span><br>python -m pip install --<span class="hljs-built_in">timeout</span> 600 --retries 20 \<br>  --index-url https://mirrors.aliyun.com/pypi/simple \<br>  --extra-index-url https://pypi.nvidia.com \<br>  <span class="hljs-string">&quot;cuda-bindings&gt;=12.9.4,&lt;13&quot;</span> \<br>  <span class="hljs-string">&quot;cuda-toolkit[cublas,cudart,cufft,cufile,cupti,curand,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==12.6.3&quot;</span> \<br>  <span class="hljs-string">&quot;nvidia-cudnn-cu12==9.10.2.21&quot;</span> \<br>  <span class="hljs-string">&quot;nvidia-cusparselt-cu12==0.7.1&quot;</span> \<br>  <span class="hljs-string">&quot;nvidia-nccl-cu12==2.28.9&quot;</span> \<br>  <span class="hljs-string">&quot;nvidia-nvshmem-cu12==3.4.5&quot;</span> \<br>  <span class="hljs-string">&quot;triton==3.6.0&quot;</span><br><br>python -m pip check<br></code></pre></td></tr></table></figure>
+<p>安装完成后立即验证：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs bash">python - &lt;&lt;<span class="hljs-string">&#x27;PY&#x27;</span><br>import torch<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;PyTorch:&quot;</span>, torch.__version__)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;CUDA runtime:&quot;</span>, torch.version.cuda)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;CUDA available:&quot;</span>, torch.cuda.is_available())<br><br><span class="hljs-keyword">if</span> torch.cuda.is_available():<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;GPU:&quot;</span>, torch.cuda.get_device_name(0))<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Compute capability:&quot;</span>, torch.cuda.get_device_capability(0))<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;BF16 supported:&quot;</span>, torch.cuda.is_bf16_supported())<br><br>    a = torch.randn(4096, 4096, device=<span class="hljs-string">&quot;cuda&quot;</span>, dtype=torch.bfloat16)<br>    b = torch.randn(4096, 4096, device=<span class="hljs-string">&quot;cuda&quot;</span>, dtype=torch.bfloat16)<br>    c = a @ b<br>    torch.cuda.synchronize()<br><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;A40 BF16 matrix multiplication: successful&quot;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Result:&quot;</span>, c.shape, c.dtype)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Peak memory (GiB):&quot;</span>, round(<br>        torch.cuda.max_memory_allocated() / 1024**3, 3<br>    ))<br>PY<br></code></pre></td></tr></table></figure>
+<p>本机实际输出：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">PyTorch: 2.11.0+cu126<br>CUDA runtime: 12.6<br>CUDA available: True<br>GPU: NVIDIA A40<br>Compute capability: (8, 6)<br>BF16 supported: True<br>A40 BF16 matrix multiplication: successful<br>Result: torch.Size([4096, 4096]) torch.bfloat16<br>Peak memory (GiB): 0.102<br></code></pre></td></tr></table></figure>
+<p>结论：在 Ubuntu 20.04.3、内核 <code>5.4.0-216-generic</code>、NVIDIA
+驱动 <code>550.54.15</code>、系统 CUDA Toolkit <code>12.4</code>
+上，<code>torch 2.11.0+cu126</code> 已成功驱动 A40 执行 BF16
+矩阵乘法；当前不需要为了本模型升级驱动。此结论是基础 CUDA
+运行验证，尚不等于 Clef 模型已加载成功。</p>
 <h3 id="下载模型并核对官方入口">8.3 下载模型并核对官方入口</h3>
 <h4 id="安装通用依赖与下载模型">8.3.1 安装通用依赖与下载模型</h4>
-<p>PyTorch
-验收通过后安装下载工具和模型常见依赖。<code>transformers</code>
-不先强行固定版本，以模型仓库中的要求为准；若仓库提供 requirements
-文件，优先按它安装。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">python -m pip install -U huggingface_hub safetensors accelerate transformers<br><span class="hljs-built_in">mkdir</span> -p /opt/installPkgs/research-PyTorch/models<br><span class="hljs-built_in">cd</span> /opt/installPkgs/research-PyTorch/models<br><br><span class="hljs-comment"># 若服务器访问 Hugging Face 需要镜像，可在确认镜像可信后再设置 HF_ENDPOINT。</span><br>hf download Cloudflare/clef-flash --local-dir Cloudflare-clef-flash<br></code></pre></td></tr></table></figure>
+<p>PyTorch 验收已通过。Cloudflare 模型卡列出的测试组合包含
+<code>transformers 5.10.2</code>，因此先固定该版本；不要使用
+<code>-U transformers</code>，以免装入一个尚未对该模型验证的新版本。<code>pillow</code>
+已在第 8.2.2 节安装，图像/视频输入才会用到它。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs bash">python -m pip install --<span class="hljs-built_in">timeout</span> 600 --retries 20 \<br>  --index-url https://mirrors.aliyun.com/pypi/simple \<br>  transformers==5.10.2 accelerate safetensors huggingface_hub<br><br>python -m pip check<br>python - &lt;&lt;<span class="hljs-string">&#x27;PY&#x27;</span><br>import torch<br>import transformers<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;torch:&quot;</span>, torch.__version__)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;transformers:&quot;</span>, transformers.__version__)<br>PY<br><span class="hljs-comment"># 输出内容如下两行：</span><br>torch: 2.11.0+cu126<br>transformers: 5.10.2<br><br><span class="hljs-built_in">mkdir</span> -p /opt/installPkgs/research-PyTorch/models<br><span class="hljs-built_in">cd</span> /opt/installPkgs/research-PyTorch/models<br><br><span class="hljs-comment"># 先确认目标目录所在磁盘有足够空间；下载过程不要跳过完整性校验。</span><br><span class="hljs-built_in">df</span> -h .<br><br><span class="hljs-comment"># 若服务器访问 Hugging Face 需要镜像，可在确认镜像可信后再设置 HF_ENDPOINT。</span><br>hf download Cloudflare/clef-flash --local-dir Cloudflare-clef-flash<br></code></pre></td></tr></table></figure>
 <p>下载结束后确认文件齐全，而不是仅以命令退出码作为成功依据：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /opt/installPkgs/research-PyTorch/models/Cloudflare-clef-flash<br>find . -maxdepth 2 -<span class="hljs-built_in">type</span> f | <span class="hljs-built_in">sort</span> | sed -n <span class="hljs-string">&#x27;1,160p&#x27;</span><br></code></pre></td></tr></table></figure>
-<p>验收条件：可以看到模型配置、权重、tokenizer，以及仓库当前版本提供的联合决策头实现（历史版本中名称为
-<code>joint_schema_model.py</code>）。模型文件较大，下载前应确认磁盘空间充足。</p>
+<p>验收条件：<code>pip check</code> 输出
+<code>No broken requirements found.</code>，且版本输出含
+<code>torch: 2.11.0+cu126</code>、<code>transformers: 5.10.2</code>。模型下载后应能看到模型配置、权重、tokenizer，以及联合决策头实现
+<code>joint_schema_model.py</code>。模型文件较大，下载前应确认磁盘空间充足。</p>
 <h4 id="以下载版本的代码为准确认-api">8.3.2 以下载版本的代码为准确认
 API</h4>
 <p>不要直接假设函数名、入参和依赖版本永远不变。先从刚下载的版本中定位真实入口与安装说明：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">find . -maxdepth 2 \( -iname <span class="hljs-string">&#x27;readme*&#x27;</span> -o -iname <span class="hljs-string">&#x27;requirements*.txt&#x27;</span> \) -<span class="hljs-built_in">type</span> f -<span class="hljs-built_in">print</span><br>rg -n <span class="hljs-string">&quot;def (load_release_model|systemone)|load_release_model|systemone&quot;</span> .<br></code></pre></td></tr></table></figure>
 <p>若存在
-<code>requirements.txt</code>，先阅读并安装其中明确的依赖：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python -m pip install -r requirements.txt<br></code></pre></td></tr></table></figure>
-<p>验收条件：确认当前下载版本实际导出的加载函数和决策函数。下节脚本以目前资料中的
-<code>load_release_model()</code>、<code>systemone()</code>
-为模板；若上一步查到的签名不同，必须按该版本
-README/源码调整后再运行。</p>
+<code>requirements.txt</code>，先阅读内容并检查其是否试图更换已验证的
+<code>torch</code>、<code>transformers</code> 版本；不要不加检查地执行
+<code>pip install -r requirements.txt</code>。仅安装其中缺失且不冲突的依赖。</p>
+<p>验收条件：确认当前下载版本实际导出的加载函数和决策函数。下一节先执行与模型卡一致的“只加载模型”测试；只有该测试通过后，才使用
+<code>systemone()</code> 测试决策请求。</p>
 <h3 id="单卡加载与决策冒烟测试">8.4 单卡加载与决策冒烟测试</h3>
-<h4 id="创建测试脚本">8.4.1 创建测试脚本</h4>
-<p>在模型目录中创建
-<code>test_clef.py</code>。下面的请求只使用合成的英文故障描述，不包含真实工单或密钥。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> perf_counter<br><span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path<br><span class="hljs-keyword">from</span> joint_schema_model <span class="hljs-keyword">import</span> load_release_model, systemone<br><br>model_path = <span class="hljs-built_in">str</span>(Path(__file__).parent)<br><br>load_started = perf_counter()<br>model, processor = load_release_model(<br>    model_path,<br>    device=<span class="hljs-string">&quot;cuda&quot;</span>,<br>    dtype=torch.bfloat16,<br>)<br>torch.cuda.synchronize()<br>load_seconds = perf_counter() - load_started<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;模型加载成功&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;GPU:&quot;</span>, torch.cuda.get_device_name(<span class="hljs-number">0</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;加载耗时 (s):&quot;</span>, <span class="hljs-built_in">round</span>(load_seconds, <span class="hljs-number">2</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;加载后显存 (GB):&quot;</span>, <span class="hljs-built_in">round</span>(torch.cuda.memory_allocated() / <span class="hljs-number">1024</span>**<span class="hljs-number">3</span>, <span class="hljs-number">2</span>))<br><br>request = &#123;<br>    <span class="hljs-string">&quot;model&quot;</span>: <span class="hljs-string">&quot;clef-flash&quot;</span>,<br>    <span class="hljs-string">&quot;state&quot;</span>: <span class="hljs-string">&quot;Checkout has been failing for every customer for the last hour.&quot;</span>,<br>    <span class="hljs-string">&quot;questions&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;urgent&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;noul&quot;</span>,<br>            <span class="hljs-string">&quot;instructions&quot;</span>: <span class="hljs-string">&quot;Is this urgent?&quot;</span>,<br>        &#125;,<br>        <span class="hljs-string">&quot;team&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;choice&quot;</span>,<br>            <span class="hljs-string">&quot;criteria&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;billing&quot;</span>: <span class="hljs-string">&quot;Payments&quot;</span>,<br>                <span class="hljs-string">&quot;technical&quot;</span>: <span class="hljs-string">&quot;Outages and errors&quot;</span>,<br>            &#125;,<br>        &#125;,<br>    &#125;,<br>&#125;<br><br>infer_started = perf_counter()<br>result = systemone(model, processor, request)<br>torch.cuda.synchronize()<br>infer_seconds = perf_counter() - infer_started<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;决策结果:&quot;</span>, result)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;完整决策耗时 (s):&quot;</span>, <span class="hljs-built_in">round</span>(infer_seconds, <span class="hljs-number">2</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;推理后显存 (GB):&quot;</span>, <span class="hljs-built_in">round</span>(torch.cuda.max_memory_allocated() / <span class="hljs-number">1024</span>**<span class="hljs-number">3</span>, <span class="hljs-number">2</span>))<br></code></pre></td></tr></table></figure>
-<blockquote>
-<p>这段脚本依赖于上节确认的历史接口：<code>joint_schema_model.py</code>、<code>load_release_model()</code>
-和
-<code>systemone()</code>。它不是对未来仓库版本的保证。若当前仓库没有这些符号，先以其官方
-README 示例替换导入与调用部分，不要自行重写联合决策头。</p>
-</blockquote>
-<h4 id="运行观测与验收">8.4.2 运行、观测与验收</h4>
+<h4 id="先只验证模型加载">8.4.1 先只验证模型加载</h4>
+<p>先在模型目录中创建 <code>load_clef.py</code>，只执行模型卡已展示的
+<code>load_release_model(..., device="cuda")</code>
+路径。此步骤不自行传入
+<code>dtype</code>，避免假定当前仓库版本存在该可选参数。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> perf_counter<br><span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path<br><span class="hljs-keyword">import</span> sys<br><br>model_path = <span class="hljs-built_in">str</span>(Path(__file__).parent)<br>sys.path.insert(<span class="hljs-number">0</span>, model_path)<br><span class="hljs-keyword">from</span> joint_schema_model <span class="hljs-keyword">import</span> load_release_model<br><br>load_started = perf_counter()<br>model, processor = load_release_model(<br>    model_path,<br>    device=<span class="hljs-string">&quot;cuda&quot;</span>,<br>)<br>torch.cuda.synchronize()<br>load_seconds = perf_counter() - load_started<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;模型加载成功&quot;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;GPU:&quot;</span>, torch.cuda.get_device_name(<span class="hljs-number">0</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;加载耗时 (s):&quot;</span>, <span class="hljs-built_in">round</span>(load_seconds, <span class="hljs-number">2</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;加载后显存 (GB):&quot;</span>, <span class="hljs-built_in">round</span>(torch.cuda.memory_allocated() / <span class="hljs-number">1024</span>**<span class="hljs-number">3</span>, <span class="hljs-number">2</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;模型参数 dtype:&quot;</span>, <span class="hljs-built_in">next</span>(model.parameters()).dtype)<br></code></pre></td></tr></table></figure>
+<p>验收条件：模型在 A40 上完成加载，未出现 CUDA out of
+memory，并打印实际参数 dtype。若此步失败，记录完整报错、模型 revision
+和已安装版本；此时不要直接用通用 <code>vllm serve</code>
+替换联合决策头。</p>
+<h4 id="加载成功后测试联合决策头">8.4.2 加载成功后测试联合决策头</h4>
+<p>只有在第 8.4.1 节成功，且第 8.3.2 节已确认当前代码确实导出
+<code>systemone()</code> 时，才创建
+<code>test_systemone.py</code>。下例仅使用合成英文故障描述，不包含真实工单或密钥；若当前仓库的函数签名或请求结构不同，须以该版本
+README/源码为准调整。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> perf_counter<br><span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path<br><span class="hljs-keyword">import</span> sys<br><br>model_path = <span class="hljs-built_in">str</span>(Path(__file__).parent)<br>sys.path.insert(<span class="hljs-number">0</span>, model_path)<br><span class="hljs-keyword">from</span> joint_schema_model <span class="hljs-keyword">import</span> load_release_model, systemone<br><br>model, processor = load_release_model(model_path, device=<span class="hljs-string">&quot;cuda&quot;</span>)<br><br>request = &#123;<br>    <span class="hljs-string">&quot;model&quot;</span>: <span class="hljs-string">&quot;clef-flash&quot;</span>,<br>    <span class="hljs-string">&quot;state&quot;</span>: <span class="hljs-string">&quot;Checkout has been failing for every customer for the last hour.&quot;</span>,<br>    <span class="hljs-string">&quot;questions&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;urgent&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;noul&quot;</span>,<br>            <span class="hljs-string">&quot;instructions&quot;</span>: <span class="hljs-string">&quot;Is this urgent?&quot;</span>,<br>        &#125;,<br>        <span class="hljs-string">&quot;team&quot;</span>: &#123;<br>            <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;choice&quot;</span>,<br>            <span class="hljs-string">&quot;criteria&quot;</span>: &#123;<br>                <span class="hljs-string">&quot;billing&quot;</span>: <span class="hljs-string">&quot;Payments&quot;</span>,<br>                <span class="hljs-string">&quot;technical&quot;</span>: <span class="hljs-string">&quot;Outages and errors&quot;</span>,<br>            &#125;,<br>        &#125;,<br>    &#125;,<br>&#125;<br><br>infer_started = perf_counter()<br>result = systemone(model, processor, request)<br>torch.cuda.synchronize()<br>infer_seconds = perf_counter() - infer_started<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;决策结果:&quot;</span>, result)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;完整决策耗时 (s):&quot;</span>, <span class="hljs-built_in">round</span>(infer_seconds, <span class="hljs-number">2</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;推理后显存 (GB):&quot;</span>, <span class="hljs-built_in">round</span>(torch.cuda.max_memory_allocated() / <span class="hljs-number">1024</span>**<span class="hljs-number">3</span>, <span class="hljs-number">2</span>))<br></code></pre></td></tr></table></figure>
+<h4 id="运行观测与验收">8.4.3 运行、观测与验收</h4>
 <p>在一个终端中运行测试，另一个终端观察 GPU：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 终端 1</span><br><span class="hljs-built_in">cd</span> /opt/installPkgs/research-PyTorch/models/Cloudflare-clef-flash<br>python test_clef.py<br><br><span class="hljs-comment"># 终端 2</span><br>watch -n 1 nvidia-smi<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 终端 1：先执行加载验证，成功后再执行决策验证</span><br><span class="hljs-built_in">cd</span> /opt/installPkgs/research-PyTorch/models/Cloudflare-clef-flash<br>python load_clef.py<br>python test_systemone.py<br><br><span class="hljs-comment"># 终端 2</span><br>watch -n 1 nvidia-smi<br></code></pre></td></tr></table></figure>
 <p>本阶段通过需同时满足：</p>
 <ol type="1">
-<li>模型在 A40 上完成加载，未出现 CUDA out of memory；</li>
-<li>请求返回可解析的类型化决策与选项概率；</li>
+<li><code>load_clef.py</code> 在 A40 上完成加载，未出现 CUDA out of
+memory；</li>
+<li><code>test_systemone.py</code>
+返回可解析的类型化决策与选项概率；</li>
 <li>至少再补测 <code>score</code> 类型问题，并人工核对
 <code>noul</code>、<code>choice</code>、<code>score</code>
 三类结果的字段；</li>
@@ -751,6 +783,7 @@ CUDA out of memory 的明确错误响应。FastGPT、Dify 或 LangGraph
 的接入属于后续工作，不能代替本节的单机正确性验证。</p>
 <h3 id="本次服务器验证记录模板">8.6 本次服务器验证记录模板</h3>
 <table>
+
 <thead>
 <tr>
 <th>项目</th>
@@ -760,39 +793,45 @@ CUDA out of memory 的明确错误响应。FastGPT、Dify 或 LangGraph
 <tbody>
 <tr>
 <td>验证日期与操作者</td>
-<td></td>
+<td>2026-11-18；待补操作者</td>
 </tr>
 <tr>
 <td>Ubuntu 内核 / NVIDIA 驱动</td>
-<td></td>
+<td>Ubuntu 20.04.3 LTS，<code>5.4.0-216-generic</code>；550.54.15</td>
+</tr>
+<tr>
+<td>系统 CUDA Toolkit</td>
+<td>12.4（<code>nvcc 12.4.131</code>）</td>
 </tr>
 <tr>
 <td>PyTorch / CUDA runtime / Transformers</td>
-<td></td>
+<td><code>torch 2.11.0+cu126</code>；12.6；Transformers
+尚未安装/验证</td>
 </tr>
 <tr>
 <td>模型名称与 revision</td>
-<td></td>
+<td><code>Cloudflare/clef-flash</code>；尚未下载，revision 待记录</td>
 </tr>
 <tr>
 <td>权重文件完整性</td>
-<td>通过 / 未通过</td>
+<td>尚未验证</td>
 </tr>
 <tr>
 <td>BF16 可用性</td>
-<td>通过 / 未通过</td>
+<td>已通过：A40 上完成 <code>4096 × 4096</code> BF16 矩阵乘法</td>
 </tr>
 <tr>
 <td><code>noul</code>、<code>choice</code>、<code>score</code></td>
-<td>分别记录通过 / 未通过及原因</td>
+<td>尚未验证</td>
 </tr>
 <tr>
 <td>加载时间 / 推理时间 / 峰值显存</td>
-<td></td>
+<td>基础 BF16 测试峰值 0.102 GiB；模型数据尚未产生</td>
 </tr>
 <tr>
 <td>遗留问题与下一步</td>
-<td></td>
+<td>安装 <code>transformers==5.10.2</code>，下载
+<code>clef-flash</code>，先执行模型加载验证</td>
 </tr>
 </tbody>
 </table>
