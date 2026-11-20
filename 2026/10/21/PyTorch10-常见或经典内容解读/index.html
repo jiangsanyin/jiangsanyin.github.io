@@ -27,7 +27,7 @@
 <meta property="og:description" content="十、常见或经典内容解读 10.1 可视化神经机器翻译模型 可视化神经机器翻译模型，就是在讲述与分析“带注意力机制的Seq2Seq模型原理”。 10.1.1 什么是seq2seq模型 Seq2Seq（Sequence-to-Sequence，序列到序列） 是深度学习中处理“输入一个序列，输出另一个序列”任务的核心架构。拥有此构架的模型称为seq2seq模型，常用来完成机器翻译任务、文本摘要任务、文本">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-21T02:45:56.000Z">
-<meta property="article:modified_time" content="2026-11-18T04:14:46.280Z">
+<meta property="article:modified_time" content="2026-11-20T15:11:26.500Z">
 <meta property="article:author" content="sanyinjiang">
 <meta property="article:tag" content="PyTorch">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          24k 字
+          28k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          200 分钟
+          231 分钟
         
       </span>
     
@@ -1401,7 +1401,8 @@ Decoding（贪心解码）。每个时间步都选择概率分布中最大概率
 个最有希望（一般是累计得分最高的 K
 个候选序列）的候选输出序列，其余输出序列将被抛弃，其中 K 是 Beam
 Width（集束宽度）。在最后一个时间步结束后，再从保留下来的 K
-个候选输出序列中，选择得分最高的一个，作为最终输出序列。</li>
+个候选输出序列中，选择得分最高的一个，作为最终输出序列。当K=1时，Beam
+Search退化为Greedy Decoding。</li>
 <li>Sampling（采样解码）。它跟Greedy
 Decoding很像但却不同（可以对照理解），Sampling并不是每次都选择概率最大的
 Token，而是按照 Softmax
@@ -1489,25 +1490,128 @@ Top-K and Top-P Sampling in LLMs</a></td>
 <li>采样解码：每一步按照概率分布随机选择 Token。</li>
 </ul>
 <h2 id="decoder-only-transformer">10.3 Decoder-only Transformer</h2>
+<h3 id="decoder-only-transformer概览">10.3.0 Decoder-only
+Transformer概览</h3>
+<p>首先，我们要明确一点：<strong>Decoder-Only
+描述的是模型的整体架构路线，而不是对原始 Transformer Decoder
+进行简单删减后得到的一套固定结构。</strong></p>
 <p>前面介绍的原始 Transformer 是 Encoder-Decoder
 架构，适合机器翻译这类“给定一个输入序列，生成另一个输出序列”的任务。如今许多大语言模型则采用
 <strong>Decoder-only Transformer（仅解码器
-Transformer）</strong>：它只保留一叠带因果 Mask 的 Decoder
-Layer，并通过“根据已有词元预测下一个词元”的任务学习语言规律。</p>
+Transformer）</strong>：它由一叠带因果 Mask 的 Transformer
+块构成，并通过“根据已有词元预测下一个词元”的任务学习语言规律。</p>
+<p>这里的“Decoder-only”是相对于原始 Encoder-Decoder Transformer
+而言的：<strong>它没有单独编码源序列的 Encoder 堆栈，也没有读取 Encoder
+输出的 Cross-Attention 子层。</strong>
+对纯文本任务来说，问题、指令、对话历史与已经生成的内容，都会按既定格式拼接成同一个词元序列，统一作为模型的输入上下文。</p>
 <p>以一段文本的词元序列 <span
-class="math inline">\(x_1,x_2,\ldots,x_T\)</span> 为例，Decoder-only
-模型依次学习预测：已知 <span class="math inline">\(x_1\)</span> 预测
-<span class="math inline">\(x_2\)</span>，已知 <span
+class="math inline">\(x_1,x_2,\ldots,x_T\)</span>
+为例，模型学习的目标可直观理解为：已知 <span
+class="math inline">\(x_1\)</span> 预测 <span
+class="math inline">\(x_2\)</span>，已知 <span
 class="math inline">\(x_1,x_2\)</span> 预测 <span
 class="math inline">\(x_3\)</span>，直到预测最后一个词元。生成文本时也遵循同一规则：先给模型一个提示词（prompt），模型预测一个新词元；把该词元追加到提示词末尾后，再预测下一个词元。</p>
 <p>可以将典型的 Decoder-only Transformer 概括为下面的数据流：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs text">词元 ID 序列<br>    ↓ Token Embedding + 位置信息<br>输入表示 [B, T, d_model]<br>    ↓ 重复 L 次：Causal Self-Attention → MLP/FFN（每个子层都有残差连接和归一化）<br>隐藏状态 [B, T, d_model]<br>    ↓ 最终归一化 + 语言模型输出层（LM Head）<br>logits [B, T, vocab_size]<br>    ↓ Softmax（需要概率时才计算）<br>每个位置对“下一个词元”的概率分布<br></code></pre></td></tr></table></figure>
+<p>这里的 <code>L</code> 指 <strong>模型中堆叠的 Transformer
+层数</strong>，在Decoder-Only Transformer中就是指堆叠的 <strong>Decoder
+Block/Layer（解码器层）数量</strong>。它是构建模型时预先设定的超参数。例如
+GPT-2 small 的 <code>L = 12</code>，即包含 12
+个依次连接的带因果自注意力的 Transformer Decoder
+Block/Layer（解码器层）。则每次将当前序列送入模型时，数据都会依次经过这
+12 层。生成阶段每预测出 1
+个新词元，都要基于更新后的序列再执行一次上述前向计算；生成会持续到模型输出
+<code>&lt;eos&gt;</code> 结束符，或达到设置的最大生成长度为止。</p>
+<p>图中的“隐藏状态 <code>[B, T, d_model]</code>”是指输入表示经过全部
+<code>L</code> 个 Decoder Layer
+后得到的输出，<strong>尚未经过最终归一化和语言模型输出层（LM
+Head）</strong>。每个 Decoder Layer 都保持序列长度 <code>T</code>
+和隐藏维度 <code>d_model</code> 不变，因此其形状仍为
+<code>[B, T, d_model]</code>。随后，最终归一化通常也不改变形状；LM Head
+这个线性层才会把最后一维从 <code>d_model</code> 投影为
+<code>vocab_size</code>，得到
+<code>logits [B, T, vocab_size]</code>。</p>
 <p>其中，<code>B</code> 是 batch_size，<code>T</code>
 是当前序列长度，<code>d_model</code>
 是隐藏向量维度，<code>vocab_size</code>
 是词表大小。<code>logits[b, t, :]</code> 是第 <code>b</code>
 个序列在位置 <code>t</code>
 的未归一化分数，包含词表中每一个候选词元作为“下一个词元”的分数。</p>
+<p>例如，若输入的词元 ID 张量形状为 <code>(2, 8, 1024)</code>，表示一个
+batch 中有 2 条、每条长度为 8
+的序列，<code>d_model=1024</code>即每个词元向量维度为1024；若
+<code>vocab_size=50000</code>，则经过嵌入和各层 Transformer
+块后，隐藏状态形状仍为 <code>(2, 8, 1024)</code>，最终的 logits 形状为
+<code>(2, 8, 50000)</code>。最后一维的 50000 个数并不是 50000
+个生成词元，而是“当前位置的下一个词元取词表中各候选词元时”的分数。</p>
+<p>Decoder-only Transformer的基本结构如下： <img
+src="https://files.seeusercontent.com/2026/11/20/0ulZ/20261120122544872.png" srcset="/img/loading.gif" lazyload
+alt="Decoder-only Transformer的基本结构" /></p>
+<p>基于Decoder-only
+Transformer构架的模型中，最具代表性就是GPT-2，GPT-2的模型构架图如下：
+<img
+src="https://files.seeusercontent.com/2026/11/20/4pyX/20261120191056918.png" srcset="/img/loading.gif" lazyload
+alt="基于Decoder-only Transformer构架的GPT-2结构图" /></p>
+<p>注意其中两个重点部分：</p>
+<ol type="1">
+<li><strong>GPT-2 Transformer Block（Pre-LN）内部结构</strong>：展示
+LayerNorm、Masked Multi-Head Self-Attention、残差连接，以及 MLP（FC →
+GELU → FC）和残差连接。</li>
+<li><strong>GPT-2 完整模型结构</strong>：展示 Token
+Embedding、Positional Embedding、N 层 Transformer Block、最终
+<code>ln_f</code>、<code>lm_head</code> 和 Softmax。 其中，GPT-2
+的每个Decoder-Layer采用的是Pre-LN，所以先执行LN，再执行MHA或MLP，然后执行残差连接。其
+Multi-Head Attention 子层的计算过程是： <span class="math display">\[  x
+= x+\operatorname{MHA}(\operatorname{LN}(x)) \]</span></li>
+</ol>
+<h4 id="参考资料-1">参考资料</h4>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://jalammar.github.io/illustrated-gpt2/">The
+Illustrated GPT-2 (Visualizing Transformer Language
+Models)</a>，此文章以可视化方式讲解GPT-2，是对同作者文章“The Illustrated
+Transformer”的延续，其中也重点讲述了 ”The Evolution of the Transformer
+Block“ 和 ”The Illustrated Masked Self-Attention“
+两部分。此文章对应的中文翻译文章：<a
+target="_blank" rel="noopener" href="https://lolitasian.blog.csdn.net/article/details/125529598">图解GPT-2</a>、<a
+target="_blank" rel="noopener" href="https://datawhalechina.github.io/learn-nlp-with-transformers/#/./%E7%AF%87%E7%AB%A02-Transformer%E7%9B%B8%E5%85%B3%E5%8E%9F%E7%90%86/2.4-%E5%9B%BE%E8%A7%A3GPT">DataWhale开源文章“图解GPT2”</a>。上述jalammar的文章中主要内容主要包括：是什么构造让GPT-2具有如此优越的性能；深入解析GPT-2的自注意力层；Decoder-Only
+Transformer的应用。</li>
+<li><a
+target="_blank" rel="noopener" href="https://rtguides.it.tufts.edu/nlp/deep-learning/decoder-pytorch.html?utm_source=chatgpt.com">Decoder-only
+Transformers: Generative Pre-trained Transformers
+(GPTs)</a>，这篇文章比较系统地介绍 Decoder-Only Transformer
+的工作机制。</li>
+<li><a
+target="_blank" rel="noopener" href="https://amaarora.github.io/posts/2020-02-18-annotatedGPT2.html?trk=article-ssr-frontend-pulse_little-text-block">The
+Annotated GPT-2: Understanding Language Models with
+PyTorch</a>，这篇文章将 GPT-2 的结构与代码结合起来，介绍模型如何经过多个
+Transformer Decoder Block，以及如何通过最后的 LayerNorm、Linear
+等层生成预测结果。比较适合在理解架构图之后阅读。</li>
+<li>大神“Andrej Karpathy”的讲解视频：<a
+href="youtube.com/watch?v=kCc8FmEb1nY">Let's build GPT: from scratch, in
+code, spelled out.</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://huggingface.co/blog/velmen/a-visual-introduction-to-decoder-only-transformer">A
+Walk With Embeddings: A Visual Guide to a Decoder-only
+Transformer</a>。这篇文章的特点是从 Embedding 开始追踪向量在
+Decoder-Only Transformer 中的流动，逐步构建一个 MiniGPT。</li>
+<li>论文：<a
+target="_blank" rel="noopener" href="https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf">Improving
+Language Understanding by Generative Pre-Training
+(GPT-1)</a>，其中讲述了GPT
+的生成式预训练思想、模型架构及下游任务迁移。</li>
+<li>论文：<a
+target="_blank" rel="noopener" href="https://d4mucfpksywv.cloudfront.net/better-language-models/language-models.pdf">Language
+Models are Unsupervised Multitask Learners
+(GPT-2)</a>，其中讲述了GPT-2、规模化语言模型、零样本任务能力。</li>
+<li>论文：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2005.14165">Language Models are
+Few-Shot Learners
+(GPT-3)</a>，其中讲述了大规模语言模型、Few-Shot、In-Context
+Learning。</li>
+<li><a
+target="_blank" rel="noopener" href="https://reinforcedknowledge.com/posts/decoder-only-language-models-architecture-evolution-part-i/">GPT-1、GPT-2、GPT-3
+架构演进</a>，其中按照 GPT-1、GPT-2、GPT-3 的发展顺序，介绍 Decoder-Only
+模型的发展历程，以及各代模型的架构和训练方式。</li>
+</ul>
 <h3 id="与原始-encoder-decoder-transformer-的结构差异">10.3.1 与原始
 Encoder-Decoder Transformer 的结构差异</h3>
 <p>原始 Transformer 与典型 Decoder-only Transformer 的主要差别如下：</p>
@@ -1549,13 +1653,33 @@ Cross-Attention；所有上下文都放在同一词元序列中，由因果自�
 </tr>
 </tbody>
 </table>
-<p>不要把“Decoder-only”理解为只保留原始 Decoder
-的一部分计算。它保留了“只能查看当前位置及之前位置”的因果自注意力思想，但现代实现常会调整归一化位置、位置编码、激活函数等细节。例如很多现代模型采用
+<p>不要把“Decoder-only”理解为只保留原始 Decoder 的一部分计算。原始
+Transformer 的 Decoder 层包括“Masked
+Self-Attention、Cross-Attention、FFN”三个子层；纯文本 Decoder-only
+模型去掉了依赖 Encoder 的 Cross-Attention，只保留因果自注意力与逐位置
+MLP/FFN。它保留了“只能查看当前位置及之前位置”的因果自注意力思想，但现代实现常会调整归一化位置、位置编码、激活函数等细节。例如很多现代模型采用
 Pre-Norm 或 RMSNorm、旋转位置编码（RoPE）以及 SwiGLU
-等设计；这些是具体模型系列的架构选择，并不是 Decoder-only 定义本身。</p>
-<p>若用 <span class="math inline">\(h^{(l-1)}\)</span> 表示第 <span
-class="math inline">\(l\)</span> 层输入，许多现代 Decoder-only
-模型的一层可以概括为：</p>
+等设计；这些是具体模型系列的架构选择，并不是 Decoder-only
+的定义本身。</p>
+<h4 id="将条件信息放入同一序列">10.3.1.1 将条件信息放入同一序列</h4>
+<p>在机器翻译中，原始架构会将“英文句子”交给
+Encoder，将“已生成的中文前缀”交给 Decoder；Decoder 通过 Cross-Attention
+读取英文句子的表示。Decoder-only
+模型没有这条单独的数据通路，而是把条件信息序列化（serialize）为一个前缀。例如，一个对话输入在概念上可写为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">&lt;system&gt;你是一个有帮助的助手&lt;/system&gt;<br>&lt;user&gt;什么是因果 Mask？&lt;/user&gt;<br>&lt;assistant&gt;<br></code></pre></td></tr></table></figure>
+<p>这些标记和文字会一起分词，成为一条连续的 Token 序列。模型在
+<code>&lt;assistant&gt;</code> 之后继续预测
+Token；它通过因果自注意力读取前面所有允许访问的位置，从而利用系统指令和用户问题。实际模型采用的特殊标记和对话模板并不相同，应以对应模型的
+tokenizer 或官方模板为准。</p>
+<p>这种“统一序列”的做法也解释了为什么 Decoder-only
+模型既可以做续写，也可以做问答、摘要或翻译：任务差异主要体现在输入提示的组织方式与训练数据格式上，而不是切换到一个独立的
+Encoder。</p>
+<h4 id="一个-transformer-块内部的数据流">10.3.1.2 一个 Transformer
+块内部的数据流</h4>
+<p>设第 <span class="math inline">\(l\)</span> 层的输入为 <span
+class="math inline">\(h^{(l-1)}\in\mathbb{R}^{B\times T\times
+d_{model}}\)</span>。许多现代 Decoder-only 模型的一层可以概括为下面的
+Pre-Norm 形式：</p>
 <p><span class="math display">\[
 u^{(l)}=h^{(l-1)}+\mathrm{CausalAttention}(\mathrm{Norm}(h^{(l-1)}))
 \]</span></p>
@@ -1564,9 +1688,48 @@ h^{(l)}=u^{(l)}+\mathrm{MLP}(\mathrm{Norm}(u^{(l)}))
 \]</span></p>
 <p>这里的 <code>CausalAttention</code> 表示带因果 Mask
 的多头自注意力，<code>Norm</code> 可能是 LayerNorm 或
-RMSNorm，<code>MLP</code> 是逐位置执行的前馈网络。公式描述的是常见的
-Pre-Norm 形式，用于帮助理解数据流；不同模型的精确实现可能有所不同。</p>
+RMSNorm，<code>MLP</code>
+是逐位置执行的前馈网络。每个加号都是<strong>残差连接</strong>：它将子层的输入直接加回输出，有助于深层网络中的信息与梯度传递。</p>
+<p>更具体地说，因果自注意力会先从同一个输入 <span
+class="math inline">\(h\)</span> 线性投影得到 <span
+class="math inline">\(Q\)</span>、<span
+class="math inline">\(K\)</span>、<span
+class="math inline">\(V\)</span>。位置 <span
+class="math inline">\(t\)</span> 的 <span
+class="math inline">\(Q_t\)</span> 只能与位置 <span
+class="math inline">\(0\sim t\)</span> 的 <span
+class="math inline">\(K\)</span> 计算注意力权重，再对相应的 <span
+class="math inline">\(V\)</span>
+做加权求和，因此输出位置数和序列长度均不变。随后 MLP/FFN
+对每个位置的向量独立地执行“升维 → 非线性变换 →
+降维”；它（MLP/FFN）不在不同 Token 间传递信息，Token
+间的信息交互主要发生在自注意力子层。</p>
+<p>公式描述的是常见的 Pre-Norm
+形式，用于帮助理解数据流；不同模型的精确实现可能有所不同。例如有的模型使用
+LayerNorm，有的使用 RMSNorm；有的 MLP 使用 GELU，有的使用 SwiGLU。</p>
+<h4 id="从隐藏状态到下一个词元分数">10.3.1.3
+从隐藏状态到下一个词元分数</h4>
+<p>经过 <span class="math inline">\(L\)</span> 个 Transformer
+块后，模型通常再执行一次最终归一化，然后用语言模型输出层（LM
+Head）将每个位置的隐藏向量投影到词表空间：</p>
+<p><span class="math display">\[
+\mathrm{logits}_{b,t,:}=h^{(L)}_{b,t,:}W_{\mathrm{lm}}+b_{\mathrm{lm}}
+\]</span></p>
+<p>其中，<span
+class="math inline">\(W_{\mathrm{lm}}\in\mathbb{R}^{d_{model}\times
+vocab\_size}\)</span>；因此每个 <span
+class="math inline">\(h^{(L)}_{b,t,:}\)</span> 都会得到长度为
+<code>vocab_size</code> 的 logits。训练时，这些 logits
+通常直接交给交叉熵损失；推理时才会根据需要经 Softmax
+转成概率并选择或采样下一个 Token。部分模型会让 LM Head 的权重与输入
+Token Embedding 的权重共享（weight
+tying），以减少参数量；这是一种常见选择，但并非所有模型都采用。</p>
 <h3 id="因果-mask">10.3.2 因果 Mask</h3>
+<p>此章节可同步查看 <a
+target="_blank" rel="noopener" href="https://jalammar.github.io/illustrated-gpt2/">The Illustrated
+GPT-2 (Visualizing Transformer Language Models)</a> 此文章中“The
+Illustrated Masked
+Self-Attention”章节中的内容，此文章以可视化方法对因果掩码进行了解释。</p>
 <p>Decoder-only 模型需要保证：预测位置 <span
 class="math inline">\(t\)</span> 的下一个词元时，只能利用位置 <span
 class="math inline">\(t\)</span>
@@ -1590,13 +1753,214 @@ class="math inline">\(-\infty\)</span>；经过 Softmax
 后，该位置的注意力权重为 0。以 4
 个位置为例，允许关注的位置可以画成下三角形式：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">查询位置 i      可以关注的 Key 位置 j<br>第 0 个位置     0<br>第 1 个位置     0, 1<br>第 2 个位置     0, 1, 2<br>第 3 个位置     0, 1, 2, 3<br></code></pre></td></tr></table></figure>
+<p>也可以将它理解为一个下三角的“允许矩阵”（<code>√</code>
+表示允许，<code>×</code> 表示禁止）：</p>
+<table>
+<thead>
+<tr>
+<th>Query 位置 <span class="math inline">\(i\)</span> / Key 位置 <span
+class="math inline">\(j\)</span></th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><code>√</code></td>
+<td><code>×</code></td>
+<td><code>×</code></td>
+<td><code>×</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>√</code></td>
+<td><code>√</code></td>
+<td>×</td>
+<td><code>×</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>√</code></td>
+<td><code>√</code></td>
+<td><code>√</code></td>
+<td><code>×</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>√</code></td>
+<td><code>√</code></td>
+<td><code>√</code></td>
+<td><code>√</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="mask-与标签右移如何配合">10.3.2.1 Mask 与“标签右移”如何配合</h4>
+<p>以序列 <code>我 / 喜欢 / 学习 / PyTorch</code>
+为例。模型输入和监督标签通常按一个位置错开：</p>
+<table>
+<thead>
+<tr>
+<th>输入位置</th>
+<th>输入 Token</th>
+<th>该位置希望预测的标签</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>我</td>
+<td>喜欢</td>
+</tr>
+<tr>
+<td>1</td>
+<td>喜欢</td>
+<td>学习</td>
+</tr>
+<tr>
+<td>2</td>
+<td>学习</td>
+<td>PyTorch</td>
+</tr>
+</tbody>
+</table>
+<p>位置 1 要预测“学习”时，可以读取“我、喜欢”，但绝不能读取位置 2
+中已经放入输入序列的“学习”。因果 Mask
+正是用来阻止这种信息泄漏的。也就是说，<strong>标签右移规定“每个位置要预测什么”，因果
+Mask 规定“预测时能看什么”</strong>；两者缺一不可。</p>
 <p>因此，训练时即使完整句子已经在内存中，位置 1 也无法利用位置 2、3
 的信息“偷看答案”。但所有位置的 <span
 class="math inline">\(Q\)</span>、<span
 class="math inline">\(K\)</span>、<span class="math inline">\(V\)</span>
-和注意力矩阵仍可通过一次批量矩阵运算并行计算，这正是自回归语言模型训练可以高效并行的原因。需要注意，因果
-Mask 解决的是“不能看未来”；若一个 batch
-中有不同长度的序列，仍通常需要额外的 Padding Mask 忽略填充位置。</p>
+和注意力矩阵仍可通过一次批量矩阵运算并行计算，这正是自回归语言模型训练（训练时使用Mask屏蔽对后面位置词元的关注）可以高效并行的原因。</p>
+<h4 id="训练可并行生成必须逐步进行">10.3.2.2
+训练可并行，生成必须逐步进行</h4>
+<p>训练阶段已知完整序列，所以可以一次算出全部 <span
+class="math inline">\(T\)</span> 个位置的 logits
+和损失，计算上是并行的。推理阶段并不知道未来
+Token：必须先根据前缀得到一个新
+Token，再把它追加到输入末尾，才能预测下一个
+Token。因此，生成过程在时间步上是自回归、顺序进行的。</p>
+<p>实现推理时，模型一般会缓存已经计算过的每层注意力 Key 和 Value（KV
+Cache）。生成第 <span class="math inline">\(t+1\)</span> 个 Token
+时，只需为新 Token 计算新的 <span
+class="math inline">\(Q\)</span>、<span
+class="math inline">\(K\)</span>、<span
+class="math inline">\(V\)</span>，并让新的 Query 关注缓存的历史
+K/V，而不用重复计算整个历史前缀。KV Cache
+改善的是推理效率，不会改变“不能看未来”的因果约束。</p>
+<p>以一段文本的词元序列 <span
+class="math inline">\(x_1,x_2,\ldots,x_T\)</span>
+为例，训练后的模型可实现“已知 <span class="math inline">\(x_1\)</span>
+预测 <span class="math inline">\(x_2\)</span>，已知 <span
+class="math inline">\(x_1,x_2\)</span> 预测 <span
+class="math inline">\(x_3\)</span>，依此类推”的功能。实际生成时，初始输入通常是一段包含多个
+Token 的提示词；为便于说明，下面先把初始提示简化为仅含一个 Token <span
+class="math inline">\(x_1\)</span>，并用“第 <span
+class="math inline">\(r\)</span> 个生成步”表示第 <span
+class="math inline">\(r\)</span> 次调用模型生成新 Token 的过程。</p>
+<p>为了区分不同含义的下标，下面约定：<span
+class="math inline">\(i\)</span> 表示 Token 在序列中的位置，<span
+class="math inline">\(l\)</span> 表示第 <span
+class="math inline">\(l\)</span> 个 Decoder Layer。<span
+class="math inline">\(Q_i^{(l)}\)</span>、<span
+class="math inline">\(K_i^{(l)}\)</span>、<span
+class="math inline">\(V_i^{(l)}\)</span> 分别表示第 <span
+class="math inline">\(l\)</span> 层中位置 <span
+class="math inline">\(i\)</span> 对应的
+Query、Key、Value。为了简化图示，暂不写 batch 维度和注意力头维度。</p>
+<p>那么这个自回归生成与 KV Cache 的过程大致如下：</p>
+<ul>
+<li><p><strong>第 1 个生成步：由 <span
+class="math inline">\(x_1\)</span> 预测 <span
+class="math inline">\(x_2\)</span>。</strong> 将 <span
+class="math inline">\(x_1\)</span> 的 Token Embedding
+与其位置表示相加，得到输入表示；它依次经过所有 Decoder Layer。在每一层
+<span class="math inline">\(l\)</span>
+中，当前层的输入隐藏状态会通过该层各自独立的 Q、K、V 投影，得到 <span
+class="math inline">\(Q_1^{(l)}\)</span>、<span
+class="math inline">\(K_1^{(l)}\)</span>、<span
+class="math inline">\(V_1^{(l)}\)</span>。在概念上，这可看作三组线性投影；实际实现中也常将它们合并为一次线性计算。经过全部
+Decoder Layer、最终归一化和 LM Head 后，模型得到位置 1 的
+logits；对其执行 Softmax 并按选定的解码策略选择 Token，得到 <span
+class="math inline">\(x_2\)</span>。此时会为<strong>每一层</strong>缓存
+<span class="math inline">\(K_1^{(l)}\)</span> 与 <span
+class="math inline">\(V_1^{(l)}\)</span>，但通常不缓存 <span
+class="math inline">\(Q_1^{(l)}\)</span>。</p></li>
+<li><p><strong>第 2 个生成步：由前缀 <span
+class="math inline">\((x_1,x_2)\)</span> 预测 <span
+class="math inline">\(x_3\)</span>。</strong> 将刚生成的 <span
+class="math inline">\(x_2\)</span>
+追加到已有前缀后，从“完整上下文”的角度看，当前序列是 <span
+class="math inline">\((x_1,x_2)\)</span>。使用 KV Cache
+时，模型无需重新处理 <span class="math inline">\(x_1\)</span>，而只将新
+Token <span class="math inline">\(x_2\)</span> 输入各层；在第 <span
+class="math inline">\(l\)</span> 层中，计算新位置的 <span
+class="math inline">\(Q_2^{(l)}\)</span>、<span
+class="math inline">\(K_2^{(l)}\)</span>、<span
+class="math inline">\(V_2^{(l)}\)</span>。随后，<span
+class="math inline">\(Q_2^{(l)}\)</span> 会与该层缓存中的历史 Key 及新的
+Key，即 <span
+class="math inline">\((K_1^{(l)},K_2^{(l)})\)</span>，计算注意力权重，再对相应的
+<span class="math inline">\((V_1^{(l)},V_2^{(l)})\)</span>
+加权求和。经过其余 Decoder Layer 后，第 2
+个位置的隐藏状态再经最终归一化和 LM Head，得到用于预测下一个 Token 的
+logits；据此选择 <span class="math inline">\(x_3\)</span>。随后把新的
+<span class="math inline">\(K_2^{(l)}\)</span>、<span
+class="math inline">\(V_2^{(l)}\)</span>
+追加到该层缓存中，缓存便包含位置 1、2 的 K、V。</p></li>
+<li><p><strong>后续生成步：</strong> 重复上述过程。用 <span
+class="math inline">\(x_r\)</span> 作为最新输入 Token、预测出 <span
+class="math inline">\(x_{r+1}\)</span> 后，每层的缓存便保存位置 <span
+class="math inline">\(1\sim r\)</span> 的 <span
+class="math inline">\(K_{1:r}^{(l)}\)</span>、<span
+class="math inline">\(V_{1:r}^{(l)}\)</span>；下一步只需输入新生成的
+<span class="math inline">\(x_{r+1}\)</span>，计算它对应的
+Q、K、V，并将新的 K、V 追加到缓存。直到生成结果为结束符
+<code>&lt;eos&gt;</code>，或达到预先设置的最大生成长度，生成结束。</p></li>
+</ul>
+<p>KV Cache <strong>直接缓存的是</strong>每层历史 Token 的
+K、V，注意：不是这些 Token 在各层中的隐藏状态。生成新 Token 时，新的
+Query 只需读取已缓存的历史
+K、V，就已具备计算注意力所需的历史信息；因此不必再将整个历史前缀重新送入各层，也就<strong>间接避免了重新计算历史
+Token 的各层隐藏状态以及由其得到的
+K、V</strong>。这样可以减少重复计算、加快生成；代价是需要额外的显存（或内存）保存每层历史
+Token 的 K、V。也就是说，KV Cache
+以额外存储换取更快的推理速度，但没有减少缓存占用。</p>
+<h4 id="因果-mask-与-padding-mask-的区别">10.3.2.3 因果 Mask 与 Padding
+Mask 的区别</h4>
+<p>因果 Mask 解决的是“<strong>不能看未来位置</strong>”；若一个 batch
+中有不同长度的序列，仍通常需要 Padding Mask
+解决“<strong>不能把补齐长度的 PAD Token 当作真实内容</strong>”。两种
+Mask 的作用不同：</p>
+<table>
+
+<thead>
+<tr>
+<th>Mask 类型</th>
+<th>主要作用</th>
+<th>是否随当前位置变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>因果 Mask</td>
+<td>屏蔽未来 Token，保证自回归约束</td>
+<td>是。位置越靠后，可见的历史越长</td>
+</tr>
+<tr>
+<td>Padding Mask</td>
+<td>屏蔽补齐的无效 Token</td>
+<td>取决于每条样本的实际长度</td>
+</tr>
+</tbody>
+</table>
+<p>在实际代码中，这些 Mask
+常被合并后加到注意力分数上；对于多头注意力，注意力分数常可表示为
+<code>(B, num_heads, T, T)</code>，因果 Mask 通常会通过广播作用到每个
+batch 样本和每个注意力头。</p>
 <h3 id="与-qwengptllama-的对应关系">10.3.3 与 Qwen、GPT、Llama
 的对应关系</h3>
 <p>GPT、Llama、Qwen 都是以
@@ -1604,6 +1968,9 @@ Decoder-only、因果语言建模为核心的语言模型系列：给定已有�
 Encoder-Decoder Transformer 中“带 Cross-Attention 的 Decoder
 堆栈”直接照搬；对于纯文本输入，它们通常没有独立的 Encoder，也没有来自
 Encoder 输出的 K、V。</p>
+<p>要注意，“属于同一架构范式”并不等于“每一个模块的实现相同”。Decoder-only
+是它们的共同骨架；位置编码、归一化、MLP
+结构、注意力头配置、上下文长度、分词器和训练/对齐方法，则可能随模型系列甚至同一系列的版本而变化。</p>
 <p>它们的共同点与常见实现差异可以概括如下：</p>
 <table>
 
@@ -1611,33 +1978,41 @@ Encoder 输出的 K、V。</p>
 <tr>
 <th>模型系列</th>
 <th>共同的核心</th>
-<th>需要区分的具体实现</th>
+<th>代表性公开设计或需要区分的细节</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>GPT</td>
 <td>Decoder-only + 因果 Mask + next-token prediction</td>
-<td>GPT 是一个持续演进的系列；例如早期 GPT/GPT-2
-使用学习到的位置嵌入，具体层数、归一化位置和训练/对齐方法会随版本变化</td>
+<td>GPT 是持续演进的系列。早期 GPT/GPT-2
+使用学习到的位置嵌入；具体层数、归一化位置、上下文长度以及预训练和对齐方式会随版本变化</td>
 </tr>
 <tr>
 <td>Llama</td>
 <td>Decoder-only + 因果 Mask + next-token prediction</td>
-<td>Llama 论文中的代表性设计采用 RoPE、RMSNorm 和 SwiGLU；Llama 2
+<td>LLaMA 论文中的代表性设计采用 RoPE、RMSNorm 和 SwiGLU；Llama 2
 及后续版本还会因模型规模而采用不同的注意力优化方案</td>
 </tr>
 <tr>
 <td>Qwen</td>
 <td>Decoder-only + 因果 Mask + next-token prediction</td>
-<td>Qwen 是一个模型家族，Qwen、Qwen2、Qwen2.5、Qwen3
-等版本的上下文长度、注意力实现、训练数据和后训练方法会变化</td>
+<td>Qwen
+是模型家族。不同代际的上下文长度、位置编码扩展方式、注意力实现、训练数据和后训练方法会变化，应查看具体版本的技术报告</td>
 </tr>
 </tbody>
 </table>
+<p>从使用方式看，聊天版本的 GPT、Llama 或 Qwen
+看似在处理“系统消息、用户消息、助手消息”这些不同字段，但送入基础语言模型的仍是一条按照聊天模板序列化的
+Token 序列。模型并不会在纯文本场景中先为用户消息建立一个独立 Encoder
+表示、再让助手消息通过 Cross-Attention 读取它；角色差异由特殊
+Token、分隔符、位置以及训练样本格式表达。</p>
+<p>还应区分“纯文本基础模型”与“多模态或检索增强系统”。若模型需要理解图像、音频等非文本输入，工程上常会额外使用视觉/音频编码器与投影模块，再把得到的表示接入语言模型；检索增强生成系统也可能在模型外先检索文档并把结果拼入提示词。这些扩展不改变其文本语言骨干可以是
+Decoder-only 的事实，但系统整体已不再是“只有一个纯文本 Decoder-only
+堆栈”的简单形式。</p>
 <p>所以，“Qwen/GPT/Llama 都是 Decoder-only
 模型”是在架构范式上的共同描述；这不意味着它们的每层细节、词表、位置编码、参数规模或训练方法完全相同。阅读某个模型的源码或技术报告时，应以该模型的具体版本为准。</p>
-<h3 id="参考资料-1">10.3.4 参考资料</h3>
+<h3 id="参考资料-2">10.3.4 参考资料</h3>
 <ol type="1">
 <li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.03762">Attention Is All You
 Need：原始 Transformer 论文</a></li>
@@ -1758,7 +2133,7 @@ Decoder-only 每层因果自注意力中历史位置的 K、V；新生成一个 
 时，只需计算新 token 的 Q、K、V，并让新 Q 与缓存的历史 K、V
 进行注意力计算，而不必重新处理整个历史前缀。</p>
 <p>训练使用真实前文，推理使用模型自己生成的前文，这种差异意味着：一旦推理早期生成了不合适的词元，它也会成为后续步骤的条件。因此，预训练之外的指令微调、偏好优化、解码策略和上下文设计，都会显著影响最终的生成质量。</p>
-<h3 id="参考资料-2">10.4.4 参考资料</h3>
+<h3 id="参考资料-3">10.4.4 参考资料</h3>
 <ol type="1">
 <li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.03762">Attention Is All You
 Need：第 3.1 节 Masked Multi-Head Attention</a></li>
@@ -1770,7 +2145,7 @@ Language Understanding by Generative Pre-Training：OpenAI GPT
 target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html">PyTorch
 官方文档：torch.nn.CrossEntropyLoss</a></li>
 </ol>
-<h2 id="参考资料-3">10.5 参考资料</h2>
+<h2 id="参考资料-4">10.5 参考资料</h2>
 <ol type="1">
 <li><a
 target="_blank" rel="noopener" href="https://datawhalechina.github.io/happy-llm/#/./chapter2/%E7%AC%AC%E4%BA%8C%E7%AB%A0%20Transformer%E6%9E%B6%E6%9E%84">datawhale开源文章：Transformer架构</a></li>
